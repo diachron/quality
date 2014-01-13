@@ -14,4 +14,9 @@ public class SPARQLAccessibility implements QualityMetric {
 		return null;
 	}
 
+	public void postprocessing() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
