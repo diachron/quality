@@ -1,18 +1,27 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics;
 
+import com.hp.hpl.jena.graph.Triple;
+
+/**
+ * @author jdebattist
+ *
+ */
 public interface QualityMetric {
 
-	/*
-	 * Input - Triple Output - value of the computed quality metric
+	/**
+	 * This method should compute the metric. A
+	 * @param The triple passed by the stream processor to the quality metric
 	 */
+	void compute(Triple triple);
 
-	double compute();
-
-	/*
-	 * Returns the name of the quality Metric
+	/**
+	 * @return the name of the quality metric
 	 */
 	String getName();
-
-	void postprocessing();
-
+	
+	
+	/**
+	 * @return the value computed by the Quality Metric
+	 */
+	double metricValue();
 }

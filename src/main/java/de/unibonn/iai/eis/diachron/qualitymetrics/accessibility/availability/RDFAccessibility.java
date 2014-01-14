@@ -3,6 +3,8 @@
  */
 package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
+import com.hp.hpl.jena.graph.Triple;
+
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 
 /**
@@ -11,25 +13,23 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
  */
 public class RDFAccessibility implements QualityMetric {
 
-	/* (non-Javadoc)
-	 * @see de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric#compute()
-	 */
-	public double compute() {
+	public void compute(Triple triple) {
 		// TODO Auto-generated method stub
-		return 0;
+//		triple.getSubject();
+//		triple.getObject();
+//		triple.getPredicate()triple;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric#getName()
-	 */
+	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void postprocessing() {
+	@Override
+	public double metricValue() {
 		// TODO Auto-generated method stub
-		
+		return 0;
 	}
 
 }
