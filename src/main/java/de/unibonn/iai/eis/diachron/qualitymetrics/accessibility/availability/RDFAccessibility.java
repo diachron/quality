@@ -20,13 +20,12 @@ public class RDFAccessibility implements QualityMetric {
 //		triple.getPredicate()triple;
 	}
 
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public double metricValue() {
 		// TODO Auto-generated method stub
 		return 0;
