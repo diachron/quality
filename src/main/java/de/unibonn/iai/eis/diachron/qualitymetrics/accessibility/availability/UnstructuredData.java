@@ -37,7 +37,7 @@ public class UnstructuredData implements QualityMetric{
 		//RDF File content types reference : http://www.w3.org/2008/01/rdf-media-types
 		//ntriples RDF file uses text/plain type address this issue when there is a normal text file
 		//Array List containing the content types of RDF files 
-		ArrayList<String> rdfContentTypes= new ArrayList<>(Arrays.asList("application/rdf+xml", 
+		ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
 						                                                  "text/plain",
 						                                                  "application/x-turtle",
 						                                                  "text/rdf+n3"));

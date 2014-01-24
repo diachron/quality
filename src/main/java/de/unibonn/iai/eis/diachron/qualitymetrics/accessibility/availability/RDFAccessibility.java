@@ -26,7 +26,7 @@ public class RDFAccessibility implements QualityMetric {
 		
 		metricValue=0;
 		//Array List containing the content types of RDF files 
-		ArrayList<String> rdfContentTypes= new ArrayList<>(Arrays.asList("application/rdf+xml", 
+		ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
 				                                                         "text/plain",
 				                                                         "application/x-turtle",
 				                                                         "text/rdf+n3"));
