@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
 
@@ -21,16 +22,19 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
  */
 public class RDFAccessibility implements QualityMetric {
 
-	double metricValue;
+	private double metricValue = 0.0d;
+	
+	//Array List containing the content types of RDF files 
+	private ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
+			                                                         "text/plain",
+			                                                         "application/x-turtle",
+			                                                         "text/rdf+n3"));
+	
+	
 	public void compute(Triple triple) {
 		
 		metricValue=0;
-		//Array List containing the content types of RDF files 
-		ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
-				                                                         "text/plain",
-				                                                         "application/x-turtle",
-				                                                         "text/rdf+n3"));
-		
+
 		//Check if the property is void:dataDump		
 		String sparqldataDump = "http://rdfs.org/ns/void#dataDump";
 		
@@ -80,6 +84,11 @@ public class RDFAccessibility implements QualityMetric {
 	public double metricValue() {
 		
 		return metricValue;
+	}
+
+	public List<Triple> toDAQTriples() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

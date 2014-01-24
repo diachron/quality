@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
 
@@ -15,11 +16,19 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 
 public class UnstructuredData implements QualityMetric{
 
-	double deadURI;
-	double totalURI;
-	double notDeadURI;
-	double metricValue;
-	double linkWithoutRDFSupport;
+	private double deadURI;
+	private double totalURI;
+	private double notDeadURI;
+	private double metricValue;
+	private double linkWithoutRDFSupport;
+
+	//RDF File content types reference : http://www.w3.org/2008/01/rdf-media-types
+	//ntriples RDF file uses text/plain type address this issue when there is a normal text file
+	//Array List containing the content types of RDF files 
+	private ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
+					                                                  "text/plain",
+					                                                  "application/x-turtle",
+					                                                  "text/rdf+n3"));
 	
 	//Constructor Initializing the parameters
 	public UnstructuredData() {
@@ -34,13 +43,7 @@ public class UnstructuredData implements QualityMetric{
 
 	public void compute(Triple triple) {
 		
-		//RDF File content types reference : http://www.w3.org/2008/01/rdf-media-types
-		//ntriples RDF file uses text/plain type address this issue when there is a normal text file
-		//Array List containing the content types of RDF files 
-		ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
-						                                                  "text/plain",
-						                                                  "application/x-turtle",
-						                                                  "text/rdf+n3"));
+
 		try{
 			
 		//the check for URI done by the URI class-- throws URIsyntax exception -exception has been handled 
@@ -110,6 +113,12 @@ public class UnstructuredData implements QualityMetric{
 		//Number of Unstructured links
 		metricValue= deadURI+ linkWithoutRDFSupport;
 		return metricValue;
+	}
+
+
+	public List<Triple> toDAQTriples() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
