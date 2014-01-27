@@ -19,15 +19,15 @@ public class Dereferencibility implements QualityMetric{
 	//Constructor initializes the number of deadURI and totalURI
 	public Dereferencibility() {
 		super();
-		dereferencableURI=0;
+		errorURI=0;
 		totalURI=0;
-		notDeadURI=0;
+		dereferencedURI=0;
 		
 	}
 
-	double dereferencableURI;
+	double errorURI;
 	double totalURI;
-	double notDeadURI;
+	double dereferencedURI;
 	
 	public void compute(Triple triple) {
 		
@@ -48,12 +48,12 @@ public class Dereferencibility implements QualityMetric{
 			int responseCode = connection.getResponseCode();
 			if (responseCode>=400 && responseCode<600)
 			{
-				dereferencableURI++;
+				errorURI++;
 				totalURI++;
 			}
 			else
 			{
-				notDeadURI++;
+				dereferencedURI++;
 				totalURI++;
 			}
 			connection.disconnect();
@@ -63,7 +63,7 @@ public class Dereferencibility implements QualityMetric{
 			e.printStackTrace();
 			//Considering Unknown host also as dead links
 		}catch(UnknownHostException e){
-			dereferencableURI++;
+			errorURI++;
 			totalURI++;
 			e.printStackTrace();
 		} catch(java.lang.ClassCastException e)
@@ -91,7 +91,7 @@ public class Dereferencibility implements QualityMetric{
 	
 	public double metricValue() {
 		//Return the Metric value
-		metricValue = notDeadURI / totalURI;
+		metricValue = dereferencedURI / totalURI;
 		return metricValue;
 	}
 
