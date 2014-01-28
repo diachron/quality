@@ -18,7 +18,7 @@ public class SPARQLAccessibility implements QualityMetric {
 
 	public void compute(Triple triple) {
 		
-		metricValue=0;
+		
 		//Check for each triple if the property is void:sparqlEnpoint for the given dataset it is as below.
 		String sparqlEndpoint ="http://rdfs.org/ns/void#sparqlEndpoint";
 		
@@ -52,12 +52,12 @@ public class SPARQLAccessibility implements QualityMetric {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return "SPARQLAccessibility";
 	}
 
 	public double metricValue() {
-		// TODO Auto-generated method stub
+		
 		return metricValue;
 	}
 

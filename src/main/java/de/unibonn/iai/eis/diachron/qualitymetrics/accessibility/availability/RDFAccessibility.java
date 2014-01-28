@@ -23,6 +23,9 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 public class RDFAccessibility implements QualityMetric {
 
 	private double metricValue = 0.0d;
+	private double countRDF=0.0d;
+	private double positiveRDF=0.0d;
+	
 	
 	//Array List containing the content types of RDF files 
 	private ArrayList<String> rdfContentTypes= new ArrayList<String>(Arrays.asList("application/rdf+xml", 
@@ -33,13 +36,14 @@ public class RDFAccessibility implements QualityMetric {
 	
 	public void compute(Triple triple) {
 		
-		metricValue=0;
-
 		//Check if the property is void:dataDump		
 		String sparqldataDump = "http://rdfs.org/ns/void#dataDump";
 		
 		if(triple.getPredicate().toString().equals(sparqldataDump))
-		{
+		{ 
+			
+			//Count the number of URI's with void:dataDump predicate
+			countRDF++;
 						
 			try {
 				
@@ -52,11 +56,10 @@ public class RDFAccessibility implements QualityMetric {
 				//Getting the content type of the file in the specified URL
 				String contentType = connection.getContentType();
 				
-				//Checking if the file type is a RDF and setting the metric value
+				//Checking if the file type is a RDF and increment the number of positive counts
 				if (rdfContentTypes.contains(contentType))
-					metricValue=1;
-				else
-					metricValue=0;
+					positiveRDF++;
+				
 				connection.disconnect();
 			   } catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -76,12 +79,16 @@ public class RDFAccessibility implements QualityMetric {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return "RDFAccessibility";
 	}
 
 	
 	public double metricValue() {
+		
+		
+		//Return the ratio of the positive RDF triple objects to the Number of RDF triple objects
+		metricValue= positiveRDF / countRDF;
 		
 		return metricValue;
 	}
