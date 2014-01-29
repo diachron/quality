@@ -3,6 +3,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
  * @author jdebattist
@@ -14,7 +15,7 @@ public interface QualityMetric {
 	 * This method should compute the metric. A
 	 * @param The triple passed by the stream processor to the quality metric
 	 */
-	void compute(Triple triple);
+	void compute(Quad quad);
 
 	/**
 	 * @return the name of the quality metric

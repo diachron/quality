@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
@@ -43,15 +44,15 @@ public class UnstructuredData implements QualityMetric{
 	}
 
 
-	public void compute(Triple triple) {
+	public void compute(Quad quad) {
 		
 	//Check if the Object is a URI	
-     if(triple.getObject().isURI())
+     if(quad.getObject().isURI())
      {
     	 
       
     try{
-		URI uriLink = new URI(triple.getObject().toString());
+		URI uriLink = new URI(quad.getObject().toString());
 		
 		//Check if URI has been already checked
 		if(!checkedURISet.uriExists(uriLink))

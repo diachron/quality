@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 
@@ -34,12 +35,12 @@ public class RDFAccessibility implements QualityMetric {
 			                                                         "text/rdf+n3"));
 	
 	
-	public void compute(Triple triple) {
+	public void compute(Quad quad) {
 		
 		//Check if the property is void:dataDump		
 		String sparqldataDump = "http://rdfs.org/ns/void#dataDump";
 		
-		if(triple.getPredicate().toString().equals(sparqldataDump))
+		if(quad.getPredicate().toString().equals(sparqldataDump))
 		{ 
 			
 			//Count the number of URI's with void:dataDump predicate
@@ -48,7 +49,7 @@ public class RDFAccessibility implements QualityMetric {
 			try {
 				
 				//Create connection and Connect				
-				URI uri = new URI(triple.getObject().toString());
+				URI uri = new URI(quad.getObject().toString());
 				HttpURLConnection connection = (HttpURLConnection)  uri.toURL().openConnection();
 				connection.setRequestMethod("HEAD");
 				connection.connect();

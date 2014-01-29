@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
@@ -27,12 +27,12 @@ public class UnstructuredDataTest extends Assert{
 
 	@Test
 	public void testUnstructuredData() {
-		List<Triple> streamedTriples = loader.getStreamingTriples();
+		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
-		for(Triple triple : streamedTriples){
+		for(Quad quad : streamingQuads){
 			
 			//Here we start streaming triples to the quality metric
-			metric.compute(triple);
+			metric.compute(quad);
 		}
 		
 		assertEquals(1.0,metric.metricValue(), 0.0);

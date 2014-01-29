@@ -3,14 +3,14 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.sparql.core.Quad;
 
 public class TestLoader {
 
-	protected List<Triple> streamingTriples = new ArrayList<Triple>();
+	protected List<Quad> streamingQuads = new ArrayList<Quad>();
 	
 	/**
 	 * Loads a sample dataset which can be used to test metrics
@@ -23,7 +23,7 @@ public class TestLoader {
 		
 		StmtIterator si = m.listStatements();
 		while(si.hasNext()){
-			this.streamingTriples.add(si.next().asTriple());
+			this.streamingQuads.add(new Quad(null, si.next().asTriple()));
 		}
 	}
 	
@@ -32,7 +32,7 @@ public class TestLoader {
 	 * to simulate the streaming of triples
 	 * @return list of Triples
 	 */
-	public List<Triple> getStreamingTriples(){
-		return this.streamingTriples;
+	public List<Quad> getStreamingQuads(){
+		return this.streamingQuads;
 	}	
 }

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.sparql.core.Quad;
 
 public class RDFAccessibilityTest extends Assert {
 
@@ -27,11 +28,11 @@ public class RDFAccessibilityTest extends Assert {
 
 	@Test
 	public void testRDFAccessibility() {
-		List<Triple> streamedTriples = loader.getStreamingTriples();
+		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
-		for(Triple triple : streamedTriples){
+		for(Quad quad : streamingQuads){
 			// here we start streaming triples to the quality metric
-			metric.compute(triple);
+			metric.compute(quad);
 		}
 		
 		assertEquals(1.0,metric.metricValue(), 0.0);
