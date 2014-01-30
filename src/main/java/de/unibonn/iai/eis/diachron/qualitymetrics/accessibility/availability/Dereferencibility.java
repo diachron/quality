@@ -21,6 +21,7 @@ public class Dereferencibility implements QualityMetric{
 	private double errorURI;
 	private double totalURI;
 	private double dereferencedURI;
+	
 
 	private CommonDataStructures checkedURISet = new CommonDataStructures();
 
@@ -35,6 +36,12 @@ public class Dereferencibility implements QualityMetric{
 
 	//Compute Function 	
 	public void compute(Quad quad) {
+		
+		
+		//Boolean variables to keep track if the triple object and subject have a protocol scheme "http" or "https"
+		boolean objectHasProtocolScheme;
+		boolean subjectHasProtocolScheme;
+
 
 		//Check if the Object is URI and If it has been already checked
 		if(quad.getObject().isURI())
@@ -44,8 +51,10 @@ public class Dereferencibility implements QualityMetric{
 
 			try {
 				URI objURILink = new URI(quad.getObject().toString());
+				//True if the object URI has a protocol else false
+				objectHasProtocolScheme =objURILink.getScheme().equals("http") || objURILink.getScheme().equals("https");
 
-				if(!checkedURISet.uriExists(objURILink))
+				if(!checkedURISet.uriExists(objURILink) && objectHasProtocolScheme)
 				{
 
 					totalURI++;
@@ -78,8 +87,6 @@ public class Dereferencibility implements QualityMetric{
 			}catch(UnknownHostException e){
 				//Considering Unknown host also as dead links
 				errorURI++;
-
-				e.printStackTrace();
 			} catch(java.lang.ClassCastException e){
 
 				e.printStackTrace();
@@ -101,10 +108,15 @@ public class Dereferencibility implements QualityMetric{
 
 			try {   
 				URI subURILink = new URI(quad.getSubject().toString());
+			
+				
+				//True if the subject URI has a protocol else false
+				subjectHasProtocolScheme =subURILink.getScheme().equals("http") || subURILink.getScheme().equals("https");
 				//Check If it has been already checked
-				if(!checkedURISet.uriExists(subURILink))
+				if(!checkedURISet.uriExists(subURILink) && subjectHasProtocolScheme)
 				{
 					totalURI++;
+					
 					//Create connection and connect 
 					HttpURLConnection connection = (HttpURLConnection)subURILink.toURL().openConnection();
 					connection.setRequestMethod("HEAD");
@@ -134,7 +146,6 @@ public class Dereferencibility implements QualityMetric{
 				//Considering Unknown host also as dead links
 				errorURI++;
 
-				e.printStackTrace();
 			} catch(java.lang.ClassCastException e){
 
 				e.printStackTrace();
