@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CommonDataStructures {
 	
 	
-	protected Set<URI> checkedURISet = Collections.newSetFromMap(new ConcurrentHashMap<URI, Boolean>());
+	protected static Set<URI> checkedURISet = Collections.newSetFromMap(new ConcurrentHashMap<URI, Boolean>());
 
 	public boolean uriExists(URI uri) {
 		
