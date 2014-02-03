@@ -26,7 +26,7 @@ public class DereferencibilityTest extends Assert{
 	}
 
 	@Test
-	public void testDereferncibility() {
+	public void testDereferencibilityMetric() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
 		for(Quad quad : streamingQuads){
