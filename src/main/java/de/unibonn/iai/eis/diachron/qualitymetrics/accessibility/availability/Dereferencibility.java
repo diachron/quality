@@ -3,181 +3,124 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.List;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 
+
+/**
+ * @author 
+ *
+ * description of metric
+ * 
+ */
 public class Dereferencibility implements QualityMetric{
 
+	private double metricValue = 0.0;
+	private double totalURI = 0;
+	private double dereferencedURI = 0;
 
-	private double metricValue;
-	private double errorURI;
-	private double totalURI;
-	private double dereferencedURI;
-	
-
-	private CommonDataStructures checkedURISet = new CommonDataStructures();
-
-	//Constructor initializes the number of deadURI and totalURI
-	public Dereferencibility() {
-
-		errorURI=0;
-		totalURI=0;
-		dereferencedURI=0;
-
-	}
 
 	//Compute Function 	
 	public void compute(Quad quad) {
-		
-		
-		//Boolean variables to keep track if the triple object and subject have a protocol scheme "http" or "https"
-		boolean objectHasProtocolScheme;
-		boolean subjectHasProtocolScheme;
+		Node subject = quad.getSubject();
 
-
-		//Check if the Object is URI and If it has been already checked
-		if(quad.getObject().isURI())
-		{
-
-
-
-			try {
-				URI objURILink = new URI(quad.getObject().toString());
-				//True if the object URI has a protocol else false
-				objectHasProtocolScheme =objURILink.getScheme().equals("http") || objURILink.getScheme().equals("https");
-
-				if(!checkedURISet.uriExists(objURILink) && objectHasProtocolScheme)
-				{
-
-					totalURI++;
-					checkedURISet.addCheckedURISet(objURILink);
-					//Create connection and connect 
-					HttpURLConnection connection = (HttpURLConnection)objURILink.toURL().openConnection();
-					connection.setRequestMethod("HEAD");
-					connection.connect();
-
-					//Check for dead links
-					//Receive the response code for the URI 
-					//Response code for the Links reference : http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html 
-					int responseCode = connection.getResponseCode();
-					if (responseCode>=400 && responseCode<600)
-					{
-						errorURI++;
-
-					}
-					else if(responseCode>=200 && responseCode<=300)
-					{
-						dereferencedURI++;
-
-					}
-					connection.disconnect();
-				}
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			}catch(UnknownHostException e){
-				//Considering Unknown host also as dead links
-				errorURI++;
-			} catch(java.lang.ClassCastException e){
-
-				e.printStackTrace();
-			} 
-			catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (this.isAPossibleDereferencableURI(subject) && (!CommonDataStructures.uriExists(subject))){
+			boolean isBroken = this.isBrokenURI(subject);
+			CommonDataStructures.addToUriMap(subject, isBroken);
+			if (!isBroken){
+				this.dereferencedURI++;
 			}
 		}
 
+		Node predicate = quad.getPredicate();
+		if (this.isAPossibleDereferencableURI(predicate) && (!CommonDataStructures.uriExists(predicate))){
+			boolean isBroken = this.isBrokenURI(predicate);
+			CommonDataStructures.addToUriMap(predicate, isBroken);
+			if (!isBroken){
+				this.dereferencedURI++;
+			}
+		}
 
-		//Check if the subject is URI
-		if(quad.getSubject().isURI())
-		{
-
-
-			try {   
-				URI subURILink = new URI(quad.getSubject().toString());
-			
-				
-				//True if the subject URI has a protocol else false
-				subjectHasProtocolScheme =subURILink.getScheme().equals("http") || subURILink.getScheme().equals("https");
-				//Check If it has been already checked
-				if(!checkedURISet.uriExists(subURILink) && subjectHasProtocolScheme)
-				{
-					totalURI++;
-					
-					//Create connection and connect 
-					HttpURLConnection connection = (HttpURLConnection)subURILink.toURL().openConnection();
-					connection.setRequestMethod("HEAD");
-					connection.connect();
-
-					//Check for dead links
-					//Receive the response code for the URI 
-					//Response code for the Links reference : http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html 
-					int responseCode = connection.getResponseCode();
-					if (responseCode>=400 && responseCode<600)
-					{
-						errorURI++;
-
-					}
-					else if(responseCode>=200 && responseCode<=300)
-					{
-						dereferencedURI++;
-
-					}
-					connection.disconnect();
-				}
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			}catch(UnknownHostException e){
-				//Considering Unknown host also as dead links
-				errorURI++;
-
-			} catch(java.lang.ClassCastException e){
-
-				e.printStackTrace();
-			} 
-			catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Node object = quad.getObject();
+		if (this.isAPossibleDereferencableURI(object) && (!CommonDataStructures.uriExists(object))){
+			boolean isBroken = this.isBrokenURI(object);
+			CommonDataStructures.addToUriMap(object, isBroken);
+			if (!isBroken){
+				this.dereferencedURI++;
 			}
 		}
 	}
 
 
 	public String getName() {
-
 		return "Dereferencibility";
 	}
 
-
 	public double metricValue() {
-
-		//Return the Metric value
-		metricValue = dereferencedURI / totalURI;
-		return metricValue;
+		this.metricValue = this.dereferencedURI / this.totalURI;
+		return this.metricValue;
 	}
-
 
 	public List<Triple> toDAQTriples() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	private boolean isBrokenURI(Node node){
+		//TODO: log more meaningful exceptions
+		Boolean isBroken = CommonDataStructures.uriExists(node) ? CommonDataStructures.isUriBroken(node) : null;
+		if (isBroken != null)
+			return isBroken;
+		else {
+			URL extUrl;
+			try {
+				extUrl = new URL(node.getURI());
+			} catch (MalformedURLException e) {
+				return true;
+			}
+
+			HttpURLConnection urlConn;
+			try {
+				urlConn = (HttpURLConnection) extUrl.openConnection();
+			} catch (IOException e) {
+				return true;
+			}
+
+			try {
+				urlConn.setRequestMethod("GET");
+			} catch (ProtocolException e) {
+				return true;
+			}
+
+			int responseCode = 0;
+
+			try {
+				urlConn.connect();
+				responseCode = urlConn.getResponseCode();
+			} catch (IOException e) {
+				return true;
+			}
+
+			if (responseCode >= 200 && responseCode < 400) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	private boolean isAPossibleDereferencableURI(Node node){
+		if ((node.isURI()) && ((node.getURI().startsWith("http")) || (node.getURI().startsWith("https")))){
+			this.totalURI++;
+			return true;
+		} else return false;
+	}
 }

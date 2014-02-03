@@ -1,30 +1,29 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.utilities;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CommonDataStructures {
-	
-	
-	protected Set<URI> checkedURISet = Collections.newSetFromMap(new ConcurrentHashMap<URI, Boolean>());
+import com.hp.hpl.jena.graph.Node;
 
-	public boolean uriExists(URI uri) {
-		
-		if (checkedURISet.contains(uri))
-			return true;
-		else
-			return false;
-		
-		}
+public final class CommonDataStructures {
+	
+	private CommonDataStructures(){}
+	
+	private static Map<Node,Boolean> uriMap = new ConcurrentHashMap<Node, Boolean>();
 
-	public void addCheckedURISet(URI uri)
+	public static boolean uriExists(Node node) {
+		return uriMap.containsKey(node) ? true : false;
+	}
+
+	public static void addToUriMap(Node node, boolean bool)
 	{
-		checkedURISet.add(uri);
+		uriMap.put(node, bool);
 	}
 	
+	public static boolean isUriBroken(Node node){
+		return uriMap.get(node);
+	}
 	
-	
-
 }
