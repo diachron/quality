@@ -16,7 +16,9 @@ public class TestLoader {
 	 * Loads a sample dataset which can be used to test metrics
 	 */
 	public void loadDataSet() {
+		
 		String filename = this.getClass().getClassLoader().getResource("testdumps/160114.ttl").toExternalForm();
+		//String filename = this.getClass().getClassLoader().getResource("testdumps/chembl-rdf-void.ttl").toExternalForm();
 		
 		Model m = ModelFactory.createDefaultModel();
 		m.read(filename, "TTL");

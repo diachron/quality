@@ -20,13 +20,8 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 
 	static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
 
-	private double metricValue = 0.0;
 	private double totalLiterals = 0;
 	private double malformedLiterals = 0;
-
-	public double getMetricValue() {
-		return metricValue;
-	}
 
 	public double getTotalLiterals() {
 		return totalLiterals;
@@ -34,13 +29,6 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 
 	public double getMalformedLiterals() {
 		return malformedLiterals;
-	}
-
-	/**
-	 * Default constructor
-	 */
-	public MalformedDatatypeLiterals() {
-		BasicConfigurator.configure();
 	}
 
 	@Override
@@ -63,6 +51,7 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 				this.totalLiterals++;
 			}
 			logger.debug("Literal :: " + object.toString());
+			
 		}
 		logger.debug("Object :: " + object.toString());
 		logger.trace("compute() --Ended--");
@@ -78,7 +67,7 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		
 		logger.trace("metricValue() --Started--");
 		logger.debug("Malformed Literals :: " +  this.malformedLiterals);
-		logger.debug("Total Literals :: " +  this.malformedLiterals);
+		logger.debug("Total Literals :: " +  this.totalLiterals);
 		
 		//return ZERO if total number of RDF literals are ZERO [WARN]
 		if (0 >= this.totalLiterals) {
@@ -86,12 +75,10 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 			return 0.0;
 		}
 		
-		this.metricValue = this.malformedLiterals / this.totalLiterals;
-		
-		logger.debug("Metric Value :: " + this.metricValue);
+		double metricValue = this.malformedLiterals / this.totalLiterals;
+		logger.debug("Metric Value :: " +  metricValue);
 		logger.trace("metricValue() --Ended--");
-		
-		return this.metricValue;
+		return metricValue;
 	}
 
 	@Override
