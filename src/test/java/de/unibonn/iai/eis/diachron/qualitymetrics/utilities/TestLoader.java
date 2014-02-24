@@ -11,7 +11,6 @@ import com.hp.hpl.jena.sparql.core.Quad;
 public class TestLoader {
 
 	protected List<Quad> streamingQuads = new ArrayList<Quad>();
-	protected Model m;
 	
 	/**
 	 * Loads a sample dataset which can be used to test metrics
@@ -21,9 +20,8 @@ public class TestLoader {
 		String filename = this.getClass().getClassLoader().getResource("testdumps/160114.ttl").toExternalForm();
 		//String filename = this.getClass().getClassLoader().getResource("testdumps/chembl-rdf-void.ttl").toExternalForm();
 		
-		m = ModelFactory.createDefaultModel();
+		Model m = ModelFactory.createDefaultModel();
 		m.read(filename, "TTL");
-		
 		
 		StmtIterator si = m.listStatements();
 		while(si.hasNext()){
@@ -31,10 +29,6 @@ public class TestLoader {
 		}
 	}
 	
-	public Model getM() {
-		return m;
-	}
-
 	/**
 	 * Returns a list of triples from the loaded dataset. This can be used 
 	 * to simulate the streaming of triples
