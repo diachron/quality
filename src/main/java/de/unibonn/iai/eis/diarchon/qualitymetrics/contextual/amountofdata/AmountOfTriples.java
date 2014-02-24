@@ -3,7 +3,6 @@ package de.unibonn.iai.eis.diarchon.qualitymetrics.contextual.amountofdata;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
@@ -17,36 +16,30 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
  */
 public class AmountOfTriples implements QualityMetric{
 
-	double metricValue;
+	protected double metricValue;
+	protected int numTriples;
 	
-	//Overloading compute function as we need the dataset model to compute the size --paramter is Model
-	public void compute(Model m) {
-		 
-		 	
-		 	long high       = 1000000000;
-			long mediumHigh =   10000000;
-			long mediumLow  =     500000;
-			long low        =      10000;
-
-			long numTriples = m.size();
-			System.out.println(numTriples);
-			
-			//Assumed the following metric value for different sizes for the given criteria
-
-			if (numTriples >= high) metricValue = 1;
-			else if (numTriples < high       && numTriples >= mediumHigh) metricValue = (float) 0.75;
-			else if (numTriples < mediumHigh && numTriples >= mediumLow) metricValue = (float) 0.5;
-			else if (numTriples < mediumLow  && numTriples >= low) metricValue = (float) 0.25;
-			else metricValue = 0;
-		
-	}
-
 	public String getName() {
 		return "AmountOfTriples";
 	}
 
 	public double metricValue() {
 		
+		long high       = 1000000000;
+		long mediumHigh =   10000000;
+		long mediumLow  =     500000;
+		long low        =      10000;
+
+		
+		System.out.println(numTriples);
+		
+		//Assumed the following metric value for different sizes for the given criteria
+
+		if (numTriples >= high) metricValue = 1;
+		else if (numTriples < high       && numTriples >= mediumHigh) metricValue =  0.75;
+		else if (numTriples < mediumHigh && numTriples >= mediumLow) metricValue =  0.5;
+		else if (numTriples < mediumLow  && numTriples >= low) metricValue = 0.25;
+		else metricValue = 0;
 		return metricValue;
 	}
 
@@ -56,7 +49,8 @@ public class AmountOfTriples implements QualityMetric{
 	}
 
 	public void compute(Quad quad) {
-		// TODO Auto-generated method stub
+		if (quad.isTriple())
+			numTriples++;
 		
 	}
 
