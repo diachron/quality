@@ -22,7 +22,7 @@ public class AmountOfTriples implements QualityMetric{
 	public String getName() {
 		return "AmountOfTriples";
 	}
-
+	// TODO: change ranges @jerdeb
 	public double metricValue() {
 		
 		long high       = 1000000000;
