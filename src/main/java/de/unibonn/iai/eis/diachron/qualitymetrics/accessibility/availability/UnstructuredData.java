@@ -69,7 +69,7 @@ public class UnstructuredData implements QualityMetric{
 
 		
 		Node object = quad.getObject();
-
+		if (HTTPConnector.isPossibleURL(object)){
 		if (HTTPConnector.isPossibleURL(object) && (!CommonDataStructures.uriExists(object.getURI()))){
 			this.unStructuredDataChecker(this.buildURIProfile(object, null));
 		} else if (CommonDataStructures.uriExists(object.getURI())){
@@ -77,10 +77,8 @@ public class UnstructuredData implements QualityMetric{
 			if (profile.getHttpStatusCode() == 0) this.unStructuredDataChecker(this.buildURIProfile(object, profile));
 			else this.unStructuredDataChecker(profile);
 		}
-
-	
+		}
 	}
-
 	private void unStructuredDataChecker(URIProfile profile) {
 		if (profile.isBroken()) this.deadURI++;
 		if ((profile.getStructuredContentType().size() == 0) && (profile.isBroken() == false)) this.unStructuredURI++;
