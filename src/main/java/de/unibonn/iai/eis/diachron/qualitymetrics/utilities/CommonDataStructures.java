@@ -1,15 +1,11 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.utilities;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.WebContent;
-
-import com.hp.hpl.jena.graph.Node;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
 

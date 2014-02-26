@@ -22,7 +22,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 /**
  * @author Nikhil Patra
  * 
- * # unstructured  links= #dead links + # links without RDF support/#total URI
+ * Approach : # unstructured  links= #dead links + # links without RDF support/#total URI
  * 
  * Pattern:  < _ _ ?o>
  * 

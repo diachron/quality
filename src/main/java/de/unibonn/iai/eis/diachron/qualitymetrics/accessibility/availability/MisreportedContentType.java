@@ -27,6 +27,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
  *           then it is a misreported content type.
  *           
  * Metric Value : Total no. of correct reported types/(misreported types + correct)
+ * 
+ * Execution Time : 1467.817 s Metric Value :0.7108433734939759
  */
 public class MisreportedContentType implements QualityMetric {
 
