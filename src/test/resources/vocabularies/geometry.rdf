@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+   xmlns:vs="http://www.w3.org/2003/06/sw-vocab-status/ns#"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+   xmlns="http://geovocab.org/geometry#">
+  <owl:Ontology rdf:about="http://geovocab.org/geometry">
+    <rdfs:comment>A vocabulary for describing geographical regions in RDF. $Id: geometry# 81 2012-02-05 11:06:49Z non88sense@gmail.com $</rdfs:comment>
+    <rdfs:label>NeoGeo Geometry Ontology</rdfs:label>
+    <owl:imports rdf:resource="http://geovocab.org/mappings/geometry"/>
+  </owl:Ontology>
+  <owl:Class rdf:about="http://geovocab.org/geometry#BoundingBox">
+    <rdfs:comment>Represents a bounding box composed by four line segments.</rdfs:comment>
+    <rdfs:label>Bounding Box</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#Geometry"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#Geometry">
+    <rdfs:comment>Super-class grouping all geometrical representations (also ones in non-RDF formats, such as KML, GML, WKT...).</rdfs:comment>
+    <rdfs:label>Geometry</rdfs:label>
+    <vs:term_status>testing</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#GeometryCollection">
+    <rdfs:comment>Super-class grouping all composite geometrical representations.</rdfs:comment>
+    <rdfs:label>Geometry Collection</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#Geometry"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#LineString">
+    <rdfs:comment>Represents a series of points connected by straight lines.</rdfs:comment>
+    <rdfs:label>LineString</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#Geometry"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#LinearRing">
+    <rdfs:comment>Represents a series of points connected by straight lines, which form a closed shape. Last point must be the same as the first point.</rdfs:comment>
+    <rdfs:label>LinearRing</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#LineString"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#MultiLineString">
+    <rdfs:comment>Describes a geometric shape composed of several LineString resources.</rdfs:comment>
+    <rdfs:label>MultiLineString</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#GeometryCollection"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#MultiPoint">
+    <rdfs:comment>Describes a collection of Point resources, which define a resource's geometric representation.</rdfs:comment>
+    <rdfs:label>MultiPoint</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#GeometryCollection"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#MultiPolygon">
+    <rdfs:comment>Describes a geometric shape composed of several Polygon resources.</rdfs:comment>
+    <rdfs:label>MultiPolygon</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#GeometryCollection"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="http://geovocab.org/geometry#Polygon">
+    <rdfs:comment>A closed area defined by an exterior boundary, and optionally one or more interior boundaries.</rdfs:comment>
+    <rdfs:label>Polygon</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://geovocab.org/geometry#Geometry"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onClass rdf:resource="http://geovocab.org/geometry#LinearRing"/>
+        <owl:onProperty rdf:resource="http://geovocab.org/geometry#exterior"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://geovocab.org/geometry#interior"/>
+        <owl:someValuesFrom rdf:resource="http://geovocab.org/geometry#LinearRing"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://geovocab.org/geometry#asWKT">
+    <rdfs:comment>WKT serialization of the geometry.</rdfs:comment>
+    <rdfs:label>As WKT</rdfs:label>
+    <vs:term_status>deprecated</vs:term_status>
+  </owl:DatatypeProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#bbox">
+    <rdfs:comment>Relates a Geometry to its Bounding Box.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#Geometry"/>
+    <rdfs:label>bounding box</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#BoundingBox"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#boundary">
+    <rdfs:comment>Super-property that groups all properties defining a polygon's boundaries.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#Polygon"/>
+    <rdfs:label>boundary</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#LinearRing"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#exterior">
+    <rdfs:comment>Defines a polygon's outer boundary.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#Polygon"/>
+    <rdfs:label>exterior</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#LinearRing"/>
+    <rdfs:subPropertyOf rdf:resource="http://geovocab.org/geometry#boundary"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#geometry">
+    <rdfs:comment>Relates a resource to its geometric shape.</rdfs:comment>
+    <rdfs:label>geometry</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#Geometry"/>
+    <vs:term_status>testing</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#interior">
+    <rdfs:comment>Defines an polygon's boundary within its outer boundary, i.e. a polygon with 'holes' in it.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#Polygon"/>
+    <rdfs:label>interior</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#LinearRing"/>
+    <rdfs:subPropertyOf rdf:resource="http://geovocab.org/geometry#boundary"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#lineStringMember">
+    <rdfs:comment>Links a LineString simple geometry to a MultiLineString composite geometry.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#MultiLineString"/>
+    <rdfs:label>LineString member</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#LineString"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#partOf">
+    <rdfs:comment>Relates a point to a geometric shape's boundary.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#Point"/>
+    <rdfs:label>part of</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#LineString"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#pointMember">
+    <rdfs:comment>Links a Point simple geometry to a MultiPoint composite Geometry.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#MultiPoint"/>
+    <rdfs:label>Point member</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#Point"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#polygonMember">
+    <rdfs:comment>Links a Polygon simple geometry to a MultiPolygon composite geometry.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#MultiPolygon"/>
+    <rdfs:label>Polygon member</rdfs:label>
+    <rdfs:range rdf:resource="http://geovocab.org/geometry#Polygon"/>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://geovocab.org/geometry#posList">
+    <rdfs:comment>Relates a LineString or LinearRing to the points that define them.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://geovocab.org/geometry#LineString"/>
+    <rdfs:label>position list</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:ObjectProperty>
+  <owl:Class rdf:about="http://www.w3.org/2003/01/geo/wgs84_pos#Point">
+    <rdfs:label>Point</rdfs:label>
+  </owl:Class>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2003/06/sw-vocab-status/ns#term_status"/>
+</rdf:RDF>
