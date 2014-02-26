@@ -21,13 +21,15 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 /**
  * @author 
  *
- * This metric calucate the number of valid redirects (303) according to LOD Principles
+ * Approach:This metric calculates the number of valid redirects (303) according to LOD Principles
+ * 
+ * Metric value: ratio of Number Derefernced URIs to Total Number of URIs
  * 
  */
 public class Dereferencibility implements QualityMetric{
 
 	static Logger logger = Logger.getLogger(Dereferencibility.class);
-	
+
 	private double metricValue = 0.0;
 	private double totalURI = 0;
 	private double dereferencedURI = 0;
@@ -47,24 +49,26 @@ public class Dereferencibility implements QualityMetric{
 			else this.dereferencabilityChecker(profile);
 		}
 
-//		TODO: check if predicate needs to be checked for dereferencability - 
-//		it does not make sense, since the publisher do not have any control on the schema
-//		Node predicate = quad.getPredicate();
-//		if (HTTPConnector.isPossibleURL(predicate) && (!CommonDataStructures.uriExists(predicate.getURI()))){
-//			this.dereferencabilityChecker(this.buildURIProfile(predicate, null));
-//		} else if (CommonDataStructures.uriExists(predicate.getURI())){
-//			URIProfile profile = CommonDataStructures.getURIProfile(predicate.getURI());
-//			if (profile.getHttpStatusCode() == 0) this.dereferencabilityChecker(this.buildURIProfile(predicate, profile));
-//			else this.dereferencabilityChecker(profile);
-//		}
+		//		TODO: check if predicate needs to be checked for dereferencability - 
+		//		it does not make sense, since the publisher do not have any control on the schema
+		//		Node predicate = quad.getPredicate();
+		//		if (HTTPConnector.isPossibleURL(predicate) && (!CommonDataStructures.uriExists(predicate.getURI()))){
+		//			this.dereferencabilityChecker(this.buildURIProfile(predicate, null));
+		//		} else if (CommonDataStructures.uriExists(predicate.getURI())){
+		//			URIProfile profile = CommonDataStructures.getURIProfile(predicate.getURI());
+		//			if (profile.getHttpStatusCode() == 0) this.dereferencabilityChecker(this.buildURIProfile(predicate, profile));
+		//			else this.dereferencabilityChecker(profile);
+		//		}
 
 		Node object = quad.getObject();
-		if (HTTPConnector.isPossibleURL(object) && (!CommonDataStructures.uriExists(object.getURI()))){
-			this.dereferencabilityChecker(this.buildURIProfile(object, null));
-		} else if (CommonDataStructures.uriExists(object.getURI())){
-			URIProfile profile = CommonDataStructures.getURIProfile(object.getURI());
-			if (profile.getHttpStatusCode() == 0) this.dereferencabilityChecker(this.buildURIProfile(object, profile));
-			else this.dereferencabilityChecker(profile);
+		if (HTTPConnector.isPossibleURL(object)){
+			if (HTTPConnector.isPossibleURL(object) && (!CommonDataStructures.uriExists(object.getURI()))){
+				this.dereferencabilityChecker(this.buildURIProfile(object, null));
+			} else if (CommonDataStructures.uriExists(object.getURI())){
+				URIProfile profile = CommonDataStructures.getURIProfile(object.getURI());
+				if (profile.getHttpStatusCode() == 0) this.dereferencabilityChecker(this.buildURIProfile(object, profile));
+				else this.dereferencabilityChecker(profile);
+			}
 		}
 	}
 
@@ -97,7 +101,7 @@ public class Dereferencibility implements QualityMetric{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		CommonDataStructures.addToUriMap(node.getURI(), profile);
 		return profile;
 	}

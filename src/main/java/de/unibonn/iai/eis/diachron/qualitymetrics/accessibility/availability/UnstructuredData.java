@@ -19,6 +19,18 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 
+/**
+ * @author Nikhil Patra
+ * 
+ * # unstructured  links= #dead links + # links without RDF support/#total URI
+ * 
+ * Pattern:  < _ _ ?o>
+ * 
+ * Check using jena isURI and then obtain source and prove whether RDF is available
+ *
+ * Metric Value :(#dead links + # links without RDF support)/#total URI
+ * 
+ */
 public class UnstructuredData implements QualityMetric{
 
 	static Logger logger = Logger.getLogger(UnstructuredData.class);

@@ -13,16 +13,29 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 
 
+/**
+ * @author Nikhil Patra
+ * 
+ *Check if a SPARQL endpoint is available and returns a result. This can be done by checking for the  void:sparqlEndpoint value, and query the server; checking the result if it is in RDF
+ *
+ *check jena functions to connect to sparql endpoint
+ *
+ *Pattern:  < _  void:sparqlEndpoint ?o>
+ *Obtain response from object 
+ *
+ *Metric Value :Iterating over the SPARQL Query results and check if any result is received 
+	            metricValue is 1 if results received otherwise set to 0 
+ */
 public class SPARQLAccessibility implements QualityMetric {
 	
 	double metricValue;
 
 	public void compute(Quad quad) {
 		
-		
+	
 		//Check for each triple if the property is void:sparqlEnpoint for the given dataset it is as below.
 		String sparqlEndpoint ="http://rdfs.org/ns/void#sparqlEndpoint";
-		
+		//TODO find how to match for the property void:sparqlEndpoint
 		
 		if (quad.getPredicate().toString().equals(sparqlEndpoint))
 		{

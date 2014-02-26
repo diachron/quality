@@ -19,7 +19,15 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 
 /**
  * @author natalja
+ * 
+ *Check if a SPARQL endpoint is available and returns a result. This can be done by checking for the  void:sparqlEndpoint value, and query the server; checking the result if it is in RDF
  *
+ *check jena functions to connect to sparql endpoint
+ *
+ *Pattern:  < _  void:sparqlEndpoint ?o>
+ *Obtain response from object 
+ *
+ *Metric Value : Ratio of the positive RDF triple objects to the Number of RDF triple objects
  */
 public class RDFAccessibility implements QualityMetric {
 

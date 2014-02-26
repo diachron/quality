@@ -50,9 +50,7 @@ public class MisreportedContentType implements QualityMetric {
 		}
 	
 	public void compute(Quad quad) {
-		
-		//TODO Check if the check should be done for subject,predicate,object
-		
+				
 		//Check for Subject
 		Node subject = quad.getSubject();
 		//System.out.println(subject.toString()+ " ");
@@ -71,12 +69,7 @@ public class MisreportedContentType implements QualityMetric {
 			this.MisreportedConetentTypeChecker(object);
 			}
 		
-		//Check for Predicate
-		Node predicate = quad.getPredicate();		
-		if (HTTPConnector.isPossibleURL(predicate) && (!CommonDataStructures.uriExists(predicate.getURI())))
-			{
-			this.MisreportedConetentTypeChecker(predicate);
-			}
+		
 	}
 	
 	
@@ -103,10 +96,11 @@ public class MisreportedContentType implements QualityMetric {
 	
 	  URIProfile profile = new URIProfile();
 	  HTTPConnectorReport report;
+	  for(String content : CommonDataStructures.ldContentTypes){
 	  try {
 		  //Connect to URI and set the profile values
-		  //TODO Check on "requires meaningful data" parameter  presently set to true
-			report= HTTPConnector.connectToURI(node,contentNegotiation,followRedirects,true);
+		 
+			report= HTTPConnector.connectToURI(node,content,followRedirects,true);
 			profile.setHttpStatusCode(report.getResponseCode());
 		
 		//Get if content is parsible 
@@ -127,22 +121,21 @@ public class MisreportedContentType implements QualityMetric {
 				misReportedType++;
 			}
 		}
+		//TODO Meaningful Logging
 	  }catch(UnknownHostException e){
-		  e.printStackTrace();
+		 
 	  } catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}	  	
 		
 		CommonDataStructures.addToUriMap(node.toString(),profile);
 		
 		}
+  }
 }
 
 

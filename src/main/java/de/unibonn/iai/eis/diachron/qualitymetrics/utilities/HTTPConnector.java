@@ -40,7 +40,7 @@ public class HTTPConnector {
 		report.setResponseCode(urlConn.getResponseCode());
 		report.setContentType(urlConn.getContentType());
 		
-		if (((report.getResponseCode() >= 400) || (report.getResponseCode() < 600)) && (requiresMeaningfulData))
+		if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
 			report.setContentParsable(isContentParsable(urlConn));
 		
 		return report;

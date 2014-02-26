@@ -10,8 +10,11 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 
 /**
  * @author Nikhil Patra
- * Amount of triples class counts the number of triples present in the dataset
- * It will check on the size of the dataset which is the lower bound for the number of triples present in the dataset
+ * 
+ * Amount of triples class counts the number of triples present in the dataset.
+ * It will check on the size of the dataset which is the lower bound for the number of triples present in the dataset.
+ * 
+ * Metric Value: According to The range in which the size lies in.
  *
  */
 public class AmountOfTriples implements QualityMetric{
@@ -22,7 +25,8 @@ public class AmountOfTriples implements QualityMetric{
 	public String getName() {
 		return "AmountOfTriples";
 	}
-	// TODO: change ranges @jerdeb
+	
+	// TODO: Find ranges @jerdeb
 	public double metricValue() {
 		
 		long high       = 1000000000;
