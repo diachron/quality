@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import org.apache.jena.riot.RiotException;
 import org.apache.log4j.Logger;
@@ -27,7 +28,7 @@ public class HTTPConnector {
 		return connectToURI(node, contentNegotiation, followRedirects, false);
 	}
 	
-	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException {
+	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
 		HttpURLConnection.setFollowRedirects(followRedirects); 
 		HTTPConnectorReport report = new HTTPConnectorReport();
 		report.setNode(node);
