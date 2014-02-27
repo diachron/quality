@@ -2,15 +2,15 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.datatypes.RDFDatatype;
 
+import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.BasicConfigurator;
 
 /**
  * @author Muhammad Ali Qasmi
@@ -51,7 +51,7 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 				this.totalLiterals++;
 			}
 			logger.debug("Literal :: " + object.toString());
-			
+
 		}
 		logger.debug("Object :: " + object.toString());
 		logger.trace("compute() --Ended--");
@@ -64,25 +64,38 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		
+
 		logger.trace("metricValue() --Started--");
-		logger.debug("Malformed Literals :: " +  this.malformedLiterals);
-		logger.debug("Total Literals :: " +  this.totalLiterals);
-		
-		//return ZERO if total number of RDF literals are ZERO [WARN]
+		logger.debug("Malformed Literals :: " + this.malformedLiterals);
+		logger.debug("Total Literals :: " + this.totalLiterals);
+
+		// return ZERO if total number of RDF literals are ZERO [WARN]
 		if (0 >= this.totalLiterals) {
 			logger.warn("Total number of RDF data type literals in given document is found to be zero.");
 			return 0.0;
 		}
-		
+
 		double metricValue = this.malformedLiterals / this.totalLiterals;
-		logger.debug("Metric Value :: " +  metricValue);
+		logger.debug("Metric Value :: " + metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
 
 	@Override
 	public List<Triple> toDAQTriples() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getDimension() {
+		return DimensionNamesOntology.INTRINSIC.ACCURACY;
+	}
+
+	public String getGroup() {
+		return DimensionNamesOntology.INTRINSIC.GROUP_NAME;
+	}
+
+	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;
 	}

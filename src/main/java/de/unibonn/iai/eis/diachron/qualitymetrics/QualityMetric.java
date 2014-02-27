@@ -7,13 +7,15 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
  * @author jdebattist
- *
+ * 
  */
 public interface QualityMetric {
 
 	/**
 	 * This method should compute the metric. A
-	 * @param The triple passed by the stream processor to the quality metric
+	 * 
+	 * @param The
+	 *            triple passed by the stream processor to the quality metric
 	 */
 	void compute(Quad quad);
 
@@ -21,16 +23,35 @@ public interface QualityMetric {
 	 * @return the name of the quality metric
 	 */
 	String getName();
-	
-	
+
 	/**
 	 * @return the value computed by the Quality Metric
 	 */
 	double metricValue();
-	
+
 	/**
-	 * This method will return daQ triples which will be stored in the dataset QualityGraph.
+	 * This method will return daQ triples which will be stored in the dataset
+	 * QualityGraph.
+	 * 
 	 * @return a list of daQ triples
 	 */
 	List<Triple> toDAQTriples();
+
+	/**
+	 * 
+	 * @return name of metric dimension
+	 */
+	String getDimension();
+
+	/**
+	 * 
+	 * @return name of metric group
+	 */
+	String getGroup();
+
+	/**
+	 * 
+	 * @return short description of the metric
+	 */
+	String getDescription();
 }
