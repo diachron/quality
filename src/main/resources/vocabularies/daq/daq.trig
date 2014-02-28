@@ -191,6 +191,15 @@
 		rdfs:domain	daq:Accessibility ;
 		rdfs:range	daq:Availability .
 		
+	#Accuracy Dimensions Properties
+	daq:hasAccuracyDimension
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasAccuracyDimension" ;
+		rdfs:domain	daq:Intrinsic ;
+		rdfs:range	daq:Accuracy .
+		
 	#Availability Metric Properties
 	daq:hasEndPointAvailabilityMetric
 		rdfs:subPropertyOf	daq:hasMetric ;
