@@ -9,28 +9,30 @@ import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 /**
- * @author
+ * @author Jeremy Debatista
  * 
- *         Approach:This metric calculates the number of valid redirects (303)
- *         according to LOD Principles
- * 
- *         Metric value: ratio of Number Derefernced URIs to Total Number of
- *         URIs
+ * This metric calculates the number of valid redirects (303)
+ * according to LOD Principles
  * 
  */
 public class Dereferencibility implements QualityMetric {
 
-	static Logger logger = Logger.getLogger(Dereferencibility.class);
+	private final Resource CATEGORY_URI = DAQ.Accessibility;
+	private final Resource DIMENSION_URI = DAQ.Availability;
+	private final Resource METRIC_URI = DAQ.DereferencibilityMetric;
+	
+	private static Logger logger = Logger.getLogger(Dereferencibility.class);
 
 	private double metricValue = 0.0;
 	private double totalURI = 0;
@@ -38,27 +40,22 @@ public class Dereferencibility implements QualityMetric {
 
 	// Compute Function
 	public void compute(Quad quad) {
-		logger.trace("Computing Dereferencibility metric on : "
-				+ quad.asTriple());
+		logger.trace("Computing Dereferencibility metric on : "+ quad.asTriple());
+		
 		Node subject = quad.getSubject();
 
-		if (HTTPConnector.isPossibleURL(subject)
-				&& (!CommonDataStructures.uriExists(subject.getURI()))) {
+		if (HTTPConnector.isPossibleURL(subject) && (!CommonDataStructures.uriExists(subject.getURI()))) {
 			this.dereferencabilityChecker(this.buildURIProfile(subject, null));
 		} else if (CommonDataStructures.uriExists(subject.getURI())) {
 			// The uri had been checked previously
-			URIProfile profile = CommonDataStructures.getURIProfile(subject
-					.getURI());
+			URIProfile profile = CommonDataStructures.getURIProfile(subject.getURI());
 			if (profile.getHttpStatusCode() == 0)
-				this.dereferencabilityChecker(this.buildURIProfile(subject,
-						profile));
+				this.dereferencabilityChecker(this.buildURIProfile(subject,profile));
 			else
 				this.dereferencabilityChecker(profile);
 		}
 
-		// TODO: check if predicate needs to be checked for dereferencability -
-		// it does not make sense, since the publisher do not have any control
-		// on the schema
+		// TODO: check if predicate needs to be checked for dereferencability - it does not make sense, since the publisher do not have any control on the schema
 		// Node predicate = quad.getPredicate();
 		// if (HTTPConnector.isPossibleURL(predicate) &&
 		// (!CommonDataStructures.uriExists(predicate.getURI()))){
@@ -74,24 +71,16 @@ public class Dereferencibility implements QualityMetric {
 
 		Node object = quad.getObject();
 		if (HTTPConnector.isPossibleURL(object)) {
-			if (HTTPConnector.isPossibleURL(object)
-					&& (!CommonDataStructures.uriExists(object.getURI()))) {
-				this.dereferencabilityChecker(this
-						.buildURIProfile(object, null));
+			if (HTTPConnector.isPossibleURL(object) && (!CommonDataStructures.uriExists(object.getURI()))) {
+				this.dereferencabilityChecker(this.buildURIProfile(object, null));
 			} else if (CommonDataStructures.uriExists(object.getURI())) {
-				URIProfile profile = CommonDataStructures.getURIProfile(object
-						.getURI());
+				URIProfile profile = CommonDataStructures.getURIProfile(object.getURI());
 				if (profile.getHttpStatusCode() == 0)
-					this.dereferencabilityChecker(this.buildURIProfile(object,
-							profile));
+					this.dereferencabilityChecker(this.buildURIProfile(object,profile));
 				else
 					this.dereferencabilityChecker(profile);
 			}
 		}
-	}
-
-	public String getName() {
-		return "Dereferencibility";
 	}
 
 	public double metricValue() {
@@ -108,14 +97,9 @@ public class Dereferencibility implements QualityMetric {
 		// TODO: meaningful logging
 		URIProfile profile = (p == null) ? new URIProfile() : p;
 		try {
-			HTTPConnectorReport report = HTTPConnector
-					.connectToURI(node, false); // We want to make sure that
-												// there is no content
-												// redirection, thus 3xx codes
-												// are reported
-			// TODO: do we require to check if the redirection actually works or
-			// gives us a 404? in that case it would be a broken dereferencable
-			// URI
+			HTTPConnectorReport report = HTTPConnector.connectToURI(node, false); 
+			// We want to make sure that there is no content redirection, thus 3xx codes are reported
+			// TODO: do we require to check if the redirection actually works or gives us a 404? in that case it would be a broken dereferencable URI
 			profile.setHttpStatusCode(report.getResponseCode());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -140,16 +124,16 @@ public class Dereferencibility implements QualityMetric {
 		this.totalURI++;
 	}
 
-	public String getDimension() {
-		return DimensionNamesOntology.ACCESIBILITY.AVAILABILITY;
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
+	}
+	
+	
+	public Resource getDimensionURI() {
+		return this.DIMENSION_URI;
 	}
 
-	public String getGroup() {
-		return DimensionNamesOntology.ACCESIBILITY.GROUP_NAME;
-	}
-
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+	public Resource getCategoryURI() {
+		return this.CATEGORY_URI;
 	}
 }

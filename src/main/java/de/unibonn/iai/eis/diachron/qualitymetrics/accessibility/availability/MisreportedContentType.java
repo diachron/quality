@@ -11,31 +11,34 @@ import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 /**
- * @author Nikhil Patra In "Misreported Content Type" metric we check if RDF/XML
- *         content is returned with a reported type other than
- *         application/rdf+xml
+ * @author Nikhil Patra 
  * 
- *         Approach: Check the content type returned by the URI and check if we
- *         can parse it. If it is parsible and not of application/rdf+xml then
- *         it is a misreported content type.
+ * In "Misreported Content Type" metric we check if RDF/XML
+ * content is returned with a reported type other than
+ * application/rdf+xml
  * 
- *         Metric Value : Total no. of correct reported types/(misreported types
- *         + correct)
+ * Approach: Check the content type returned by the URI and check if we
+ * can parse it. If it is parsible and not of application/rdf+xml then
+ * it is a misreported content type.
  * 
- *         Execution Time : 1467.817 s Metric Value :0.7108433734939759
  */
 public class MisreportedContentType implements QualityMetric {
 
+	private final Resource CATEGORY_URI = DAQ.Accessibility;
+	private final Resource DIMENSION_URI = DAQ.Availability;
+	private final Resource METRIC_URI = DAQ.MisreportedContentTypesMetric;
+	
 	// TODO check why parsing slows down at
 	// http://academic.research.microsoft.com/Author/53619090
 	// TODO handle unknown host exception (people.comiles.eu,fb.comiles.eu)
@@ -75,16 +78,16 @@ public class MisreportedContentType implements QualityMetric {
 
 	}
 
-	public String getName() {
-		return "MisreportedContentType";
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
+	}
+	
+	public Resource getDimensionURI() {
+		return this.DIMENSION_URI;
 	}
 
-	public String getDimension() {
-		return DimensionNamesOntology.ACCESIBILITY.AVAILABILITY;
-	}
-
-	public String getGroup() {
-		return DimensionNamesOntology.ACCESIBILITY.GROUP_NAME;
+	public Resource getCategoryURI() {
+		return this.CATEGORY_URI;
 	}
 
 	public double metricValue() {
@@ -134,11 +137,8 @@ public class MisreportedContentType implements QualityMetric {
 			} catch (UnknownHostException e) {
 
 			} catch (MalformedURLException e) {
-
 			} catch (ProtocolException e) {
-
 			} catch (IOException e) {
-
 			}
 
 			CommonDataStructures.addToUriMap(node.toString(), profile);
@@ -146,8 +146,4 @@ public class MisreportedContentType implements QualityMetric {
 		}
 	}
 
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

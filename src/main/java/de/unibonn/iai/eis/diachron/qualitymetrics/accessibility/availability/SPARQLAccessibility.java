@@ -8,48 +8,37 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 
 /**
  * @author Nikhil Patra
  * 
- *         Check if a SPARQL endpoint is available and returns a result. This
- *         can be done by checking for the void:sparqlEndpoint value, and query
- *         the server; checking the result if it is in RDF
+ * Check if a SPARQL endpoint (matching void:sparqlEndpoint) is available and returns a result. 
  * 
- *         check jena functions to connect to sparql endpoint
- * 
- *         Pattern: < _ void:sparqlEndpoint ?o> Obtain response from object
- * 
- *         Metric Value :Iterating over the SPARQL Query results and check if
- *         any result is received metricValue is 1 if results received otherwise
- *         set to 0
  */
 public class SPARQLAccessibility implements QualityMetric {
 
-	double metricValue;
+	private final Resource CATEGORY_URI = DAQ.Accessibility;
+	private final Resource DIMENSION_URI = DAQ.Availability;
+	private final Resource METRIC_URI = DAQ.EndPointAvailabilityMetric;
+	
+	double metricValue = 0.0;
 
 	public void compute(Quad quad) {
 
-		// Check for each triple if the property is void:sparqlEnpoint for the
-		// given dataset it is as below.
-		String sparqlEndpoint = "http://rdfs.org/ns/void#sparqlEndpoint";
-		// TODO find how to match for the property void:sparqlEndpoint
+		if (quad.getPredicate().equals(VOID.sparqlEndpoint)) {
 
-		if (quad.getPredicate().toString().equals(sparqlEndpoint)) {
-			// The query string
 			String sparqlQuerystring = "select ?s where {?s ?p ?o}limit 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
 
-			// Executing SPARQL Query and pointing to the triple store SPARQL
-			// Endpoint
 			QueryExecution qexec = QueryExecutionFactory.sparqlService(quad
 					.getObject().toString(), query);
 
-			// Retrieving the SPARQL Query results
 			ResultSet results = qexec.execSelect();
 
 			// Iterating over the SPARQL Query results and check if any result
@@ -66,11 +55,6 @@ public class SPARQLAccessibility implements QualityMetric {
 
 	}
 
-	public String getName() {
-
-		return "SPARQLAccessibility";
-	}
-
 	public double metricValue() {
 
 		return metricValue;
@@ -81,17 +65,15 @@ public class SPARQLAccessibility implements QualityMetric {
 		return null;
 	}
 
-	public String getDimension() {
-		return DimensionNamesOntology.ACCESIBILITY.AVAILABILITY;
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
+	}
+	
+	public Resource getDimensionURI() {
+		return this.DIMENSION_URI;
 	}
 
-	public String getGroup() {
-		return DimensionNamesOntology.ACCESIBILITY.GROUP_NAME;
+	public Resource getCategoryURI() {
+		return this.CATEGORY_URI;
 	}
-
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

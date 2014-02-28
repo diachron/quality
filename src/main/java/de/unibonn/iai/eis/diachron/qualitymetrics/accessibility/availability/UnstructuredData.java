@@ -11,32 +11,29 @@ import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 /**
  * @author Nikhil Patra
  * 
- *         Approach : # unstructured links= #dead links + # links without RDF
- *         support/#total URI
- * 
- *         Pattern: < _ _ ?o>
- * 
- *         Check using jena isURI and then obtain source and prove whether RDF
- *         is available
- * 
- *         Metric Value :(#dead links + # links without RDF support)/#total URI
+ * The metric checks for URIs which return no structured information.
  * 
  */
 public class UnstructuredData implements QualityMetric {
 
-	static Logger logger = Logger.getLogger(UnstructuredData.class);
+	private final Resource CATEGORY_URI = DAQ.Accessibility;
+	private final Resource DIMENSION_URI = DAQ.Availability;
+	private final Resource METRIC_URI = DAQ.UnstructuredMetric;
+	
+	private static Logger logger = Logger.getLogger(UnstructuredData.class);
 
 	private double unStructuredURI;
 	private double deadURI;
@@ -51,15 +48,12 @@ public class UnstructuredData implements QualityMetric {
 				+ "] Computing metric on : " + quad.asTriple());
 		Node subject = quad.getSubject();
 
-		if (HTTPConnector.isPossibleURL(subject)
-				&& (!CommonDataStructures.uriExists(subject.getURI()))) {
+		if (HTTPConnector.isPossibleURL(subject) && (!CommonDataStructures.uriExists(subject.getURI()))) {
 			this.unStructuredDataChecker(this.buildURIProfile(subject, null));
 		} else if (CommonDataStructures.uriExists(subject.getURI())) {
-			URIProfile profile = CommonDataStructures.getURIProfile(subject
-					.getURI());
+			URIProfile profile = CommonDataStructures.getURIProfile(subject.getURI());
 			if (profile.getHttpStatusCode() == 0)
-				this.unStructuredDataChecker(this.buildURIProfile(subject,
-						profile));
+				this.unStructuredDataChecker(this.buildURIProfile(subject,profile));
 			else
 				this.unStructuredDataChecker(profile);
 		}
@@ -83,15 +77,12 @@ public class UnstructuredData implements QualityMetric {
 
 		Node object = quad.getObject();
 		if (HTTPConnector.isPossibleURL(object)) {
-			if (HTTPConnector.isPossibleURL(object)
-					&& (!CommonDataStructures.uriExists(object.getURI()))) {
+			if (HTTPConnector.isPossibleURL(object) && (!CommonDataStructures.uriExists(object.getURI()))) {
 				this.unStructuredDataChecker(this.buildURIProfile(object, null));
 			} else if (CommonDataStructures.uriExists(object.getURI())) {
-				URIProfile profile = CommonDataStructures.getURIProfile(object
-						.getURI());
+				URIProfile profile = CommonDataStructures.getURIProfile(object.getURI());
 				if (profile.getHttpStatusCode() == 0)
-					this.unStructuredDataChecker(this.buildURIProfile(object,
-							profile));
+					this.unStructuredDataChecker(this.buildURIProfile(object,profile));
 				else
 					this.unStructuredDataChecker(profile);
 			}
@@ -101,11 +92,9 @@ public class UnstructuredData implements QualityMetric {
 	private void unStructuredDataChecker(URIProfile profile) {
 		if (profile.isBroken())
 			this.deadURI++;
-		if ((profile.getStructuredContentType().size() == 0)
-				&& (profile.isBroken() == false))
+		if ((profile.getStructuredContentType().size() == 0) && (profile.isBroken() == false))
 			this.unStructuredURI++;
-		if (profile.getHttpStatusCode() >= 400
-				|| profile.getHttpStatusCode() < 600)
+		if (profile.getHttpStatusCode() >= 400 || profile.getHttpStatusCode() < 600)
 			profile.setBroken(true);
 		this.totalURI++;
 	}
@@ -113,15 +102,11 @@ public class UnstructuredData implements QualityMetric {
 	private URIProfile buildURIProfile(Node node, URIProfile p) {
 		// TODO: meaningful logging
 		URIProfile profile = (p == null) ? new URIProfile() : p;
-		if ((profile.getStructuredContentType().size() == 0)
-				&& (profile.isBroken() == false)) {
+		if ((profile.getStructuredContentType().size() == 0) && (profile.isBroken() == false)) {
 			for (String content : CommonDataStructures.ldContentTypes) {
 				try {
-					HTTPConnectorReport report = HTTPConnector.connectToURI(
-							node, content, true, true);
-					if (((report.getResponseCode() >= 400) || (report
-							.getResponseCode() < 600))
-							&& report.isContentParsable())
+					HTTPConnectorReport report = HTTPConnector.connectToURI(node, content, true, true);
+					if (((report.getResponseCode() >= 400) || (report.getResponseCode() < 600)) && report.isContentParsable())
 						profile.addToStructuredContentType(content);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -137,13 +122,8 @@ public class UnstructuredData implements QualityMetric {
 		return profile;
 	}
 
-	public String getName() {
-		return "UnstructuredData";
-	}
-
 	public double metricValue() {
-		this.metricValue = (this.deadURI + this.unStructuredURI)
-				/ this.totalURI;
+		this.metricValue = (this.deadURI + this.unStructuredURI) / this.totalURI;
 		return this.metricValue;
 	}
 
@@ -151,18 +131,16 @@ public class UnstructuredData implements QualityMetric {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public String getDimension() {
-		return DimensionNamesOntology.ACCESIBILITY.AVAILABILITY;
+	
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
+	}
+	
+	public Resource getDimensionURI() {
+		return this.DIMENSION_URI;
 	}
 
-	public String getGroup() {
-		return DimensionNamesOntology.ACCESIBILITY.GROUP_NAME;
+	public Resource getCategoryURI() {
+		return this.CATEGORY_URI;
 	}
-
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
