@@ -219,4 +219,26 @@
 			</rdfs:Class>
 		</rdfs:range>
 	</rdf:Description>
+	<rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasMalformedDatatypeLiteralsMetric">
+		<rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric" />
+		<rdfs:comment>
+		</rdfs:comment>
+		<rdfs:label>hasMalformedDatatypeLiteralsMetric</rdfs:label>
+		<rdfs:domain>
+			<rdfs:Class rdf:about="http://purl.org/eis/vocab/daq#Accuracy">
+				<rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Dimension" />
+				<rdfs:comment>
+				</rdfs:comment>
+				<rdfs:label>Accuracy</rdfs:label>
+			</rdfs:Class>
+		</rdfs:domain>
+		<rdfs:range>
+			<rdfs:Class rdf:about="http://purl.org/eis/vocab/daq#MalformedDatatypeLiteralsMetric">
+				<rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric" />
+				<rdfs:comment>
+				</rdfs:comment>
+				<rdfs:label>MalformedDatatypeLiteralsMetric</rdfs:label>
+			</rdfs:Class>
+		</rdfs:range>
+	</rdf:Description>
 </rdf:RDF>

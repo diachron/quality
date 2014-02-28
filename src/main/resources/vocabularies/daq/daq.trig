@@ -72,6 +72,12 @@
 		rdfs:comment	"" ;
 		rdfs:label	"Availability" .
 		
+	daq:Accuracy
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"Accuracy" .
+		
 	#Metric Classes
 	daq:EndPointAvailabilityMetric
 		a	rdfs:Class ;
@@ -113,7 +119,13 @@
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"" ;
-		rdfs:label	"MisreportedContentTypesMetric" .			
+		rdfs:label	"MisreportedContentTypesMetric" .	
+
+	daq:MalformedDatatypeLiteralsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"MalformedDatatypeLiteralsMetric" .			
 		
 	#Properties
 	
@@ -228,3 +240,10 @@
 		rdfs:label	"hasMisreportedContentTypesMetric" ;
 		rdfs:domain	daq:Availability ;
 		rdfs:range	daq:MisreportedContentTypesMetric .		
+		
+	daq:hasMalformedDatatypeLiteralsMetric
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasMalformedDatatypeLiteralsMetric" ;
+		rdfs:domain	daq:Accuracy ;
+		rdfs:range	daq:MalformedDatatypeLiteralsMetric .		
