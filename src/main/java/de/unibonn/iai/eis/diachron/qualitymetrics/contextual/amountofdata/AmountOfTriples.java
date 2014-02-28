@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diarchon.qualitymetrics.contextual.amountofdata;
+package de.unibonn.iai.eis.diachron.qualitymetrics.contextual.amountofdata;
 
 import java.util.List;
 
