@@ -3,6 +3,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
@@ -14,15 +15,14 @@ public interface QualityMetric {
 	/**
 	 * This method should compute the metric. A
 	 * 
-	 * @param The
-	 *            triple passed by the stream processor to the quality metric
+	 * @param The Quad <s,p,o,c> passed by the stream processor to the quality metric
 	 */
 	void compute(Quad quad);
 
 	/**
-	 * @return the name of the quality metric
+	 * @return returns the daQ URI of the Quality Metric
 	 */
-	String getName();
+	Resource getMetricURI();
 
 	/**
 	 * @return the value computed by the Quality Metric
@@ -39,19 +39,13 @@ public interface QualityMetric {
 
 	/**
 	 * 
-	 * @return name of metric dimension
+	 * @return returns the daQ URI of the Dimension the metric is in. 
 	 */
-	String getDimension();
+	Resource getDimensionURI();
 
 	/**
 	 * 
-	 * @return name of metric group
+	 * @return returns the daQ URI of the Category the metric is in
 	 */
-	String getGroup();
-
-	/**
-	 * 
-	 * @return short description of the metric
-	 */
-	String getDescription();
+	Resource getCategoryURI();
 }
