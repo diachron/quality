@@ -31,7 +31,6 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		return malformedLiterals;
 	}
 
-	@Override
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
 		// retrieves object from statement
@@ -57,12 +56,10 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		logger.trace("compute() --Ended--");
 	}
 
-	@Override
 	public String getName() {
 		return "MalformedDatatypeLiterals";
 	}
 
-	@Override
 	public double metricValue() {
 
 		logger.trace("metricValue() --Started--");
@@ -81,7 +78,6 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		return metricValue;
 	}
 
-	@Override
 	public List<Triple> toDAQTriples() {
 		// TODO Auto-generated method stub
 		return null;
