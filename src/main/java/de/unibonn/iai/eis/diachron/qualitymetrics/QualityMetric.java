@@ -20,11 +20,6 @@ public interface QualityMetric {
 	void compute(Quad quad);
 
 	/**
-	 * @return returns the daQ URI of the Quality Metric
-	 */
-	Resource getMetricURI();
-
-	/**
 	 * @return the value computed by the Quality Metric
 	 */
 	double metricValue();
@@ -48,4 +43,9 @@ public interface QualityMetric {
 	 * @return returns the daQ URI of the Category the metric is in
 	 */
 	Resource getCategoryURI();
+	
+	/**
+	 * @return returns the daQ URI of the Quality Metric
+	 */
+	Resource getMetricURI();
 }
