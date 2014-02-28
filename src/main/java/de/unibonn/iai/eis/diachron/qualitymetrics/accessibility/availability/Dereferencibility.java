@@ -28,8 +28,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  */
 public class Dereferencibility implements QualityMetric {
 
-	private final Resource CATEGORY_URI = DAQ.Accessibility;
-	private final Resource DIMENSION_URI = DAQ.Availability;
 	private final Resource METRIC_URI = DAQ.DereferencibilityMetric;
 	
 	private static Logger logger = Logger.getLogger(Dereferencibility.class);
@@ -126,14 +124,5 @@ public class Dereferencibility implements QualityMetric {
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
-	}
-	
-	
-	public Resource getDimensionURI() {
-		return this.DIMENSION_URI;
-	}
-
-	public Resource getCategoryURI() {
-		return this.CATEGORY_URI;
 	}
 }

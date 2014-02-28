@@ -23,8 +23,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.VOID;
  */
 public class SPARQLAccessibility implements QualityMetric {
 
-	private final Resource CATEGORY_URI = DAQ.Accessibility;
-	private final Resource DIMENSION_URI = DAQ.Availability;
 	private final Resource METRIC_URI = DAQ.EndPointAvailabilityMetric;
 	
 	double metricValue = 0.0;
@@ -69,11 +67,4 @@ public class SPARQLAccessibility implements QualityMetric {
 		return this.METRIC_URI;
 	}
 	
-	public Resource getDimensionURI() {
-		return this.DIMENSION_URI;
-	}
-
-	public Resource getCategoryURI() {
-		return this.CATEGORY_URI;
-	}
 }

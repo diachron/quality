@@ -29,8 +29,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  */
 public class UnstructuredData implements QualityMetric {
 
-	private final Resource CATEGORY_URI = DAQ.Accessibility;
-	private final Resource DIMENSION_URI = DAQ.Availability;
 	private final Resource METRIC_URI = DAQ.UnstructuredMetric;
 	
 	private static Logger logger = Logger.getLogger(UnstructuredData.class);
@@ -134,13 +132,5 @@ public class UnstructuredData implements QualityMetric {
 	
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
-	}
-	
-	public Resource getDimensionURI() {
-		return this.DIMENSION_URI;
-	}
-
-	public Resource getCategoryURI() {
-		return this.CATEGORY_URI;
 	}
 }

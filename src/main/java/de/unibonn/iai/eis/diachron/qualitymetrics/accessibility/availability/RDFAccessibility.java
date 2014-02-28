@@ -27,8 +27,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.VOID;
  */
 public class RDFAccessibility implements QualityMetric {
 
-	private final Resource CATEGORY_URI = DAQ.Accessibility;
-	private final Resource DIMENSION_URI = DAQ.Availability;
 	private final Resource METRIC_URI = DAQ.RDFAvailabilityMetric;
 	
 	private double metricValue = 0.0d;
@@ -65,13 +63,5 @@ public class RDFAccessibility implements QualityMetric {
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
-	}
-	
-	public Resource getDimensionURI() {
-		return this.DIMENSION_URI;
-	}
-
-	public Resource getCategoryURI() {
-		return this.CATEGORY_URI;
 	}
 }
