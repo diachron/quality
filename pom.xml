@@ -107,8 +107,10 @@
 								<property name="runtime_classpath" refid="maven.runtime.classpath" />
 								<echo message="Compiling Vocabularies into Classes" />
 								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg
-										line="-i src/main/resources/vocabularies/daq/daq.trig -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n DAQ" />
+									<arg line="-i src/main/resources/vocabularies/daq/daq.trig -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n DAQ" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+										<arg line="-i src/main/resources/vocabularies/void/void.rdf -e RDF/XML --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n VOID" />
 								</java>
 							</tasks>
 						</configuration>
