@@ -16,7 +16,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class HTTPConnector {
 
-	static Logger logger = Logger.getLogger(HTTPConnector.class);
+	private static Logger logger = Logger.getLogger(HTTPConnector.class);
 	
 	private HTTPConnector(){}
 	
@@ -58,9 +58,9 @@ public class HTTPConnector {
 		try {
 			connection.connect();
 			m = ModelFactory.createDefaultModel(); // create a new Model that will store the resultant RDF graph from Vapour
-			m.read(connection.getInputStream(),null);
+			m.read(connection.getInputStream(),null); //TODO: read according to negotiated content type
 		} catch (RiotException re) {
-			logger.error("Content cannot be Parsed");
+			logger.error(connection.getURL() + " content cannot be parsed");
 			return false;
 		} catch (IOException e) {
 			logger.error("Error connecting or parsing input stream "+ e.getLocalizedMessage());
