@@ -7,10 +7,12 @@ import org.apache.log4j.Logger;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 /**
  * @author Muhammad Ali Qasmi
@@ -18,7 +20,11 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
  */
 public class MalformedDatatypeLiterals implements QualityMetric {
 
-	static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
+	private final Resource CATEGORY_URI = DAQ.Intrinsic;
+	private final Resource DIMENSION_URI = DAQ.Accuracy;
+	private final Resource METRIC_URI = DAQ.MalformedDatatypeLiteralsMetric;
+	
+	private static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
 
 	private double totalLiterals = 0;
 	private double malformedLiterals = 0;
@@ -44,8 +50,7 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 				logger.debug("RdfDataTypeLiteral :: " + object.toString());
 				if (!rdfdataType.isValidLiteral(object.getLiteral())) {
 					this.malformedLiterals++;
-					logger.debug("MalformedRDFDataTypeLiteral :: "
-							+ object.toString());
+					logger.debug("MalformedRDFDataTypeLiteral :: " + object.toString());
 				}
 				this.totalLiterals++;
 			}
@@ -54,10 +59,6 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		}
 		logger.debug("Object :: " + object.toString());
 		logger.trace("compute() --Ended--");
-	}
-
-	public String getName() {
-		return "MalformedDatatypeLiterals";
 	}
 
 	public double metricValue() {
@@ -83,17 +84,16 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		return null;
 	}
 
-	public String getDimension() {
-		return DimensionNamesOntology.INTRINSIC.ACCURACY;
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
+	}
+	
+	
+	public Resource getDimensionURI() {
+		return this.DIMENSION_URI;
 	}
 
-	public String getGroup() {
-		return DimensionNamesOntology.INTRINSIC.GROUP_NAME;
+	public Resource getCategoryURI() {
+		return this.CATEGORY_URI;
 	}
-
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
