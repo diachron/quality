@@ -25,21 +25,33 @@ public class DAQHelper {
 		return label;
 	}
 	
+	
 	public static String getDimensionLabel(Resource metricURI){
-		String whereClause = "?prop " + " " + SPARQLHelper.toSPARQL(RDFS.range) + SPARQLHelper.toSPARQL(metricURI) + " . ";
-		whereClause = whereClause + " ?prop " + SPARQLHelper.toSPARQL(RDFS.domain) + " ?dim .";
+		return getClassLabel(getDomainResource(metricURI));
+	}
+	
+	public static String getCategoryLabel(Resource metricURI){
+		Resource dim = getDomainResource(metricURI);
+		Resource cat = getDomainResource(dim);
 		
-		String query = SPARQLHelper.SELECT_STATEMENT.replace("[variables]", "?name").replace("[whereClauses]", whereClause);
+		return getClassLabel(cat);
+	}
+	
+	private static Resource getDomainResource(Resource uri){
+		String whereClause = "?prop " + " " + SPARQLHelper.toSPARQL(RDFS.range) + SPARQLHelper.toSPARQL(uri) + " . ";
+		whereClause = whereClause + " ?prop " + SPARQLHelper.toSPARQL(RDFS.domain) + " ?domain .";
+		
+		String query = SPARQLHelper.SELECT_STATEMENT.replace("[variables]", "?domain").replace("[whereClauses]", whereClause);
 		Resource r = null;
 		Query qry = QueryFactory.create(query);
 	    QueryExecution qe = QueryExecutionFactory.create(qry, InternalModelConf.getDAQModel());
 	    ResultSet rs = qe.execSelect();
 	    
 	    while (rs.hasNext()){
-	    	r = rs.next().get("dim").asResource();
+	    	r = rs.next().get("domain").asResource();
 	    }
 	    
-	    return getClassLabel(r);
+	    return r;
 	}
 	
 	

@@ -20,8 +20,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  */
 public class MalformedDatatypeLiterals implements QualityMetric {
 
-	private final Resource CATEGORY_URI = DAQ.Intrinsic;
-	private final Resource DIMENSION_URI = DAQ.Accuracy;
 	private final Resource METRIC_URI = DAQ.MalformedDatatypeLiteralsMetric;
 	
 	private static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
@@ -86,14 +84,5 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
-	}
-	
-	
-	public Resource getDimensionURI() {
-		return this.DIMENSION_URI;
-	}
-
-	public Resource getCategoryURI() {
-		return this.CATEGORY_URI;
 	}
 }

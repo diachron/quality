@@ -32,17 +32,6 @@ public interface QualityMetric {
 	 */
 	List<Triple> toDAQTriples();
 
-	/**
-	 * 
-	 * @return returns the daQ URI of the Dimension the metric is in. 
-	 */
-	Resource getDimensionURI();
-
-	/**
-	 * 
-	 * @return returns the daQ URI of the Category the metric is in
-	 */
-	Resource getCategoryURI();
 	
 	/**
 	 * @return returns the daQ URI of the Quality Metric

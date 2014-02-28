@@ -3,6 +3,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.contextual.amountofdata;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
@@ -23,7 +24,7 @@ public class AmountOfTriples implements QualityMetric {
 	protected double metricValue;
 	protected int numTriples;
 
-	public String getName() {
+	public Resource getMetricURI() {
 		return "AmountOfTriples";
 	}
 
@@ -64,11 +65,11 @@ public class AmountOfTriples implements QualityMetric {
 
 	}
 
-	public String getDimension() {
+	public Resource getDimensionURI() {
 		return DimensionNamesOntology.CONTEXTUAL.AMOUNT_OF_DATA;
 	}
 
-	public String getGroup() {
+	public Resource getCategoryURI() {
 		return DimensionNamesOntology.CONTEXTUAL.GROUP_NAME;
 	}
 

@@ -35,8 +35,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  */
 public class MisreportedContentType implements QualityMetric {
 
-	private final Resource CATEGORY_URI = DAQ.Accessibility;
-	private final Resource DIMENSION_URI = DAQ.Availability;
 	private final Resource METRIC_URI = DAQ.MisreportedContentTypesMetric;
 	
 	// TODO check why parsing slows down at
@@ -82,14 +80,6 @@ public class MisreportedContentType implements QualityMetric {
 		return this.METRIC_URI;
 	}
 	
-	public Resource getDimensionURI() {
-		return this.DIMENSION_URI;
-	}
-
-	public Resource getCategoryURI() {
-		return this.CATEGORY_URI;
-	}
-
 	public double metricValue() {
 
 		// Returns total no. of correct reported types/(misreported types +
