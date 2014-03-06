@@ -2,12 +2,14 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.contextual.amountofdata;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.DimensionNamesOntology;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 /**
  * @author Nikhil Patra
@@ -20,37 +22,37 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
  * 
  */
 public class AmountOfTriples implements QualityMetric {
-
+	
+	//TODO: logging
+	private final Resource METRIC_URI = DAQ.AmountOfTriplesMetric; //TODO: define amount of triples
+	private static Logger logger = Logger.getLogger(AmountOfTriples.class);
 	protected double metricValue;
 	protected int numTriples;
 
-	public Resource getMetricURI() {
-		return "AmountOfTriples";
+	// -- Stats taken from lod-cloud.net --//
+	protected long high = 1000000000;
+	protected long mediumHigh = 10000000;
+	protected long mediumLow = 500000;
+	protected long low = 10000;
+	
+
+	public void compute(Quad quad) {
+			numTriples++;
 	}
 
-	// TODO: Find ranges @jerdeb
 	public double metricValue() {
 
-		long high = 1000000000;
-		long mediumHigh = 10000000;
-		long mediumLow = 500000;
-		long low = 10000;
-
-		System.out.println(numTriples);
-
-		// Assumed the following metric value for different sizes for the given
-		// criteria
-
-		if (numTriples >= high)
+		if (numTriples > high)
 			metricValue = 1;
-		else if (numTriples < high && numTriples >= mediumHigh)
-			metricValue = 0.75;
-		else if (numTriples < mediumHigh && numTriples >= mediumLow)
-			metricValue = 0.5;
-		else if (numTriples < mediumLow && numTriples >= low)
-			metricValue = 0.25;
+		else if ((numTriples <= high) && (numTriples > mediumHigh))
+			metricValue = 0.80;
+		else if ((numTriples <= mediumHigh) && (numTriples > mediumLow))
+			metricValue = 0.60;
+		else if ((numTriples <= mediumLow) && (numTriples > low))
+			metricValue = 0.40;
 		else
-			metricValue = 0;
+			metricValue = 0.20;
+		
 		return metricValue;
 	}
 
@@ -59,23 +61,9 @@ public class AmountOfTriples implements QualityMetric {
 		return null;
 	}
 
-	public void compute(Quad quad) {
-		if (quad.isTriple())
-			numTriples++;
 
-	}
-
-	public Resource getDimensionURI() {
-		return DimensionNamesOntology.CONTEXTUAL.AMOUNT_OF_DATA;
-	}
-
-	public Resource getCategoryURI() {
-		return DimensionNamesOntology.CONTEXTUAL.GROUP_NAME;
-	}
-
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
 	}
 
 }
