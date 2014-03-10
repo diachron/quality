@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -96,9 +97,9 @@ public class Dereferencibility implements QualityMetric {
 		URIProfile profile = (p == null) ? new URIProfile() : p;
 		try {
 			HTTPConnectorReport report = HTTPConnector.connectToURI(node, false); 
-			// We want to make sure that there is no content redirection, thus 3xx codes are reported
-			// TODO: do we require to check if the redirection actually works or gives us a 404? in that case it would be a broken dereferencable URI
+			profile.setUriNode(report.getNode());
 			profile.setHttpStatusCode(report.getResponseCode());
+			profile.addToStructuredContentType(report.getContentType());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (ProtocolException e) {
@@ -110,14 +111,40 @@ public class Dereferencibility implements QualityMetric {
 		CommonDataStructures.addToUriMap(node.getURI(), profile);
 		return profile;
 	}
+	
+	private void checkValidRedirect(Node node, URIProfile p){
+		try {
+			HTTPConnectorReport report = HTTPConnector.connectToURI(node, true); 
+			if ((report.getResponseCode() >= 400 && report.getResponseCode() < 600)) p.setBroken(true);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	private void dereferencabilityChecker(URIProfile profile) {
 		if (profile.getHttpStatusCode() == 303) {
-			this.dereferencedURI++;
-			profile.setValidDereferencableURI(true);
+			//check if URL of profile is actually accessible
+			this.checkValidRedirect(profile.getUriNode(), profile);
+			if (!profile.isBroken()){
+				this.dereferencedURI++;
+				profile.setValidDereferencableURI(true);
+			}
 		}
-		if (profile.getHttpStatusCode() >= 400
-				|| profile.getHttpStatusCode() < 600)
+		if (profile.getHttpStatusCode() == 200){
+			Set<String> one = profile.getStructuredContentType();
+			Set<String> two = CommonDataStructures.ldContentTypes;
+			one.retainAll(two); //intersection of two sets
+			if (one.size() > 0) {
+				this.dereferencedURI++;
+				profile.setValidDereferencableURI(true);				
+			}
+		}
+		if (profile.getHttpStatusCode() >= 400 && profile.getHttpStatusCode() < 600)
 			profile.setBroken(true);
 		this.totalURI++;
 	}
@@ -125,4 +152,9 @@ public class Dereferencibility implements QualityMetric {
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
+	
+    public void getDerefPassedURI(){
+    	System.out.println( this.dereferencedURI );
+    	System.out.println( this.totalURI);
+    }
 }

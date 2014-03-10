@@ -3,21 +3,23 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hp.hpl.jena.graph.Node;
+
 
 public class URIProfile {
 
-	private String uri;
+	private Node uriNode;
 	private int httpStatusCode = 0;
 	private boolean isValidDereferencableURI = false;
 	private boolean isBroken = false;
 	
 	private Set<String> structuredContentType = new HashSet<String>(); 
 
-	public String getUri() {
-		return uri;
+	public Node getUriNode() {
+		return uriNode;
 	}
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setUriNode(Node uri) {
+		this.uriNode = uri;
 	}
 	public int getHttpStatusCode() {
 		return httpStatusCode;

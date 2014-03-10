@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 public class DereferencibilityTest extends Assert{
@@ -33,8 +34,9 @@ public class DereferencibilityTest extends Assert{
 			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
-		System.out.println(metric.metricValue());
+		metric.getDerefPassedURI();
+		CommonDataStructures.getDerefPassedURI();
 		
-		assertEquals(1.0,metric.metricValue(), 0.0);
+		assertEquals(0.08176100628,metric.metricValue(), 0.00001);
 	}
 }

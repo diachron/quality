@@ -19,15 +19,58 @@ public class HTTPConnector {
 	private static Logger logger = Logger.getLogger(HTTPConnector.class);
 	
 	private HTTPConnector(){}
+
 	
+	/**
+	 * Connects to a URI via HTTP using standard text/html content negotiation.
+	 * If followRedirects is set to true, then the HTTP connector will follow all 
+	 * possible redirects
+	 * 
+	 * @param node
+	 * @param followRedirects
+	 * @return An HTTP report about the URI
+	 * @throws MalformedURLException
+	 * @throws ProtocolException
+	 * @throws IOException
+	 */
 	public static HTTPConnectorReport connectToURI(Node node, boolean followRedirects) throws MalformedURLException, ProtocolException, IOException{
 		return connectToURI(node, "text/html", followRedirects);
 	}
-	
+		
+	/**
+	 * Connects to a URI via HTTP using a defined content negotiation.
+	 * If followRedirects is set to true, then the HTTP connector will follow all 
+	 * possible redirects
+	 * 
+	 * @param node
+	 * @param contentNegotiation
+	 * @param followRedirects
+	 * @return An HTTP report about the URI
+	 * @throws MalformedURLException
+	 * @throws ProtocolException
+	 * @throws IOException
+	 */
 	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects) throws MalformedURLException, ProtocolException, IOException {
 		return connectToURI(node, contentNegotiation, followRedirects, false);
 	}
 	
+	/**
+	 * Connects to a URI via HTTP using a defined content negotiation.
+	 * If followRedirects is set to true, then the HTTP connector will follow all 
+	 * possible redirects
+	 * If requiresMeaningfulData is set to true, then it tries to parse the
+	 * content data using a Jena Model
+	 * 
+	 * @param node
+	 * @param contentNegotiation
+	 * @param followRedirects
+	 * @param requiresMeaningfulData
+	 * @return An HTTP report about the URI
+	 * @throws MalformedURLException
+	 * @throws ProtocolException
+	 * @throws IOException
+	 * @throws UnknownHostException
+	 */
 	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
 		HttpURLConnection.setFollowRedirects(followRedirects); 
 		HTTPConnectorReport report = new HTTPConnectorReport();
@@ -48,10 +91,25 @@ public class HTTPConnector {
 	
 	// TODO: check if there are HTML descriptions of a resource i.e. check for requesting (X)HTML - is this part of "No Structured Data metric"?
 	
+	/**
+	 * Checks if a Jena Node is a possible URL. 
+	 * The conditions for this to be true is that a node is a URI and that it has 
+	 * the http or https protocol.
+	 * 
+	 * @param node
+	 * @return True if a Node is a possible URL
+	 */
 	public static boolean isPossibleURL(Node node){
+		//TODO: add more protocols
 		return ((node.isURI()) && ((node.getURI().startsWith("http")) || (node.getURI().startsWith("https"))));
 	}
 	
+	/**
+	 * Checks if content is parsable by a Jena Model.
+	 * 
+	 * @param connection
+	 * @return True if content is parsable
+	 */
 	private static boolean isContentParsable(HttpURLConnection connection){
 		Model m = null;
 		
@@ -69,4 +127,11 @@ public class HTTPConnector {
 			
 		return true;
 	}
+//	public static void main(String [] args) throws MalformedURLException, ProtocolException, IOException{
+//		Model m = ModelFactory.createDefaultModel();
+//		Node n = m.createResource("http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml").asNode();
+//		HTTPConnectorReport r =connectToURI(n, false); 
+//		System.out.println(r.getResponseCode());
+//	}
+
 }
