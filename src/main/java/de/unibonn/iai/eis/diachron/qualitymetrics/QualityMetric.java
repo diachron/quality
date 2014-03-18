@@ -15,9 +15,7 @@ public interface QualityMetric {
 	/**
 	 * This method should compute the metric.
 	 * 
-	 * @param The
-	 *            Quad <s,p,o,c> passed by the stream processor to the quality
-	 *            metric
+	 * @param The Quad <s,p,o,c> passed by the stream processor to the quality metric
 	 */
 	void compute(Quad quad);
 
