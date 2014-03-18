@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -33,7 +34,7 @@ public class MalformedDatatypeLiteralsTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 		BasicConfigurator.configure();
-		loader.loadDataSet();
+		loader.loadDataSet(DataSetMappingForTestCase.MalformedDatatypeLiterals);
 	}
 
 	/**
