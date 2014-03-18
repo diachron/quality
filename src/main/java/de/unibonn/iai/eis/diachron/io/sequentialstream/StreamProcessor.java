@@ -14,7 +14,7 @@ import org.apache.jena.riot.lang.PipedTriplesStream;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.datatypes.RDFStmtIterator;
+import de.unibonn.iai.eis.diachron.datatypes.Object2Quad;
 import de.unibonn.iai.eis.diachron.exceptions.ProcessorNotInitialised;
 import de.unibonn.iai.eis.diachron.io.IOProcessor;
 
@@ -68,7 +68,7 @@ public class StreamProcessor implements IOProcessor {
 
 		// loop which will go through the statements one by one
 		while (this.iterator.hasNext()){
-			RDFStmtIterator stmt = new RDFStmtIterator(this.iterator.next());
+			Object2Quad stmt = new Object2Quad(this.iterator.next());
 			
 			System.out.println(stmt.getStatement().toString());
 			//pass it to metrics

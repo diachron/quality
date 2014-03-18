@@ -3,12 +3,12 @@ package de.unibonn.iai.eis.diachron.datatypes;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-public class RDFStmtIterator {
+public class Object2Quad {
 
 	private Quad quad;
 	private Triple triple;
 	
-	public RDFStmtIterator(Object iterator){
+	public Object2Quad(Object iterator){
 		if (iterator instanceof Quad){
 			this.quad = (Quad) iterator;
 		}
