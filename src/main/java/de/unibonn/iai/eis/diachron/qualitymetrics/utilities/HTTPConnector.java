@@ -127,11 +127,4 @@ public class HTTPConnector {
 			
 		return true;
 	}
-//	public static void main(String [] args) throws MalformedURLException, ProtocolException, IOException{
-//		Model m = ModelFactory.createDefaultModel();
-//		Node n = m.createResource("http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml").asNode();
-//		HTTPConnectorReport r =connectToURI(n, false); 
-//		System.out.println(r.getResponseCode());
-//	}
-
 }
