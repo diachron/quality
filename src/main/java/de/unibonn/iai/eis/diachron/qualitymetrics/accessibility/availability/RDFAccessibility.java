@@ -35,7 +35,7 @@ public class RDFAccessibility implements QualityMetric {
 
 	public void compute(Quad quad) {
 		// TODO Meaningful error logging
-		if (quad.getPredicate().equals(VOID.dataDump)) {
+		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
 
 			countRDF++;
 			
