@@ -14,5 +14,6 @@ public class DataSetMappingForTestCase {
 	// For...qualitymetric.intrinsic.consistency
 	public static String UndefinedClassesOrProperties = "testdumps/160114.ttl";
 	public static String MisplacedClassesOrProperties = "testdumps/160114.ttl";
+	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/160114.ttl";
 	
 }
