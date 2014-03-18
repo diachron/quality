@@ -69,6 +69,8 @@ public class Dereferencibility implements QualityMetric {
 		// }
 
 		Node object = quad.getObject();
+		//TODO: not to check if property is rdf:type
+		//TODO: idea of new metric, is the publisher using well defined vocab, i.e check if the vocab has correct dereferencable URI
 		if (HTTPConnector.isPossibleURL(object)) {
 			if (HTTPConnector.isPossibleURL(object) && (!CommonDataStructures.uriExists(object.getURI()))) {
 				this.dereferencabilityChecker(this.buildURIProfile(object, null));
