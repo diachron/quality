@@ -22,28 +22,27 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 /**
- * @author Nikhil Patra 
+ * @author Nikhil Patra
  * 
- * In "Misreported Content Type" metric we check if RDF/XML
- * content is returned with a reported type other than
- * application/rdf+xml
+ *         In "Misreported Content Type" metric we check if RDF/XML content is
+ *         returned with a reported type other than application/rdf+xml
  * 
- * Approach: Check the content type returned by the URI and check if we
- * can parse it. If it is parsible and not of application/rdf+xml then
- * it is a misreported content type.
+ *         Approach: Check the content type returned by the URI and check if we
+ *         can parse it. If it is parsible and not of application/rdf+xml then
+ *         it is a misreported content type.
  * 
  */
 public class MisreportedContentType implements QualityMetric {
 
 	private final Resource METRIC_URI = DAQ.MisreportedContentTypesMetric;
-	
+
 	// TODO check why parsing slows down at
 	// http://academic.research.microsoft.com/Author/53619090
 	// TODO handle unknown host exception (people.comiles.eu,fb.comiles.eu)
 	private double misReportedType;
 	private double correctReportedType;
 
-	static Logger logger = Logger.getLogger(MisreportedContentTypeTest.class);
+	static Logger logger = Logger.getLogger(MisreportedContentType.class);
 	boolean followRedirects = true;
 	String contentNegotiation = "application/rdf+xml";
 
@@ -79,7 +78,7 @@ public class MisreportedContentType implements QualityMetric {
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
-	
+
 	public double metricValue() {
 
 		// Returns total no. of correct reported types/(misreported types +
