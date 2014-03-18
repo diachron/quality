@@ -18,7 +18,6 @@ public class TestLoader {
 	public void loadDataSet() {
 		
 		String filename = this.getClass().getClassLoader().getResource("testdumps/160114.ttl").toExternalForm();
-		//String filename = this.getClass().getClassLoader().getResource("testdumps/chembl-rdf-void.ttl").toExternalForm();
 		
 		Model m = ModelFactory.createDefaultModel();
 		m.read(filename, "TTL");
@@ -29,6 +28,21 @@ public class TestLoader {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param fileName
+	 */
+	public void loadDataSet(String fileName){
+		String filename = this.getClass().getClassLoader().getResource(fileName).toExternalForm();
+		
+		Model m = ModelFactory.createDefaultModel();
+		m.read(filename, "TTL");
+		
+		StmtIterator si = m.listStatements();
+		while(si.hasNext()){
+			this.streamingQuads.add(new Quad(null, si.next().asTriple()));
+		}
+	}
 	/**
 	 * Returns a list of triples from the loaded dataset. This can be used 
 	 * to simulate the streaming of triples
