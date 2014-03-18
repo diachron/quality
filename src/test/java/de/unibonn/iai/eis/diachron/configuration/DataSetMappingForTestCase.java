@@ -10,6 +10,7 @@ public class DataSetMappingForTestCase {
 	
 	// For ...qualitymetric.intrinsic.accuracy
 	public static String MalformedDatatypeLiterals = "testdumps/chembl-rdf-void.ttl";
+	public static String IncompatibleDatatypeRange = "testdumps/chembl-rdf-void_2.ttl";
 	// For...qualitymetric.intrinsic.consistency
 	public static String UndefinedClassesOrProperties = "testdumps/160114.ttl";
 	
