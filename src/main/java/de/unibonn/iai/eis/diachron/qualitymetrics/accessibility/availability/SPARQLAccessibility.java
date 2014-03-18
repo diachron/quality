@@ -29,7 +29,7 @@ public class SPARQLAccessibility implements QualityMetric {
 
 	public void compute(Quad quad) {
 
-		if (quad.getPredicate().equals(VOID.sparqlEndpoint)) {
+		if (quad.getPredicate().getURI().equals(VOID.sparqlEndpoint.getURI())) {
 
 			String sparqlQuerystring = "select ?s where {?s ?p ?o}limit 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
