@@ -34,13 +34,11 @@ public class SPARQLAccessibility implements QualityMetric {
 			String sparqlQuerystring = "select ?s where {?s ?p ?o}limit 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
 
-			QueryExecution qexec = QueryExecutionFactory.sparqlService(quad
-					.getObject().toString(), query);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(quad.getObject().toString(), query);
 
 			ResultSet results = qexec.execSelect();
 
-			// Iterating over the SPARQL Query results and check if any result
-			// is received
+			// Iterating over the SPARQL Query results and check if any result is received
 			// set metricValue to 1 if results received otherwise set to 0
 			if (results.hasNext())
 				metricValue = 1;
@@ -54,7 +52,6 @@ public class SPARQLAccessibility implements QualityMetric {
 	}
 
 	public double metricValue() {
-
 		return metricValue;
 	}
 
@@ -66,5 +63,4 @@ public class SPARQLAccessibility implements QualityMetric {
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
-	
 }
