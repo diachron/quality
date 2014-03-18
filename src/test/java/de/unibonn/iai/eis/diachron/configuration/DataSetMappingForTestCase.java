@@ -13,5 +13,6 @@ public class DataSetMappingForTestCase {
 	public static String IncompatibleDatatypeRange = "testdumps/chembl-rdf-void_2.ttl";
 	// For...qualitymetric.intrinsic.consistency
 	public static String UndefinedClassesOrProperties = "testdumps/160114.ttl";
+	public static String MisplacedClassesOrProperties = "testdumps/160114.ttl";
 	
 }
