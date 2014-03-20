@@ -97,7 +97,7 @@ public class MisuseOwlDatatypeOrObjectProperties implements QualityMetric{
 		long tmpTotalProperties = this.totalDatatypeProperties + this.totalObjectProperties;
 		//return ZERO if total number of owl properties are ZERO [WARN]
 		if (tmpTotalProperties <= 0) {
-			logger.warn("Total number of classes and properties in given document is found to be zero.");
+			logger.warn("Total number of owl properties in given document is found to be zero.");
 			return 0.0;
 		}
 		
