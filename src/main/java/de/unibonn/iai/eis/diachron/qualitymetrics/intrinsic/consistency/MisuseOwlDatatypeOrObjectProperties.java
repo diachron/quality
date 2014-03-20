@@ -95,7 +95,7 @@ public class MisuseOwlDatatypeOrObjectProperties implements QualityMetric{
 		
 		long tmpTotalMisusedProperties = this.misuseDatatypeProperties + this.misuseObjectProperties;
 		long tmpTotalProperties = this.totalDatatypeProperties + this.totalObjectProperties;
-		//return ZERO if total number of RDF literals are ZERO [WARN]
+		//return ZERO if total number of owl properties are ZERO [WARN]
 		if (tmpTotalProperties <= 0) {
 			logger.warn("Total number of classes and properties in given document is found to be zero.");
 			return 0.0;
