@@ -24,7 +24,7 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		BasicConfigurator.configure();
+		//BasicConfigurator.configure();
 		loader.loadDataSet(DataSetMappingForTestCase.MisuseOwlDataTypeOrObjectProperties);
 	}
 

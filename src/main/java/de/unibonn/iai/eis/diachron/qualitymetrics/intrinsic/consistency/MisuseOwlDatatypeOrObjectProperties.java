@@ -52,34 +52,41 @@ public class MisuseOwlDatatypeOrObjectProperties implements QualityMetric{
 	
 	public void compute(Quad quad) {
 		
-		Node predicate = quad.getPredicate(); //retrieve predicate
+		Node object = quad.getObject(); //retrieve predicate
 		
-		if(predicate.isURI()){ //check if predicate is URI
+		if(object.isURI()){ //check if predicate is URI
 			// check if predicate refers to OWL namespace
-			if ( predicate.getNameSpace().contains(NAMESPACE_MATCH_SUBSTRING) &&
-				 predicate.getURI().split("#").length > 1){
+			if ( object.getNameSpace().contains(NAMESPACE_MATCH_SUBSTRING) &&
+					object.getURI().split("#").length > 1){
 
 				// retrieve predicate value
-				String tmpPropertyName = predicate.getURI().split("#")[1];
+				String tmpPropertyName = object.getURI().split("#")[1];
 				if (tmpPropertyName.toLowerCase().equals(OWL_DATA_TYPE_PROPERTY.toLowerCase())){
 					
 					this.totalDatatypeProperties++;
 					
+					System.out.println(quad.getSubject() + " is of owl data type property");
+					
+					/*
 					// for data property Subject is Resource and Object is Literal
 					if (!quad.getSubject().isURI() || !quad.getObject().isLiteral()) {
 						logger.debug("Misuse Owl Datatype Property Found ::" + quad.getSubject() + " -- " + quad.getPredicate() + " --> " + quad.getObject());
 						this.misuseDatatypeProperties++;
 					}
+					*/
 				}
 				else if (tmpPropertyName.toLowerCase().equals(OWL_OBJECT_PROPERTY.toLowerCase())){
 					
 					this.totalObjectProperties++;
 					
+					System.out.println(quad.getSubject()  + " is of owl object property");
+					/*
 					// for object property both Subject and Object are Resource
 					if (!quad.getSubject().isURI() || !quad.getObject().isURI()) {
 						logger.debug("Misuse Owl Object Property Found ::" + quad.getSubject() + " -- " + quad.getPredicate() + " --> " + quad.getObject());
 						this.misuseObjectProperties++;
 					}
+					*/
 				}
 			}
 		}
