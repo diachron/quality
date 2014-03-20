@@ -2,6 +2,8 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.List;
 
+import javax.security.auth.Subject;
+
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
@@ -66,6 +68,7 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 						// if it has one then it is a property not class.
 						if ( subjectModel.getResource(subject.getURI()).hasProperty(RDFS.domain) || 
 							 subjectModel.getResource(subject.getURI()).hasProperty(RDFS.range)) {
+							logger.debug("Misplace Class Found in Subject::" + subject);
 							this.misplacedClassesCount++;
 						}
 					}
@@ -83,6 +86,7 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 						// if it does NOT have some domain and range than its NOT a property
 						if (!( predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) && 
 							 predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.range))) {
+							logger.debug("Misplace Property Found in Predicate ::" + predicate);
 							this.misplacedPropertiesCount++;
 						}
 					}
@@ -101,6 +105,7 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 						// if it has one then it is a property not class.
 						if ( objectModel.getResource(object.getURI()).hasProperty(RDFS.domain) || 
 								objectModel.getResource(object.getURI()).hasProperty(RDFS.range)) {
+							logger.debug("Misplace Class Found in Object ::" + object);
 							this.misplacedClassesCount++;
 						}
 					}

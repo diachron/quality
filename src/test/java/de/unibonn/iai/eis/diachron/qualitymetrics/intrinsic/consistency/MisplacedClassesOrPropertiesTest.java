@@ -50,7 +50,7 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 		logger.info("Total Properties :: " + misplacedClassesOrProperties.getTotalPropertiesCount());
 		logger.info("Misplaced Properties :: " + misplacedClassesOrProperties.getMisplacedPropertiesCount());
 		logger.info("Metric Value ::" + misplacedClassesOrProperties.metricValue());
-		assertEquals(0.07692307, misplacedClassesOrProperties.metricValue(), 0.00001);
+		assertEquals(0.15384615, misplacedClassesOrProperties.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");
 	}
 

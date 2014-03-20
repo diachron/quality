@@ -65,5 +65,5 @@ people:MichaelMartin a foaf:Person ;
 people:NatanaelArndt a foaf:Person ;
                      foaf:name "Natanael Arndt" .
 
-people:MichaelMartin people:NatanaelArndt foaf:know  .
+foaf:knows people:MichaelMartin people:NatanaelArndt .
  
