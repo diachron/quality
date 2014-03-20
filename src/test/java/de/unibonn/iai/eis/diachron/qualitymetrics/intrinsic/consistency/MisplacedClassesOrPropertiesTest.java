@@ -46,11 +46,11 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 			misplacedClassesOrProperties.compute(quad);
 		}
 		logger.info("Total Classes :: " + misplacedClassesOrProperties.getTotalClassesCount());
-		logger.info("Undefined Classes :: " + misplacedClassesOrProperties.getMisplacedClassesCount());
+		logger.info("Misplaced Classes :: " + misplacedClassesOrProperties.getMisplacedClassesCount());
 		logger.info("Total Properties :: " + misplacedClassesOrProperties.getTotalPropertiesCount());
-		logger.info("Undefined Properties :: " + misplacedClassesOrProperties.getMisplacedPropertiesCount());
+		logger.info("Misplaced Properties :: " + misplacedClassesOrProperties.getMisplacedPropertiesCount());
 		logger.info("Metric Value ::" + misplacedClassesOrProperties.metricValue());
-		assertEquals(0.13114754, misplacedClassesOrProperties.metricValue(), 0.00001);
+		assertEquals(0.07692307, misplacedClassesOrProperties.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");
 	}
 

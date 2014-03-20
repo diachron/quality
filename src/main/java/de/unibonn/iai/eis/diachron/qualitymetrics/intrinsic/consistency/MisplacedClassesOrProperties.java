@@ -64,8 +64,8 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 					if (subjectModel.getResource(subject.getURI()).isURIResource()){
 						// search for its domain and range properties
 						// if it has one then it is a property not class.
-						if ( subjectModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) || 
-							 subjectModel.getResource(predicate.getURI()).hasProperty(RDFS.range)) {
+						if ( subjectModel.getResource(subject.getURI()).hasProperty(RDFS.domain) || 
+							 subjectModel.getResource(subject.getURI()).hasProperty(RDFS.range)) {
 							this.misplacedClassesCount++;
 						}
 					}
@@ -99,8 +99,8 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 					if (objectModel.getResource(object.getURI()).isURIResource()){
 						// search for its domain and range properties
 						// if it has one then it is a property not class.
-						if ( objectModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) || 
-								objectModel.getResource(predicate.getURI()).hasProperty(RDFS.range)) {
+						if ( objectModel.getResource(object.getURI()).hasProperty(RDFS.domain) || 
+								objectModel.getResource(object.getURI()).hasProperty(RDFS.range)) {
 							this.misplacedClassesCount++;
 						}
 					}
@@ -124,9 +124,9 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
-		logger.debug("Number of Undefined Classes :: " +  this.misplacedClassesCount);
+		logger.debug("Number of Misplaced Classes :: " +  this.misplacedClassesCount);
 		logger.debug("Number of Classes :: " +  this.totalClassesCount);
-		logger.debug("Number of Undefined Properties :: " +  this.misplacedPropertiesCount);
+		logger.debug("Number of Misplaced Properties :: " +  this.misplacedPropertiesCount);
 		logger.debug("Number of Properties :: " +  this.totalPropertiesCount);
 		
 		long tmpTotalUndefinedClassesAndUndefinedProperties = this.misplacedClassesCount + this.misplacedPropertiesCount;
