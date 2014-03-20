@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties;
 
 /**
  * Responsible for reading vocabulary (Models) from Web.
