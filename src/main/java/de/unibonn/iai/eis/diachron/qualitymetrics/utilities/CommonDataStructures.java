@@ -67,13 +67,4 @@ public final class CommonDataStructures {
     	ldContentTypes.add("application/xhtml+xml");
 //    	ldContentTypes.add("text/html");
     }
-    
-    public static void getDerefPassedURI(){
-    	for (String s : uriMap.keySet()){
-    		if (uriMap.get(s).isValidDereferencableURI()) {
-    			System.out.println(s);
-    		} 
-    	}
-    }
-	
 }

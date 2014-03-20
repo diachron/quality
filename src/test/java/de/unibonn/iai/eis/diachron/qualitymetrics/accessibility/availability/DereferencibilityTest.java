@@ -34,8 +34,8 @@ public class DereferencibilityTest extends Assert{
 			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
-		metric.getDerefPassedURI();
-		CommonDataStructures.getDerefPassedURI();
+		//metric.getDerefPassedURI();
+		//CommonDataStructures.getDerefPassedURI();
 		
 		assertEquals(0.08176100628,metric.metricValue(), 0.00001);
 	}

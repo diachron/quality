@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.WebContent;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
@@ -82,12 +83,34 @@ public class HTTPConnector {
 		urlConn.setRequestProperty("Accept", contentNegotiation);
 		report.setResponseCode(urlConn.getResponseCode());
 		report.setContentType(urlConn.getContentType());
+		report.setRedirectLocation(urlConn.getHeaderField("Location"));
 		
 		if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
 			report.setContentParsable(isContentParsable(urlConn));
 		
 		return report;
 	}
+	
+	public static HTTPConnectorReport connectToURI(String node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
+		HttpURLConnection.setFollowRedirects(followRedirects); 
+		HTTPConnectorReport report = new HTTPConnectorReport();
+		//report.setNode(node);
+		report.setUri(node);
+		
+		URL extUrl =  new URL(node);//new URL(node.getURI());
+		HttpURLConnection urlConn  = (HttpURLConnection) extUrl.openConnection();
+		urlConn.setRequestMethod("GET");
+		urlConn.setRequestProperty("Accept", contentNegotiation);
+		report.setResponseCode(urlConn.getResponseCode());
+		report.setContentType(urlConn.getContentType());
+		report.setRedirectLocation(urlConn.getHeaderField("Location"));
+		
+		if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
+			report.setContentParsable(isContentParsable(urlConn));
+		
+		return report;
+	}
+	
 	
 	// TODO: check if there are HTML descriptions of a resource i.e. check for requesting (X)HTML - is this part of "No Structured Data metric"?
 	
