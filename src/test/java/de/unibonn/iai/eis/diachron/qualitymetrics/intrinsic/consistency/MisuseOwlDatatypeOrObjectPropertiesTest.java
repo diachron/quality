@@ -39,6 +39,13 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 		for(Quad quad : streamingQuads){
 			misuseOwlDatatypeOrObjectProperty.compute(quad);
 		}
+		logger.info("Number of Misuse Owl Datatype Properties :: " + misuseOwlDatatypeOrObjectProperty.getMisuseDatatypeProperties());
+		logger.info("Total Owl Datatype Properties :: " + misuseOwlDatatypeOrObjectProperty.getTotalDatatypeProperties());
+		logger.info("Number of Misuse Owl Object Properties :: " + misuseOwlDatatypeOrObjectProperty.getMisuseObjectProperties());
+		logger.info("Total Owl Object Properties :: " + misuseOwlDatatypeOrObjectProperty.getTotalObjectProperties());
+		logger.info("Metric Value ::" + misuseOwlDatatypeOrObjectProperty.metricValue());
+		assertEquals(0.0, misuseOwlDatatypeOrObjectProperty.metricValue(), 0.00001);
+		logger.trace("testCompute() --Ended--");
 	}
 
 }
