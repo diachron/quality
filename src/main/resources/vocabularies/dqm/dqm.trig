@@ -1,0 +1,220 @@
+@prefix daq:     <http://purl.org/eis/vocab/daq#> .
+@prefix dqm:     <http://www.example.org/dqm#> .
+@prefix owl:	 <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfg:	 <http://www.w3.org/2004/03/trix/rdfg-1> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+
+	#Category Classes
+	dqm:Accessibility
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Category ;
+		rdfs:comment	"" ;
+		rdfs:label	"Accessibility" .
+		
+	dqm:Intrinsic
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Category ;
+		rdfs:comment	"" ;
+		rdfs:label	"Intrinsic" .
+		
+	daq:Trust
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Category ;
+		rdfs:comment	"" ;
+		rdfs:label	"Trust" .
+		
+	daq:Dynamicity
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Category ;
+		rdfs:comment	"" ;
+		rdfs:label	"Dynamicity" .
+	
+	daq:Contextual
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Category ;
+		rdfs:comment	"" ;
+		rdfs:label	"Contextual" .
+		
+	daq:Representational
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Category ;
+		rdfs:comment	"" ;
+		rdfs:label	"Representational" .
+
+	#Dimension Classes
+	daq:Availability
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"Availability" .
+		
+	daq:Accuracy
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"Accuracy" .
+			
+	daq:AmountOfData
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"Amount of Data" .
+		
+	#Metric Classes
+	daq:EndPointAvailabilityMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"EndPointAvailabilityMetric" .		
+
+	daq:RDFAvailabilityMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"RDFAvailabilityMetric" .	
+
+	daq:DereferencibilityMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"DereferencibilityMetric" .	
+
+	daq:UnstructuredMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"UnstructuredMetric" .			
+
+	daq:DeferencibilityBackLinksMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"DeferencibilityBackLinksMetric" .	
+
+	daq:DeferencibilityForwardLinksMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"DeferencibilityForwardLinksMetric" .	
+
+	daq:MisreportedContentTypesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"MisreportedContentTypesMetric" .	
+
+	daq:MalformedDatatypeLiteralsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"MalformedDatatypeLiteralsMetric" .		
+
+	daq:AmountOfTriplesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"" ;
+		rdfs:label	"AmountOfTriplesMetric" .					
+	
+	#Properties
+	#Accessibility Dimensions Properties
+	dqm:hasAvailabilityDimension
+		a	rdfs:Property ;	
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"Links Accessibility Category with Availability Dimension" ;
+		rdfs:label	"hasAvailabilityDimension" ;
+		rdfs:domain	daq:Accessibility ;
+		rdfs:range	daq:Availability .
+		
+	#Availability Metric Properties
+	dqm:hasEndPointAvailabilityMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasEndPointAvailabilityMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:EndPointAvailabilityMetric .
+
+	dqm:hasRDFAvailabilityMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasRDFAvailabilityMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:RDFAvailabilityMetric .
+
+	daq:hasDereferencibilityMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasDereferencibilityMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:DereferencibilityMetric .
+
+	daq:hasUnstructuredMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasUnstructuredMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:UnstructuredMetric .		
+
+	daq:hasDeferencibilityBackLinksMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasDeferencibilityBackLinksMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:DeferencibilityBackLinksMetric .
+
+	daq:hasDeferencibilityForwardLinksMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasDeferencibilityForwardLinksMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:DeferencibilityForwardLinksMetric .
+
+	daq:hasMisreportedContentTypesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasMisreportedContentTypesMetric" ;
+		rdfs:domain	daq:Availability ;
+		rdfs:range	daq:MisreportedContentTypesMetric .		
+
+	#Accuracy Dimensions Properties
+	daq:hasAccuracyDimension
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasAccuracyDimension" ;
+		rdfs:domain	daq:Intrinsic ;
+		rdfs:range	daq:Accuracy .
+		
+	daq:hasMalformedDatatypeLiteralsMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasMalformedDatatypeLiteralsMetric" ;
+		rdfs:domain	daq:Accuracy ;
+		rdfs:range	daq:MalformedDatatypeLiteralsMetric .	
+
+	#Contextual Dimensions Properties
+	daq:hasAmountOfDataDimension
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasAccuracyDimension" ;
+		rdfs:domain	daq:Contextual ;
+		rdfs:range	daq:AmountOfData .
+		
+	daq:hasAmountOfTriplesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"" ;
+		rdfs:label	"hasAmountOfTriplesMetric" ;
+		rdfs:domain	daq:AmountOfData ;
+		rdfs:range	daq:AmountOfTriplesMetric .	
