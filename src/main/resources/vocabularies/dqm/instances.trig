@@ -19,10 +19,10 @@ aksw:qualityGraph1 {
 		dqm:hasRDFAvailabilityMetric aksw:rdfAvailMetric .
 	
 	aksw:endPointMetric a dqm:EndPointAvailabilityMetric ;
-		dqm:dateComputed "2014-01-23T14:53:00"^^xsd:dateTime ;
-		dqm:doubleValue "1.0"^^xsd:double .
+		daq:dateComputed "2014-01-23T14:53:00"^^xsd:dateTime ;
+		daq:doubleValue "1.0"^^xsd:double .
 	
 	aksw:rdfAvailMetric a dqm:RDFAvailabilityMetric ;
-		dqm:dateComputed "2014-01-23T14:53:01"^^xsd:dateTime ;
-		dqm:doubleValue "1.0"^^xsd:double .
+		daq:dateComputed "2014-01-23T14:53:01"^^xsd:dateTime ;
+		daq:doubleValue "1.0"^^xsd:double .
 }
