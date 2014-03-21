@@ -34,6 +34,7 @@ public class HTTPConnector {
 	 * @throws ProtocolException
 	 * @throws IOException
 	 */
+	@Deprecated 
 	public static HTTPConnectorReport connectToURI(Node node, boolean followRedirects) throws MalformedURLException, ProtocolException, IOException{
 		return connectToURI(node, "text/html", followRedirects);
 	}
@@ -51,6 +52,7 @@ public class HTTPConnector {
 	 * @throws ProtocolException
 	 * @throws IOException
 	 */
+	@Deprecated
 	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects) throws MalformedURLException, ProtocolException, IOException {
 		return connectToURI(node, contentNegotiation, followRedirects, false);
 	}
@@ -72,6 +74,7 @@ public class HTTPConnector {
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 */
+	@Deprecated
 	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
 		HttpURLConnection.setFollowRedirects(followRedirects); 
 		HTTPConnectorReport report = new HTTPConnectorReport();
@@ -91,13 +94,12 @@ public class HTTPConnector {
 		return report;
 	}
 	
-	public static HTTPConnectorReport connectToURI(String node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
+	public static HTTPConnectorReport connectToURI(String uri, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
 		HttpURLConnection.setFollowRedirects(followRedirects); 
 		HTTPConnectorReport report = new HTTPConnectorReport();
-		//report.setNode(node);
-		report.setUri(node);
+		report.setUri(uri);
 		
-		URL extUrl =  new URL(node);//new URL(node.getURI());
+		URL extUrl =  new URL(uri);//new URL(node.getURI());
 		HttpURLConnection urlConn  = (HttpURLConnection) extUrl.openConnection();
 		urlConn.setRequestMethod("GET");
 		urlConn.setRequestProperty("Accept", contentNegotiation);
