@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility;
+package de.unibonn.iai.eis.diachron.datatypes;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,16 +8,19 @@ import com.hp.hpl.jena.graph.Node;
 
 public class URIProfile {
 
-	private Node uriNode;
+	@Deprecated  private Node uriNode;
+	private String uri;
 	private int httpStatusCode = 0;
 	private boolean isValidDereferencableURI = false;
 	private boolean isBroken = false;
 	
 	private Set<String> structuredContentType = new HashSet<String>(); 
 
+	@Deprecated 
 	public Node getUriNode() {
 		return uriNode;
 	}
+	@Deprecated 
 	public void setUriNode(Node uri) {
 		this.uriNode = uri;
 	}
@@ -44,6 +47,12 @@ public class URIProfile {
 	}
 	public void addToStructuredContentType(String contentType) {
 		this.structuredContentType.add(contentType);
+	}
+	public String getUri() {
+		return uri;
+	}
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	
