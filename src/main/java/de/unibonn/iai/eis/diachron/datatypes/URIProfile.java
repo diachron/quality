@@ -10,9 +10,10 @@ public class URIProfile {
 
 	@Deprecated  private Node uriNode;
 	private String uri;
-	private int httpStatusCode = 0;
-	private boolean isValidDereferencableURI = false;
+	@Deprecated private int httpStatusCode = 0;
+	@Deprecated private boolean isValidDereferencableURI = false;
 	private boolean isBroken = false;
+	private Status uriStatus;
 	
 	private Set<String> structuredContentType = new HashSet<String>(); 
 
@@ -24,15 +25,19 @@ public class URIProfile {
 	public void setUriNode(Node uri) {
 		this.uriNode = uri;
 	}
+	@Deprecated
 	public int getHttpStatusCode() {
 		return httpStatusCode;
 	}
+	@Deprecated
 	public void setHttpStatusCode(int httpStatusCode) {
 		this.httpStatusCode = httpStatusCode;
 	}
+	@Deprecated
 	public boolean isValidDereferencableURI() {
 		return isValidDereferencableURI;
 	}
+	@Deprecated
 	public void setValidDereferencableURI(boolean isValidDereferencableURI) {
 		this.isValidDereferencableURI = isValidDereferencableURI;
 	}
@@ -53,6 +58,12 @@ public class URIProfile {
 	}
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+	public Status getUriStatus() {
+		return uriStatus;
+	}
+	public void setUriStatus(Status uriStatus) {
+		this.uriStatus = uriStatus;
 	}
 
 	
