@@ -1,18 +1,11 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.URL;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.jena.riot.WebContent;
 import org.apache.log4j.Logger;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -20,12 +13,12 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import de.unibonn.iai.eis.diachron.datatypes.Response;
 import de.unibonn.iai.eis.diachron.datatypes.Status;
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
-import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
-import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
+import de.unibonn.iai.eis.diachron.datatypes.URIProfile;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
-import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Jeremy Debatista
@@ -39,9 +32,9 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
  */
-public class Dereferencibility implements QualityMetric {
+public class Dereferencibility extends AbstractQualityMetric {
 
-	private final Resource METRIC_URI = DAQ.DereferencibilityMetric;
+	private final Resource METRIC_URI = DQM.DereferencibilityMetric;
 
 	private static Logger logger = Logger.getLogger(Dereferencibility.class);
 
@@ -49,38 +42,51 @@ public class Dereferencibility implements QualityMetric {
 	private double totalURI = 0;
 	private double dereferencedURI = 0;
 
-	// Compute Function
+
 	public void compute(Quad quad) {
-		logger.trace("Computing Dereferencibility metric on : "+ quad.asTriple());
+		//logger.trace("Computing Dereferencibility metric on : "+ quad.asTriple());
 		//TODO: not to check if property is rdf:type
 		//TODO: idea of new metric, is the publisher using well defined vocab, i.e check if the vocab has correct dereferencable URI
 		//TODO: check if predicate needs to be checked for dereferencability - it does not make sense, since the publisher do not have any control on the schema
 
-		try {
-			if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
-				this.startDereferencingProcess(quad.getSubject().getURI());//TODO: check if subject is a possible URI
-				if (HTTPConnector.isPossibleURL(quad.getObject())) this.startDereferencingProcess(quad.getObject().getURI());
+		try {	
+			if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){ // we are currently ignoring triples ?s a ?o
+				
+				// Computing Subject
+				if (HTTPConnector.isPossibleURL(quad.getSubject())){
+					if (!CommonDataStructures.uriExists(quad.getSubject().getURI())){
+						logger.info("Computing Dereferencibility on " + quad.getSubject().getURI());
+						URIProfile uriProfile = this.startDereferencingProcess(quad.getSubject().getURI());
+						CommonDataStructures.addToUriMap(quad.getSubject().getURI(), uriProfile);
+						logger.info(" - " + uriProfile.getUriStatus().getStatusCode());
+					} // if we computed the Dereferencibility we do not need to recompute or else add to total URIs
+				}
+				
+				// Computing Object
+				if (HTTPConnector.isPossibleURL(quad.getObject())){
+					if (!CommonDataStructures.uriExists(quad.getObject().getURI())){
+						logger.info("Computing Dereferencibility on " + quad.getObject().getURI());
+						URIProfile uriProfile = this.startDereferencingProcess(quad.getObject().getURI());
+						CommonDataStructures.addToUriMap(quad.getObject().getURI(), uriProfile);
+						logger.info(" - " + uriProfile.getUriStatus().getStatusCode());
+					} // if we computed the Dereferencibility we do not need to recompute or else add to total URIs
+				}
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO more practical logging
+			logger.warn("Malformed Exception " + quad.toString());
 		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO more practical logging
+			logger.warn("Protocol Exception " + quad.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO more practical logging
+			logger.warn("IOException Exception " + quad.toString());
 		} 
 	}
 
 	public double metricValue() {
 		this.metricValue = this.dereferencedURI / this.totalURI;
 		return this.metricValue;
-	}
-
-	public List<Triple> toDAQTriples() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Resource getMetricURI() {
@@ -109,8 +115,18 @@ public class Dereferencibility implements QualityMetric {
 			isHash = true;
 		}
 
-		// making request
-		HTTPConnectorReport rep = HTTPConnector.connectToURI(uri, WebContent.contentTypeRDFXML, false, false);
+		// making request - 1st we try with RDFXML content type
+		HTTPConnectorReport rep = HTTPConnector.connectToURI(uri, WebContent.contentTypeRDFXML, false, false); 
+		
+		
+		// if the first try fails, we try again to check if the content can be negotiated with any other LD Content type e.g. text/turtle
+		// TODO: Check if this is actually required. this is required for those URI like http://acrux.weposolutions.de/xodx/?c=person&id=toni&a=rdf which returns a 404 when requesting rdf+xml but works with text/turtle.
+		if (rep.getResponseCode() == 404){
+			HTTPConnectorReport temp_rep = HTTPConnector.connectToURI(uri, null, false, false); 
+			if (CommonDataStructures.ldContentTypes.contains(temp_rep.getContentType())){
+				rep = temp_rep; // if temp_rep gives a content type which is part of ldContentTypes 
+			}
+		}
 
 		// building response
 		r = this.buildResponse(rep,isHash);
@@ -121,7 +137,8 @@ public class Dereferencibility implements QualityMetric {
 
 		if ((r.getStatusCode() == StatusCode.SC200) || 
 				(r.getStatusCode() == StatusCode.SC4XX) || 
-				(r.getStatusCode() == StatusCode.SC5XX)) return this.getRule(t); // we do not need to continue dereferecing
+				(r.getStatusCode() == StatusCode.SC5XX) || 
+				(r.getStatusCode() == StatusCode.BAD)) return this.getRule(t); // we do not need to continue dereferecing
 		else return this.dereferenceNow(this.getRule(t));
 	}
 
@@ -188,6 +205,7 @@ public class Dereferencibility implements QualityMetric {
 			break;
 		case SC4XX :
 		case SC5XX :
+		case BAD:
 			//rule 5
 			newStatus.setUri(s.getUri());
 			newStatus.setStatusCode(StatusCode.BAD);
@@ -253,29 +271,38 @@ public class Dereferencibility implements QualityMetric {
 		if (i == 307) return StatusCode.SC307;
 		if ((i >= 400) &&  (i <= 499)) return StatusCode.SC4XX;
 		if ((i >= 500) &&  (i <= 599)) return StatusCode.SC5XX;	
-		else return StatusCode.EMPTY;
+		if (i == -1) return StatusCode.BAD;
+ 		else return StatusCode.EMPTY;
 	}
 
 	/**
 	 * Starts the dereferencing process for a given URI
 	 * 
 	 * @param URI to dereference
+	 * @return A new URIProfile
 	 * @throws MalformedURLException
 	 * @throws ProtocolException
 	 * @throws IOException
 	 */
-	private void startDereferencingProcess(String uri) throws MalformedURLException, ProtocolException, IOException{
+	private URIProfile startDereferencingProcess(String uri) throws MalformedURLException, ProtocolException, IOException{
 		Status s = new Status();
 		s.setUri(uri);
 		s.setStatusCode(StatusCode.EMPTY);
 		s.setTuri(""); // "" means empty response uri
 
 		Status ret = this.dereferenceNow(s);
+		
+		URIProfile profile = new URIProfile();
+		profile.setUri(uri);
+		profile.setUriStatus(ret);
+		
+		if ((ret.getStatusCode() == StatusCode.SC4XX) || (ret.getStatusCode() == StatusCode.SC5XX) || (ret.getStatusCode() == StatusCode.BAD)) profile.setBroken(true);
 
 		if ((ret.getStatusCode() == StatusCode.SC303) || (ret.getStatusCode() == StatusCode.UNHASH)) this.dereferencedURI++;
 		this.totalURI++;
+		
+		return profile;
 	}
-
 
 	/**
 	 * This protected class is required in order to

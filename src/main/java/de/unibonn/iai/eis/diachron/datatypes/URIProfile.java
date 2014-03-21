@@ -9,9 +9,9 @@ import com.hp.hpl.jena.graph.Node;
 public class URIProfile {
 
 	@Deprecated  private Node uriNode;
-	private String uri;
 	@Deprecated private int httpStatusCode = 0;
 	@Deprecated private boolean isValidDereferencableURI = false;
+	private String uri;
 	private boolean isBroken = false;
 	private Status uriStatus;
 	

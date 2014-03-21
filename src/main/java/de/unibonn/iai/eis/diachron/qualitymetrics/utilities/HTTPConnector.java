@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 import org.apache.jena.riot.RiotException;
-import org.apache.jena.riot.WebContent;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
@@ -94,22 +93,39 @@ public class HTTPConnector {
 		return report;
 	}
 	
-	public static HTTPConnectorReport connectToURI(String uri, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
+	public static HTTPConnectorReport connectToURI(String uri, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) {
 		HttpURLConnection.setFollowRedirects(followRedirects); 
 		HTTPConnectorReport report = new HTTPConnectorReport();
 		report.setUri(uri);
-		
-		URL extUrl =  new URL(uri);//new URL(node.getURI());
-		HttpURLConnection urlConn  = (HttpURLConnection) extUrl.openConnection();
-		urlConn.setRequestMethod("GET");
-		urlConn.setRequestProperty("Accept", contentNegotiation);
-		report.setResponseCode(urlConn.getResponseCode());
-		report.setContentType(urlConn.getContentType());
-		report.setRedirectLocation(urlConn.getHeaderField("Location"));
-		
-		if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
-			report.setContentParsable(isContentParsable(urlConn));
-		
+
+		try{
+			URL extUrl =  new URL(uri);//new URL(node.getURI());
+			HttpURLConnection urlConn  = (HttpURLConnection) extUrl.openConnection();
+			urlConn.setRequestMethod("GET");
+			if (contentNegotiation != null) urlConn.setRequestProperty("Accept", contentNegotiation);
+			report.setResponseCode(urlConn.getResponseCode());
+			report.setContentType(urlConn.getContentType());
+			report.setRedirectLocation(urlConn.getHeaderField("Location"));
+
+			if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
+				report.setContentParsable(isContentParsable(urlConn));
+		} catch (MalformedURLException mue) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("Malformed Exception " + mue.getLocalizedMessage());
+		} catch (UnknownHostException uhe) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("Unknown Host Exception " + uhe.getLocalizedMessage());
+		} catch (ProtocolException pe) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("Protocol Exception " + pe.getLocalizedMessage());
+		} catch (IOException ioe) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("IO Exception " + ioe.getLocalizedMessage());
+		}
 		return report;
 	}
 	
