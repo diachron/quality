@@ -10,6 +10,6 @@ PREFIX = ..
 
 include $(PREFIX)/Makefile.vars
 
-all: daq.rdf
+all: dqm.rdf
 
 include $(PREFIX)/Makefile.in
