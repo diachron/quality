@@ -76,11 +76,11 @@
 		rdfs:comment	"Upon request of an RDF dump, checks whether it is provided as result" ;
 		rdfs:label	"RDFAvailabilityMetric" .	
 
-	dqm:DereferencibilityMetric
+	dqm:DereferenceabilityMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Determines whether requesting a resource, identified by a URI, results in an error code being returned (e.g. 4xx: client error or 5xx: server error), or in a broken link" ;
-		rdfs:label	"DereferencibilityMetric" .	
+		rdfs:label	"DereferenceabilityMetric" .	
 
 	dqm:UnstructuredMetric
 		a	rdfs:Class ;
@@ -88,17 +88,17 @@
 		rdfs:comment	"Detects dead links or URIs without any supporting RDF metadata or no redirection using the status code 303" ;
 		rdfs:label	"UnstructuredMetric" .			
 
-	dqm:DeferencibilityBackLinksMetric
+	dqm:DereferenceabilityBackLinksMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects all local in-links or back-links (locally available triples with the resource URI appearing as object, in the dereferenced document returned for the resource)" ;
-		rdfs:label	"DeferencibilityBackLinksMetric" .	
+		rdfs:label	"DereferenceabilityBackLinksMetric" .	
 
-	dqm:DeferencibilityForwardLinksMetric
+	dqm:DereferenceabilityForwardLinksMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects all forward links (locally known triples where the local URI is mentioned in the subject)" ;
-		rdfs:label	"DeferencibilityForwardLinksMetric" .	
+		rdfs:label	"DereferenceabilityForwardLinksMetric" .	
 
 	dqm:MisreportedContentTypesMetric
 		a	rdfs:Class ;
@@ -145,13 +145,13 @@
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:RDFAvailabilityMetric .
 
-	dqm:hasDereferencibilityMetric
+	dqm:hasDereferenceabilityMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Dereferenceability Metric (Dereferenceability Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasDereferencibilityMetric" ;
+		rdfs:label	"hasDereferenceabilityMetric" ;
 		rdfs:domain	dqm:Availability ;
-		rdfs:range	dqm:DereferencibilityMetric .
+		rdfs:range	dqm:DereferenceabilityMetric .
 
 	dqm:hasUnstructuredMetric
 		a	rdfs:Property ;
@@ -161,21 +161,21 @@
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:UnstructuredMetric .		
 
-	dqm:hasDeferencibilityBackLinksMetric
+	dqm:hasDereferenceabilityBackLinksMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Dereferenceability of Back-links Metric (Dereferenceability of Back-links Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasDeferencibilityBackLinksMetric" ;
+		rdfs:label	"hasDereferenceabilityBackLinksMetric" ;
 		rdfs:domain	dqm:Availability ;
-		rdfs:range	dqm:DeferencibilityBackLinksMetric .
+		rdfs:range	dqm:DereferenceabilityBackLinksMetric .
 
-	dqm:hasDeferencibilityForwardLinksMetric
+	dqm:hasDereferenceabilityForwardLinksMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Dereferenceability of Forward-links Metric (Dereferenceability of Forward-links Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasDeferencibilityForwardLinksMetric" ;
+		rdfs:label	"hasDereferenceabilityForwardLinksMetric" ;
 		rdfs:domain	dqm:Availability ;
-		rdfs:range	dqm:DeferencibilityForwardLinksMetric .
+		rdfs:range	dqm:DereferenceabilityForwardLinksMetric .
 
 	dqm:hasMisreportedContentTypesMetric
 		a	rdfs:Property ;
