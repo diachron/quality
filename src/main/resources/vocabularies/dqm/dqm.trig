@@ -11,112 +11,112 @@
 	dqm:Accessibility
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Encompasses dimensions related to the ability to access to and retrieve the dataset required for a particular use case" ;
 		rdfs:label	"Accessibility" .
 		
 	dqm:Intrinsic
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Refers to dimensions that are independent of the user's context and that measure the correctness, succinctness and consistency of the dataset" ;
 		rdfs:label	"Intrinsic" .
 		
-	daq:Trust
+	dqm:Trust
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Dimensions belonging to this group focus on the perceived trustworthiness of the dataset and its sources" ;
 		rdfs:label	"Trust" .
 		
-	daq:Dynamicity
+	dqm:Dynamicity
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Dimensions in this category provide information about how current is the data (i.e. its freshness over time) and how frequently it changes" ;
 		rdfs:label	"Dynamicity" .
 	
-	daq:Contextual
+	dqm:Contextual
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Comprises dimensions that highly depend on the context of the task to be performed" ;
 		rdfs:label	"Contextual" .
 		
-	daq:Representational
+	dqm:Representational
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Groups dimensions related to the design of the data, which provide information about how the chosen representation of the data affect its quality" ;
 		rdfs:label	"Representational" .
 
 	#Dimension Classes
-	daq:Availability
+	dqm:Availability
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Metrics in this dimension measure the extent to which information (or some portion of it) is present, obtainable and ready for use" ;
 		rdfs:label	"Availability" .
 		
-	daq:Accuracy
+	dqm:Accuracy
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Extent to which data is correct. The degree to which the dataset correctly represents the real world and how much it is free of syntax errors. Classified in: Syntactic accuracy (the degree to which data values are close to their definition domain) and Semantic accuracy (the degree to which data values correctly represent the actual real world values)" ;
 		rdfs:label	"Accuracy" .
 			
-	daq:AmountOfData
+	dqm:AmountOfData
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Refers to how appropriate the quantity and volume of data is for the task at hand. The amount of data should be enough to approximate the true scenario precisely" ;
 		rdfs:label	"Amount of Data" .
 		
 	#Metric Classes
-	daq:EndPointAvailabilityMetric
+	dqm:EndPointAvailabilityMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Checks whether the server (endpoint) is reachable and responds to a SPARQL query" ;
 		rdfs:label	"EndPointAvailabilityMetric" .		
 
-	daq:RDFAvailabilityMetric
+	dqm:RDFAvailabilityMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Upon request of an RDF dump, checks whether it is provided as result" ;
 		rdfs:label	"RDFAvailabilityMetric" .	
 
-	daq:DereferencibilityMetric
+	dqm:DereferenceabilityMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"DereferencibilityMetric" .	
+		rdfs:comment	"Determines whether requesting a resource, identified by a URI, results in an error code being returned (e.g. 4xx: client error or 5xx: server error), or in a broken link" ;
+		rdfs:label	"DereferenceabilityMetric" .	
 
-	daq:UnstructuredMetric
+	dqm:UnstructuredMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Detects dead links or URIs without any supporting RDF metadata or no redirection using the status code 303" ;
 		rdfs:label	"UnstructuredMetric" .			
 
-	daq:DeferencibilityBackLinksMetric
+	dqm:DereferenceabilityBackLinksMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"DeferencibilityBackLinksMetric" .	
+		rdfs:comment	"Detects all local in-links or back-links (locally available triples with the resource URI appearing as object, in the dereferenced document returned for the resource)" ;
+		rdfs:label	"DereferenceabilityBackLinksMetric" .	
 
-	daq:DeferencibilityForwardLinksMetric
+	dqm:DereferenceabilityForwardLinksMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"DeferencibilityForwardLinksMetric" .	
+		rdfs:comment	"Detects all forward links (locally known triples where the local URI is mentioned in the subject)" ;
+		rdfs:label	"DereferenceabilityForwardLinksMetric" .	
 
-	daq:MisreportedContentTypesMetric
+	dqm:MisreportedContentTypesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Checks whether the content is suitable for consumption and if such content should be accessed" ;
 		rdfs:label	"MisreportedContentTypesMetric" .	
 
-	daq:MalformedDatatypeLiteralsMetric
+	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Detects ill-typed literals, which do not abide by the lexical syntax of their respective datatypes" ;
 		rdfs:label	"MalformedDatatypeLiteralsMetric" .		
 
-	daq:AmountOfTriplesMetric
+	dqm:AmountOfTriplesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"AmountOfTriplesMetric" .					
+		rdfs:comment	"Counts the total number of triples present in the dataset" ;
+		rdfs:label	"AmountOfTriplesMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -125,96 +125,96 @@
 		rdfs:subPropertyOf	daq:hasDimension ;
 		rdfs:comment	"Links Accessibility Category with Availability Dimension" ;
 		rdfs:label	"hasAvailabilityDimension" ;
-		rdfs:domain	daq:Accessibility ;
-		rdfs:range	daq:Availability .
+		rdfs:domain	dqm:Accessibility ;
+		rdfs:range	dqm:Availability .
 		
 	#Availability Metric Properties
 	dqm:hasEndPointAvailabilityMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Availability Dimension with Endpoint Availability Metric (Endpoint Availability Metric belongs to the Availability Dimension)" ;
 		rdfs:label	"hasEndPointAvailabilityMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:EndPointAvailabilityMetric .
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:EndPointAvailabilityMetric .
 
 	dqm:hasRDFAvailabilityMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Availability Dimension with RDF Availability Metric (RDF Availability Metric belongs to the Availability Dimension)" ;
 		rdfs:label	"hasRDFAvailabilityMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:RDFAvailabilityMetric .
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:RDFAvailabilityMetric .
 
-	daq:hasDereferencibilityMetric
+	dqm:hasDereferenceabilityMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasDereferencibilityMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:DereferencibilityMetric .
+		rdfs:comment	"Links Availability Dimension with Dereferenceability Metric (Dereferenceability Metric belongs to the Availability Dimension)" ;
+		rdfs:label	"hasDereferenceabilityMetric" ;
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:DereferenceabilityMetric .
 
-	daq:hasUnstructuredMetric
+	dqm:hasUnstructuredMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Availability Dimension with Unstructured Data Metric (Unstructured Data Metric belongs to the Availability Dimension)" ;
 		rdfs:label	"hasUnstructuredMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:UnstructuredMetric .		
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:UnstructuredMetric .		
 
-	daq:hasDeferencibilityBackLinksMetric
+	dqm:hasDereferenceabilityBackLinksMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasDeferencibilityBackLinksMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:DeferencibilityBackLinksMetric .
+		rdfs:comment	"Links Availability Dimension with Dereferenceability of Back-links Metric (Dereferenceability of Back-links Metric belongs to the Availability Dimension)" ;
+		rdfs:label	"hasDereferenceabilityBackLinksMetric" ;
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:DereferenceabilityBackLinksMetric .
 
-	daq:hasDeferencibilityForwardLinksMetric
+	dqm:hasDereferenceabilityForwardLinksMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasDeferencibilityForwardLinksMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:DeferencibilityForwardLinksMetric .
+		rdfs:comment	"Links Availability Dimension with Dereferenceability of Forward-links Metric (Dereferenceability of Forward-links Metric belongs to the Availability Dimension)" ;
+		rdfs:label	"hasDereferenceabilityForwardLinksMetric" ;
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:DereferenceabilityForwardLinksMetric .
 
-	daq:hasMisreportedContentTypesMetric
+	dqm:hasMisreportedContentTypesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Availability Dimension with Misreported Content Types Metric (Misreported Content Types Metric belongs to the Availability Dimension)" ;
 		rdfs:label	"hasMisreportedContentTypesMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:MisreportedContentTypesMetric .		
+		rdfs:domain	dqm:Availability ;
+		rdfs:range	dqm:MisreportedContentTypesMetric .		
 
 	#Accuracy Dimensions Properties
-	daq:hasAccuracyDimension
+	dqm:hasAccuracyDimension
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Intrinsic Category with Accuracy Dimension" ;
 		rdfs:label	"hasAccuracyDimension" ;
-		rdfs:domain	daq:Intrinsic ;
-		rdfs:range	daq:Accuracy .
+		rdfs:domain	dqm:Intrinsic ;
+		rdfs:range	dqm:Accuracy .
 		
-	daq:hasMalformedDatatypeLiteralsMetric
+	dqm:hasMalformedDatatypeLiteralsMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Accuracy Dimension with Malformed Data Type Literals Metric (Malformed Data Type Literals Metric belongs to the Accuracy Dimension)" ;
 		rdfs:label	"hasMalformedDatatypeLiteralsMetric" ;
-		rdfs:domain	daq:Accuracy ;
-		rdfs:range	daq:MalformedDatatypeLiteralsMetric .	
+		rdfs:domain	dqm:Accuracy ;
+		rdfs:range	dqm:MalformedDatatypeLiteralsMetric .
 
 	#Contextual Dimensions Properties
-	daq:hasAmountOfDataDimension
+	dqm:hasAmountOfDataDimension
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasAccuracyDimension" ;
-		rdfs:domain	daq:Contextual ;
-		rdfs:range	daq:AmountOfData .
+		rdfs:comment	"Links Contextual Category with Amount of Data Dimension" ;
+		rdfs:label	"hasAmountOfDataDimension" ;
+		rdfs:domain	dqm:Contextual ;
+		rdfs:range	dqm:AmountOfData .
 		
-	daq:hasAmountOfTriplesMetric
+	dqm:hasAmountOfTriplesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
+		rdfs:comment	"Links Amount of Data Dimension with Amount of Triples Metric (Amount of Triples Metric belongs to the Amount of Data Dimension)" ;
 		rdfs:label	"hasAmountOfTriplesMetric" ;
-		rdfs:domain	daq:AmountOfData ;
-		rdfs:range	daq:AmountOfTriplesMetric .	
+		rdfs:domain	dqm:AmountOfData ;
+		rdfs:range	dqm:AmountOfTriplesMetric .	
