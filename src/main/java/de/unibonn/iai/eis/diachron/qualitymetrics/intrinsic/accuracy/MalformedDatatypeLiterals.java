@@ -12,6 +12,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Muhammad Ali Qasmi
@@ -19,7 +20,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  */
 public class MalformedDatatypeLiterals implements QualityMetric {
 
-	private final Resource METRIC_URI = DAQ.MalformedDatatypeLiteralsMetric;
+	private final Resource METRIC_URI = DQM.MalformedDatatypeLiteralsMetric;
 	
 	private static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
 

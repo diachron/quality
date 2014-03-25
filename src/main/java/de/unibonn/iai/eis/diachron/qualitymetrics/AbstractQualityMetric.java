@@ -33,6 +33,4 @@ public abstract class AbstractQualityMetric implements QualityMetric{
 	public abstract void compute(Quad quad);
 	public abstract double metricValue();
 	public abstract Resource getMetricURI();
-	
-
 }

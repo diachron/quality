@@ -36,4 +36,6 @@ public interface QualityMetric {
 	 * @return returns the daQ URI of the Quality Metric
 	 */
 	Resource getMetricURI();
+	
+	//List<ProblemType> getQualityProblems();
 }

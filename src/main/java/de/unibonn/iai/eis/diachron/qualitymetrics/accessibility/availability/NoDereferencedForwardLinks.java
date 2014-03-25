@@ -7,11 +7,11 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
-import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 public class NoDereferencedForwardLinks implements QualityMetric {
 
-	private final Resource METRIC_URI = DAQ.DeferencibilityForwardLinksMetric;
+	private final Resource METRIC_URI = DQM.DeferencibilityForwardLinksMetric;
 	
 	public void compute(Quad quad) {
 		// TODO Auto-generated method stub
