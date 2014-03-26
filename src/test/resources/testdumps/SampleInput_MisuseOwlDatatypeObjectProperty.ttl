@@ -241,11 +241,11 @@ f:Jeff rdf:type _:x38 ;
 
 # John
 f:John rdf:type f:Person ;
-    f:hasDaughter f:Susan ;
+    f:hasDaughter "77"^^xsd:integer ;
     f:hasGender f:male ;
     f:hasWife f:Mary ;
     f:hasSon f:Bill ;
-    f:hasAge "33"^^xsd:integer ;
+    f:hasAge f:Bill ;
     owl:sameAs f:Jack .
 
 # Mary

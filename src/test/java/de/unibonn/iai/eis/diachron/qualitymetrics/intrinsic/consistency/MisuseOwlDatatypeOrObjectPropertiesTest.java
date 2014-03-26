@@ -19,17 +19,19 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 	static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectPropertiesTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected MisuseOwlDatatypeOrObjectProperties misuseOwlDatatypeOrObjectProperty =  new MisuseOwlDatatypeOrObjectProperties();
+	protected MisuseOwlDatatypeOrObjectProperties misuseOwlDatatypeOrObjectProperty =  null;
 	
 	
 	@Before
 	public void setUp() throws Exception {
-		//BasicConfigurator.configure();
+		BasicConfigurator.configure();
 		loader.loadDataSet(DataSetMappingForTestCase.MisuseOwlDataTypeOrObjectProperties);
+		misuseOwlDatatypeOrObjectProperty = new MisuseOwlDatatypeOrObjectProperties(loader.getStreamingQuads());
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		misuseOwlDatatypeOrObjectProperty.clearAllOwlPropertiesList();
 	}
 
 	@Test
@@ -44,7 +46,7 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 		logger.info("Number of Misuse Owl Object Properties :: " + misuseOwlDatatypeOrObjectProperty.getMisuseObjectProperties());
 		logger.info("Total Owl Object Properties :: " + misuseOwlDatatypeOrObjectProperty.getTotalObjectProperties());
 		logger.info("Metric Value ::" + misuseOwlDatatypeOrObjectProperty.metricValue());
-		assertEquals(0.0, misuseOwlDatatypeOrObjectProperty.metricValue(), 0.00001);
+		assertEquals(0.1111111, misuseOwlDatatypeOrObjectProperty.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");
 	}
 
