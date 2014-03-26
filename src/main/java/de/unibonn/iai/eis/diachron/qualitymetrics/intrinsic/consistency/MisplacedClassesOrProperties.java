@@ -2,6 +2,8 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.List;
 
+import javax.security.auth.Subject;
+
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
@@ -11,8 +13,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-import de.unibonn.iai.eis.diachron.io.VocabularyReader;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
  * 
@@ -64,8 +66,9 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 					if (subjectModel.getResource(subject.getURI()).isURIResource()){
 						// search for its domain and range properties
 						// if it has one then it is a property not class.
-						if ( subjectModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) || 
-							 subjectModel.getResource(predicate.getURI()).hasProperty(RDFS.range)) {
+						if ( subjectModel.getResource(subject.getURI()).hasProperty(RDFS.domain) || 
+							 subjectModel.getResource(subject.getURI()).hasProperty(RDFS.range)) {
+							logger.debug("Misplace Class Found in Subject::" + subject);
 							this.misplacedClassesCount++;
 						}
 					}
@@ -83,6 +86,7 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 						// if it does NOT have some domain and range than its NOT a property
 						if (!( predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) && 
 							 predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.range))) {
+							logger.debug("Misplace Property Found in Predicate ::" + predicate);
 							this.misplacedPropertiesCount++;
 						}
 					}
@@ -99,8 +103,9 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 					if (objectModel.getResource(object.getURI()).isURIResource()){
 						// search for its domain and range properties
 						// if it has one then it is a property not class.
-						if ( objectModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) || 
-								objectModel.getResource(predicate.getURI()).hasProperty(RDFS.range)) {
+						if ( objectModel.getResource(object.getURI()).hasProperty(RDFS.domain) || 
+								objectModel.getResource(object.getURI()).hasProperty(RDFS.range)) {
+							logger.debug("Misplace Class Found in Object ::" + object);
 							this.misplacedClassesCount++;
 						}
 					}
@@ -124,9 +129,9 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
-		logger.debug("Number of Undefined Classes :: " +  this.misplacedClassesCount);
+		logger.debug("Number of Misplaced Classes :: " +  this.misplacedClassesCount);
 		logger.debug("Number of Classes :: " +  this.totalClassesCount);
-		logger.debug("Number of Undefined Properties :: " +  this.misplacedPropertiesCount);
+		logger.debug("Number of Misplaced Properties :: " +  this.misplacedPropertiesCount);
 		logger.debug("Number of Properties :: " +  this.totalPropertiesCount);
 		
 		long tmpTotalUndefinedClassesAndUndefinedProperties = this.misplacedClassesCount + this.misplacedPropertiesCount;

@@ -12,7 +12,8 @@ public class DataSetMappingForTestCase {
 	public static String MalformedDatatypeLiterals = "testdumps/chembl-rdf-void.ttl";
 	public static String IncompatibleDatatypeRange = "testdumps/chembl-rdf-void_2.ttl";
 	// For...qualitymetric.intrinsic.consistency
-	public static String UndefinedClassesOrProperties = "testdumps/160114.ttl";
-	public static String MisplacedClassesOrProperties = "testdumps/160114.ttl";
+	public static String UndefinedClassesOrProperties = "testdumps/SampleInput_UndefinedClassesOrProperties.ttl";
+	public static String MisplacedClassesOrProperties = "testdumps/SampleInput_MisplacedClassesOrProperties.ttl";
+	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisuseOwlDatatypeObjectProperty.ttl";
 	
 }
