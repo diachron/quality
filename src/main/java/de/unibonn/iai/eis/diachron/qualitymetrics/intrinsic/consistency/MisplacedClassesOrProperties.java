@@ -13,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
@@ -155,6 +156,11 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 	}
 
 	public Resource getMetricURI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
 	}
