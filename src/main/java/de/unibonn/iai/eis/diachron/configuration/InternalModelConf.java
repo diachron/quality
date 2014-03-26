@@ -9,7 +9,6 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 
 public class InternalModelConf {
-
 	// creates an empty model for the default dataset - a dataset is readonly.
 	private static Dataset semanticModel = DatasetFactory.create(ModelFactory.createDefaultModel()); 
 	
@@ -25,4 +24,6 @@ public class InternalModelConf {
 	public static Model getDAQModel(){
 		return semanticModel.getNamedModel(DAQ.NS);
 	}
+	
+	//TODO: load DQM model
 }

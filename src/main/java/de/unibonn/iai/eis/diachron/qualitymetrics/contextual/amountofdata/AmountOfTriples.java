@@ -10,6 +10,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Nikhil Patra
@@ -24,7 +25,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 public class AmountOfTriples implements QualityMetric {
 	
 	//TODO: logging
-	private final Resource METRIC_URI = DAQ.AmountOfTriplesMetric; //TODO: define amount of triples
+	private final Resource METRIC_URI = DQM.AmountOfTriplesMetric; //TODO: define amount of triples
 	private static Logger logger = Logger.getLogger(AmountOfTriples.class);
 	protected double metricValue;
 	protected int numTriples;

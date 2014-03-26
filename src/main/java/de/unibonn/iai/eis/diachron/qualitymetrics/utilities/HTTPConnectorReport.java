@@ -14,6 +14,8 @@ public class HTTPConnectorReport {
 	private int responseCode;
 	private boolean isContentParsable = false;
 	private String contentType = "";
+	private String redirectLocation = "";
+	private String uri;
 	
 	public Node getNode() {
 		return node;
@@ -38,6 +40,18 @@ public class HTTPConnectorReport {
 	}
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
+	}
+	public String getRedirectLocation() {
+		return redirectLocation;
+	}
+	public void setRedirectLocation(String redirectLocation) {
+		this.redirectLocation = redirectLocation;
+	}
+	public String getUri() {
+		return uri;
+	}
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 	
 }

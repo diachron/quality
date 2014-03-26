@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.jena.riot.WebContent;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
+import de.unibonn.iai.eis.diachron.datatypes.URIProfile;
 
 public final class CommonDataStructures {
 	
@@ -45,7 +45,7 @@ public final class CommonDataStructures {
     	ldContentTypes.add(WebContent.contentTypeTurtleAlt2);
     	ldContentTypes.add(WebContent.contentTypeRDFXML);
     	ldContentTypes.add(WebContent.contentTypeRDFJSON);
-    	ldContentTypes.add(WebContent.contentTypeTextPlain);  // MIME type for N-triple is text/plain (!!!)
+    	//ldContentTypes.add(WebContent.contentTypeTextPlain);  // MIME type for N-triple is text/plain (!!!)
     	ldContentTypes.add(WebContent.contentTypeNTriples);
     	ldContentTypes.add(WebContent.contentTypeNTriplesAlt);
     	ldContentTypes.add(WebContent.contentTypeTriG);
@@ -67,13 +67,4 @@ public final class CommonDataStructures {
     	ldContentTypes.add("application/xhtml+xml");
 //    	ldContentTypes.add("text/html");
     }
-    
-    public static void getDerefPassedURI(){
-    	for (String s : uriMap.keySet()){
-    		if (uriMap.get(s).isValidDereferencableURI()) {
-    			System.out.println(s);
-    		} 
-    	}
-    }
-	
 }

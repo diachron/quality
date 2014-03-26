@@ -14,12 +14,13 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.URIProfile;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
-import de.unibonn.iai.eis.diachron.qualitymetrics.report.accessibility.URIProfile;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Nikhil Patra
@@ -34,7 +35,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
  */
 public class MisreportedContentType implements QualityMetric {
 
-	private final Resource METRIC_URI = DAQ.MisreportedContentTypesMetric;
+	private final Resource METRIC_URI = DQM.MisreportedContentTypesMetric;
 
 	// TODO check why parsing slows down at
 	// http://academic.research.microsoft.com/Author/53619090

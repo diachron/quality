@@ -34,9 +34,12 @@ public class DereferencibilityTest extends Assert{
 			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
-		metric.getDerefPassedURI();
-		CommonDataStructures.getDerefPassedURI();
 		
-		assertEquals(0.08176100628,metric.metricValue(), 0.00001);
+		// The expected value is calculated by going through all possible URIs
+		// in HyperThing.org and using DEV http client for Chrome.
+		// We had a total of 59 unique URIs and 16 had a 303 See Other code
+		// or hash URI. In HyperThing 2 URIs gave problems which was
+		// beyond our capabilities.
+		assertEquals(0.271186441,metric.metricValue(), 0.0001);
 	}
 }

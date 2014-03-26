@@ -1,0 +1,213 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dqm="http://www.example.org/dqm#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:daq="http://purl.org/eis/vocab/daq#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:rdfg="http://www.w3.org/2004/03/trix/rdfg-1" > 
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasAmountOfTriplesMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasAmountOfTriplesMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#AmountOfData"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#AmountOfTriplesMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#Trust">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Category"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Trust</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#MisreportedContentTypesMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>MisreportedContentTypesMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#EndPointAvailabilityMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>EndPointAvailabilityMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#AmountOfTriplesMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>AmountOfTriplesMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.example.org/dqm#Intrinsic">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Category"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Intrinsic</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#Dynamicity">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Category"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Dynamicity</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#DeferencibilityBackLinksMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>DeferencibilityBackLinksMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasUnstructuredMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasUnstructuredMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#UnstructuredMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.example.org/dqm#hasEndPointAvailabilityMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasEndPointAvailabilityMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#EndPointAvailabilityMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#AmountOfData">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Dimension"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Amount of Data</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.example.org/dqm#hasRDFAvailabilityMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasRDFAvailabilityMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#RDFAvailabilityMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#MalformedDatatypeLiteralsMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>MalformedDatatypeLiteralsMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#DereferencibilityMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>DereferencibilityMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasAccuracyDimension">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasDimension"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasAccuracyDimension</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Intrinsic"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#Accuracy"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.example.org/dqm#hasAvailabilityDimension">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasDimension"/>
+    <rdfs:comment>Links Accessibility Category with Availability Dimension</rdfs:comment>
+    <rdfs:label>hasAvailabilityDimension</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Accessibility"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#DeferencibilityForwardLinksMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>DeferencibilityForwardLinksMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasMisreportedContentTypesMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasMisreportedContentTypesMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#MisreportedContentTypesMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#UnstructuredMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>UnstructuredMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#Contextual">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Category"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Contextual</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasMalformedDatatypeLiteralsMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasMalformedDatatypeLiteralsMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Accuracy"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#MalformedDatatypeLiteralsMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.example.org/dqm#Accessibility">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Category"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Accessibility</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasDeferencibilityForwardLinksMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasDeferencibilityForwardLinksMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#DeferencibilityForwardLinksMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasAmountOfDataDimension">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasDimension"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasAccuracyDimension</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Contextual"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#AmountOfData"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#RDFAvailabilityMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>RDFAvailabilityMetric</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#Representational">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Category"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Representational</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasDeferencibilityBackLinksMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasDeferencibilityBackLinksMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#DeferencibilityBackLinksMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#hasDereferencibilityMetric">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>hasDereferencibilityMetric</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/eis/vocab/daq#Availability"/>
+    <rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#DereferencibilityMetric"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#Availability">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Dimension"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Availability</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/eis/vocab/daq#Accuracy">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Dimension"/>
+    <rdfs:comment></rdfs:comment>
+    <rdfs:label>Accuracy</rdfs:label>
+  </rdf:Description>
+</rdf:RDF>

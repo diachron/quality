@@ -6,6 +6,8 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+
 /**
  * @author jdebattist
  * 
@@ -36,4 +38,9 @@ public interface QualityMetric {
 	 * @return returns the daQ URI of the Quality Metric
 	 */
 	Resource getMetricURI();
+	
+	/**
+	 * @return returns a typed ProblemList which will be used to create a "quality report" of the metric.
+	 */
+	ProblemList<?> getQualityProblems();
 }

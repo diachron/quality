@@ -8,10 +8,11 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 public class NoDereferencedBackLinks implements QualityMetric {
 
-	private final Resource METRIC_URI = DAQ.DeferencibilityBackLinksMetric;
+	private final Resource METRIC_URI = DQM.DeferencibilityBackLinksMetric;
 	
 	public void compute(Quad quad) {
 		// TODO Auto-generated method stub

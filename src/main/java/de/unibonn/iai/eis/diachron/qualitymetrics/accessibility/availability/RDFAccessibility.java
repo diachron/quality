@@ -17,6 +17,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 
 /**
@@ -27,7 +28,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.VOID;
  */
 public class RDFAccessibility implements QualityMetric {
 
-	private final Resource METRIC_URI = DAQ.RDFAvailabilityMetric;
+	private final Resource METRIC_URI = DQM.RDFAvailabilityMetric;
 	
 	private double metricValue = 0.0d;
 	private double countRDF = 0.0d;
@@ -35,7 +36,7 @@ public class RDFAccessibility implements QualityMetric {
 
 	public void compute(Quad quad) {
 		// TODO Meaningful error logging
-		if (quad.getPredicate().equals(VOID.dataDump)) {
+		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
 
 			countRDF++;
 			

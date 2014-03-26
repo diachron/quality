@@ -33,6 +33,7 @@ public class HTTPConnector {
 	 * @throws ProtocolException
 	 * @throws IOException
 	 */
+	@Deprecated 
 	public static HTTPConnectorReport connectToURI(Node node, boolean followRedirects) throws MalformedURLException, ProtocolException, IOException{
 		return connectToURI(node, "text/html", followRedirects);
 	}
@@ -50,6 +51,7 @@ public class HTTPConnector {
 	 * @throws ProtocolException
 	 * @throws IOException
 	 */
+	@Deprecated
 	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects) throws MalformedURLException, ProtocolException, IOException {
 		return connectToURI(node, contentNegotiation, followRedirects, false);
 	}
@@ -71,6 +73,7 @@ public class HTTPConnector {
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 */
+	@Deprecated
 	public static HTTPConnectorReport connectToURI(Node node, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) throws MalformedURLException, ProtocolException, IOException, UnknownHostException {
 		HttpURLConnection.setFollowRedirects(followRedirects); 
 		HTTPConnectorReport report = new HTTPConnectorReport();
@@ -82,12 +85,50 @@ public class HTTPConnector {
 		urlConn.setRequestProperty("Accept", contentNegotiation);
 		report.setResponseCode(urlConn.getResponseCode());
 		report.setContentType(urlConn.getContentType());
+		report.setRedirectLocation(urlConn.getHeaderField("Location"));
 		
 		if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
 			report.setContentParsable(isContentParsable(urlConn));
 		
 		return report;
 	}
+	
+	public static HTTPConnectorReport connectToURI(String uri, String contentNegotiation, boolean followRedirects, boolean requiresMeaningfulData) {
+		HttpURLConnection.setFollowRedirects(followRedirects); 
+		HTTPConnectorReport report = new HTTPConnectorReport();
+		report.setUri(uri);
+
+		try{
+			URL extUrl =  new URL(uri);//new URL(node.getURI());
+			HttpURLConnection urlConn  = (HttpURLConnection) extUrl.openConnection();
+			urlConn.setRequestMethod("GET");
+			if (contentNegotiation != null) urlConn.setRequestProperty("Accept", contentNegotiation);
+			report.setResponseCode(urlConn.getResponseCode());
+			report.setContentType(urlConn.getContentType());
+			report.setRedirectLocation(urlConn.getHeaderField("Location"));
+
+			if (((report.getResponseCode() < 400) || (report.getResponseCode() >= 600)) && (requiresMeaningfulData))
+				report.setContentParsable(isContentParsable(urlConn));
+		} catch (MalformedURLException mue) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("Malformed Exception " + mue.getLocalizedMessage());
+		} catch (UnknownHostException uhe) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("Unknown Host Exception " + uhe.getLocalizedMessage());
+		} catch (ProtocolException pe) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("Protocol Exception " + pe.getLocalizedMessage());
+		} catch (IOException ioe) {
+			report.setResponseCode(-1);
+			report.setContentType("");
+			logger.warn("IO Exception " + ioe.getLocalizedMessage());
+		}
+		return report;
+	}
+	
 	
 	// TODO: check if there are HTML descriptions of a resource i.e. check for requesting (X)HTML - is this part of "No Structured Data metric"?
 	
@@ -127,11 +168,4 @@ public class HTTPConnector {
 			
 		return true;
 	}
-//	public static void main(String [] args) throws MalformedURLException, ProtocolException, IOException{
-//		Model m = ModelFactory.createDefaultModel();
-//		Node n = m.createResource("http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml").asNode();
-//		HTTPConnectorReport r =connectToURI(n, false); 
-//		System.out.println(r.getResponseCode());
-//	}
-
 }

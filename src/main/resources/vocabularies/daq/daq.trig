@@ -4,284 +4,95 @@
 @prefix rdfg:	 <http://www.w3.org/2004/03/trix/rdfg-1> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix voaf:    <http://purl.org/vocommons/voaf#>.
+@prefix dct:     <http://purl.org/dc/terms/>.
+@prefix foaf:    <http://xmlns.com/foaf/0.1/>.
 
-	#Classes
-	daq:QualityGraph
-		a	rdfs:Class ;
-		rdfs:subClassOf	rdfg:Graph ;
-		rdfs:comment	"Defines a quality graph which will contain all metadata about quality metrics on the dataset." ;
-		rdfs:label	"QualityGraph" .
-		
-	#Abstract Classes
-	daq:Category
-		a	rdfs:Class ;
-		rdfs:comment	"The highest level of quality metric is a category. A category groups a number of dimensions relevant to each other which aims at measuring the quality of a dataset from different aspects. Categories are provided as subclasses of this abstract class, which is not intended for direct usage." ;
-		rdfs:label	"Category" .
-		
-	daq:Dimension
-		a	rdfs:Class ;
-		rdfs:comment	"Each dimension is part of a larger group called category (See daq:Category). Each dimension has a number of metrics which are associated to it. A dimension is linked with a category using the daq:hasDimension property. Dimensions are provided as subclasses of this abstract class, which is not intended for direct usage." ;
-		rdfs:label	"Dimension" .
-		
-	daq:Metric
-		a	rdfs:Class ;
-		rdfs:comment	"The smallest unit of measuring a quality dimension is a metric. Each metric have a value which is associated to the quality computed. Since this value is multi-typed (i.e. one metric might return true/false whilst another might require a double value), then the value's (daq:hasValue) range is inherited by the metric's attributes. A metric might also require additional information (e.g. a gold standard dataset to compare with). Therefore, a concrete metric representation shall also define such properties (see daq:requires). Metrics are provided as subclasses of this abstract class, which is not intended for direct usage." ;
-		rdfs:label	"Metric" .
-		
-	#Category Classes
-	daq:Accessibility
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
-		rdfs:label	"Accessibility" .
-		
-	daq:Intrinsic
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
-		rdfs:label	"Intrinsic" .
-		
-	daq:Trust
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
-		rdfs:label	"Trust" .
-		
-	daq:Dynamicity
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
-		rdfs:label	"Dynamicity" .
+# VOCABULARY
+daq:
+	a owl:Ontology, voaf:Vocabulary ;
+        rdfs:label "Dataset Quality Vocabulary (daQ)" ;
+        rdfs:comment "The Dataset Quality Vocabulary (daQ) is a lightweight, extensible core vocabulary for attaching the result of quality benchmarking of a linked open dataset (usually an expensive process) to that dataset.  daQ is designed to be extended by custom quality metrics.  Use cases include filtering and ranking datasets by quality." ;
+        dct:creator [ foaf:name "Jeremy Debattista" ], [ foaf:name "Christoph Lange"; rdfs:seeAlso <http://purl.org/net/clange>; foaf:homepage <http://langec.wordpress.com/about/> ] ;
+        dct:modified "2014-05-21"^^xsd:date .
+
+# CLASSES
+daq:QualityGraph
+	a	rdfs:Class, owl:Class ;
+	rdfs:subClassOf	rdfg:Graph ;
+	rdfs:comment	"Defines a quality graph which will contain all metadata about quality metrics on the dataset." ;
+	rdfs:label	"QualityGraph" .
 	
-	daq:Contextual
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
-		rdfs:label	"Contextual" .
-		
-	daq:Representational
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"" ;
-		rdfs:label	"Representational" .
-
-	#Dimension Classes
-	daq:Availability
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Dimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"Availability" .
-		
-	daq:Accuracy
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Dimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"Accuracy" .
-		
-		
-	daq:AmountOfData
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Dimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"Amount of Data" .
-		
-	#Metric Classes
-	daq:EndPointAvailabilityMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"EndPointAvailabilityMetric" .		
-
-	daq:RDFAvailabilityMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"RDFAvailabilityMetric" .	
-
-	daq:DereferencibilityMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"DereferencibilityMetric" .	
-
-	daq:UnstructuredMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"UnstructuredMetric" .			
-
-	daq:DeferencibilityBackLinksMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"DeferencibilityBackLinksMetric" .	
-
-	daq:DeferencibilityForwardLinksMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"DeferencibilityForwardLinksMetric" .	
-
-	daq:MisreportedContentTypesMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"MisreportedContentTypesMetric" .	
-
-	daq:MalformedDatatypeLiteralsMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"MalformedDatatypeLiteralsMetric" .		
-
-	daq:AmountOfTriplesMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ;
-		rdfs:comment	"" ;
-		rdfs:label	"AmountOfTriplesMetric" .				
-		
-	#Properties
+# Abstract Classes
+daq:Category
+	a	rdfs:Class, owl:Class ;
+	rdfs:comment	"The highest level of quality metric is a category. A category groups a number of dimensions relevant to each other which aims at measuring the quality of a dataset from different aspects. Categories are provided as subclasses of this abstract class, which is not intended for direct usage." ;
+	rdfs:label	"Category" .
 	
-	#Generic Properties
-	daq:computedOn
-		a	rdf:Property ;
-        rdfs:label	"computedOn" ;
-        rdfs:comment	"Quality metrics can be (in principle) calculated on various forms of data (such as datasets, graphs, set of triples etc...). This vocabulary allow the owner/user of such RDF data to create multiple quality graphs and identify the corresponding dataset resource (e.g. the dataset URI) for the quality graph." ;
-        rdfs:domain	daq:QualityGraph ;
-		rdfs:range	rdfs:Resource .	
-
-	daq:dateComputed
-		a	rdf:Property ;
-        rdfs:label	"dateComputed" ;
-        rdfs:comment	"A timestamp which shows when the metric was computed last" ;
-        rdfs:domain	daq:Metric ;
-		rdfs:range	 xsd:dateTime ;
-		owl:cardinality "1"^^xsd:nonNegativeInteger .
-
-	#Abstract Properties
-		daq:hasDimension
-		a	rdf:Property ;
-        rdfs:label	"hasDimension" ;
-        rdfs:comment	"The category concept classifies dimensions related to the measurement of quality for a specific criteria. This is an abstract property and should not be used directly. Specific sub-properties should be inherited for different dimensions." ;
-        rdfs:domain	daq:Category ;
-		rdfs:range	daq:Dimension .	
-		
-	daq:hasMetric
-		a	rdf:Property ;
-        rdfs:label	"hasMetric" ;
-        rdfs:comment	"A dimension is an abstract concept which groups an number of more concrete metrics to measure quality of a dataset. This is an abstract property and should not be used directly. Specific sub-properties should be inherited for different metrics." ;
-        rdfs:domain	daq:Dimension ;
-		rdfs:range	daq:Metric .
-		
-	daq:value
-		a	rdf:Property ;
-        rdfs:label	"value" ;
-        rdfs:comment	"Each metric will have a value computed. In order to deal with the different return type of the metric computation, this generic (abstract) property links a metric with a value object (e.g. boolean, double, Literal). This property should not be used directly." ;
-        rdfs:domain	daq:Metric ;
-		owl:cardinality "1"^^xsd:nonNegativeInteger .
-		
-	daq:requires
-		a	rdf:Property ;
-        rdfs:label	"requires" ;
-        rdfs:comment	"A metric might require a number of external resources (e.g. a gold standard) in order to be able to measure the quality. In order to cater for the most generic requirement, this abstract property links a metric to the required resource. This property should not be used directly." ;
-        rdfs:domain	daq:Metric ;
-		rdfs:range	rdfs:Resource .
-		
-	#Specific Properties
-	daq:doubleValue
-		a	rdfs:Property ;
-		rdfs:subPropertyOf	daq:value ;
-		rdfs:label	"double value" ;
-		rdfs:domain daq:Metric ;
-		rdfs:range	xsd:double .
+daq:Dimension
+	a	rdfs:Class, owl:Class ;
+	rdfs:comment	"Each dimension is part of a larger group called category (See daq:Category). Each dimension has a number of metrics which are associated to it. A dimension is linked with a category using the daq:hasDimension property. Dimensions are provided as subclasses of this abstract class, which is not intended for direct usage." ;
+	rdfs:label	"Dimension" .
 	
-	#Accessibility Dimensions Properties
-	daq:hasAvailabilityDimension
-		a	rdfs:Property ;	
-		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasAvailabilityDimension" ;
-		rdfs:domain	daq:Accessibility ;
-		rdfs:range	daq:Availability .
+daq:Metric
+	a	rdfs:Class, owl:Class ;
+	rdfs:comment	"The smallest unit of measuring a quality dimension is a metric. Each metric have a value which is associated to the quality computed. Since this value is multi-typed (i.e. one metric might return true/false whilst another might require a double value), then the value's (daq:hasValue) range is inherited by the metric's attributes. A metric might also require additional information (e.g. a gold standard dataset to compare with). Therefore, a concrete metric representation shall also define such properties (see daq:requires). Metrics are provided as subclasses of this abstract class, which is not intended for direct usage." ;
+	rdfs:label	"Metric" .
+	
 		
-	#Availability Metric Properties
-	daq:hasEndPointAvailabilityMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasEndPointAvailabilityMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:EndPointAvailabilityMetric .
+# PROPERTIES
 
-	daq:hasRDFAvailabilityMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasRDFAvailabilityMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:RDFAvailabilityMetric .
+# Generic Properties
+daq:computedOn
+	a	rdf:Property, owl:ObjectProperty ;
+	rdfs:label	"computedOn" ;
+	rdfs:comment	"Quality metrics can be (in principle) calculated on various forms of data (such as datasets, graphs, set of triples etc...). This vocabulary allow the owner/user of such RDF data to create multiple quality graphs and identify the corresponding dataset resource (e.g. the dataset URI) for the quality graph." ;
+	rdfs:domain	daq:QualityGraph ;
+	rdfs:range	rdfs:Resource .	
 
-	daq:hasDereferencibilityMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasDereferencibilityMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:DereferencibilityMetric .
+daq:dateComputed
+	a	rdf:Property, owl:DatatypeProperty ;
+	rdfs:label	"dateComputed" ;
+	rdfs:comment	"A timestamp which shows when the metric was computed last" ;
+	rdfs:domain	daq:Metric ;
+	rdfs:range	 xsd:dateTime ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-	daq:hasUnstructuredMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasUnstructuredMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:UnstructuredMetric .		
+# Abstract Properties
+daq:hasDimension
+	a	rdf:Property, owl:ObjectProperty ;
+	rdfs:label	"hasDimension" ;
+	rdfs:comment	"The category concept classifies dimensions related to the measurement of quality for a specific criteria. This is an abstract property and should not be used directly. Specific sub-properties should be inherited for different dimensions." ;
+	rdfs:domain	daq:Category ;
+	rdfs:range	daq:Dimension .	
+	
+daq:hasMetric
+	a	rdf:Property, owl:ObjectProperty ;
+	rdfs:label	"hasMetric" ;
+	rdfs:comment	"A dimension is an abstract concept which groups an number of more concrete metrics to measure quality of a dataset. This is an abstract property and should not be used directly. Specific sub-properties should be inherited for different metrics." ;
+	rdfs:domain	daq:Dimension ;
+	rdfs:range	daq:Metric .
+	
+daq:value
+	a	rdf:Property, owl:DatatypeProperty ;
+	rdfs:label	"value" ;
+	rdfs:comment	"Each metric will have a value computed. In order to deal with the different return type of the metric computation, this generic (abstract) property links a metric with a value object (e.g. boolean, double, Literal). This property should not be used directly." ;
+	rdfs:domain	daq:Metric ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+	
+daq:requires
+	a	rdf:Property, owl:ObjectProperty ;
+	rdfs:label	"requires" ;
+	rdfs:comment	"A metric might require a number of external resources (e.g. a gold standard) in order to be able to measure the quality. In order to cater for the most generic requirement, this abstract property links a metric to the required resource. This property should not be used directly." ;
+	rdfs:domain	daq:Metric ;
+	rdfs:range	rdfs:Resource .
+	
+# Specific Properties
+daq:doubleValue
+	a	rdfs:Property, owl:DatatypeProperty ;
+	rdfs:subPropertyOf	daq:value ;
+	rdfs:label	"double value" ;
+	rdfs:domain daq:Metric ;
+	rdfs:range	xsd:double .
 
-	daq:hasDeferencibilityBackLinksMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasDeferencibilityBackLinksMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:DeferencibilityBackLinksMetric .
-
-	daq:hasDeferencibilityForwardLinksMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasDeferencibilityForwardLinksMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:DeferencibilityForwardLinksMetric .
-
-	daq:hasMisreportedContentTypesMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasMisreportedContentTypesMetric" ;
-		rdfs:domain	daq:Availability ;
-		rdfs:range	daq:MisreportedContentTypesMetric .		
-
-	#Accuracy Dimensions Properties
-	daq:hasAccuracyDimension
-		a	rdfs:Property ;
-		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasAccuracyDimension" ;
-		rdfs:domain	daq:Intrinsic ;
-		rdfs:range	daq:Accuracy .
 		
-	daq:hasMalformedDatatypeLiteralsMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasMalformedDatatypeLiteralsMetric" ;
-		rdfs:domain	daq:Accuracy ;
-		rdfs:range	daq:MalformedDatatypeLiteralsMetric .	
-
-	#Contextual Dimensions Properties
-	daq:hasAmountOfDataDimension
-		a	rdfs:Property ;
-		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasAccuracyDimension" ;
-		rdfs:domain	daq:Contextual ;
-		rdfs:range	daq:AmountOfData .
-		
-	daq:hasAmountOfTriplesMetric
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"" ;
-		rdfs:label	"hasAmountOfTriplesMetric" ;
-		rdfs:domain	daq:AmountOfData ;
-		rdfs:range	daq:AmountOfTriplesMetric .			
