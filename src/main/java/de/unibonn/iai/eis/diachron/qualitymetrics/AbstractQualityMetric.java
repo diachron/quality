@@ -9,6 +9,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
@@ -33,4 +34,5 @@ public abstract class AbstractQualityMetric implements QualityMetric{
 	public abstract void compute(Quad quad);
 	public abstract double metricValue();
 	public abstract Resource getMetricURI();
+	public abstract ProblemList<?> getQualityProblems();
 }
