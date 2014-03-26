@@ -3,7 +3,6 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.jena.atlas.web.HttpException;
@@ -20,13 +19,13 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
-import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
 /**
  * @author Muhammad Ali Qasmi
  * @date 20th Feb 2014
  */
-public class IncompatibleDatatypeRange implements QualityMetric{
+public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	
 	static Logger logger = Logger.getLogger(IncompatibleDatatypeRange.class);
 	// cache frequently used Properties
@@ -212,11 +211,6 @@ public class IncompatibleDatatypeRange implements QualityMetric{
 		logger.debug("Metric Value :: " +  metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
-	}
-
-	public List<Triple> toDAQTriples() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Resource getMetricURI() {

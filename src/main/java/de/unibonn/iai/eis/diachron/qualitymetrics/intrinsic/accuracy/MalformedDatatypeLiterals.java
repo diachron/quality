@@ -1,25 +1,21 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
-import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
-import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Muhammad Ali Qasmi
  * @date 13th Feb 2014
  */
-public class MalformedDatatypeLiterals implements QualityMetric {
+public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.MalformedDatatypeLiteralsMetric;
 	
@@ -76,11 +72,6 @@ public class MalformedDatatypeLiterals implements QualityMetric {
 		logger.debug("Metric Value :: " + metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
-	}
-
-	public List<Triple> toDAQTriples() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Resource getMetricURI() {

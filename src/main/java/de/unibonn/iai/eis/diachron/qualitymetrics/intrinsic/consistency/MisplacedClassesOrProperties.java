@@ -1,20 +1,16 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.util.List;
-
-import javax.security.auth.Subject;
 
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
-import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
@@ -22,7 +18,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
  * @author Muhammad Ali Qasmi
  * @date 13th March 2014
  */
-public class MisplacedClassesOrProperties implements QualityMetric{
+public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 
 	static Logger logger = Logger.getLogger(MisplacedClassesOrProperties.class);
 	
@@ -147,12 +143,6 @@ public class MisplacedClassesOrProperties implements QualityMetric{
 		logger.debug("Metric Value :: " +  metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
-	}
-
-
-	public List<Triple> toDAQTriples() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Resource getMetricURI() {

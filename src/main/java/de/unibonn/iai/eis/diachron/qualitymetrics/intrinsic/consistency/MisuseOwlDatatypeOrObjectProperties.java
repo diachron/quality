@@ -6,14 +6,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
-import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
-public class MisuseOwlDatatypeOrObjectProperties implements QualityMetric{
+public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 
 	private static String NAMESPACE_MATCH_SUBSTRING = "/owl#";
 	private static String OWL_DATA_TYPE_PROPERTY = "datatypeproperty";
@@ -123,11 +122,6 @@ public class MisuseOwlDatatypeOrObjectProperties implements QualityMetric{
 		logger.debug("Metric Value :: " +  metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;	}
-
-	public List<Triple> toDAQTriples() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public Resource getMetricURI() {
 		// TODO Auto-generated method stub
