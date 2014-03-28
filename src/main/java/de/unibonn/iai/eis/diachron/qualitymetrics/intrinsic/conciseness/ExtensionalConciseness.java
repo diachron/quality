@@ -1,21 +1,18 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
-
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ComparableSubject;
 
 /**
  * @author Santiago Londono
- * Provides a measure of the consistency of the dataset, by calculating the Extensional Conciseness metric, 
- * which is part of the Conciseness dimension.
+ * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
+ * Extensional Conciseness metric, which is part of the Conciseness dimension.
  */
 public class ExtensionalConciseness extends AbstractQualityMetric {
 	
@@ -24,13 +21,13 @@ public class ExtensionalConciseness extends AbstractQualityMetric {
 	/**
 	 * Map indexing the subjects detected during the computation of the metric. Every subject is identified 
 	 * by a different id (URI), which serves as key of the map. The value of each subject consists of a 
-	 * resource. A Hashtable is used since it is synchronized and metric instances ought to be thread safe.
+	 * resource. A ConcurrentHashMap is used since it is synchronized and metric instances ought to be thread safe.
 	 */
-	private Hashtable<String, ComparableSubject> mapSubjects = new Hashtable<String, ComparableSubject>();
+	private ConcurrentHashMap<String, ComparableSubject> mapSubjects = new ConcurrentHashMap<String, ComparableSubject>();
 
 	/**
 	 * Re-computes the value of the Extensional Conciseness Metric, by considering a new quad provided.
-	 * @param quad The new quad to be considered in the computation of the metric
+	 * @param quad The new quad to be considered in the computation of the metric. Must be not null.
 	 */
 	@Override
 	public void compute(Quad quad) {

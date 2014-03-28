@@ -1,23 +1,20 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import com.hp.hpl.jena.sparql.core.Quad;
-
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
-public class ExtensionalConcisenessTest extends Assert {
+public class DuplicateInstanceTest extends Assert {
 	
-	private static Logger logger = Logger.getLogger(ExtensionalConcisenessTest.class);
+	private static Logger logger = Logger.getLogger(DuplicateInstanceTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected ExtensionalConciseness metric = new ExtensionalConciseness();
+	protected DuplicateInstance metric = new DuplicateInstance();
 
 	@Before
 	public void setUp() throws Exception {
@@ -30,7 +27,7 @@ public class ExtensionalConcisenessTest extends Assert {
 	}
 
 	@Test
-	public void testExtensionalConciseness() {
+	public void testDuplicateInstance() {
 		logger.trace("Loading quads...");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -40,16 +37,16 @@ public class ExtensionalConcisenessTest extends Assert {
 			metric.compute(quad);
 			countLoadedQuads++;
 		}
+
 		logger.trace("Quads loaded, " + countLoadedQuads + " quads");
 		
-		// 9 subjects in the dump file, only two of them are equivalent:
-		// <http://acrux.weposolutions.de/xodx/?c=person&id=Lukasw> foaf:knows people:NatanaelArndt . and 
-		// <http://acrux.weposolutions.de/xodx/?c=person&id=toni> foaf:knows people:NatanaelArndt .
-		// Thus, (No. of Unique Objects) / (Total No. of Objects in Dataset) = 8 / 9 = 0.888
-		double actual = 0.8888; 
+		// All instances are declared once in the test dump file, therefore the number of 
+		// instances that violate the uniqueness rule is 0 and there are 7 instance declarations in total,
+		// thus, the value of the duplicate instance metric is in this case: 1 - (0/7) = 1
+		double actual = 1.0; 
 		double delta = 0.0001;
 		double metricValue = metric.metricValue();
-		logger.trace("Computed extensional conciseness metric: " + metricValue);
+		logger.trace("Computed duplicate instance metric: " + metricValue);
 		
 		assertEquals(actual, metricValue, delta);
 	}
