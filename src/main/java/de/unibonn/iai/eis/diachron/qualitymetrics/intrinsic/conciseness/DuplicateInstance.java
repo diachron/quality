@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
 
@@ -85,6 +86,12 @@ public class DuplicateInstance extends AbstractQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
 	}

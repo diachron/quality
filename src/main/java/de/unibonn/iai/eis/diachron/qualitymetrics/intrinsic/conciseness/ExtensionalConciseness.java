@@ -3,9 +3,13 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
+
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ComparableSubject;
 
@@ -91,6 +95,12 @@ public class ExtensionalConciseness extends AbstractQualityMetric {
 	@Override
 	public Resource getMetricURI() {
 		// TODO Implement getMetricURI(). Add URI of this metric to de.unibonn.iai.eis.diachron.vocabularies.DQM
+		return null;
+	}
+
+	@Override
+	public ProblemList<?> getQualityProblems() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
