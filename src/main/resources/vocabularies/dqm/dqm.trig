@@ -62,7 +62,13 @@
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Refers to how appropriate the quantity and volume of data is for the task at hand. The amount of data should be enough to approximate the true scenario precisely" ;
 		rdfs:label	"Amount of Data" .
-		
+	
+	dqm:Conciseness
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Refers to the redundancy of entities, be it at the schema or the data level" ;
+		rdfs:label	"Conciseness" .
+
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
 		a	rdfs:Class ;
@@ -117,6 +123,18 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Counts the total number of triples present in the dataset" ;
 		rdfs:label	"AmountOfTriplesMetric" .
+		
+	dqm:ExtensionalConcisenessMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the redundancy of the dataset at the data level, computed as the ratio of the Number of Unique Subjects to the Total Number of Subjects" ;
+		rdfs:label	"ExtensionalConcisenessMetric" .
+		
+	dqm:DuplicateInstanceMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the redundancy of entities at the data level (ratio of entities that violate the uniqueness rule)" ;
+		rdfs:label	"DuplicateInstanceMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -218,3 +236,28 @@
 		rdfs:label	"hasAmountOfTriplesMetric" ;
 		rdfs:domain	dqm:AmountOfData ;
 		rdfs:range	dqm:AmountOfTriplesMetric .	
+		
+	#Conciseness Dimensions Properties
+	dqm:hasConcisenessDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links Intrinsic Category with Conciseness Dimension" ;
+		rdfs:label "hasConcisenessDimension" ;
+		rdfs:domain dqm:Intrinsic ;
+		rdfs:range dqm:Conciseness .
+		
+	dqm:hasExtensionalConcisenessMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Conciseness Dimension with Extensional Conciseness Metric (Extensional Conciseness Metric belongs to the Conciseness Dimension)" ;
+		rdfs:label	"hasExtensionalConcisenessMetric" ;
+		rdfs:domain	dqm:Conciseness ;
+		rdfs:range	dqm:ExtensionalConcisenessMetric .	
+		
+	dqm:hasDuplicateInstanceMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Conciseness Dimension with Duplicate Instance Metric (Duplicate Instance Metric belongs to the Conciseness Dimension)" ;
+		rdfs:label	"hasDuplicateInstanceMetric" ;
+		rdfs:domain	dqm:Conciseness ;
+		rdfs:range	dqm:DuplicateInstanceMetric .

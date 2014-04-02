@@ -10,6 +10,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Santiago Londono
@@ -19,6 +20,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
 public class DuplicateInstance extends AbstractQualityMetric {
 	
 	private static Logger logger = Logger.getLogger(DuplicateInstance.class);
+	
+	private final Resource METRIC_URI = DQM.DuplicateInstanceMetric;
 	
 	/**
 	 * Map indexing the instances found to be declared in the dataset. Key of entries is a combination of the 
@@ -86,8 +89,7 @@ public class DuplicateInstance extends AbstractQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return METRIC_URI;
 	}
 
 	@Override
