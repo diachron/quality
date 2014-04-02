@@ -15,6 +15,7 @@ public class DataSetMappingForTestCase {
 	public static String UndefinedClassesOrProperties = "testdumps/SampleInput_UndefinedClassesOrProperties.ttl";
 	public static String MisplacedClassesOrProperties = "testdumps/SampleInput_MisplacedClassesOrProperties.ttl";
 	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisuseOwlDatatypeObjectProperty.ttl";
+	public static String HomogeneousDatatypes = "testdumps/SampleInput_HomogeneousDatatypes.ttl";
 	// For...qualitymetric.intrinsic.conciseness
 	public static String DuplicateInstance = "testdumps/SampleInput_DuplicateInstance.ttl";
 	

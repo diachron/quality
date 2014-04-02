@@ -99,7 +99,6 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 		catch (Exception exception){
 			logger.debug(exception);
         	logger.error(exception.getMessage());
-        	exception.printStackTrace();
 		}
 		
 		logger.trace("compute() --Ended--");
