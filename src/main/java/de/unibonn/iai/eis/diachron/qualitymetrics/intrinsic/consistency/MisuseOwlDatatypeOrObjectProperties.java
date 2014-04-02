@@ -85,6 +85,11 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 	}
 	
 	public void compute(Quad quad) {
+		
+		logger.trace("compute() --Started--");
+		
+		try {
+			
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		//owl:DatatypeProperty relates some resource to a literal
@@ -101,6 +106,13 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 				this.misuseObjectProperties++;
 			}
 		}
+		
+		}
+		catch (Exception exception){
+			logger.debug(exception);
+        	logger.error(exception.getMessage());
+		}
+		logger.trace("compute() --Ended--");
 	}
 
 	public double metricValue() {
