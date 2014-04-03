@@ -10,6 +10,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
 public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
@@ -19,7 +20,9 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 	private static String OWL_OBJECT_PROPERTY = "objectproperty";
 	private List<Node> owlDatatypePropertyList = new ArrayList<Node>();
 	private List<Node> owlObjectPropertyList = new ArrayList<Node>();
-		
+	
+	protected List<Quad> problemList = new ArrayList<Quad>();
+	
 	protected long misuseDatatypeProperties = 0;
 	protected long totalDatatypeProperties = 0;
 	
@@ -97,6 +100,7 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 			this.totalDatatypeProperties++;
 			if (!object.isLiteral()){
 				this.misuseDatatypeProperties++;
+				this.problemList.add(quad);
 			}
 		}
 		// owl:ObjectProperty relates some resource another resource
@@ -104,6 +108,7 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 			this.totalObjectProperties++;
 			if (!object.isURI()){
 				this.misuseObjectProperties++;
+				this.problemList.add(quad);
 			}
 		}
 		
@@ -140,8 +145,18 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 		return null;
 	}
 
+	/**
+	 * Returns list of problematic Quads
+	 */
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Quad>(this.problemList); 
+		} 
+		catch (ProblemListInitialisationException problemListInitialisationException){
+			logger.debug(problemListInitialisationException);
+        	logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;
 	}
 }

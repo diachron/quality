@@ -2,7 +2,9 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.jena.atlas.web.HttpException;
@@ -19,6 +21,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
 /**
@@ -30,6 +33,8 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	static Logger logger = Logger.getLogger(IncompatibleDatatypeRange.class);
 	// cache frequently used Properties
 	static Map<String, Statement> cacheProperty = new HashMap<String,Statement>();
+	
+	protected List<Quad> problemList = new ArrayList<Quad>();
 	
 	private double totalLiterals = 0;
 	
@@ -82,23 +87,23 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	 */
 	protected boolean checkTypeByComparingURI(URI literalDataTypeURI, URI rangeReferredURI){
 	
+		// case: literDataTyprURI NOT null but RangeReferredURI is null
+		if (literalDataTypeURI != null && rangeReferredURI == null) {
+			logger.warn("literalDataTypeURI is NOT null but RangeReferredURI is null.");
+			return true;
+		}
+		// case: literDataType is NUll and RangeRefferedURI is a literal
+		else if (literalDataTypeURI == null && rangeReferredURI.getFragment().toLowerCase().equals("literal")) {
+			return true;
+		}
 		// case: literalDataTypeURI is null
-		if (literalDataTypeURI == null) {
+		else if (literalDataTypeURI == null) {
 			logger.info("literDataTypeURI is null.");
 			return true;
 		}
 		// case: rangeReferredURI is null
 		else if (rangeReferredURI == null) {
 			logger.warn("RangeReferredURI is null.");
-			return true;
-		}
-		// case: literDataTyprURI NOT null but RangeReferredURI is null
-		else if (literalDataTypeURI != null && rangeReferredURI == null) {
-			logger.warn("literalDataTypeURI is NOT null but RangeReferredURI is null.");
-			return true;
-		}
-		// case: literDataType is NUll and RangeRefferedURI is a literal
-		else if (literalDataTypeURI == null && rangeReferredURI.getFragment().toLowerCase().equals("literal")) {
 			return true;
 		}
 		// case: Both are EQUAL
@@ -174,6 +179,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 										URI rangeObjectURI = (triple.getObject().toString() != null) ? new URI (triple.getObject().toString()) : null;
 										if (!checkTypeByComparingURI(givenObjectDateTypeURI,rangeObjectURI)){
 											this.incompatiableDataTypeLiterals++;
+											this.problemList.add(quad);
 										}
 									} catch (URISyntaxException e) {
 										logger.error("Malformed URI exception for " + e.getMessage());
@@ -218,9 +224,19 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 		return null;
 	}
 
+	/**
+	 * Returns list of problematic Quads
+	 */
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Quad>(this.problemList); 
+		} 
+		catch (ProblemListInitialisationException problemListInitialisationException){
+			logger.debug(problemListInitialisationException);
+        	logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;	
 	}
 
 }
