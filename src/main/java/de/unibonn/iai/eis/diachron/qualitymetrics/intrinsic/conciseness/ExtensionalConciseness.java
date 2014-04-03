@@ -12,6 +12,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ComparableSubject;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Santiago Londono
@@ -21,6 +22,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ComparableSubject;
 public class ExtensionalConciseness extends AbstractQualityMetric {
 	
 	private static Logger logger = Logger.getLogger(ExtensionalConciseness.class);
+	
+	private final Resource METRIC_URI = DQM.ExtensionalConcisenessMetric;
 	
 	/**
 	 * Map indexing the subjects detected during the computation of the metric. Every subject is identified 
@@ -94,8 +97,7 @@ public class ExtensionalConciseness extends AbstractQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		// TODO Implement getMetricURI(). Add URI of this metric to de.unibonn.iai.eis.diachron.vocabularies.DQM
-		return null;
+		return METRIC_URI;
 	}
 
 	@Override

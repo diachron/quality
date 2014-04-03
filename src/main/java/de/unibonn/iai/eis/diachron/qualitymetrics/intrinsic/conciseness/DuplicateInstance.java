@@ -4,12 +4,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Santiago Londono
@@ -19,6 +21,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
 public class DuplicateInstance extends AbstractQualityMetric {
 	
 	private static Logger logger = Logger.getLogger(DuplicateInstance.class);
+	
+	private final Resource METRIC_URI = DQM.DuplicateInstanceMetric;
 	
 	/**
 	 * Map indexing the instances found to be declared in the dataset. Key of entries is a combination of the 
@@ -46,8 +50,11 @@ public class DuplicateInstance extends AbstractQualityMetric {
 	public void compute(Quad quad) {
 		// Check whether current triple corresponds to an instance declaration
 		logger.trace("Computing triple with predicate: " + quad.getPredicate().getURI());
+		Node predicateEdge = quad.getPredicate();
 		
-		if(Commons.isInstanceDeclaration(quad.getPredicate())) {
+		// Determines whether the specified predicate corresponds to an instance declaration 
+		// statement, that is, whether the statement is of the form: Instance rdf:type Class
+		if(predicateEdge != null && predicateEdge.isURI() && predicateEdge.hasURI(RDF.type.getURI())) {
 			// Build the Id of the instance, concatenating the instance's (subject) URI and the URI of its class
 			String newInstanceId = quad.getSubject().toString() + "||" + quad.getObject().toString();
 			logger.trace("Instance declared: " + newInstanceId);
@@ -86,8 +93,7 @@ public class DuplicateInstance extends AbstractQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return METRIC_URI;
 	}
 
 	@Override

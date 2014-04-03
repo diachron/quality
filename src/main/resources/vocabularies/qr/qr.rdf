@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:qr="http://purl.org/eis/vocab/qr#" xmlns:daq="http://purl.org/eis/vocab/daq#" xmlns:owl="http://www.w3.org/2002/07/owl#">
+	<rdfs:Class rdf:about="http://purl.org/eis/vocab/qr#QualityReport">
+		<rdfs:comment>Quality report aims to model quality status of a data sets</rdfs:comment>
+		<rdfs:label>Quality Report</rdfs:label>
+	</rdfs:Class>
+	<rdfs:Class rdf:about="http://purl.org/eis/vocab/qr#QualityProblem">
+		<rdfs:comment>represents quality problems identified during the quality assesment</rdfs:comment>
+		<rdfs:label>Quality problem</rdfs:label>
+	</rdfs:Class>	
+	<rdf:Property rdf:about="http://purl.org/eis/vocab/qr#computedOn">
+		<rdfs:label>computedOn</rdfs:label>
+		<rdfs:comment>Quality report is associated with a data source</rdfs:comment>
+		<rdfs:domain rdf:resource="http://purl.org/eis/vocab/qr#QualityReport"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+	</rdf:Property>
+	<rdf:Property rdf:about="http://purl.org/eis/vocab/daq#dateComputed">
+		<rdfs:label>dateComputed</rdfs:label>
+		<rdfs:comment>Timestamp of report creation</rdfs:comment>
+		<rdfs:domain rdf:resource="http://purl.org/eis/vocab/qr#QualityReport" />
+		<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime" />
+		<owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+	</rdf:Property>
+	<rdf:Property rdf:about="http://purl.org/eis/vocab/qr#contains">
+		<rdfs:label>contains</rdfs:label>
+		<rdfs:comment></rdfs:comment>
+		<rdfs:domain rdf:resource="http://purl.org/eis/vocab/qr#QualityReport" />
+		<rdfs:range rdf:resource="http://purl.org/eis/vocab/qr#QualityProblem" />
+	</rdf:Property>
+	<rdf:Property rdf:about="http://purl.org/eis/vocab/qr#isDescribedBy">
+		<rdfs:label>isDescribedBy</rdfs:label>
+		<rdfs:comment></rdfs:comment>
+		<rdfs:domain rdf:resource="http://purl.org/eis/vocab/qr#QualityProblem" />
+		<rdfs:range rdf:resource="http://purl.org/eis/vocab/daq#Metric" />
+	</rdf:Property>
+	<rdf:Property rdf:about="http://purl.org/eis/vocab/qr#affects">
+		<rdfs:label>affects</rdfs:label>
+		<rdfs:comment></rdfs:comment>
+		<rdfs:domain rdf:resource="http://purl.org/eis/vocab/qr#QualityProblem" />
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+	</rdf:Property>
+</rdf:RDF>
