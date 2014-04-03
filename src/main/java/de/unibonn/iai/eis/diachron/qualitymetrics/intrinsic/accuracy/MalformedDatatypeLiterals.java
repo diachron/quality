@@ -1,5 +1,8 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -8,6 +11,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
@@ -24,6 +28,8 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	private double totalLiterals = 0;
 	private double malformedLiterals = 0;
 
+	protected List<Quad> problemList = new ArrayList<Quad>();
+	
 	public double getTotalLiterals() {
 		return totalLiterals;
 	}
@@ -41,10 +47,11 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 			// retrieves rdfDataType from literal
 			RDFDatatype rdfdataType = object.getLiteralDatatype();
 			// check if rdf data type is a valid data type
-			if (null != rdfdataType) {
+			if (rdfdataType != null) {
 				logger.debug("RdfDataTypeLiteral :: " + object.toString());
 				if (!rdfdataType.isValidLiteral(object.getLiteral())) {
 					this.malformedLiterals++;
+					this.problemList.add(quad);
 					logger.debug("MalformedRDFDataTypeLiteral :: " + object.toString());
 				}
 				this.totalLiterals++;
@@ -78,8 +85,18 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 		return this.METRIC_URI;
 	}
 
+	/**
+	 * Returns list of problematic Quads
+	 */
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Quad>(this.problemList); 
+		} 
+		catch (ProblemListInitialisationException problemListInitialisationException){
+			logger.debug(problemListInitialisationException);
+        	logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;	
 	}
 }

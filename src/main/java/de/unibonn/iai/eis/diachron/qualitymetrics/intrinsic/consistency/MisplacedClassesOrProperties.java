@@ -1,6 +1,9 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
@@ -10,6 +13,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
@@ -26,6 +30,8 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 	protected long totalClassesCount = 0;
 	protected long misplacedPropertiesCount = 0;
 	protected long totalPropertiesCount = 0;
+	
+	protected List<Quad> problemList = new ArrayList<Quad>();
 	
 	public long getMisplacedClassesCount() {
 		return misplacedClassesCount;
@@ -67,6 +73,7 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 							 subjectModel.getResource(subject.getURI()).hasProperty(RDFS.range)) {
 							logger.debug("Misplace Class Found in Subject::" + subject);
 							this.misplacedClassesCount++;
+							this.problemList.add(quad);
 						}
 					}
 				}
@@ -85,6 +92,7 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 							 predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.range))) {
 							logger.debug("Misplace Property Found in Predicate ::" + predicate);
 							this.misplacedPropertiesCount++;
+							this.problemList.add(quad);
 						}
 					}
 				}
@@ -104,6 +112,7 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 								objectModel.getResource(object.getURI()).hasProperty(RDFS.range)) {
 							logger.debug("Misplace Class Found in Object ::" + object);
 							this.misplacedClassesCount++;
+							this.problemList.add(quad);
 						}
 					}
 				}
@@ -150,9 +159,19 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 		return null;
 	}
 
+	/**
+	 * Returns list of problematic Quads
+	 */
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Quad>(this.problemList); 
+		} 
+		catch (ProblemListInitialisationException problemListInitialisationException){
+			logger.debug(problemListInitialisationException);
+        	logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;	
 	}
 
 }
