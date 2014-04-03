@@ -34,7 +34,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
  */
 public class Dereferencibility extends AbstractQualityMetric {
 
-	private final Resource METRIC_URI = DQM.DereferencibilityMetric;
+	private final Resource METRIC_URI = DQM.DereferenceabilityMetric;
 
 	private static Logger logger = Logger.getLogger(Dereferencibility.class);
 
