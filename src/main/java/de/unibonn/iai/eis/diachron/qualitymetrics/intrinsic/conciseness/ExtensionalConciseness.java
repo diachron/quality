@@ -1,36 +1,42 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ComparableSubject;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Santiago Londono
- * Provides a measure of the consistency of the dataset, by calculating the Extensional Conciseness metric, 
- * which is part of the Conciseness dimension.
+ * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
+ * Extensional Conciseness metric, which is part of the Conciseness dimension.
  */
 public class ExtensionalConciseness extends AbstractQualityMetric {
 	
 	private static Logger logger = Logger.getLogger(ExtensionalConciseness.class);
 	
+	private final Resource METRIC_URI = DQM.ExtensionalConcisenessMetric;
+	
 	/**
 	 * Map indexing the subjects detected during the computation of the metric. Every subject is identified 
 	 * by a different id (URI), which serves as key of the map. The value of each subject consists of a 
-	 * resource. A Hashtable is used since it is synchronized and metric instances ought to be thread safe.
+	 * resource. A ConcurrentHashMap is used since it is synchronized and metric instances ought to be thread safe.
 	 */
-	private Hashtable<String, ComparableSubject> mapSubjects = new Hashtable<String, ComparableSubject>();
+	private ConcurrentHashMap<String, ComparableSubject> mapSubjects = new ConcurrentHashMap<String, ComparableSubject>();
 
 	/**
 	 * Re-computes the value of the Extensional Conciseness Metric, by considering a new quad provided.
-	 * @param quad The new quad to be considered in the computation of the metric
+	 * @param quad The new quad to be considered in the computation of the metric. Must be not null.
 	 */
 	@Override
 	public void compute(Quad quad) {
@@ -93,8 +99,103 @@ public class ExtensionalConciseness extends AbstractQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		// TODO Implement getMetricURI(). Add URI of this metric to de.unibonn.iai.eis.diachron.vocabularies.DQM
+		return METRIC_URI;
+	}
+
+	@Override
+	public ProblemList<?> getQualityProblems() {
+		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * @author Santiago Londono
+	 * Represents a subject (i.e. a resource), that is described by a set of properties. Furthermore, provides 
+	 * the functionality necessary to determine the equivalence of subjects according to their properties. 
+	 * - Notice: this class is not thread safe (since HashMaps are not synchronized).
+	 */
+	private class ComparableSubject {
+		
+		/**
+		 * URI identifying the subject, serves as its id.
+		 */
+		private String uri;
+		
+		/**
+		 * Map containing the properties that describe this subject. Maps allow properties to be 
+		 * retrieved by URI efficiently, which is quite convenient when comparing the sets of 
+		 * properties of subjects. HashMap is used, since instances of this class ought not to be thread safe.
+		 */
+		private HashMap<String, String> mapProperties;
+		
+		/**
+		 * Creates a new instance of a subject, identified by the provided URI and with
+		 * an empty set of properties.
+		 * @param uri Id of the subject
+		 */
+		public ComparableSubject(String uri) {
+			this.uri = uri;
+			mapProperties = new HashMap<String, String>();
+		}
+		
+		/**	
+		 * Adds or updates a property describing this subject.
+		 * @param predicateUri URI of the predicate corresponding to the property to be added
+		 * @param objectValue Value of the property to be added
+		 */
+		public void addProperty(String predicateUri, Node objectValue) {
+			// To keep the memory footprint low, store in the properties hash a string representation of the node value. 
+			// Node.toString() is suitable, as it "Answers a human-readable representation of the Node" (see javadoc for Node class)
+			String objectValString = "";
+			if(objectValue != null) {
+				objectValString = objectValue.toString();
+			}
+			
+			mapProperties.put(predicateUri, objectValString);		
+		}
+		
+		/**
+		 * Determines if this subject is equivalent to the one provided as parameter. 
+		 * Two subjects are equivalent if they have the same set of properties, 
+		 * all with the same values (but not necessarily the same ids).
+		 * @param subject Subject this instance will be compared with
+		 * @return true if the parameter is not null and if both subjects are equivalent, false otherwise.
+		 */
+		public boolean isEquivalentTo(ComparableSubject subject) {
+			boolean result = false;
+			
+			if(subject != null) {
+				
+				int countPropertiesS2inThis = 0;		// Counts how many of the properties in subject are in this and have the same value in both resources
+
+				// For each property in subject, check if it is contained in this and if it has the same value here
+				for(Entry<String, String> curProperty : subject.mapProperties.entrySet()) {
+					String curEquivProperty = this.mapProperties.get(curProperty.getKey());
+					
+					// Compare the properties values using their string representation
+					if(curEquivProperty != null && curEquivProperty.equals(curProperty.getValue())) {
+						countPropertiesS2inThis++;
+					}
+				}
+				
+				// Consider both resources equivalent if they have the same number of properties and all properties in r2
+				// exist in r1 and have the same value in both resources
+				if((countPropertiesS2inThis == subject.mapProperties.size()) && (this.mapProperties.size() == countPropertiesS2inThis)) {
+					result = true;
+				}	
+			}
+			
+			return result;
+		}
+
+		/**
+		 * URI identifying the subject, serves as its id.
+		 * @return
+		 */
+		public String getUri() {
+			return uri;
+		}
+
 	}
 
 }

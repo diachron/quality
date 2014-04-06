@@ -12,8 +12,8 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.io.VocabularyReader;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
  * 
@@ -52,7 +52,7 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 		logger.info("Total Properties :: " + undefinedClassesOrProperties.getTotalPropertiesCount());
 		logger.info("Undefined Properties :: " + undefinedClassesOrProperties.getUndefinedPropertiesCount());
 		logger.info("Metric Value ::" + undefinedClassesOrProperties.metricValue());
-		assertEquals(0.12840466, undefinedClassesOrProperties.metricValue(), 0.00001);
+		assertEquals(0.076923076, undefinedClassesOrProperties.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");
 	}
 

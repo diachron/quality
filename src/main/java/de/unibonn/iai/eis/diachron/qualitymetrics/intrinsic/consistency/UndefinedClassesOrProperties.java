@@ -1,25 +1,28 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-import de.unibonn.iai.eis.diachron.io.VocabularyReader;
-import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014
  */
-public class UndefinedClassesOrProperties implements QualityMetric {
+public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 	
 	static Logger logger = Logger.getLogger(UndefinedClassesOrProperties.class);
 		
@@ -27,6 +30,8 @@ public class UndefinedClassesOrProperties implements QualityMetric {
 	protected long totalClassesCount = 0;
 	protected long undefinedPropertiesCount = 0;
 	protected long totalPropertiesCount = 0;
+	
+	protected List<Quad> problemList = new ArrayList<Quad>();
 	
 	public long getUndefinedClassesCount() {
 		return undefinedClassesCount;
@@ -63,6 +68,7 @@ public class UndefinedClassesOrProperties implements QualityMetric {
 					// search for URI resource from Model
 					if (!subjectModel.getResource(subject.getURI()).isURIResource()){
 						this.undefinedClassesCount++;
+						this.problemList.add(quad);
 					}
 				}
 			}
@@ -78,6 +84,7 @@ public class UndefinedClassesOrProperties implements QualityMetric {
 						if (!( predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) && 
 							 predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.range))) {
 							this.undefinedPropertiesCount++;
+							this.problemList.add(quad);
 						}
 					}
 				}
@@ -92,6 +99,7 @@ public class UndefinedClassesOrProperties implements QualityMetric {
 					// search for URI resource from Model
 					if (!objectModel.getResource(object.getURI()).isURIResource()){
 						this.undefinedClassesCount++;
+						this.problemList.add(quad);
 					}
 				}
 			}
@@ -100,7 +108,6 @@ public class UndefinedClassesOrProperties implements QualityMetric {
 		catch (Exception exception){
 			logger.debug(exception);
         	logger.error(exception.getMessage());
-        	exception.printStackTrace();
 		}
 		
 		logger.trace("compute() --Ended--");
@@ -127,15 +134,28 @@ public class UndefinedClassesOrProperties implements QualityMetric {
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
-
-	public List<Triple> toDAQTriples() {
+	
+	/**
+	 * 
+	 */
+	public Resource getMetricURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Resource getMetricURI() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Returns list of problematic Quads
+	 */
+	public ProblemList<?> getQualityProblems() {
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Quad>(this.problemList); 
+		} 
+		catch (ProblemListInitialisationException problemListInitialisationException){
+			logger.debug(problemListInitialisationException);
+        	logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;
 	}
 
 }

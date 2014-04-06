@@ -10,14 +10,15 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.qualitymetrics.representational.conciseness.ShortURIs;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
-public class ExtensionalConcisenessTest extends Assert {
+public class ShortURIsTest extends Assert {
 	
-	private static Logger logger = Logger.getLogger(ExtensionalConcisenessTest.class);
+	private static Logger logger = Logger.getLogger(ShortURIsTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected ExtensionalConciseness metric = new ExtensionalConciseness();
+	protected ShortURIs metric = new ShortURIs();
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,14 +43,12 @@ public class ExtensionalConcisenessTest extends Assert {
 		}
 		logger.trace("Quads loaded, " + countLoadedQuads + " quads");
 		
-		// 9 subjects in the dump file, only two of them are equivalent:
-		// <http://acrux.weposolutions.de/xodx/?c=person&id=Lukasw> foaf:knows people:NatanaelArndt . and 
-		// <http://acrux.weposolutions.de/xodx/?c=person&id=toni> foaf:knows people:NatanaelArndt .
-		// Thus, (No. of Unique Objects) / (Total No. of Objects in Dataset) = 8 / 9 = 0.888
-		double actual = 0.8888; 
+		// The test data dump contains 7 instance declarations, the sum of the length of the URIs identifying 
+		// all ther subjects totals 225. Thus the expected value of the metric is: 225/7 = 32.14285
+		double actual = 32.14285;
 		double delta = 0.0001;
 		double metricValue = metric.metricValue();
-		logger.trace("Computed extensional conciseness metric: " + metricValue);
+		logger.trace("Computed keeping-URIs-short metric: " + metricValue);
 		
 		assertEquals(actual, metricValue, delta);
 	}

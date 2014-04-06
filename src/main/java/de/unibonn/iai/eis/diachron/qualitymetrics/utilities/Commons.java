@@ -24,4 +24,5 @@ public class Commons {
 	public static Literal generateDoubleTypeLiteral(double d){
 		return ModelFactory.createDefaultModel().createTypedLiteral(d);
 	}
+
 }
