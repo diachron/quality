@@ -68,6 +68,12 @@
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Refers to the redundancy of entities, be it at the schema or the data level" ;
 		rdfs:label	"Conciseness" .
+		
+	dqm:RepresentationalConciseness
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Measures the extent to which the representation of data is compact, clear and well formatted" ;
+		rdfs:label	"RepresentationalConciseness" .
 
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
@@ -124,6 +130,12 @@
 		rdfs:comment	"Counts the total number of triples present in the dataset" ;
 		rdfs:label	"AmountOfTriplesMetric" .
 		
+	dqm:IntensionalConcisenessMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the redundancy of the dataset at the schema level, computed as the ratio of the Number of Unique Attributes (Properties) to the Total Number of Attributes in the target schema" ;
+		rdfs:label	"IntensionalConcisenessMetric" .
+		
 	dqm:ExtensionalConcisenessMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
@@ -135,6 +147,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the redundancy of entities at the data level (ratio of entities that violate the uniqueness rule)" ;
 		rdfs:label	"DuplicateInstanceMetric" .
+		
+	dqm:ShortURIsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Detects the use of short URIs (and the avoidance of query parameters), which suggests that information is compactly represented and favors readability" ;
+		rdfs:label	"ShortURIsMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -245,6 +263,14 @@
 		rdfs:label "hasConcisenessDimension" ;
 		rdfs:domain dqm:Intrinsic ;
 		rdfs:range dqm:Conciseness .
+	
+	dqm:hasIntensionalConcisenessMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Conciseness Dimension with Intensional Conciseness Metric (Intensional Conciseness Metric belongs to the Conciseness Dimension)" ;
+		rdfs:label	"hasIntensionalConcisenessMetric" ;
+		rdfs:domain	dqm:Conciseness ;
+		rdfs:range	dqm:IntensionalConcisenessMetric .	
 		
 	dqm:hasExtensionalConcisenessMetric
 		a	rdfs:Property ;
@@ -261,3 +287,20 @@
 		rdfs:label	"hasDuplicateInstanceMetric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:DuplicateInstanceMetric .
+		
+	#Representational Conciseness Dimension Properties
+	dqm:hasRepresentationalConcisenessDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links Representational Category with Representational-Conciseness Dimension" ;
+		rdfs:label "dqm:hasRepresentationalConcisenessDimension" ;
+		rdfs:domain dqm:Representational ;
+		rdfs:range dqm:RepresentationalConciseness .
+		
+	dqm:hasShortURIsMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Representational-Conciseness Dimension with Keeping URIs Short Metric (Keeping URIs Short Metric belongs to the Representational-Conciseness Dimension)" ;
+		rdfs:label	"hasShortURIsMetric" ;
+		rdfs:domain	dqm:RepresentationalConciseness ;
+		rdfs:range	dqm:ShortURIsMetric .
