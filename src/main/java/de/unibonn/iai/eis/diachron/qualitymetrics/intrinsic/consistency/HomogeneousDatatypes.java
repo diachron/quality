@@ -1,7 +1,9 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -11,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
 public class HomogeneousDatatypes extends AbstractQualityMetric{
@@ -23,6 +26,8 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 	protected long totalProperties = 0;
 	
 	protected Hashtable<Node, Hashtable<RDFDatatype, Long>> propertiesDatatypeMatrix = new Hashtable<Node, Hashtable<RDFDatatype,Long>>();   
+	
+	protected List<Node> problemList = new ArrayList<Node>();
 	
 	public long getPropertiesWithHeterogeneousDatatype() {
 		return propertiesWithHeterogeneousDatatype;
@@ -153,8 +158,15 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Node>(this.problemList); 
+		} 
+		catch (ProblemListInitialisationException problemListInitialisationException){
+			logger.debug(problemListInitialisationException);
+        	logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;	
 	}
 
 }
