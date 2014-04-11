@@ -122,6 +122,7 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 			Node key = enumKey.nextElement();
 			if (!isHeterogeneousDataType(propertiesDatatypeMatrix.get(key), HomogeneousDatatypes.THRESHOLD)){
 				tmpCount++;
+				this.problemList.add(key);
 			}
 		}
 		return tmpCount;
@@ -158,7 +159,7 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> tmpProblemList = null;
+		ProblemList<Node> tmpProblemList = null;
 		try {
 			tmpProblemList = new ProblemList<Node>(this.problemList); 
 		} 
