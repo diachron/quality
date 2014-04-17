@@ -6,13 +6,13 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
-import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 public class NoDereferencedBackLinks implements QualityMetric {
 
-	private final Resource METRIC_URI = DQM.DeferencibilityBackLinksMetric;
+	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
 	public void compute(Quad quad) {
 		// TODO Auto-generated method stub
@@ -30,6 +30,11 @@ public class NoDereferencedBackLinks implements QualityMetric {
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
+	}
+	
+	public ProblemList<?> getQualityProblems() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
