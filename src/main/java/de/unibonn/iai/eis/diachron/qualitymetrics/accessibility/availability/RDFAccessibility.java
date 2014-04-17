@@ -13,10 +13,10 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
-import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 
@@ -64,5 +64,10 @@ public class RDFAccessibility implements QualityMetric {
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
+	}
+
+	public ProblemList<?> getQualityProblems() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
