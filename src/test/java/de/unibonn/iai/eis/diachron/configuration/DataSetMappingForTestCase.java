@@ -18,7 +18,5 @@ public class DataSetMappingForTestCase {
 	public static String HomogeneousDatatypes = "testdumps/SampleInput_HomogeneousDatatypes.ttl";
 	// For...qualitymetric.intrinsic.conciseness
 	public static String DuplicateInstance = "testdumps/SampleInput_DuplicateInstance.ttl";
-	// For...qualitymetrics.dynamicity.currency.CurrencyDocumentStatements
-	public static String CurrencyDocumentStatements = "testdumps/SampleInput_Currency.ttl";
 	
 }

@@ -31,7 +31,7 @@ public class ShortURIsTest extends Assert {
 	}
 
 	@Test
-	public void testShortURIs() {
+	public void testExtensionalConciseness() {
 		logger.trace("Loading quads...");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
