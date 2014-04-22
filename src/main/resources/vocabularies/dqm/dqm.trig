@@ -165,6 +165,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Compares the time when the data was observed with the time when the data (document as a whole and individual triples) were last modified, thereby providing a measure of how current the dataset is" ;
 		rdfs:label	"CurrencyOfDocumentStatementsMetric" .
+		
+	dqm:TimeSinceModificationMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the current time with the time when the data was last modified" ;
+		rdfs:label	"TimeSinceModificationMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -325,7 +331,7 @@
 		rdfs:label "hasCurrencyDimension" ;
 		rdfs:domain dqm:Dynamicity ;
 		rdfs:range dqm:Currency .
-		
+
 	dqm:hasCurrencyOfDocumentStatementsMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
@@ -333,3 +339,11 @@
 		rdfs:label	"hasCurrencyOfDocumentStatementsMetric" ;
 		rdfs:domain	dqm:Currency ;
 		rdfs:range	dqm:CurrencyOfDocumentStatementsMetric .
+
+	dqm:hasTimeSinceModificationMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Currency Dimension with the Time Since Modification Metric (Time Since Modification Metric belongs to the Currency Dimension)" ;
+		rdfs:label	"hasTimeSinceModificationMetric" ;
+		rdfs:domain	dqm:Currency ;
+		rdfs:range	dqm:TimeSinceModificationMetric .

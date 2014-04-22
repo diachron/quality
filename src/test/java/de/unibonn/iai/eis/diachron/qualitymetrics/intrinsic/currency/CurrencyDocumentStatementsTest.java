@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
+package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.currency;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -39,7 +39,7 @@ public class CurrencyDocumentStatementsTest extends Assert {
 
 	@Test
 	public void testCurrencyDocumentStatements() {
-		logger.trace("Loading quads...");
+		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
 		
