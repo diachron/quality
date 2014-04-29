@@ -76,7 +76,7 @@ public class CurrencyDocumentStatements extends AbstractQualityMetric {
 		// Check whether the current property corresponds to the Publishing time of the resource containing the quad
 		if(TemporalDataAnalyzer.isPublisingTime(quad)) {
 			// Process the Publishing Time property
-			logger.trace("Parsing publishing time: " + object.getLiteralValue().toString());
+			logger.trace("Parsing publishing time: " + object.toString());
 			
 			Date procPublishingTime = TemporalDataAnalyzer.extractTimeFromObject(quad);
 			
@@ -90,7 +90,7 @@ public class CurrencyDocumentStatements extends AbstractQualityMetric {
 		// Check whether the current property corresponds to the Last Modified Time of the subject described by the quad
 		if(TemporalDataAnalyzer.isLastUpdateTime(quad)) {
 			// Process the Last Modified Time property
-			logger.trace("Parsing last modified time: " + object.getLiteralValue().toString());
+			logger.trace("Parsing last modified time: " + object.toString());
 
 			// Parse the date contained into object's the literal value and set it as current Publishing Time
 			Date valLastModifiedTime = TemporalDataAnalyzer.extractTimeFromObject(quad);
@@ -107,7 +107,7 @@ public class CurrencyDocumentStatements extends AbstractQualityMetric {
 					publishingTime = valLastModifiedTime;
 				}
 			} else {
-				logger.trace("Unable to parse date/time literal value: " + object.getLiteralValue().toString() + " of property: " + predicate.getURI());
+				logger.trace("Unable to parse date/time literal value: " + object.toString() + " of property: " + predicate.getURI());
 				
 				// Increase the counter of temporal values with unrecognized format 
 				countInvalidFormatDates++;

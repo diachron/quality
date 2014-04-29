@@ -171,6 +171,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the current time with the time when the data was last modified" ;
 		rdfs:label	"TimeSinceModificationMetric" .
+		
+	dqm:ExclusionOfOutdatedDataMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the total number of resources, described by the dataset, versus the number of those that are recognized to be outdated" ;
+		rdfs:label	"ExclusionOfOutdatedDataMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -347,3 +353,11 @@
 		rdfs:label	"hasTimeSinceModificationMetric" ;
 		rdfs:domain	dqm:Currency ;
 		rdfs:range	dqm:TimeSinceModificationMetric .
+
+	dqm:hasExclusionOfOutdatedDataMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Currency Dimension with the Exclusion of Outdated Data Metric (Exclusion of Outdated Data Metric belongs to the Currency Dimension)" ;
+		rdfs:label	"hasExclusionOfOutdatedDataMetric" ;
+		rdfs:domain	dqm:Currency ;
+		rdfs:range	dqm:ExclusionOfOutdatedDataMetric .

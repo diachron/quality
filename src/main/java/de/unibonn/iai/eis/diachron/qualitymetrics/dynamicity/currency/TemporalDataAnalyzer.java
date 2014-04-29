@@ -36,6 +36,11 @@ public class TemporalDataAnalyzer {
 	private static HashMap<String, DateFormatters> mapPublishingTimeProps;
 	
 	/**
+	 * Map containing the set of properties known to provide the valid time of a resource
+	 */
+	private static HashMap<String, DateFormatters> mapValidTimeProps;
+	
+	/**
 	 * Singleton used to parse literals of type xsd:dateTime
 	 */
 	private static RDFDatatype rdfDate = NodeFactory.getType(XSD.date.getURI());
@@ -50,6 +55,7 @@ public class TemporalDataAnalyzer {
 		// The key of the map corresponds to the URI of the property and its value provides information about the format of the objects
 		mapLastUpdateTimeProps = new HashMap<String, DateFormatters>();
 		mapPublishingTimeProps = new HashMap<String, DateFormatters>();
+		mapValidTimeProps = new HashMap<String, DateFormatters>();
 		
 		mapLastUpdateTimeProps.put(DCTerms.modified.getURI(), DateFormatters.INTL_LONG);
 		mapLastUpdateTimeProps.put("http://purl.org/dc/terms/#modified", DateFormatters.INTL_LONG);
@@ -58,6 +64,8 @@ public class TemporalDataAnalyzer {
 		mapPublishingTimeProps.put(DCTerms.issued.getURI(), DateFormatters.XSD);
 		mapPublishingTimeProps.put(DCTerms.created.getURI(), DateFormatters.XSD);
 		mapPublishingTimeProps.put("http://semantic-mediawiki.org/swivt/1.0#creationDate", DateFormatters.XSD);
+		
+		mapValidTimeProps.put(DCTerms.valid.getURI(), DateFormatters.XSD);
 	}
 	
 	/**
@@ -101,6 +109,26 @@ public class TemporalDataAnalyzer {
 	}
 	
 	/**
+	 * Tells whether the quad provided as parameter, refers to the time of expiration of the data (valid time). 
+	 * The decision is based on a set of properties which are well-known and commonly used to store such data
+	 * @param statement RDF quad (triple) to be tested, in order to determine if it contains "Expiration Time" information
+	 * @return True if the statement refers to the "Valid Time" of a resource. False otherwise
+	 */
+	public static boolean isValidTime(Quad statement) {
+		// Extract the predicate of the statement, as the result will be determined based on its URI
+		Node predicate = statement.getPredicate();
+		
+		if(predicate != null && predicate.isURI()) {
+			// Check whether the URI of the predicate corresponds to one of the "Expiration Time" properties 
+			if(mapValidTimeProps.containsKey(predicate.getURI())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	/**
 	 * Extracts date and time data contained in an object's value, tries to parse it in a best-effort basis and returns 
 	 * the result as a java.util.Date instance. If the extraction/parsing process could not be carried  out successfully, returns null 
 	 * @param object RDF Node corresponding to the object of a triple and whose value is intended to be processed as a date/time
@@ -116,7 +144,7 @@ public class TemporalDataAnalyzer {
 		if(object != null && object.isLiteral()) {
 			// First, try to parse date/time literal as an xsd type. Check whether the object is of xsd:dateTime
 			if(rdfDate.isValid(object.getLiteralValue().toString()) || rdfDateTime.isValid(object.getLiteralValue().toString())) {
-				logger.trace("Parsing date/time: " + object.getLiteralValue().toString() + ", as xsd:date/time value");
+				logger.trace("Parsing date/time: " + object.toString() + ", as xsd:date/time value");
 				
 				XSDDateTime xsdDateTime = (XSDDateTime)rdfDateTime.parse(object.getLiteralValue().toString());
 				return xsdDateTime.asCalendar().getTime();
@@ -129,16 +157,20 @@ public class TemporalDataAnalyzer {
 			if(timeFormat == null) {
 				timeFormat = mapLastUpdateTimeProps.get(predicate.getURI());
 			}
+			// ... if still not found, look up again as valid-time
+			if(timeFormat == null) {
+				timeFormat = mapValidTimeProps.get(predicate.getURI());
+			}
 			
 			if(timeFormat != null && !timeFormat.getFormatSpecifier().equals("")) {
 				// Try to parse date if a suitable date/time format specifier was found
-				logger.trace("Parsing date/time: " + object.getLiteralValue().toString() + ", as: " + timeFormat);
+				logger.trace("Parsing date/time: " + object.toString() + ", as: " + timeFormat);
 				
 				try {
 					SimpleDateFormat fmtDateTime = new SimpleDateFormat(timeFormat.getFormatSpecifier());
 					return fmtDateTime.parse(object.getLiteralValue().toString());
 				} catch(ParseException pex) {
-					logger.debug("Unable to parse date/time literal: " + object.getLiteralValue().toString() + ". Format string: " + timeFormat);
+					logger.debug("Unable to parse date/time literal: " + object.toString() + ". Format string: " + timeFormat);
 				}
 			}
 		}
@@ -151,9 +183,10 @@ public class TemporalDataAnalyzer {
 	 * Enumeration listing all date formats supported by the analyzer. Additionally, for every supported format,
 	 * provides the format specified that, together with java.text.SimpleDateFormat, can be used to parse literals 
 	 * corresponding to date values
+	 * WARNING: The format specifier used for XSD formats (yyyy-MM-dd'T'HH:mm:ss.SSSXXX) requires Java 7
 	 */
-	private enum DateFormatters {
-		XSD(""),
+	public enum DateFormatters {
+		XSD("yyyy-MM-dd'T'HH:mm:ssX"),	// WARNING: This format specifier, which involves X, requires Java 7
 		INTL_LONG("yyyy-MM-dd HH:mm:ss"),
 		INTL_LONG_TIMEZONE("yyyy-MM-dd HH:mm:ssz");
 		
@@ -170,5 +203,5 @@ public class TemporalDataAnalyzer {
 			return formatSpecifier;
 		}
 	}
-	
+
 }

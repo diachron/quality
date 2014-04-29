@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
+package de.unibonn.iai.eis.diachron.qualitymetrics.representational.conciseness;
 
 import java.util.List;
 

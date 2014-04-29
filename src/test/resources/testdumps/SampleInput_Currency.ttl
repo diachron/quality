@@ -9,6 +9,7 @@
 @prefix cito: <http://purl.org/spar/cito/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix osgeo: <http://data.ordnancesurvey.co.uk/ontology/geometry/> .
 @prefix osspatial: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
@@ -62,7 +63,8 @@
 <http://pleiades.stoa.org/places/902996#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Bagistanus M.";
     rdfs:comment "An ancient place, cited: BAtlas 92 C2 Bagistanus M.";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/902996> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/902996> ;
+    dcterms:valid "2014-06-10T17:03:45Z" .
 
 <http://pleiades.stoa.org/places/903002#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Bisutun/Bagistana/Vastan?/Baptana";
@@ -77,7 +79,8 @@
 <http://pleiades.stoa.org/places/903005#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Chal Tarkhan-Eshqabad";
     rdfs:comment "An ancient place, cited: BAtlas 92 G1 Chal Tarkhan-Eshqabad";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903005> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903005> ;
+    dcterms:valid "2017-01-03T17:03:45+03:00" .
 
 <http://pleiades.stoa.org/places/903007#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Changiyeh";
@@ -202,7 +205,8 @@
 <http://pleiades.stoa.org/places/903065#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Khurramdasht";
     rdfs:comment "An ancient place, cited: BAtlas 92 G3 Khurramdasht";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903065> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903065> ;
+    dcterms:valid "2015-12-14T17:03:45-05:00" .
 
 <http://pleiades.stoa.org/places/903067#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "KS126";
@@ -1040,7 +1044,8 @@
 <http://pleiades.stoa.org/places/912979#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "U1213, 1214";
     rdfs:comment "An ancient place, cited: BAtlas 93 B1 U1213, 1214";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/912979> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/912979> ;
+    dcterms:valid "2013-11-14T17:03:45Z" .
 
 <http://pleiades.stoa.org/places/912980#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "U1310";
@@ -1347,7 +1352,8 @@
 <http://pleiades.stoa.org/places/915862#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Harax";
     rdfs:comment "An ancient place, cited: BAtlas 93 unlocated Harax fl.";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/915862> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/915862> ;
+    dcterms:valid "1999-08-14T17:03:45Z" .
 
 <http://pleiades.stoa.org/places/915864#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Iamba";
@@ -1946,7 +1952,8 @@
 <http://pleiades.stoa.org/places/922638#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Farrashband 1";
     rdfs:comment "An ancient place, cited: BAtlas 94 C5 Farrashband 1";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/922638> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/922638> ;
+    dcterms:valid "2010-08-14T17:03:45Z" .
 
 <http://pleiades.stoa.org/places/922639#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Farrashband 2";
@@ -2628,7 +2635,8 @@
 <http://pleiades.stoa.org/places/930237#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Poryospana/Portospana/Portippa";
     rdfs:comment "An ancient place, cited: BAtlas 94 unlocated Poryospana/Portospana/Portippa";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/930237> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/930237> ;
+    dcterms:valid "2000-01-14T17:03:45Z" .
 
 <http://pleiades.stoa.org/places/930238#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Potikara";
@@ -3460,7 +3468,8 @@
 <http://pleiades.stoa.org/places/961893#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Challa tepe";
     rdfs:comment "An ancient place, cited: BAtlas 98 G1 Challa tepe";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/961893> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/961893> ;
+    dcterms:valid "1982-04-08T07:03:45Z" .
 
 <http://pleiades.stoa.org/places/961894#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Changly";
@@ -4211,7 +4220,8 @@
 <http://pleiades.stoa.org/places/963101071#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Fort at Great Wall of Gorgan";
     rdfs:comment "One of the integral forts spaced along the wall";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/963101071> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/963101071> ;
+    dcterms:valid "2014-05-28T03:03:45Z" .
 
 <http://pleiades.stoa.org/places/963101072#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Fort at Great Wall of Gorgan";
@@ -5135,6 +5145,7 @@
         [ a <http://xmlns.com/foaf/0.1/Person>;
             foaf:name "H. Kopp" ];
     dcterms:description "A place name from the TAVO Index (Vol. 2, p. 799)";
+    dcterms:valid "2012-05-30T03:03:45Z"^^xsd:dateTime ;
     dcterms:modified "11.01.2014 04:55:31";
     dcterms:title "Imgur-Bēl";
     cito:cites <http://www.worldcat.org/oclc/32624915>;
@@ -5160,6 +5171,7 @@
             foaf:name "H. Kopp" ];
     dcterms:description "A place from the TAVO Index";
     dcterms:modified "01/11/2014 3:23:00 pm";
+    dcterms:valid "2012/05/30 03:03:45.233" ;
     dcterms:title "Masion";
     cito:cites <http://www.worldcat.org/oclc/32624915>;
     skos:altLabel "Kašjari, Kašijari, Kashiyari, Kašyari, Kashyari, Kašiari, Kashiari"@akk,
