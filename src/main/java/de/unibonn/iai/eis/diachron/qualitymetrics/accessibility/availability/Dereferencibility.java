@@ -3,6 +3,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+
 import org.apache.jena.riot.WebContent;
 import org.apache.log4j.Logger;
 
@@ -10,6 +11,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.datatypes.Response;
 import de.unibonn.iai.eis.diachron.datatypes.Status;
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
@@ -312,6 +314,12 @@ public class Dereferencibility extends AbstractQualityMetric {
 	protected class Tuple{
 		Status s;
 		Response r;
+	}
+
+	@Override
+	public ProblemList<?> getQualityProblems() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
