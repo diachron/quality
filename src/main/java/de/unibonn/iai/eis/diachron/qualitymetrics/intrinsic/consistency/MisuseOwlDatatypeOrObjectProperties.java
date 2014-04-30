@@ -6,12 +6,17 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 
@@ -62,8 +67,49 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 	}
 	
 	protected void filterAllOwlProperties(List<Quad> quadList){
+		List<String> tmpPredicateURI = new ArrayList<String>();
 		for(Quad quad : quadList){
-			Node object = quad.getObject(); //retrieve predicate
+			
+			Node predicate = quad.getPredicate(); // retrieve predicate
+			
+			if (predicate.isURI()){
+				
+				if (!tmpPredicateURI.contains(predicate.getURI())) {
+					
+					tmpPredicateURI.add(predicate.getURI()); // add predicateURI in list
+					
+					Model tmpModel = VocabularyReader.read(predicate.getURI());
+					if (tmpModel != null) { 
+						StmtIterator stmtIt = tmpModel.listStatements();
+						while(stmtIt.hasNext()){
+							Statement statement = stmtIt.next();
+							Triple tmpTriple = statement.asTriple();
+							
+							Node tmpObject = tmpTriple.getObject();
+							if (tmpObject.isURI()){
+								// check if predicate refers to OWL namespace
+								if ( tmpObject.getNameSpace().contains(NAMESPACE_MATCH_SUBSTRING) &&
+										tmpObject.getURI().split("#").length > 1){
+		
+									// retrieve predicate value
+									String tmpPropertyName = tmpObject.getURI().split("#")[1];
+									if (tmpPropertyName.toLowerCase().equals(OWL_DATA_TYPE_PROPERTY.toLowerCase())){
+										
+										logger.debug(quad.getSubject() + " is of owl data type property");
+										this.owlDatatypePropertyList.add(quad.getSubject());
+									}
+									else if (tmpPropertyName.toLowerCase().equals(OWL_OBJECT_PROPERTY.toLowerCase())){
+										
+										logger.debug(quad.getSubject()  + " is of owl object property");
+										this.owlObjectPropertyList.add(quad.getSubject());						
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			Node object = quad.getObject(); //retrieve object
 			
 			if(object.isURI()){ //check if predicate is URI
 				// check if predicate refers to OWL namespace

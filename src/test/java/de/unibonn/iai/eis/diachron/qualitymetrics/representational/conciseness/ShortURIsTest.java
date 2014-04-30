@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
+package de.unibonn.iai.eis.diachron.qualitymetrics.representational.conciseness;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class ShortURIsTest extends Assert {
 	}
 
 	@Test
-	public void testExtensionalConciseness() {
+	public void testShortURIs() {
 		logger.trace("Loading quads...");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;

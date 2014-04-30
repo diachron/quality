@@ -74,6 +74,12 @@
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Measures the extent to which the representation of data is compact, clear and well formatted" ;
 		rdfs:label	"RepresentationalConciseness" .
+		
+	dqm:Currency
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Provides a measure of the degree to which information is up to date and how promptly the data is updated" ;
+		rdfs:label	"Currency" .
 
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
@@ -153,6 +159,24 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects the use of short URIs (and the avoidance of query parameters), which suggests that information is compactly represented and favors readability" ;
 		rdfs:label	"ShortURIsMetric" .
+	
+	dqm:CurrencyOfDocumentStatementsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Compares the time when the data was observed with the time when the data (document as a whole and individual triples) were last modified, thereby providing a measure of how current the dataset is" ;
+		rdfs:label	"CurrencyOfDocumentStatementsMetric" .
+		
+	dqm:TimeSinceModificationMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the current time with the time when the data was last modified" ;
+		rdfs:label	"TimeSinceModificationMetric" .
+		
+	dqm:ExclusionOfOutdatedDataMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the total number of resources, described by the dataset, versus the number of those that are recognized to be outdated" ;
+		rdfs:label	"ExclusionOfOutdatedDataMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -293,7 +317,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links Representational Category with Representational-Conciseness Dimension" ;
-		rdfs:label "dqm:hasRepresentationalConcisenessDimension" ;
+		rdfs:label "hasRepresentationalConcisenessDimension" ;
 		rdfs:domain dqm:Representational ;
 		rdfs:range dqm:RepresentationalConciseness .
 		
@@ -304,3 +328,36 @@
 		rdfs:label	"hasShortURIsMetric" ;
 		rdfs:domain	dqm:RepresentationalConciseness ;
 		rdfs:range	dqm:ShortURIsMetric .
+		
+	#Currency Dimension Properties
+	dqm:hasCurrencyDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links the Dynamicity Category with the Currency Dimension" ;
+		rdfs:label "hasCurrencyDimension" ;
+		rdfs:domain dqm:Dynamicity ;
+		rdfs:range dqm:Currency .
+
+	dqm:hasCurrencyOfDocumentStatementsMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Currency Dimension with the Currency of Document/Statements Metric (Currency of Document/Statements Metric belongs to the Currency Dimension)" ;
+		rdfs:label	"hasCurrencyOfDocumentStatementsMetric" ;
+		rdfs:domain	dqm:Currency ;
+		rdfs:range	dqm:CurrencyOfDocumentStatementsMetric .
+
+	dqm:hasTimeSinceModificationMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Currency Dimension with the Time Since Modification Metric (Time Since Modification Metric belongs to the Currency Dimension)" ;
+		rdfs:label	"hasTimeSinceModificationMetric" ;
+		rdfs:domain	dqm:Currency ;
+		rdfs:range	dqm:TimeSinceModificationMetric .
+
+	dqm:hasExclusionOfOutdatedDataMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Currency Dimension with the Exclusion of Outdated Data Metric (Exclusion of Outdated Data Metric belongs to the Currency Dimension)" ;
+		rdfs:label	"hasExclusionOfOutdatedDataMetric" ;
+		rdfs:domain	dqm:Currency ;
+		rdfs:range	dqm:ExclusionOfOutdatedDataMetric .

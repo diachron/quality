@@ -52,8 +52,7 @@ public final class VocabularyReader {
         catch (RiotException roitException){
         	logger.debug(url + " :: unable to loaded vocabulary from web.");
         	logger.debug(roitException);
-        	logger.fatal(roitException.getMessage());
-        	VocabularyReader.vocabularies.put(url, null);
+        	logger.error(roitException.getMessage());
         	return null;
         }
         catch (HttpException httpException){
