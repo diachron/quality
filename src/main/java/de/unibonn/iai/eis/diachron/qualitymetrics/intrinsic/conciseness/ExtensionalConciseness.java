@@ -114,7 +114,7 @@ public class ExtensionalConciseness extends AbstractQualityMetric {
 	 * the functionality necessary to determine the equivalence of subjects according to their properties. 
 	 * - Notice: this class is not thread safe (since HashMaps are not synchronized).
 	 */
-	private class ComparableSubject {
+	private static class ComparableSubject {
 		
 		/**
 		 * URI identifying the subject, serves as its id.

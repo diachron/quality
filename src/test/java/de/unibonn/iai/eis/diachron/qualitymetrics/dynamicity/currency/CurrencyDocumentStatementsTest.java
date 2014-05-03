@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.currency;
+package de.unibonn.iai.eis.diachron.qualitymetrics.dynamicity.currency;
 
 import java.text.DateFormat;
 import java.text.ParseException;
