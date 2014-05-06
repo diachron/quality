@@ -22,7 +22,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
  */
 public class ExclusionOutdatedData extends AbstractQualityMetric {
 	
-private final Resource METRIC_URI = DQM.ExclusionOfOutdatedDataMetric;
+	private final Resource METRIC_URI = DQM.ExclusionOfOutdatedDataMetric;
 	
 	private static Logger logger = LoggerFactory.getLogger(ExclusionOutdatedData.class);
 	
@@ -68,7 +68,6 @@ private final Resource METRIC_URI = DQM.ExclusionOfOutdatedDataMetric;
 	@Override
 	public void compute(Quad quad) {
 		// Extract the predicate and object of the statement
-		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		
 		// Check whether the current quad represents an instance declaration, in order to keep to date the total number of subjects
@@ -92,8 +91,6 @@ private final Resource METRIC_URI = DQM.ExclusionOfOutdatedDataMetric;
 					countTotalOutdatedSubjects++;
 				}
 			} else {
-				logger.trace("Unable to parse date/time literal value: {} of property: {}", object, predicate.getURI());
-				
 				// Increase the counter of temporal values with unrecognized format 
 				countInvalidFormatDates++;
 			}
@@ -137,8 +134,8 @@ private final Resource METRIC_URI = DQM.ExclusionOfOutdatedDataMetric;
 	 */
 	private void checkNewInstanceDeclared(Quad quad) {
 		// Check whether current triple corresponds to an instance declaration
-		logger.trace("Computing triple with predicate: " + quad.getPredicate().getURI());
 		Node predicateEdge = quad.getPredicate();
+		logger.trace("Checking new instance declaration withing predicate: {}" + predicateEdge);
 		
 		// Determines whether the specified predicate corresponds to an instance declaration 
 		// statement, that is, whether the statement is of the form: Instance rdf:type Class

@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.currency;
+package de.unibonn.iai.eis.diachron.qualitymetrics.dynamicity.currency;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,7 +38,7 @@ private static Logger logger = Logger.getLogger(ExclusionOutdatedDataTest.class)
 	}
 
 	@Test
-	public void testCurrencyDocumentStatements() {
+	public void testExclusionOutdatedData() {
 		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -52,7 +52,7 @@ private static Logger logger = Logger.getLogger(ExclusionOutdatedDataTest.class)
 		
 		// Prepare the setup required to calculate the expected value of the metric. The Publishing Time and Last Modified Times known to 
 		// be part of the test dataset are parsed according to the default custom datetime formats and the number of subjects qualified with
-		// a Last Modified Time (countOfModSubjects) is set to three. There are two subjects with invalid Last Modified Time (countInvalidTimeSubjects)
+		// a Last Modified Time (countOfModSubjects) is set to three. There is one subject with invalid Last Modified Time (countInvalidTimeSubjects)
 		long observationTime = metric.getObservationTime().getTime();
 		long validTimeStamps[] = new long[10];
 		double countTotalSubjects = 1018.0;

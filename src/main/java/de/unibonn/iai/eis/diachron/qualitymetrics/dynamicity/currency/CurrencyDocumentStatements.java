@@ -70,7 +70,6 @@ public class CurrencyDocumentStatements extends AbstractQualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		// Extract the predicate and object of the statement
-		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		
 		// Check whether the current property corresponds to the Publishing time of the resource containing the quad
@@ -107,8 +106,6 @@ public class CurrencyDocumentStatements extends AbstractQualityMetric {
 					publishingTime = valLastModifiedTime;
 				}
 			} else {
-				logger.trace("Unable to parse date/time literal value: " + object.toString() + " of property: " + predicate.getURI());
-				
 				// Increase the counter of temporal values with unrecognized format 
 				countInvalidFormatDates++;
 			}

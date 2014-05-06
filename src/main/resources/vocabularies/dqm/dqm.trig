@@ -80,6 +80,12 @@
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Provides a measure of the degree to which information is up to date and how promptly the data is updated" ;
 		rdfs:label	"Currency" .
+		
+	dqm:Volatility
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Refers to the frequency with which data varies in time" ;
+		rdfs:label	"Volatility" .
 
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
@@ -177,6 +183,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the total number of resources, described by the dataset, versus the number of those that are recognized to be outdated" ;
 		rdfs:label	"ExclusionOfOutdatedDataMetric" .
+		
+	dqm:TimeValidityIntervalMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Measures the frequency with which data varies over time, by calculating the length of the time interval during which data remains valid." ;
+		rdfs:label	"TimeValidityIntervalMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -361,3 +373,20 @@
 		rdfs:label	"hasExclusionOfOutdatedDataMetric" ;
 		rdfs:domain	dqm:Currency ;
 		rdfs:range	dqm:ExclusionOfOutdatedDataMetric .
+
+	#Volatility Dimension Properties
+	dqm:hasVolatilityDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links the Dynamicity Category with the Volatility Dimension" ;
+		rdfs:label "hasVolatilityDimension" ;
+		rdfs:domain dqm:Dynamicity ;
+		rdfs:range dqm:Volatility .
+
+	dqm:hasTimeValidityIntervalMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Volatility Dimension with the Time Validity Interval Metric (Time Validity Interval Metric belongs to the Volatility Dimension)" ;
+		rdfs:label	"hasTimeValidityIntervalMetric" ;
+		rdfs:domain	dqm:Volatility ;
+		rdfs:range	dqm:TimeValidityIntervalMetric .
