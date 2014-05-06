@@ -1,0 +1,41 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix qr: <http://purl.org/eis/vocab/qr#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix daq: <http://purl.org/eis/vocab/daq#>.
+
+
+# Classes
+qr:QualityReport a rdfs:Class ;
+	rdfs:comment "Represents a report on the problems detected during the assessment of quality on a dataset" ;
+	rdfs:label "Quality Report" .
+	
+qr:QualityProblem a rdfs:Class ;
+	rdfs:comment "Represents a quality problem detected during the assessment of quality metrics on triples" ;
+	rdfs:label "Quality Problem" .
+	
+# Properties
+qr:computedOn a rdf:Property ;
+	rdfs:comment "Represents the dataset URI on which quality metrics where computed" ;
+	rdfs:domain qr:QualityReport ;
+	rdfs:label "computedOn" ;
+	rdfs:range rdfs:Resource .
+	
+qr:hasProblem a rdf:Property ;
+	rdfs:comment "Identifies problem instances in the report";
+	rdfs:domain qr:QualityReport ;
+	rdfs:label "has Problem" ;
+	rdfs:range qr:QualityProblem .
+
+qr:isDescribedBy a rdf:Property;
+	rdfs:comment "Represent the URI of the metric which instantiated this problem";
+	rdfs:domain qr:QualityProblem;
+	rdfs:label "isDescribedBy";
+	rdfs:range daq:Metric.
+
+qr:problematicThing a rdf:Property;
+	rdfs:comment "Represent the actual problematic instance from the dataset. This could be a list of resources (rdf:Seq) or a list of reified statements.";
+	rdfs:domain qr:QualityProblem;
+	rdfs:label "affects";
+	rdfs:range rdfs:Resource.
