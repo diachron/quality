@@ -48,7 +48,7 @@ public class CurrencyDocumentStatements extends AbstractQualityMetric {
 	private long countInvalidFormatDates;
 	
 	/**
-	 * Holds the summatory of the difference between the Observation Time and Last Modified Time, over all processed quads (in milliseconds)
+	 * Holds the summation of the difference between the Observation Time and Last Modified Time, over all processed quads (in milliseconds)
 	 */
 	private long accuModifiedTimeDiffs;
 

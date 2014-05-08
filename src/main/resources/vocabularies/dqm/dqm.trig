@@ -86,6 +86,12 @@
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Refers to the frequency with which data varies in time" ;
 		rdfs:label	"Volatility" .
+		
+	dqm:Timeliness
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Indicates how up-to-date the data is, relative to the specific task at hand" ;
+		rdfs:label	"Timeliness" .
 
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
@@ -189,6 +195,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the frequency with which data varies over time, by calculating the length of the time interval during which data remains valid." ;
 		rdfs:label	"TimeValidityIntervalMetric" .
+		
+	dqm:TimelinessOfResourceMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Assesses the difference between the last modified time of the original data source and the last modified time of the semantic web source, thereby indicating if the resource is outdated" ;
+		rdfs:label	"TimelinessOfResourceMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -390,3 +402,20 @@
 		rdfs:label	"hasTimeValidityIntervalMetric" ;
 		rdfs:domain	dqm:Volatility ;
 		rdfs:range	dqm:TimeValidityIntervalMetric .
+		
+	#Timeliness Dimension Properties
+	dqm:hasTimelinessDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links the Dynamicity Category with the Timeliness Dimension" ;
+		rdfs:label "hasTimelinessDimension" ;
+		rdfs:domain dqm:Dynamicity ;
+		rdfs:range dqm:Timeliness .
+		
+	dqm:hasTimelinessOfResourceMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Timeliness Dimension with the Timeliness of the Resource Metric (Timeliness of the Resource Metric belongs to the Timeliness Dimension)" ;
+		rdfs:label	"hasTimelinessOfResourceMetric" ;
+		rdfs:domain	dqm:Timeliness ;
+		rdfs:range	dqm:TimelinessOfResourceMetric .
