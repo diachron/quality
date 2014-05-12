@@ -20,7 +20,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 public class ExclusionOutdatedDataTest extends Assert {
 	
-private static Logger logger = Logger.getLogger(ExclusionOutdatedDataTest.class);
+	private static Logger logger = Logger.getLogger(ExclusionOutdatedDataTest.class);
 	
 	protected TestLoader loader = new TestLoader();
 	protected ExclusionOutdatedData metric = new ExclusionOutdatedData();

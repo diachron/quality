@@ -17,7 +17,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 /**
  * @author Santiago Londono
  * Assesses the difference between the last modified time of the original data source and the last 
- * modified time of the semantic web source, thereby indicating if the resource is outdated
+ * modified time of the semantic web source, thereby indicating that the resource is most likely outdated
  */
 public class TimelinessOfResource extends AbstractQualityMetric {
 	

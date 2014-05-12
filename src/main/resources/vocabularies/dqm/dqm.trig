@@ -51,6 +51,12 @@
 		rdfs:comment	"Metrics in this dimension measure the extent to which information (or some portion of it) is present, obtainable and ready for use" ;
 		rdfs:label	"Availability" .
 		
+	dqm:Performance
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Assesses the efficiency with which a system can bind to the dataset and get access to the information contained into it" ;
+		rdfs:label	"Performance" .
+		
 	dqm:Accuracy
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -135,6 +141,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Checks whether the content is suitable for consumption and if such content should be accessed" ;
 		rdfs:label	"MisreportedContentTypesMetric" .	
+
+	dqm:LowLatencyMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Measures the delay between the submission of a request to the data source and the reception of the respective response (or the first part of it)" ;
+		rdfs:label	"LowLatencyMetric" .
 
 	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
@@ -267,7 +279,24 @@
 		rdfs:comment	"Links Availability Dimension with Misreported Content Types Metric (Misreported Content Types Metric belongs to the Availability Dimension)" ;
 		rdfs:label	"hasMisreportedContentTypesMetric" ;
 		rdfs:domain	dqm:Availability ;
-		rdfs:range	dqm:MisreportedContentTypesMetric .		
+		rdfs:range	dqm:MisreportedContentTypesMetric .
+	
+	#Performance Dimension Properties
+	dqm:hasPerformanceDimension
+		a	rdfs:Property ;	
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"Links Accessibility Category with Performance Dimension" ;
+		rdfs:label	"hasPerformanceDimension" ;
+		rdfs:domain	dqm:Accessibility ;
+		rdfs:range	dqm:Performance .
+		
+	dqm:hasLowLatencyMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Accessibility Dimension with Low Latency Metric (Low Latency Metric belongs to the Accessibility Dimension)" ;
+		rdfs:label	"hasLowLatencyMetric" ;
+		rdfs:domain	dqm:Accessibility ;
+		rdfs:range	dqm:LowLatencyMetric .
 
 	#Accuracy Dimensions Properties
 	dqm:hasAccuracyDimension
