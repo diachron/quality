@@ -29,14 +29,6 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 	
 	protected List<Node> problemList = new ArrayList<Node>();
 	
-	public long getPropertiesWithHeterogeneousDatatype() {
-		return propertiesWithHeterogeneousDatatype;
-	}
-
-	public long getTotalProperties() {
-		return totalProperties;
-	}
-	
 	@Override
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
@@ -134,9 +126,6 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 		logger.trace("metricValue() --Started--");
 		
 		this.propertiesWithHeterogeneousDatatype = countHeterogeneousDataTypePropeties();
-		
-		logger.info("Total Properties with Heterogeneous Datatype :: " + getPropertiesWithHeterogeneousDatatype());
-		logger.info("Total Properties :: " + getTotalProperties());
 		
 		//return ZERO if total number of properties are ZERO [WARN]
 		if (totalProperties <= 0) {

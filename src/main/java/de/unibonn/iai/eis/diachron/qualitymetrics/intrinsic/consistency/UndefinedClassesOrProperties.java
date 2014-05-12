@@ -33,22 +33,6 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 	
 	protected List<Quad> problemList = new ArrayList<Quad>();
 	
-	public long getUndefinedClassesCount() {
-		return undefinedClassesCount;
-	}
-
-	public long getTotalClassesCount() {
-		return totalClassesCount;
-	}
-
-	public long getUndefinedPropertiesCount() {
-		return undefinedPropertiesCount;
-	}
-
-	public long getTotalPropertiesCount() {
-		return totalPropertiesCount;
-	}
-	
 	public void compute(Quad quad) {
 		
 		logger.trace("compute() --Started--");

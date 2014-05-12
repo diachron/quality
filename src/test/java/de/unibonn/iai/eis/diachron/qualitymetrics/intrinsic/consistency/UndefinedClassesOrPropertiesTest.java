@@ -47,10 +47,6 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 		for(Quad quad : streamingQuads){
 			undefinedClassesOrProperties.compute(quad);
 		}
-		logger.info("Total Classes :: " + undefinedClassesOrProperties.getTotalClassesCount());
-		logger.info("Undefined Classes :: " + undefinedClassesOrProperties.getUndefinedClassesCount());
-		logger.info("Total Properties :: " + undefinedClassesOrProperties.getTotalPropertiesCount());
-		logger.info("Undefined Properties :: " + undefinedClassesOrProperties.getUndefinedPropertiesCount());
 		logger.info("Metric Value ::" + undefinedClassesOrProperties.metricValue());
 		assertEquals(0.076923076, undefinedClassesOrProperties.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");

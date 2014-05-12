@@ -34,22 +34,6 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 	protected long misuseObjectProperties = 0;
 	protected long totalObjectProperties = 0;
 	
-	public long getMisuseDatatypeProperties() {
-		return misuseDatatypeProperties;
-	}
-
-	public long getTotalDatatypeProperties() {
-		return totalDatatypeProperties;
-	}
-
-	public long getMisuseObjectProperties() {
-		return misuseObjectProperties;
-	}
-
-	public long getTotalObjectProperties() {
-		return totalObjectProperties;
-	}
-	
 	protected static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectProperties.class);
 	
 	public static void clearAllOwlPropertiesList()

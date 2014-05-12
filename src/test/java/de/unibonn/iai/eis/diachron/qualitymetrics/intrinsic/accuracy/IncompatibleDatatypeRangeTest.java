@@ -46,8 +46,6 @@ public class IncompatibleDatatypeRangeTest extends Assert {
 		for(Quad quad : streamingQuads){
 			incompatibleDatatypeRange.compute(quad);
 		}
-		logger.info("Incompatible Data Type Literals ::" + incompatibleDatatypeRange.getIncompatiableLiterals());
-		logger.info("Total Literals ::" + incompatibleDatatypeRange.getTotalLiterals());
 		logger.info("Metric Value ::" + incompatibleDatatypeRange.metricValue());
 		assertEquals(0.153846153,incompatibleDatatypeRange.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");

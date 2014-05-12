@@ -37,16 +37,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	protected List<Quad> problemList = new ArrayList<Quad>();
 	
 	private double totalLiterals = 0;
-	
-	public double getTotalLiterals() {
-		return totalLiterals;
-	}
-
 	private double incompatiableDataTypeLiterals = 0;
-	
-	public double getIncompatiableLiterals() {
-		return incompatiableDataTypeLiterals;
-	}
 
 	/**
 	 * Clear Property Cache
