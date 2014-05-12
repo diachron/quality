@@ -40,14 +40,11 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 
 	@Test
 	public final void testCompute() {
-		logger.trace("testCompute() --Started--");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
 			misplacedClassesOrProperties.compute(quad);
 		}
-		logger.info("Metric Value ::" + misplacedClassesOrProperties.metricValue());
 		assertEquals(0.15384615, misplacedClassesOrProperties.metricValue(), 0.00001);
-		logger.trace("testCompute() --Ended--");
 	}
 
 }
