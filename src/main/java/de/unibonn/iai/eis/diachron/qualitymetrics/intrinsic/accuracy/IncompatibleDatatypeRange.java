@@ -23,6 +23,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * This class is responsible for detection of literals incompatible with range data type.
@@ -31,7 +32,10 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * @date 20th Feb 2014
  */
 public class IncompatibleDatatypeRange extends AbstractQualityMetric{
-	
+    /**
+     * Metic URI
+     */
+    private final Resource METRIC_URI = DQM.IncompatibleDatatypeRangeMetric;
 	/**
 	 *  logger object
 	 */
@@ -228,12 +232,14 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
-
+	/**
+	 * Returns Metric URI
+	 * 
+	 * @return metric URI 
+	 */
 	public Resource getMetricURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.METRIC_URI;
 	}
-
 	/**
 	 * Returns list of problematic Quads
 	 * 

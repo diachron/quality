@@ -17,6 +17,7 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 /**
  * This class is responsible for detection of (owl) properties used with wrong type of subject.
  * 
@@ -24,6 +25,10 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
  * @date 12th May 2014
  */
 public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
+    /**
+     * Metic URI
+     */
+    private final Resource METRIC_URI = DQM.MisuseOwlDatatypeOrObjectPropertiesMetric;
     /**
      * static logger object
      */
@@ -210,11 +215,12 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 		logger.trace("metricValue() --Ended--");
 		return metricValue;	}
 	/**
+	 * Returns Metric URI
 	 * 
+	 * @return metric URI
 	 */
 	public Resource getMetricURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.METRIC_URI;
 	}
 	/**
 	 * Returns list of problematic Quads
