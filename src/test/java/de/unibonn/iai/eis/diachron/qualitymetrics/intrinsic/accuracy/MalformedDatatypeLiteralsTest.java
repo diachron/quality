@@ -54,8 +54,6 @@ public class MalformedDatatypeLiteralsTest extends Assert {
 		for(Quad quad : streamingQuads){
 			malformedDatatypeLiterals.compute(quad);
 		}
-		logger.info("Malformed Literals ::" + malformedDatatypeLiterals.getMalformedLiterals());
-		logger.info("Total Literals ::" + malformedDatatypeLiterals.getTotalLiterals());
 		logger.info("Metric Value ::" + malformedDatatypeLiterals.metricValue());
 		assertEquals(0.166666,malformedDatatypeLiterals.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");

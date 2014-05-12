@@ -29,14 +29,6 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	private double malformedLiterals = 0;
 
 	protected List<Quad> problemList = new ArrayList<Quad>();
-	
-	public double getTotalLiterals() {
-		return totalLiterals;
-	}
-
-	public double getMalformedLiterals() {
-		return malformedLiterals;
-	}
 
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
