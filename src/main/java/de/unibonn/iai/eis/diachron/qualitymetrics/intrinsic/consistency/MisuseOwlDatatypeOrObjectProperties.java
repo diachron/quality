@@ -23,8 +23,8 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 	private static String NAMESPACE_MATCH_SUBSTRING = "/owl#";
 	private static String OWL_DATA_TYPE_PROPERTY = "datatypeproperty";
 	private static String OWL_OBJECT_PROPERTY = "objectproperty";
-	private List<Node> owlDatatypePropertyList = new ArrayList<Node>();
-	private List<Node> owlObjectPropertyList = new ArrayList<Node>();
+	private static List<Node> owlDatatypePropertyList = new ArrayList<Node>();
+	private static List<Node> owlObjectPropertyList = new ArrayList<Node>();
 	
 	protected List<Quad> problemList = new ArrayList<Quad>();
 	
@@ -52,21 +52,13 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 	
 	protected static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectProperties.class);
 	
-	/**
-	 * Constructor
-	 * @param quadList
-	 */
-	public MisuseOwlDatatypeOrObjectProperties(List<Quad> quadList){
-		this.filterAllOwlProperties(quadList);
-	}
-	
-	public void clearAllOwlPropertiesList()
+	public static void clearAllOwlPropertiesList()
 	{
-		this.owlDatatypePropertyList.clear();
-		this.owlObjectPropertyList.clear();
+	        MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.clear();
+	        MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.clear();
 	}
 	
-	protected void filterAllOwlProperties(List<Quad> quadList){
+	public static void filterAllOwlProperties(List<Quad> quadList){
 		List<String> tmpPredicateURI = new ArrayList<String>();
 		for(Quad quad : quadList){
 			
@@ -96,12 +88,12 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 									if (tmpPropertyName.toLowerCase().equals(OWL_DATA_TYPE_PROPERTY.toLowerCase())){
 										
 										logger.debug(quad.getSubject() + " is of owl data type property");
-										this.owlDatatypePropertyList.add(quad.getSubject());
+										MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.add(quad.getSubject());
 									}
 									else if (tmpPropertyName.toLowerCase().equals(OWL_OBJECT_PROPERTY.toLowerCase())){
 										
 										logger.debug(quad.getSubject()  + " is of owl object property");
-										this.owlObjectPropertyList.add(quad.getSubject());						
+										MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.add(quad.getSubject());						
 									}
 								}
 							}
@@ -121,12 +113,12 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 					if (tmpPropertyName.toLowerCase().equals(OWL_DATA_TYPE_PROPERTY.toLowerCase())){
 						
 						logger.debug(quad.getSubject() + " is of owl data type property");
-						this.owlDatatypePropertyList.add(quad.getSubject());
+						MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.add(quad.getSubject());
 					}
 					else if (tmpPropertyName.toLowerCase().equals(OWL_OBJECT_PROPERTY.toLowerCase())){
 						
 						logger.debug(quad.getSubject()  + " is of owl object property");
-						this.owlObjectPropertyList.add(quad.getSubject());						
+						MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.add(quad.getSubject());						
 					}
 				}
 			}
@@ -142,7 +134,7 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		//owl:DatatypeProperty relates some resource to a literal
-		if (this.owlDatatypePropertyList.contains(predicate)){
+		if (MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.contains(predicate)){
 			this.totalDatatypeProperties++;
 			if (!object.isLiteral()){
 				this.misuseDatatypeProperties++;
@@ -150,7 +142,7 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 			}
 		}
 		// owl:ObjectProperty relates some resource another resource
-		else if (this.owlObjectPropertyList.contains(predicate)){
+		else if (MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.contains(predicate)){
 			this.totalObjectProperties++;
 			if (!object.isURI()){
 				this.misuseObjectProperties++;
