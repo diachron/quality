@@ -32,23 +32,6 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 	protected long totalPropertiesCount = 0;
 	
 	protected List<Quad> problemList = new ArrayList<Quad>();
-	
-	public long getMisplacedClassesCount() {
-		return misplacedClassesCount;
-	}
-
-	public long getTotalClassesCount() {
-		return totalClassesCount;
-	}
-
-	public long getMisplacedPropertiesCount() {
-		return misplacedPropertiesCount;
-	}
-
-	public long getTotalPropertiesCount() {
-		return totalPropertiesCount;
-	}
-	
 
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
@@ -127,11 +110,6 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 		
 		logger.trace("compute() --Ended--");
 	}
-
-	public String getName() {
-		return "MisplacedClassesOrProperties";
-	}
-
 
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");

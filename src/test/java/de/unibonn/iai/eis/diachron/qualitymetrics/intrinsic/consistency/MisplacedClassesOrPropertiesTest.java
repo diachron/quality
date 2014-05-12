@@ -45,10 +45,6 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 		for(Quad quad : streamingQuads){
 			misplacedClassesOrProperties.compute(quad);
 		}
-		logger.info("Total Classes :: " + misplacedClassesOrProperties.getTotalClassesCount());
-		logger.info("Misplaced Classes :: " + misplacedClassesOrProperties.getMisplacedClassesCount());
-		logger.info("Total Properties :: " + misplacedClassesOrProperties.getTotalPropertiesCount());
-		logger.info("Misplaced Properties :: " + misplacedClassesOrProperties.getMisplacedPropertiesCount());
 		logger.info("Metric Value ::" + misplacedClassesOrProperties.metricValue());
 		assertEquals(0.15384615, misplacedClassesOrProperties.metricValue(), 0.00001);
 		logger.trace("testCompute() --Ended--");
