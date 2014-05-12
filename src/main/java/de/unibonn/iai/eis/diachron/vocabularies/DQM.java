@@ -237,6 +237,28 @@ public class DQM {
      */
     public static final Resource MalformedDatatypeLiteralsMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#MalformedDatatypeLiteralsMetric" );
     
+    /** <p>Detection of literals incompatible with range data type, which do not abide by the lexical syntax of their 
+     *  respective datatypes</p>
+     */
+    public static final Resource IncompatibleDatatypeRangeMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#IncompatibleDatatypeRangeMetric" );
+    
+    /** <p>Detection of heterogeneous data types. Base on that it evaluates the value of homogeneity of 
+     * data types for give sets of quads</p>
+     */
+    public static final Resource HomogeneousDatatypesMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#HomogeneousDatatypesMetric" );
+    
+    /** <p>Detection of misplaced classes and properties</p>
+     */
+    public static final Resource MisplacedClassesOrPropertiesMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#MisplacedClassesOrPropertiesMetric" );
+    
+    /** <p>Detection of (owl) properties used with wrong type of subject</p>
+     */
+    public static final Resource MisuseOwlDatatypeOrObjectPropertiesMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#MisuseOwlDatatypeOrObjectPropertiesMetric" );
+    
+    /** <p>Detection of undefined classes and properties</p>
+     */
+    public static final Resource UndefinedClassesOrPropertiesMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#UndefinedClassesOrPropertiesMetric" );
+    
     /** <p>Checks whether the content is suitable for consumption and if such content 
      *  should be accessed</p>
      */

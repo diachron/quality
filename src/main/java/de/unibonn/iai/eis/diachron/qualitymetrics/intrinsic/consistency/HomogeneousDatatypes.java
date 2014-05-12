@@ -15,6 +15,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 /**
  * This class is responsible for detection of heterogeneous data types. Base
  * on that it evaluates the value of homogeneity of data types for give sets of quads.
@@ -23,7 +24,10 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * @date 12th May 2014
  */
 public class HomogeneousDatatypes extends AbstractQualityMetric{
-
+    /**
+     * Metic URI
+     */
+    private final Resource METRIC_URI = DQM.HomogeneousDatatypesMetric;
     /**
      * logger static object
      */
@@ -176,11 +180,12 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 		return metricValue;
 	}
 	/**
+	 * Returns Metric URI
 	 * 
+	 * @return metic URI
 	 */
 	public Resource getMetricURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.METRIC_URI;
 	}
 	/**
 	 * Returns list of problematic quads

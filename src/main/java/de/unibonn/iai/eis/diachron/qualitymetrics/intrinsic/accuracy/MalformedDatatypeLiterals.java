@@ -93,7 +93,11 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
-
+	/**
+	 * Returns the metric URI
+	 * 
+	 * @return the metric URI
+	 */
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
