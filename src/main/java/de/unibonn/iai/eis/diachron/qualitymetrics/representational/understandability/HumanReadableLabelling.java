@@ -2,6 +2,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandab
 
 import java.util.HashMap;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -20,7 +21,7 @@ public class HumanReadableLabelling extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.HumanReadableLabellingMetric;
 	
-	private HashMap<Resource, Integer> entities = new HashMap<Resource, Integer>();
+	private HashMap<Node, Integer> entities = new HashMap<Node, Integer>();
 	
 	/**
 	 * Each entity is checked for a Human Readable label <rdfs:comment> or <rdfs:label>.
@@ -29,17 +30,16 @@ public class HumanReadableLabelling extends AbstractQualityMetric {
 	 */
 	@Override
 	public void compute(Quad quad) {
-		if (quad.getPredicate().getURI().equals(RDF.type)){
+		if (quad.getPredicate().getURI().equals(RDF.type.getURI())){
 			// we've got an instance!
 			if (!(entities.containsKey(quad.getSubject()))) { // an instance might have more than 1 type defined
-				entities.put((Resource) quad.getSubject(), 0);
+				entities.put(quad.getSubject(), 0);
 			}
-			return;
 		}
 	
-		if ( (quad.getPredicate().getURI().equals(RDFS.label)) || (quad.getPredicate().getURI().equals(RDFS.comment))){
+		if ( (quad.getPredicate().getURI().equals(RDFS.label.getURI())) || (quad.getPredicate().getURI().equals(RDFS.comment.getURI()))){
 			// we'll check if the provider is cheating and is publishing empty string labels and comments
-			if (!(quad.getObject().getLiteralValue().equals(""))) entities.put((Resource) quad.getSubject(), 1);
+			if (!(quad.getObject().getLiteralValue().equals(""))) entities.put(quad.getSubject(), 1);
 		}
 	}
 
@@ -47,11 +47,11 @@ public class HumanReadableLabelling extends AbstractQualityMetric {
 	public double metricValue() {
 		double entities = 0.0;
 		double humanLabels = 0.0;
-		for (Resource r : this.entities.keySet()){
+		for (Node n : this.entities.keySet()){
 			entities+=1;
-			humanLabels += this.entities.get(r);
+			humanLabels += this.entities.get(n);
 		}
-		return entities/humanLabels;
+		return humanLabels/entities; // at most we should have 1 label/comment for each entity
 	}
 
 	@Override

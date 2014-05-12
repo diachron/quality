@@ -2,6 +2,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.conciseness;
 
 import java.util.HashMap;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
@@ -22,7 +23,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 public class OntologyVersioningConciseness extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.OntologyVersionConcisenessMetric;
-	private HashMap<Resource, Integer> ontologyInstances = new HashMap<Resource, Integer>();
+	private HashMap<Node, Integer> ontologyInstances = new HashMap<Node, Integer>();
 	
 	private final String ONTOLOGY_VERSION = "http://www.w3.org/2002/07/owl#ontologyVersion";
 	
@@ -33,12 +34,12 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		// <owl:ontologyVersion> should be defined only on something of type owl:Ontology
-		if (quad.getObject().getURI().equals(OWL.Ontology.getURI())){
+		if (quad.getObject().getURI().equals(OWL.Ontology.getURI().toString())){
 			if (ontologyInstances.containsKey(quad.getSubject())){
 				int instance = ontologyInstances.get(quad.getSubject()) + 1;
-				ontologyInstances.put((Resource) quad.getSubject(), instance);
+				ontologyInstances.put(quad.getSubject(), instance);
 			} else {
-				ontologyInstances.put((Resource) quad.getSubject(), 0);
+				ontologyInstances.put(quad.getSubject(), 0);
 			}
 		}
 		
@@ -46,7 +47,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 			if (ontologyInstances.containsKey(quad.getSubject())){
 				// We have an ontologyVersion property defined in the ontology
 				int instance = ontologyInstances.get(quad.getSubject()) + 1;
-				ontologyInstances.put((Resource) quad.getSubject(), instance);
+				ontologyInstances.put(quad.getSubject(), instance);
 			}
 		}
 	}
@@ -59,12 +60,12 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 		
 		int ontologies = 0;
 		int instances = 0;
-		for (Resource r : this.ontologyInstances.keySet()){
+		for (Node n : this.ontologyInstances.keySet()){
 			ontologies = ontologies++;
-			instances += this.ontologyInstances.get(r);
+			instances += this.ontologyInstances.get(n);
 		}
-		
-		return (ontologies / instances);
+	
+		return instances / ontologies;
 	}
 
 	@Override
