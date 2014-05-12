@@ -15,6 +15,8 @@ import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.IncompatibleDatatypeRange#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * 
  * @author Muhammad Ali Qasmi
  * @date 20th Feb 2014
  */
@@ -37,7 +39,7 @@ public class IncompatibleDatatypeRangeTest extends Assert {
 	}
 
 	/**
-	 * 
+	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.IncompatibleDatatypeRange#compute(com.hp.hpl.jena.sparql.core.Quad)}.
 	 */
 	@Test
 	public final void testCompute() {

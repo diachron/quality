@@ -18,6 +18,8 @@ import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.MalformedDatatypeLiterals#compute(com.hp.hpl.jena.sparql.core.Quad)}. 
+ * 
  * @author Muhammad Ali Qasmi
  * @date 13th Feb 2014
  */

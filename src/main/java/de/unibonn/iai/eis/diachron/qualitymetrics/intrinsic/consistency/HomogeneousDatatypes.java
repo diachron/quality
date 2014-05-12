@@ -15,21 +15,45 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
-
+/**
+ * This class is responsible for detection of heterogeneous data types. Base
+ * on that it evaluates the value of homogeneity of data types for give sets of quads.
+ * 
+ * @author Muhammad Ali Qasmi
+ * @date 12th May 2014
+ */
 public class HomogeneousDatatypes extends AbstractQualityMetric{
 
+    /**
+     * logger static object
+     */
 	static Logger logger = Logger.getLogger(HomogeneousDatatypes.class);
-
+	/**
+	 * threshold value to declare whether a property is heterogeneous or not.
+	 */
 	protected static Long THRESHOLD = new Long(99);
-	
+	/**
+	 * number of properties with heterogeneous data type
+	 */
 	protected long propertiesWithHeterogeneousDatatype = 0;
+	/**
+	 * total number of properties
+	 */
 	protected long totalProperties = 0;
-	
+	/**
+	 * data structure store node w.r.t. it rdf data type and also maintain it the total number of hits 
+	 * (counts) for the given property in a collection of quads.
+	 */
 	protected Hashtable<Node, Hashtable<RDFDatatype, Long>> propertiesDatatypeMatrix = new Hashtable<Node, Hashtable<RDFDatatype,Long>>();   
-	
+	/**
+	 * list of problematic nodes 	
+	 */
 	protected List<Node> problemList = new ArrayList<Node>();
 	
-	@Override
+	/**
+	 * This method extracts properties from a given quad and stores it into the hash table with required
+	 * information e.g. rdf type, count.
+	 */
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
 		try{
@@ -89,7 +113,13 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 		}
 		logger.trace("compute() --Ended--");
 	}
-
+	/**
+	 * This method identifies whether a given property is heterogeneous or not.
+	 * 
+	 * @param givenTable - property (its rdf type and its count) 
+	 * @param threshold - to declare a property as heterogeneous
+	 * @return true - if heterogeneous
+	 */
 	protected boolean isHeterogeneousDataType(Hashtable<RDFDatatype, Long> givenTable, Long threshold){
 		
 		Long tmpMax = new Long(0); //for count of Max dataType
@@ -106,7 +136,10 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 		
 		return (((tmpMax/tmpTotal) * 100) >= threshold) ? true : false;
 	}
-	
+	/**
+	 * This method counts number of heterogeneous data type properties 
+	 * @return
+	 */
 	protected long countHeterogeneousDataTypePropeties(){
 		long tmpCount = 0;
 		Enumeration<Node> enumKey = propertiesDatatypeMatrix.keys();
@@ -119,8 +152,11 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 		}
 		return tmpCount;
 	}
-	
-	@Override
+	/**
+	 * Returns metric value for the object of this class
+	 * 
+	 * @return (number of heterogeneous properties ) / (total number of properties)
+	 */
 	public double metricValue() {
 		
 		logger.trace("metricValue() --Started--");
@@ -139,14 +175,18 @@ public class HomogeneousDatatypes extends AbstractQualityMetric{
 		
 		return metricValue;
 	}
-
-	@Override
+	/**
+	 * 
+	 */
 	public Resource getMetricURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
+	/**
+	 * Returns list of problematic quads
+	 * 
+	 * @return list of problematic quads
+	 */
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Node> tmpProblemList = null;
 		try {

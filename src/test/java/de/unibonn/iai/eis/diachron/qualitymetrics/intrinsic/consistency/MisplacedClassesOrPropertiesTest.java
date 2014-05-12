@@ -16,7 +16,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
- * testing...
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * 
  * @author Muhammad Ali Qasmi
  * @date 13th March 2014
  */
@@ -39,6 +40,9 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 	}
 
 	@Test
+	/**
+	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+	 */
 	public final void testCompute() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){

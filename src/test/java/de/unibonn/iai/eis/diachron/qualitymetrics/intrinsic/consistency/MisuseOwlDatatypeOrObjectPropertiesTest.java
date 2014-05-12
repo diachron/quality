@@ -13,7 +13,13 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
-
+/**
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisuseOwlDatatypeOrObjectProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * 
+ * @author Muhammad Ali Qasmi
+ * @data 12th May 2014
+ *
+ */
 public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 
 	static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectPropertiesTest.class);
@@ -35,6 +41,9 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 	}
 
 	@Test
+	/**
+	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisuseOwlDatatypeOrObjectProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+	 */
 	public final void testCompute() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){

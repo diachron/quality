@@ -16,20 +16,37 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
+ * This class is responsible for Detection of malformed Data type Literals - typed literals like "13"^^xsd:int"
+ * 
  * @author Muhammad Ali Qasmi
  * @date 13th Feb 2014
  */
 public class MalformedDatatypeLiterals extends AbstractQualityMetric {
-
+    /**
+     * Metic URI
+     */
 	private final Resource METRIC_URI = DQM.MalformedDatatypeLiteralsMetric;
-	
+	/**
+	 * logger static object
+	 */
 	private static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
-
+	/**
+	 * total number of literals
+	 */
 	private double totalLiterals = 0;
+	/**
+	 * total number of malformed literals
+	 */
 	private double malformedLiterals = 0;
-
+	/**
+	 * list of problematic quads
+	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
-
+	/**
+	 * This method identify whether a given quad is malformed or not.
+	 * 
+	 * @param quad - to be identified
+	 */
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
 		// retrieves object from statement
@@ -49,12 +66,16 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 				this.totalLiterals++;
 			}
 			logger.debug("Literal :: " + object.toString());
-
 		}
 		logger.debug("Object :: " + object.toString());
 		logger.trace("compute() --Ended--");
 	}
 
+	/**
+	 * Returns metric value for object this class 
+	 * 
+	 * @return  (number of malformed literals) / (total number of literals)
+	 */
 	public double metricValue() {
 
 		logger.trace("metricValue() --Started--");
@@ -79,6 +100,8 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 
 	/**
 	 * Returns list of problematic Quads
+	 * 
+	 * @return list of problematic quads
 	 */
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;

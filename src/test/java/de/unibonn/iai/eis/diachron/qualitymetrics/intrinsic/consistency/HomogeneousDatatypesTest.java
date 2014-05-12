@@ -13,7 +13,12 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
-
+/**
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.HomogeneousDatatypes#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * 
+ * @author Muhammad Ali Qasmi
+ * @date 12th May 2014
+ */
 public class HomogeneousDatatypesTest extends Assert {
 
 	static Logger logger = Logger.getLogger(HomogeneousDatatypesTest.class);
@@ -32,6 +37,9 @@ public class HomogeneousDatatypesTest extends Assert {
 	}
 
 	@Test
+	/**
+	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.HomogeneousDatatypes#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+	 */
 	public final void testCompute() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){

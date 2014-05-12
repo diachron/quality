@@ -1,7 +1,5 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,20 +17,41 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
+ * This class is responsible for detection of undefined classes and properties.
+ *  
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014
  */
 public class UndefinedClassesOrProperties extends AbstractQualityMetric{
-	
+	/**
+	 * static logger object
+	 */
 	static Logger logger = Logger.getLogger(UndefinedClassesOrProperties.class);
-		
+	/**
+	 * total number of undefined classes
+	 */
 	protected long undefinedClassesCount = 0;
+	/**
+	 * total number classes
+	 */
 	protected long totalClassesCount = 0;
+	/**
+	 * total number of undefined properties
+	 */
 	protected long undefinedPropertiesCount = 0;
+	/**
+	 * total number of properties
+	 */
 	protected long totalPropertiesCount = 0;
-	
+	/**
+	 * list of problematic quads
+	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
-	
+	/**
+	 * This method identifies whether given quad is an undefined class or property.
+	 * 
+	 * @param quad - to be identified
+	 */
 	public void compute(Quad quad) {
 		
 		logger.trace("compute() --Started--");
@@ -74,7 +93,6 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 				}
 			}
 			
-			
 			if (object.isURI()){ //check if object is URI (not blank or literal)
 				this.totalClassesCount++;
 				//load model
@@ -96,7 +114,11 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 		
 		logger.trace("compute() --Ended--");
 	}
-
+	/**
+	 * This method returns metric value for the object of this class
+	 * 
+	 * @return (total number of undefined classes and undefined properties) / ( total number of classes and properties)
+	 */
 	public double metricValue() {
 		
 		logger.trace("metricValue() --Started--");
@@ -118,7 +140,6 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
-	
 	/**
 	 * 
 	 */
@@ -129,6 +150,8 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 
 	/**
 	 * Returns list of problematic Quads
+	 * 
+	 * @return list of problematic quad
 	 */
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
@@ -141,5 +164,4 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric{
 		}
 		return tmpProblemList;
 	}
-
 }

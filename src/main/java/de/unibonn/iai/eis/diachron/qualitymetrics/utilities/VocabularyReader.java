@@ -8,8 +8,6 @@ import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-
-
 /**
  * Responsible for reading vocabulary (Models) from Web.
  * Also stores vocabulary in cache.
@@ -23,7 +21,7 @@ public final class VocabularyReader {
 	private static Hashtable<String, Model>vocabularies = new Hashtable<String, Model>();
 	
 	/**
-	 * 
+	 * Clears all content from the vocabulary hash table
 	 */
 	public static void clear(){
 		VocabularyReader.vocabularies.clear();

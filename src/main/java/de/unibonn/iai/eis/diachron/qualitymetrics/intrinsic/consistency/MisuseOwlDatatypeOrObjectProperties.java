@@ -17,31 +17,71 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
-
+/**
+ * This class is responsible for detection of (owl) properties used with wrong type of subject.
+ * 
+ * @author Muhammad Ali Qasmi
+ * @date 12th May 2014
+ */
 public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
-
-	private static String NAMESPACE_MATCH_SUBSTRING = "/owl#";
+    /**
+     * static logger object
+     */
+    protected static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectProperties.class);
+    /**
+     * owl prefix
+     */
+    private static String NAMESPACE_MATCH_SUBSTRING = "/owl#";
+    /**
+     * owl data type propetry
+     */
 	private static String OWL_DATA_TYPE_PROPERTY = "datatypeproperty";
+	/**
+	 * owl object property
+	 */
 	private static String OWL_OBJECT_PROPERTY = "objectproperty";
+	/**
+	 * list of owl data type properties
+	 */
 	private static List<Node> owlDatatypePropertyList = new ArrayList<Node>();
+	/**
+	 * list of owl object properties
+	 */
 	private static List<Node> owlObjectPropertyList = new ArrayList<Node>();
-	
+	/**
+	 * list of problematic quads
+	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
-	
+	/**
+	 * total number of misuse data type properties
+	 */
 	protected long misuseDatatypeProperties = 0;
+	/**
+	 * total number of data type properties
+	 */
 	protected long totalDatatypeProperties = 0;
-	
+	/**
+	 * total number of misuse object properties
+	 */
 	protected long misuseObjectProperties = 0;
+	/**
+	 * total number of object properties
+	 */
 	protected long totalObjectProperties = 0;
-	
-	protected static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectProperties.class);
-	
+	/**
+	 * This method clears all content in the owlDatatypePropertyList 
+	 * and owlObjectPropertyList
+	 */
 	public static void clearAllOwlPropertiesList()
 	{
-	        MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.clear();
-	        MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.clear();
+        MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.clear();
+        MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.clear();
 	}
-	
+	/**
+	 * This method separates out owl properties from a given list of quad
+	 * 
+	 * @param quadList - list of quad to be filtered
+	 */
 	public static void filterAllOwlProperties(List<Quad> quadList){
 		List<String> tmpPredicateURI = new ArrayList<String>();
 		for(Quad quad : quadList){
@@ -108,32 +148,36 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 			}
 		}
 	}
-	
+	/**
+	 * This method computes identified a given quad is a misuse owl data type property
+	 * or object property.
+	 * 
+	 * @param quad - to be identified
+	 */
 	public void compute(Quad quad) {
 		
 		logger.trace("compute() --Started--");
 		
 		try {
 			
-		Node predicate = quad.getPredicate();
-		Node object = quad.getObject();
-		//owl:DatatypeProperty relates some resource to a literal
-		if (MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.contains(predicate)){
-			this.totalDatatypeProperties++;
-			if (!object.isLiteral()){
-				this.misuseDatatypeProperties++;
-				this.problemList.add(quad);
-			}
-		}
-		// owl:ObjectProperty relates some resource another resource
-		else if (MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.contains(predicate)){
-			this.totalObjectProperties++;
-			if (!object.isURI()){
-				this.misuseObjectProperties++;
-				this.problemList.add(quad);
-			}
-		}
-		
+    		Node predicate = quad.getPredicate();
+    		Node object = quad.getObject();
+    		//owl:DatatypeProperty relates some resource to a literal
+    		if (MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.contains(predicate)){
+    			this.totalDatatypeProperties++;
+    			if (!object.isLiteral()){
+    				this.misuseDatatypeProperties++;
+    				this.problemList.add(quad);
+    			}
+    		}
+    		// owl:ObjectProperty relates some resource another resource
+    		else if (MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.contains(predicate)){
+    			this.totalObjectProperties++;
+    			if (!object.isURI()){
+    				this.misuseObjectProperties++;
+    				this.problemList.add(quad);
+    			}
+    		}
 		}
 		catch (Exception exception){
 			logger.debug(exception);
@@ -141,7 +185,11 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 		}
 		logger.trace("compute() --Ended--");
 	}
-
+	/**
+	 * This method computes metric value for the object of this class
+	 * 
+	 * @return (total misuse properties) / (total properties)   
+	 */
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
 		logger.debug("Number of Misuse Owl Datatype Properties :: " +  this.misuseDatatypeProperties);
@@ -161,14 +209,17 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric{
 		logger.debug("Metric Value :: " +  metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;	}
-
+	/**
+	 * 
+	 */
 	public Resource getMetricURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	/**
 	 * Returns list of problematic Quads
+	 * 
+	 * @return list of problematic quads
 	 */
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
