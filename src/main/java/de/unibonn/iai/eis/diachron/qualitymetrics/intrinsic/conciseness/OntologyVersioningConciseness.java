@@ -61,7 +61,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 		int instances = 0;
 		for (Resource r : this.ontologyInstances.keySet()){
 			ontologies = ontologies++;
-			instances = this.ontologyInstances.get(r);
+			instances += this.ontologyInstances.get(r);
 		}
 		
 		return (ontologies / instances);
