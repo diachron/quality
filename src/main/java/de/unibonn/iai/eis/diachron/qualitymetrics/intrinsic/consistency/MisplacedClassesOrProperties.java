@@ -18,21 +18,41 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
+ * This class is responsible for detection of misplaced classes and properties.
  * 
  * @author Muhammad Ali Qasmi
  * @date 13th March 2014
  */
 public class MisplacedClassesOrProperties extends AbstractQualityMetric{
-
+    /**
+     * static logger object
+     */
 	static Logger logger = Logger.getLogger(MisplacedClassesOrProperties.class);
-	
+	/**
+	 * total number of misplaces classes
+	 */
 	protected long misplacedClassesCount = 0;
+	/**
+	 * total number of classes
+	 */
 	protected long totalClassesCount = 0;
+	/**
+	 * total number of misplaces properties
+	 */
 	protected long misplacedPropertiesCount = 0;
+	/**
+	 * total number properties
+	 */
 	protected long totalPropertiesCount = 0;
-	
+	/**
+	 * list of problematic quads
+	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
-
+	/**
+	 * This method identifies whether a given quad is a misplaced class or a misplaced property.
+	 * 
+	 * @param quad - to be identified
+	 */
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
 		
@@ -81,7 +101,6 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 				}
 			}
 			
-			
 			if (object.isURI()){ //check if object is URI (not blank or literal)
 				this.totalClassesCount++;
 				//load model
@@ -110,7 +129,11 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 		
 		logger.trace("compute() --Ended--");
 	}
-
+	/**
+	 * This method computes metric value for the object of this class.
+	 * 
+	 *  @return (total number of undefined classes or properties) / (total number of classes or properties)
+	 */
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
 		logger.debug("Number of Misplaced Classes :: " +  this.misplacedClassesCount);
@@ -131,14 +154,17 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
-
+	/**
+	 * 
+	 */
 	public Resource getMetricURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	/**
 	 * Returns list of problematic Quads
+	 * 
+	 * @return list of problematic quads
 	 */
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;

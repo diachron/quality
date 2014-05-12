@@ -25,31 +25,43 @@ import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
 /**
+ * This class is responsible for detection of literals incompatible with range data type.
+ * 
  * @author Muhammad Ali Qasmi
  * @date 20th Feb 2014
  */
 public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	
-	static Logger logger = Logger.getLogger(IncompatibleDatatypeRange.class);
-	// cache frequently used Properties
-	static Map<String, Statement> cacheProperty = new HashMap<String,Statement>();
-	
-	protected List<Quad> problemList = new ArrayList<Quad>();
-	
-	private double totalLiterals = 0;
-	private double incompatiableDataTypeLiterals = 0;
-
 	/**
-	 * Clear Property Cache
+	 *  logger object
+	 */
+    static Logger logger = Logger.getLogger(IncompatibleDatatypeRange.class);
+	/**
+	 *  cache frequently used Properties
+	 */
+	static Map<String, Statement> cacheProperty = new HashMap<String,Statement>();
+	/**
+	 *  list of problematic quads
+	 */
+	protected List<Quad> problemList = new ArrayList<Quad>();
+	/**
+	 *  total number of literals
+	 */
+	private double totalLiterals = 0;
+	/**
+	 *  total number of incompatiable data type literals.
+	 */
+	private double incompatiableDataTypeLiterals = 0;
+	/**
+	 * Clears Property Cache
 	 */
 	public static void clearCache(){
 		cacheProperty.clear();
 	}
-	
 	/**
-	 *	Reads vocabulary from given URL 
+	 * Reads vocabulary from given URL 
 	 * 
-	 * @param uri
+	 * @param url - for the model to be retrieved
 	 */
 	protected Model loadVocabulary(String url){
         Model model = ModelFactory.createDefaultModel();
@@ -74,7 +86,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	 * Data Type URI specified in the range of the Object's predicate
 	 * @param literalDateTypeURI
 	 * @param RangeDataTypeURI
-	 * @return
+	 * @return true - if validated
 	 */
 	protected boolean checkTypeByComparingURI(URI literalDataTypeURI, URI rangeReferredURI){
 	
@@ -109,7 +121,9 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 	
 	/**
 	 * Computes whether a given quad is incompatible data type
-	 * literal or not 
+	 * literal or not
+	 * 
+	 * @param quad - to be processed 
 	 */
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
@@ -193,6 +207,11 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 		logger.trace("compute() --Ended--");
 	}
 	
+	/**
+	 * Returns value of the metric based on
+	 * 
+	 * @return ( number of incompatiable Data type literls ) / ( total number of literls )
+	 */
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
 		logger.debug("Incompatiable DataType Literals :: " +  this.incompatiableDataTypeLiterals);
@@ -217,6 +236,8 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 
 	/**
 	 * Returns list of problematic Quads
+	 * 
+	 * @return list of problematic Quads
 	 */
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;

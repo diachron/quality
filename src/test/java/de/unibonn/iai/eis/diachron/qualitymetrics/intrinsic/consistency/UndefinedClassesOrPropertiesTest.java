@@ -16,6 +16,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
  * 
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014
@@ -37,10 +38,10 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 		VocabularyReader.clear();
 	}
 	
-	/**
-	 * 
-	 */
 	@Test
+	/**
+	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+	 */
 	public final void testCompute() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
