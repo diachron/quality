@@ -419,3 +419,25 @@
 		rdfs:label	"hasTimelinessOfResourceMetric" ;
 		rdfs:domain	dqm:Timeliness ;
 		rdfs:range	dqm:TimelinessOfResourceMetric .
+		
+		
+##################################
+#								 #
+#	EBI SPECIFIC METRICS		 #
+#								 #
+##################################
+
+#Ontology Versioning Conciseness
+dqm:hasOntologyVersionConcisenessMetric
+	a	rdfs:Property ;
+	rdfs:subPropertyOf	daq:hasMetric ;
+	rdfs:comment	"Links Conciseness Dimension with Ontology Versioning Conciseness Metric" ;
+	rdfs:label	"hasExtensionalConcisenessMetric" ;
+	rdfs:domain	dqm:Conciseness ;
+	rdfs:range	dqm:OntologyVersionConcisenessMetric .	
+	
+dqm:OntologyVersionConcisenessMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure for checking singleton instances of the use-case specific defined owl:ontologyVersion property" ;
+		rdfs:label	"OntologyVersionConcisenessMetric" .
