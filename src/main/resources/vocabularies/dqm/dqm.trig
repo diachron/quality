@@ -93,6 +93,12 @@
 		rdfs:comment	"Indicates how up-to-date the data is, relative to the specific task at hand" ;
 		rdfs:label	"Timeliness" .
 
+	dqm:Understandability
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Refers to the easy with which data can be compreshended without ambiguity and used by a human data consumer" ;
+		rdfs:label	"Understandability" .
+			
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
 		a	rdfs:Class ;
@@ -201,6 +207,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Assesses the difference between the last modified time of the original data source and the last modified time of the semantic web source, thereby indicating if the resource is outdated" ;
 		rdfs:label	"TimelinessOfResourceMetric" .
+		
+	dqm:HumanReadableLabellingMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Assesses the percentage of entities having an rdfs:label or rdfs:comment" ;
+		rdfs:label	"HumanReadableLabellingMetric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -352,6 +364,23 @@
 		rdfs:label	"hasShortURIsMetric" ;
 		rdfs:domain	dqm:RepresentationalConciseness ;
 		rdfs:range	dqm:ShortURIsMetric .
+		
+	#Understandability Dimension Properties
+	dqm:hasRepresentationalConcisenessDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links Representational Category with Understandability Dimension" ;
+		rdfs:label "hasRepresentationalConcisenessDimension" ;
+		rdfs:domain dqm:Representational ;
+		rdfs:range dqm:Understandability .
+		
+	dqm:hasHumanReadableLabellingMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Understandability Dimension with Human Readable Labelling Metric (Human Readable Labelling belongs to the Understandability Dimension)" ;
+		rdfs:label	"hasShortURIsMetric" ;
+		rdfs:domain	dqm:Understandability ;
+		rdfs:range	dqm:HumanReadableLabellingMetric .
 		
 	#Currency Dimension Properties
 	dqm:hasCurrencyDimension
