@@ -42,14 +42,11 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 	 */
 	@Test
 	public final void testCompute() {
-		logger.trace("testCompute() --Started--");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
 			undefinedClassesOrProperties.compute(quad);
 		}
-		logger.info("Metric Value ::" + undefinedClassesOrProperties.metricValue());
 		assertEquals(0.076923076, undefinedClassesOrProperties.metricValue(), 0.00001);
-		logger.trace("testCompute() --Ended--");
 	}
 
 }

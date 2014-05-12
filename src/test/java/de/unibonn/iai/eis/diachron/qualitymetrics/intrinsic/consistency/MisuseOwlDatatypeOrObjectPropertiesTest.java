@@ -36,14 +36,11 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 
 	@Test
 	public final void testCompute() {
-		logger.trace("testCompute() --Started--");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
 			misuseOwlDatatypeOrObjectProperty.compute(quad);
 		}
-		logger.info("Metric Value ::" + misuseOwlDatatypeOrObjectProperty.metricValue());
 		assertEquals(0.222222, misuseOwlDatatypeOrObjectProperty.metricValue(), 0.00001);
-		logger.trace("testCompute() --Ended--");
 	}
 
 }

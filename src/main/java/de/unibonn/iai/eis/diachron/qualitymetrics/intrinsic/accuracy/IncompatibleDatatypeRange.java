@@ -58,7 +58,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
         	logger.debug(url + " :: vocabulary loaded from web.");
         }catch (RiotException roitException){
         	logger.debug(roitException);
-        	logger.fatal(roitException.getMessage());
+        	logger.error(roitException.getMessage());
         	return null;
         }
         catch (HttpException httpException){

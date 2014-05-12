@@ -33,20 +33,12 @@ public class HomogeneousDatatypesTest extends Assert {
 
 	@Test
 	public final void testCompute() {
-
-		logger.trace("testCompute() --Started--");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
 			homogeneousDatatypes.compute(quad);
 		}
-		
 		double metricValue = homogeneousDatatypes.metricValue();
-		
-		logger.info("Metric Value ::" + metricValue);
-		
 		assertEquals(0.2, metricValue, 0.00001);
-		logger.trace("testCompute() --Ended--");
-		
 	}
 
 }
