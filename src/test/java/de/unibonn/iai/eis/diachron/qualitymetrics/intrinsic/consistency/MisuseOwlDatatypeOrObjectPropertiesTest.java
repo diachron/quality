@@ -19,19 +19,19 @@ public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
 	static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectPropertiesTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected MisuseOwlDatatypeOrObjectProperties misuseOwlDatatypeOrObjectProperty =  null;
+	protected MisuseOwlDatatypeOrObjectProperties misuseOwlDatatypeOrObjectProperty =  new MisuseOwlDatatypeOrObjectProperties();
 	
 	
 	@Before
 	public void setUp() throws Exception {
 		BasicConfigurator.configure();
 		loader.loadDataSet(DataSetMappingForTestCase.MisuseOwlDataTypeOrObjectProperties);
-		misuseOwlDatatypeOrObjectProperty = new MisuseOwlDatatypeOrObjectProperties(loader.getStreamingQuads());
+		MisuseOwlDatatypeOrObjectProperties.filterAllOwlProperties((loader.getStreamingQuads()));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		misuseOwlDatatypeOrObjectProperty.clearAllOwlPropertiesList();
+	    MisuseOwlDatatypeOrObjectProperties.clearAllOwlPropertiesList();
 	}
 
 	@Test
