@@ -42,8 +42,6 @@ public class HomogeneousDatatypesTest extends Assert {
 		
 		double metricValue = homogeneousDatatypes.metricValue();
 		
-		logger.info("Total Properties with Heterogeneous Datatype :: " + homogeneousDatatypes.getPropertiesWithHeterogeneousDatatype());
-		logger.info("Total Properties :: " + homogeneousDatatypes.getTotalProperties());
 		logger.info("Metric Value ::" + metricValue);
 		
 		assertEquals(0.2, metricValue, 0.00001);
