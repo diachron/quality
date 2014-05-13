@@ -529,3 +529,48 @@ dqm:ObsoleteConceptsInOntologyMetric
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"Provides a measure for the number of classes and properties in an ontology which are marked as depricated. If an ontology is making lots of obsolete concepts between different versions, then this is an indicator that the ontology is going through a lot of changes, and is potentially in a state of poor quality" ;
 	rdfs:label	"ObsoleteConceptsInOntologyMetric" .
+	
+#Synonym Usage in Ontology Classes
+	dqm:hasSynonymUsageMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Accuracy Dimension with Synonym Usage Metric" ;
+		rdfs:label	"hasSynonymUsageMetric" ;
+		rdfs:domain	dqm:Accuracy ;
+		rdfs:range	dqm:SynonymUsageMetric .	
+	
+	dqm:SynonymUsageMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Measures the number of classes which has a synonym <efo:alternative_term> described." ;
+		rdfs:label	"SynonymUsageMetric" .
+		
+#POBO Definition Usage
+	dqm:hasPOBODefinitionUsageMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Accuracy Dimension with POBO Definition Usage Metric" ;
+		rdfs:label	"hasPOBODefinitionUsageMetric" ;
+		rdfs:domain	dqm:Accuracy ;
+		rdfs:range	dqm:POBODefinitionUsageMetric .	
+	
+	dqm:POBODefinitionUsageMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Provides a measure for an Ontology checking the usage of <pobo:def> in defined classes." ;
+		rdfs:label	"POBODefinitionUsageMetric" .
+		
+#POBO Definition Usage
+	dqm:hasDefinedOntologyAuthorMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Accuracy Dimension with POBO Definition Usage Metric" ;
+		rdfs:label	"hasDefinedOntologyAuthorMetric" ;
+		rdfs:domain	dqm:Accuracy ;
+		rdfs:range	dqm:DefinedOntologyAuthorMetric .	
+	
+	dqm:DefinedOntologyAuthorMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Checks whether the creator <efo:creator> is defined in the ontology." ;
+		rdfs:label	"DefinedOntologyAuthor" .
