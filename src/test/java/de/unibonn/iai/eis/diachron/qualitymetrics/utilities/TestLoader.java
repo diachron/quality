@@ -36,7 +36,7 @@ public class TestLoader {
 		String filename = this.getClass().getClassLoader().getResource(fileName).toExternalForm();
 		
 		Model m = ModelFactory.createDefaultModel();
-		m.read(filename, "TTL");
+		m.read(filename, null);
 		
 		StmtIterator si = m.listStatements();
 		while(si.hasNext()){
