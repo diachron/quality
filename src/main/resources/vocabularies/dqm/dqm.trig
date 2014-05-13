@@ -499,3 +499,18 @@ dqm:OntologyVersionConcisenessMetric
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure for checking singleton instances of the use-case specific defined owl:ontologyVersion property" ;
 		rdfs:label	"OntologyVersionConcisenessMetric" .
+		
+		#Ontology Versioning Conciseness
+dqm:hasLowBlankNodesUsageMetric
+	a	rdfs:Property ;
+	rdfs:subPropertyOf	daq:hasMetric ;
+	rdfs:comment	"Links Understandability Dimension with Low Blank Nodes Usage Metric" ;
+	rdfs:label	"hasLowBlankNodesUsageMetric" ;
+	rdfs:domain	dqm:Understandability ;
+	rdfs:range	dqm:LowBlankNodesUsageMetric .	
+	
+dqm:LowBlankNodesUsageMetric
+	a	rdfs:Class ;
+	rdfs:subClassOf	daq:Metric ;
+	rdfs:comment	"Provides a measure for the usage of blank nodes in a dataset" ;
+	rdfs:label	"LowBlankNodesUsageMetric" .
