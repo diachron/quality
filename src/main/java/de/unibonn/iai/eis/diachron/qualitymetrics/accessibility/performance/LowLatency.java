@@ -36,13 +36,39 @@ public class LowLatency extends AbstractQualityMetric {
 	private static final int NUM_HTTP_SAMPLES = 2;
 	
 	/**
-	 * Holds the average latency as currently calculated by the compute method
+	 * Holds the total delay as currently calculated by the compute method
 	 */
-	private long avgLatency = -1;
+	private long totalDelay = -1;
 
+	/**
+	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
+	 * This is done by checking whether the current quads corresponds to the rdf:type property stating that the resource is a void:Dataset, if so, 
+	 * the URI is extracted from the corresponding subject. Some HTTP requests are sent to the dataset's URI and the response times are averaged to 
+	 * obtain a measure of the latency 
+	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
+	 */
 	@Override
 	public void compute(Quad quad) {
 		// Get all parts of the quad required for the computation of this metric
+		String datasetURI = extractDatasetURI(quad);
+
+		// The URI of the subject of such quad, should be the dataset's URL. 
+		// Try to calculate the total delay associated to the current dataset
+		if(datasetURI != null) {
+			totalDelay = measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
+		}
+	}
+	
+	/**
+	 * TODO: Move this method to a common's class, since it could be useful for several metrics
+	 * Tries to figure out the URI of the dataset wherefrom the quads were obtained. This is done by checking whether the 
+	 * current quads corresponds to the rdf:type property stating that the resource is a void:Dataset, if so, the URI is extracted 
+	 * from the corresponding subject and returned 
+	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
+	 * @return URI of the dataset wherefrom the quad originated, null if the quad does not contain such information
+	 */
+	protected static String extractDatasetURI(Quad quad) {
+		// Get all parts of the quad required to analyze the quad
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
@@ -51,24 +77,27 @@ public class LowLatency extends AbstractQualityMetric {
 		if(subject != null && predicate != null && object != null) {			
 			// Second level validation: all parts of the triple must be URIs
 			if(subject.isURI() && predicate.isURI() && object.isURI()) {				
-				// Check that the current quad corresponds to the dataset declaration, from which the dataset URL will be extracted...
+				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
 				if(predicate.getURI().equals(RDF.type.getURI()) && object.getURI().equals(VOID.Dataset.getURI())) {
 					// The URI of the subject of such quad, should be the dataset's URL. 
 					// Try to calculate the latency associated to the current dataset
-					avgLatency = measureAvgLatency(subject.getURI());
+					return subject.getURI();
 				}
 			}
 		}
+		
+		return null;
 	}
 	
 	/**
 	 * Calculates the time required to obtain the response resulting of a request to the specified dataset URL. 
-	 * The calculation is performed by executing several requests to the dataSetUrl and counting the time elapsed until a response is received 
-	 * and then, by taking the average of the results. Note that the contents nor the code of the responses are taken into account
+	 * The calculation is performed by executing several requests to the dataSetUrl and counting the time elapsed until a response is received.  
+	 * Note that the contents nor the code of the responses are taken into account
 	 * @param dataSetUrl URL to which the requests will be sent
-	 * @return Average delay between the sending of the request and the reception of the corresponding response
+	 * @param numRequests total requests to be sent in the burst
+	 * @return Total delay between the sending of the requests and the reception of the corresponding responses
 	 */
-	private long measureAvgLatency(String dataSetUrl) {
+	protected static long measureReqsBurstDelay(String dataSetUrl, int numRequests) {
 		HttpURLConnection httpConn = null;
 		InputStream responseStream = null;
 		long accumDelay = 0;
@@ -77,7 +106,7 @@ public class LowLatency extends AbstractQualityMetric {
 			URL targetUrl = new URL(dataSetUrl);
 			long startTimeStamp = 0;
 			
-			for(int i = 0; i < NUM_HTTP_SAMPLES; i++) {
+			for(int i = 0; i < numRequests; i++) {
 				// Create a new HttpURLConnection object for each request, since each instance is intended to perform a single request (view Javadoc)
 				// note that this call does not establish the actual network connection to the target resource and thus the timer is not initiated here
 				httpConn = (HttpURLConnection)targetUrl.openConnection();
@@ -97,8 +126,8 @@ public class LowLatency extends AbstractQualityMetric {
 				}
 			}
 		} catch (IOException e) {
-			// Something went wrong, numbers are not accurate anymore, return -1 indicating that latency could not be determined
-			logger.error("Error calculating latency: {}", e);
+			// Something went wrong, numbers are not accurate anymore, return -1 indicating that total delay could not be determined
+			logger.error("Error calculating requests burst delay: {}", e);
 			return -1;
 		} finally {
 			// No need to reuse the connection anymore, disconnect
@@ -107,8 +136,8 @@ public class LowLatency extends AbstractQualityMetric {
 			}
 		}
 		
-		// Return as result, the average time in seconds elapsed between request and response
-		return accumDelay/NUM_HTTP_SAMPLES;
+		// Return as result, the total time in seconds elapsed between requests and responses
+		return accumDelay;
 	}
 
 	/**
@@ -119,7 +148,7 @@ public class LowLatency extends AbstractQualityMetric {
 	@Override
 	public double metricValue() {
 		// Average latency is in milliseconds
-		return avgLatency;
+		return ((double)totalDelay)/((double)NUM_HTTP_SAMPLES);
 	}
 
 	@Override
