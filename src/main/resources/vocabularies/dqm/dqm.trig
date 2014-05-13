@@ -500,7 +500,7 @@ dqm:OntologyVersionConcisenessMetric
 		rdfs:comment	"Provides a measure for checking singleton instances of the use-case specific defined owl:ontologyVersion property" ;
 		rdfs:label	"OntologyVersionConcisenessMetric" .
 		
-		#Ontology Versioning Conciseness
+#Low Blank Node Usage
 dqm:hasLowBlankNodesUsageMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -514,3 +514,18 @@ dqm:LowBlankNodesUsageMetric
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"Provides a measure for the usage of blank nodes in a dataset" ;
 	rdfs:label	"LowBlankNodesUsageMetric" .
+	
+#Obsolete Concepts in Ontology
+dqm:hasObsoleteConceptsInOntologyMetric
+	a	rdfs:Property ;
+	rdfs:subPropertyOf	daq:hasMetric ;
+	rdfs:comment	"Links Consistency Dimension with Obsolete Concepts In Ontology Metric" ;
+	rdfs:label	"hasObsoleteConceptsInOntologyMetric" ;
+	rdfs:domain	dqm:Understandability ;
+	rdfs:range	dqm:LowBlankNodesUsageMetric .	
+	
+dqm:ObsoleteConceptsInOntologyMetric
+	a	rdfs:Class ;
+	rdfs:subClassOf	daq:Metric ;
+	rdfs:comment	"Provides a measure for the number of classes and properties in an ontology which are marked as depricated. If an ontology is making lots of obsolete concepts between different versions, then this is an indicator that the ontology is going through a lot of changes, and is potentially in a state of poor quality" ;
+	rdfs:label	"ObsoleteConceptsInOntologyMetric" .
