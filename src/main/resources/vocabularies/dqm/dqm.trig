@@ -67,7 +67,7 @@
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Refers to how appropriate the quantity and volume of data is for the task at hand. The amount of data should be enough to approximate the true scenario precisely" ;
-		rdfs:label	"Amount of Data" .
+		rdfs:label	"Amount of data" .
 	
 	dqm:Consistency
 		a	rdfs:Class ;
@@ -85,7 +85,7 @@
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Measures the extent to which the representation of data is compact, clear and well formatted" ;
-		rdfs:label	"RepresentationalConciseness" .
+		rdfs:label	"Representational conciseness" .
 		
 	dqm:Currency
 		a	rdfs:Class ;
@@ -116,133 +116,133 @@
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Checks whether the server (endpoint) is reachable and responds to a SPARQL query" ;
-		rdfs:label	"EndPointAvailabilityMetric" .		
+		rdfs:label	"Availability of the SPARQL end-point metric" .		
 
 	dqm:RDFAvailabilityMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Upon request of an RDF dump, checks whether it is provided as result" ;
-		rdfs:label	"RDFAvailabilityMetric" .	
+		rdfs:label	"Availability of the RDF dumps metric" .	
 
 	dqm:DereferenceabilityMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Determines whether requesting a resource, identified by a URI, results in an error code being returned (e.g. 4xx: client error or 5xx: server error), or in a broken link" ;
-		rdfs:label	"DereferenceabilityMetric" .	
+		rdfs:label	"Dereferenceability metric" .	
 
 	dqm:UnstructuredMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects dead links or URIs without any supporting RDF metadata or no redirection using the status code 303" ;
-		rdfs:label	"UnstructuredMetric" .			
+		rdfs:label	"No structured data available metric" .			
 
 	dqm:DereferenceabilityBackLinksMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects all local in-links or back-links (locally available triples with the resource URI appearing as object, in the dereferenced document returned for the resource)" ;
-		rdfs:label	"DereferenceabilityBackLinksMetric" .	
+		rdfs:label	"Dereferenceability of back-links metric" .	
 
 	dqm:DereferenceabilityForwardLinksMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects all forward links (locally known triples where the local URI is mentioned in the subject)" ;
-		rdfs:label	"DereferenceabilityForwardLinksMetric" .	
+		rdfs:label	"Dereferenceability of forward-links metric" .	
 
 	dqm:MisreportedContentTypesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Checks whether the content is suitable for consumption and if such content should be accessed" ;
-		rdfs:label	"MisreportedContentTypesMetric" .	
+		rdfs:label	"Misreported content types metric" .	
 
 	dqm:LowLatencyMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the delay between the submission of a request to the data source and the reception of the respective response (or the first part of it)" ;
-		rdfs:label	"LowLatencyMetric" .
+		rdfs:label	"Low latency metric" .
 		
 	dqm:HighThroughputMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the number of answered HTTP requests responsed by the source of the dataset, per second" ;
-		rdfs:label	"HighThroughputMetric" .
+		rdfs:label	"High throughput metric" .
 
 	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects ill-typed literals, which do not abide by the lexical syntax of their respective datatypes" ;
-		rdfs:label	"MalformedDatatypeLiteralsMetric" .		
+		rdfs:label	"Malformed datatype literals metric" .		
 
 	dqm:AmountOfTriplesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Counts the total number of triples present in the dataset" ;
-		rdfs:label	"AmountOfTriplesMetric" .
+		rdfs:label	"Amount of triples metric" .
 
 	dqm:EntitiesAsMembersOfDisjointClassesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"the ratio of entities described as members of disjoint classes (here: classes explicitly known as disjoint) to the total number of entities described in the dataset" ;
-		rdfs:label	"entities as members of disjoint classes metric" .
+		rdfs:label	"Entities as members of disjoint classes metric" .
 		
 	dqm:IntensionalConcisenessMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the redundancy of the dataset at the schema level, computed as the ratio of the Number of Unique Attributes (Properties) to the Total Number of Attributes in the target schema" ;
-		rdfs:label	"IntensionalConcisenessMetric" .
+		rdfs:label	"Intensional conciseness metric" .
 		
 	dqm:ExtensionalConcisenessMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the redundancy of the dataset at the data level, computed as the ratio of the Number of Unique Subjects to the Total Number of Subjects" ;
-		rdfs:label	"ExtensionalConcisenessMetric" .
+		rdfs:label	"Extensional conciseness metric" .
 		
 	dqm:DuplicateInstanceMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the redundancy of entities at the data level (ratio of entities that violate the uniqueness rule)" ;
-		rdfs:label	"DuplicateInstanceMetric" .
+		rdfs:label	"Duplicate instance metric" .
 		
 	dqm:ShortURIsMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects the use of short URIs (and the avoidance of query parameters), which suggests that information is compactly represented and favors readability" ;
-		rdfs:label	"ShortURIsMetric" .
+		rdfs:label	"Short URIs metric" .
 	
 	dqm:CurrencyOfDocumentStatementsMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Compares the time when the data was observed with the time when the data (document as a whole and individual triples) were last modified, thereby providing a measure of how current the dataset is" ;
-		rdfs:label	"CurrencyOfDocumentStatementsMetric" .
+		rdfs:label	"Currency of document/statements metric" .
 		
 	dqm:TimeSinceModificationMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the current time with the time when the data was last modified" ;
-		rdfs:label	"TimeSinceModificationMetric" .
+		rdfs:label	"Time since modification metric" .
 		
 	dqm:ExclusionOfOutdatedDataMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure of the degree to which information is up to date, by comparing the total number of resources, described by the dataset, versus the number of those that are recognized to be outdated" ;
-		rdfs:label	"ExclusionOfOutdatedDataMetric" .
+		rdfs:label	"Exclusion of outdated data metric" .
 		
 	dqm:TimeValidityIntervalMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the frequency with which data varies over time, by calculating the length of the time interval during which data remains valid." ;
-		rdfs:label	"TimeValidityIntervalMetric" .
+		rdfs:label	"Time validity interval metric" .
 		
 	dqm:TimelinessOfResourceMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Assesses the difference between the last modified time of the original data source and the last modified time of the semantic web source, thereby indicating if the resource is outdated" ;
-		rdfs:label	"TimelinessOfResourceMetric" .
+		rdfs:label	"Timeliness of the resource metric" .
 		
 	dqm:HumanReadableLabellingMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Assesses the percentage of entities having an rdfs:label or rdfs:comment" ;
-		rdfs:label	"HumanReadableLabellingMetric" .
+		rdfs:label	"Human-readable labelling metric" .
 	
 	#Properties
 	#Accessibility Dimensions Properties
@@ -250,7 +250,7 @@
 		a	rdfs:Property ;	
 		rdfs:subPropertyOf	daq:hasDimension ;
 		rdfs:comment	"Links Accessibility Category with Availability Dimension" ;
-		rdfs:label	"hasAvailabilityDimension" ;
+		rdfs:label	"Accessibility has availability dimension" ;
 		rdfs:domain	dqm:Accessibility ;
 		rdfs:range	dqm:Availability .
 		
@@ -259,7 +259,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Endpoint Availability Metric (Endpoint Availability Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasEndPointAvailabilityMetric" ;
+		rdfs:label	"Availability has end-point availability metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:EndPointAvailabilityMetric .
 
@@ -267,7 +267,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with RDF Availability Metric (RDF Availability Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasRDFAvailabilityMetric" ;
+		rdfs:label	"Availability has RDF availability metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:RDFAvailabilityMetric .
 
@@ -275,7 +275,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Dereferenceability Metric (Dereferenceability Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasDereferenceabilityMetric" ;
+		rdfs:label	"Availability has dereferenceability metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:DereferenceabilityMetric .
 
@@ -283,7 +283,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Unstructured Data Metric (Unstructured Data Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasUnstructuredMetric" ;
+		rdfs:label	"Availability has no structured data available metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:UnstructuredMetric .		
 
@@ -291,7 +291,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Dereferenceability of Back-links Metric (Dereferenceability of Back-links Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasDereferenceabilityBackLinksMetric" ;
+		rdfs:label	"Availability has Dereferenceability of back-links metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:DereferenceabilityBackLinksMetric .
 
@@ -299,7 +299,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Dereferenceability of Forward-links Metric (Dereferenceability of Forward-links Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasDereferenceabilityForwardLinksMetric" ;
+		rdfs:label	"Availability has Dereferenceability of forward-links metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:DereferenceabilityForwardLinksMetric .
 
@@ -307,7 +307,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Availability Dimension with Misreported Content Types Metric (Misreported Content Types Metric belongs to the Availability Dimension)" ;
-		rdfs:label	"hasMisreportedContentTypesMetric" ;
+		rdfs:label	"Availability has misreported content types metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:MisreportedContentTypesMetric .
 	
@@ -316,7 +316,7 @@
 		a	rdfs:Property ;	
 		rdfs:subPropertyOf	daq:hasDimension ;
 		rdfs:comment	"Links Accessibility Category with Performance Dimension" ;
-		rdfs:label	"hasPerformanceDimension" ;
+		rdfs:label	"Accessibility has performance dimension" ;
 		rdfs:domain	dqm:Accessibility ;
 		rdfs:range	dqm:Performance .
 		
@@ -324,7 +324,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Performance Dimension with Low Latency Metric (Low Latency Metric belongs to the Performance Dimension)" ;
-		rdfs:label	"hasLowLatencyMetric" ;
+		rdfs:label	"Performance has low latency metric" ;
 		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:LowLatencyMetric .
 		
@@ -332,7 +332,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Performance Dimension with High Throughput Metric (High Throughput Metric belongs to the Performance Dimension)" ;
-		rdfs:label	"hasHighThroughputMetric" ;
+		rdfs:label	"Performance has high throughput metric" ;
 		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:HighThroughputMetric .
 
@@ -341,7 +341,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasDimension ;
 		rdfs:comment	"Links Intrinsic Category with Accuracy Dimension" ;
-		rdfs:label	"hasAccuracyDimension" ;
+		rdfs:label	"Intrinsic has accuracy dimension" ;
 		rdfs:domain	dqm:Intrinsic ;
 		rdfs:range	dqm:Accuracy .
 		
@@ -349,7 +349,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Accuracy Dimension with Malformed Data Type Literals Metric (Malformed Data Type Literals Metric belongs to the Accuracy Dimension)" ;
-		rdfs:label	"hasMalformedDatatypeLiteralsMetric" ;
+		rdfs:label	"Accuracy has malformed data type literals metric" ;
 		rdfs:domain	dqm:Accuracy ;
 		rdfs:range	dqm:MalformedDatatypeLiteralsMetric .
 
@@ -358,7 +358,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasDimension ;
 		rdfs:comment	"Links Contextual Category with Amount of Data Dimension" ;
-		rdfs:label	"hasAmountOfDataDimension" ;
+		rdfs:label	"Contextual has amount of data dimension" ;
 		rdfs:domain	dqm:Contextual ;
 		rdfs:range	dqm:AmountOfData .
 		
@@ -366,7 +366,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Amount of Data Dimension with Amount of Triples Metric (Amount of Triples Metric belongs to the Amount of Data Dimension)" ;
-		rdfs:label	"hasAmountOfTriplesMetric" ;
+		rdfs:label	"Amount of Data has amount of triples metric" ;
 		rdfs:domain	dqm:AmountOfData ;
 		rdfs:range	dqm:AmountOfTriplesMetric .	
 
@@ -375,7 +375,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links Intrinsic Category with Consistency Dimension" ;
-		rdfs:label "has consistency dimension" ;
+		rdfs:label "Intrinsic has consistency dimension" ;
 		rdfs:domain dqm:Intrinsic ;
 		rdfs:range dqm:Consistency .
 	
@@ -383,7 +383,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Consistency Dimension with ‘entities as members of disjoint classes’ Metric (Entities as Members of Disjoint Classes Metric belongs to the Consistency Dimension)" ;
-		rdfs:label	"hasEntitiesAsMembersOfDisjointClassesMetric" ;
+		rdfs:label	"Consistency has entities as members of disjoint classes metric" ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:EntitiesAsMembersOfDisjointClassesMetric .	
 		
@@ -392,7 +392,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links Intrinsic Category with Conciseness Dimension" ;
-		rdfs:label "hasConcisenessDimension" ;
+		rdfs:label "Intrinsic has conciseness dimension" ;
 		rdfs:domain dqm:Intrinsic ;
 		rdfs:range dqm:Conciseness .
 	
@@ -400,7 +400,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Conciseness Dimension with Intensional Conciseness Metric (Intensional Conciseness Metric belongs to the Conciseness Dimension)" ;
-		rdfs:label	"hasIntensionalConcisenessMetric" ;
+		rdfs:label	"Conciseness has intensional conciseness metric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:IntensionalConcisenessMetric .	
 		
@@ -408,7 +408,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Conciseness Dimension with Extensional Conciseness Metric (Extensional Conciseness Metric belongs to the Conciseness Dimension)" ;
-		rdfs:label	"hasExtensionalConcisenessMetric" ;
+		rdfs:label	"Conciseness has extensional conciseness metric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:ExtensionalConcisenessMetric .	
 		
@@ -416,7 +416,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Conciseness Dimension with Duplicate Instance Metric (Duplicate Instance Metric belongs to the Conciseness Dimension)" ;
-		rdfs:label	"hasDuplicateInstanceMetric" ;
+		rdfs:label	"Conciseness has duplicate instance metric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:DuplicateInstanceMetric .
 		
@@ -425,7 +425,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links Representational Category with Representational-Conciseness Dimension" ;
-		rdfs:label "hasRepresentationalConcisenessDimension" ;
+		rdfs:label "Representational has representational conciseness dimension" ;
 		rdfs:domain dqm:Representational ;
 		rdfs:range dqm:RepresentationalConciseness .
 		
@@ -433,7 +433,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Representational-Conciseness Dimension with Keeping URIs Short Metric (Keeping URIs Short Metric belongs to the Representational-Conciseness Dimension)" ;
-		rdfs:label	"hasShortURIsMetric" ;
+		rdfs:label	"Representational conciseness has short URIs metric" ;
 		rdfs:domain	dqm:RepresentationalConciseness ;
 		rdfs:range	dqm:ShortURIsMetric .
 		
@@ -442,7 +442,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links Representational Category with Understandability Dimension" ;
-		rdfs:label "hasRepresentationalConcisenessDimension" ;
+		rdfs:label "Representational has representational conciseness dimension" ;
 		rdfs:domain dqm:Representational ;
 		rdfs:range dqm:Understandability .
 		
@@ -450,7 +450,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Understandability Dimension with Human Readable Labelling Metric (Human Readable Labelling belongs to the Understandability Dimension)" ;
-		rdfs:label	"hasShortURIsMetric" ;
+		rdfs:label	"Understandability has short URIs metric" ;
 		rdfs:domain	dqm:Understandability ;
 		rdfs:range	dqm:HumanReadableLabellingMetric .
 		
@@ -459,7 +459,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links the Dynamicity Category with the Currency Dimension" ;
-		rdfs:label "hasCurrencyDimension" ;
+		rdfs:label "Dynamicity has currency dimension" ;
 		rdfs:domain dqm:Dynamicity ;
 		rdfs:range dqm:Currency .
 
@@ -467,7 +467,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Currency Dimension with the Currency of Document/Statements Metric (Currency of Document/Statements Metric belongs to the Currency Dimension)" ;
-		rdfs:label	"hasCurrencyOfDocumentStatementsMetric" ;
+		rdfs:label	"Currency has currency of document/statements metric" ;
 		rdfs:domain	dqm:Currency ;
 		rdfs:range	dqm:CurrencyOfDocumentStatementsMetric .
 
@@ -475,7 +475,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Currency Dimension with the Time Since Modification Metric (Time Since Modification Metric belongs to the Currency Dimension)" ;
-		rdfs:label	"hasTimeSinceModificationMetric" ;
+		rdfs:label	"Currency has time since modification metric" ;
 		rdfs:domain	dqm:Currency ;
 		rdfs:range	dqm:TimeSinceModificationMetric .
 
@@ -483,7 +483,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Currency Dimension with the Exclusion of Outdated Data Metric (Exclusion of Outdated Data Metric belongs to the Currency Dimension)" ;
-		rdfs:label	"hasExclusionOfOutdatedDataMetric" ;
+		rdfs:label	"Currency has exclusion of outdated data metric" ;
 		rdfs:domain	dqm:Currency ;
 		rdfs:range	dqm:ExclusionOfOutdatedDataMetric .
 
@@ -492,7 +492,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links the Dynamicity Category with the Volatility Dimension" ;
-		rdfs:label "hasVolatilityDimension" ;
+		rdfs:label "Dynamicity has volatility dimension" ;
 		rdfs:domain dqm:Dynamicity ;
 		rdfs:range dqm:Volatility .
 
@@ -500,7 +500,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Volatility Dimension with the Time Validity Interval Metric (Time Validity Interval Metric belongs to the Volatility Dimension)" ;
-		rdfs:label	"hasTimeValidityIntervalMetric" ;
+		rdfs:label	"Volatility has time validity interval metric" ;
 		rdfs:domain	dqm:Volatility ;
 		rdfs:range	dqm:TimeValidityIntervalMetric .
 		
@@ -509,7 +509,7 @@
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links the Dynamicity Category with the Timeliness Dimension" ;
-		rdfs:label "hasTimelinessDimension" ;
+		rdfs:label "Dynamicity has timeliness dimension" ;
 		rdfs:domain dqm:Dynamicity ;
 		rdfs:range dqm:Timeliness .
 		
@@ -517,7 +517,7 @@
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Timeliness Dimension with the Timeliness of the Resource Metric (Timeliness of the Resource Metric belongs to the Timeliness Dimension)" ;
-		rdfs:label	"hasTimelinessOfResourceMetric" ;
+		rdfs:label	"Timeliness has timeliness of resource metric" ;
 		rdfs:domain	dqm:Timeliness ;
 		rdfs:range	dqm:TimelinessOfResourceMetric .
 		
@@ -533,7 +533,7 @@ dqm:hasOntologyVersionConcisenessMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:comment	"Links Conciseness Dimension with Ontology Versioning Conciseness Metric" ;
-	rdfs:label	"hasExtensionalConcisenessMetric" ;
+	rdfs:label	"Conciseness has extensional conciseness metric" ;
 	rdfs:domain	dqm:Conciseness ;
 	rdfs:range	dqm:OntologyVersionConcisenessMetric .	
 	
@@ -541,14 +541,14 @@ dqm:OntologyVersionConcisenessMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure for checking singleton instances of the use-case specific defined owl:ontologyVersion property" ;
-		rdfs:label	"OntologyVersionConcisenessMetric" .
+		rdfs:label	"Ontology version conciseness metric" .
 		
 #Low Blank Node Usage
 dqm:hasLowBlankNodesUsageMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:comment	"Links Understandability Dimension with Low Blank Nodes Usage Metric" ;
-	rdfs:label	"hasLowBlankNodesUsageMetric" ;
+	rdfs:label	"Understandability has low blank nodes usage metric" ;
 	rdfs:domain	dqm:Understandability ;
 	rdfs:range	dqm:LowBlankNodesUsageMetric .	
 	
@@ -556,14 +556,14 @@ dqm:LowBlankNodesUsageMetric
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"Provides a measure for the usage of blank nodes in a dataset" ;
-	rdfs:label	"LowBlankNodesUsageMetric" .
+	rdfs:label	"Low blank nodes usage metric" .
 	
 #Obsolete Concepts in Ontology
 dqm:hasObsoleteConceptsInOntologyMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:comment	"Links Consistency Dimension with Obsolete Concepts In Ontology Metric" ;
-	rdfs:label	"hasObsoleteConceptsInOntologyMetric" ;
+	rdfs:label	"Understandability has obsolete concepts in ontology metric" ;
 	rdfs:domain	dqm:Understandability ;
 	rdfs:range	dqm:LowBlankNodesUsageMetric .	
 	
@@ -571,14 +571,14 @@ dqm:ObsoleteConceptsInOntologyMetric
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"Provides a measure for the number of classes and properties in an ontology which are marked as depricated. If an ontology is making lots of obsolete concepts between different versions, then this is an indicator that the ontology is going through a lot of changes, and is potentially in a state of poor quality" ;
-	rdfs:label	"ObsoleteConceptsInOntologyMetric" .
+	rdfs:label	"Obsolete concepts in ontology metric" .
 	
 #Synonym Usage in Ontology Classes
 	dqm:hasSynonymUsageMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Accuracy Dimension with Synonym Usage Metric" ;
-		rdfs:label	"hasSynonymUsageMetric" ;
+		rdfs:label	"Accuracy has synonym usage metric" ;
 		rdfs:domain	dqm:Accuracy ;
 		rdfs:range	dqm:SynonymUsageMetric .	
 	
@@ -586,14 +586,14 @@ dqm:ObsoleteConceptsInOntologyMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the number of classes which has a synonym <efo:alternative_term> described." ;
-		rdfs:label	"SynonymUsageMetric" .
+		rdfs:label	"Synonym usage metric" .
 		
 #POBO Definition Usage
 	dqm:hasPOBODefinitionUsageMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Accuracy Dimension with POBO Definition Usage Metric" ;
-		rdfs:label	"hasPOBODefinitionUsageMetric" ;
+		rdfs:label	"Accuracy has POBO definition usage metric" ;
 		rdfs:domain	dqm:Accuracy ;
 		rdfs:range	dqm:POBODefinitionUsageMetric .	
 	
@@ -601,14 +601,14 @@ dqm:ObsoleteConceptsInOntologyMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Provides a measure for an Ontology checking the usage of <pobo:def> in defined classes." ;
-		rdfs:label	"POBODefinitionUsageMetric" .
+		rdfs:label	"POBO definition usage metric" .
 		
 #POBO Definition Usage
 	dqm:hasDefinedOntologyAuthorMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Accuracy Dimension with POBO Definition Usage Metric" ;
-		rdfs:label	"hasDefinedOntologyAuthorMetric" ;
+		rdfs:label	"Accuracy has defined ontology author metric" ;
 		rdfs:domain	dqm:Accuracy ;
 		rdfs:range	dqm:DefinedOntologyAuthorMetric .	
 	
@@ -616,4 +616,4 @@ dqm:ObsoleteConceptsInOntologyMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Checks whether the creator <efo:creator> is defined in the ontology." ;
-		rdfs:label	"DefinedOntologyAuthor" .
+		rdfs:label	"Defined ontology author" .
