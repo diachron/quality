@@ -382,6 +382,57 @@
 		rdfs:label	"Accuracy has malformed data type literals metric" ;
 		rdfs:domain	dqm:Accuracy ;
 		rdfs:range	dqm:MalformedDatatypeLiteralsMetric .
+		
+	dqm:hasIncompatibleDatatypeRangeMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Accuracy Dimension with Incompatible Datatype Range Metric" ;
+		rdfs:label	"hasIncompatibleDatatypeRangeMetric" ;
+		rdfs:domain	dqm:Accuracy ;
+		rdfs:range	dqm:IncompatibleDatatypeRangeMetric .
+		
+		
+		#Consistency Dimensions Properties
+	dqm:hasConsistencyDimension
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"Links Intrinsic Category with Consistency Dimnsion" ;
+		rdfs:label	"ConsistencyDimension" ;
+		rdfs:domain	dqm:Intrinsic ;
+		rdfs:range	dqm:Consistency .
+		
+	dqm:hasHomogeneousDatatypesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Consistency Dimension with Homogeneous data types Metric" ;
+		rdfs:label	"hasHomogeneousDatatypesMetric" ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:hasHomogeneousDatatypesMetric .
+		
+	dqm:hasUndefinedClassesOrPropertiesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Consistency Dimension with Undefined classes or properties metric" ;
+		rdfs:label	"hasUndefinedClassesOrPropertiesMetric" ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:hasUndefinedClassesOrPropertiesMetric .
+		
+	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Consistency Dimension with Misuse Owl- datatype or object properties metric" ;
+		rdfs:label	"hasMisuseOwlDatatypeOrObjectPropertiesMetric" ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric .
+		
+	dqm:hasMisplacedClassesOrPropertiesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Consistency Dimension with misplaced classes or properties metric ;
+		rdfs:label	"hasMisplacedClassesOrPropertiesMetric" ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:hasMisplacedClassesOrPropertiesMetric .
+		
 
 	#Contextual Dimensions Properties
 	dqm:hasAmountOfDataDimension
