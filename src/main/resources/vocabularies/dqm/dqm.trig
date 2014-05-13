@@ -171,7 +171,37 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects ill-typed literals, which do not abide by the lexical syntax of their respective datatypes" ;
 		rdfs:label	"Malformed datatype literals metric" .		
-
+	
+	dqm:IncompatibleDatatypeRangeMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Detects literals incompatible with range data type" ;
+		rdfs:label	"Incompatible datatype range metric" .
+	
+	dqm:HomogeneousDatatypesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Detects outliers or conflicts of literal datatypes. Since it is meant to measure the homogeneity and not the validity possible rdfs:range restrictions are not evaluated" ;
+		rdfs:label	"Homogeneous datatypes metric" .
+	
+	dqm:MisplacedClassesOrPropertiesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Find resources that are - defined as a property but also appear on subject or object positions in other triples (except cases like ex:prop rdf:type rdfs:Property, ex:prop rds:subPropetyOf) - defined as a class but also appear on predicate position in other triples. The metric is computed as a ratio of misplaced classes and properties" ;
+		rdfs:label	"Misplaced classes or properties metric" .
+	
+	dqm:MisuseOwlDatatypeOrObjectPropertiesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Detect properties that are defined as a owl:datatype property but is used as object property and properties defined as a owl:object property and used as datatype property The metric is computed as a ratio of misused properties" ;
+		rdfs:label	"Misuse Owl datatype or object properties metric" .
+		
+	dqm:UndefinedClassesOrPropertiesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Detects undefined classes and properties" ;
+		rdfs:label	"Undefined classes or properties metric" .
+			
 	dqm:AmountOfTriplesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
