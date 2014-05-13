@@ -69,6 +69,12 @@
 		rdfs:comment	"Refers to how appropriate the quantity and volume of data is for the task at hand. The amount of data should be enough to approximate the true scenario precisely" ;
 		rdfs:label	"Amount of Data" .
 	
+	dqm:Consistency
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Consistency means that a knowledge base is free of (logical/formal) contradictions with respect to particular knowledge representation and inference mechanisms" ;
+		rdfs:label	"Consistency" .
+	
 	dqm:Conciseness
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -165,6 +171,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Counts the total number of triples present in the dataset" ;
 		rdfs:label	"AmountOfTriplesMetric" .
+
+	dqm:EntitiesAsMembersOfDisjointClassesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"the ratio of entities described as members of disjoint classes (here: classes explicitly known as disjoint) to the total number of entities described in the dataset" ;
+		rdfs:label	"entities as members of disjoint classes metric" .
 		
 	dqm:IntensionalConcisenessMetric
 		a	rdfs:Class ;
@@ -343,6 +355,23 @@
 		rdfs:label	"hasAmountOfTriplesMetric" ;
 		rdfs:domain	dqm:AmountOfData ;
 		rdfs:range	dqm:AmountOfTriplesMetric .	
+
+	#Consistency Dimensions Properties
+	dqm:hasConsistencyDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links Intrinsic Category with Consistency Dimension" ;
+		rdfs:label "has consistency dimension" ;
+		rdfs:domain dqm:Intrinsic ;
+		rdfs:range dqm:Consistency .
+	
+	dqm:hasEntitiesAsMembersOfDisjointClassesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Consistency Dimension with ‘entities as members of disjoint classes’ Metric (Entities as Members of Disjoint Classes Metric belongs to the Consistency Dimension)" ;
+		rdfs:label	"hasEntitiesAsMembersOfDisjointClassesMetric" ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:EntitiesAsMembersOfDisjointClassesMetric .	
 		
 	#Conciseness Dimensions Properties
 	dqm:hasConcisenessDimension
