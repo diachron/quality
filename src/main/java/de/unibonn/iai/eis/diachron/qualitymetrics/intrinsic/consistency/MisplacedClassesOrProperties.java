@@ -1,6 +1,5 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,19 +18,23 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * This class is responsible for detection of misplaced classes and properties.
+ * This metric should find resources that are - defined as a property but also
+ * appear on subject or object positions in other triples (except cases like
+ * ex:prop rdf:type rdfs:Property, ex:prop rds:subPropetyOf) - defined as a
+ * class but also appear on predicate position in other triples. The metric is
+ * computed as a ratio of misplaced classes and properties
  * 
  * @author Muhammad Ali Qasmi
  * @date 13th March 2014
  */
-public class MisplacedClassesOrProperties extends AbstractQualityMetric{
-    /**
-     * Metic URI
-     */
-    private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;    
-    /**
-     * static logger object
-     */
+public class MisplacedClassesOrProperties extends AbstractQualityMetric {
+	/**
+	 * Metic URI
+	 */
+	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
+	/**
+	 * static logger object
+	 */
 	static Logger logger = Logger.getLogger(MisplacedClassesOrProperties.class);
 	/**
 	 * total number of misplaces classes
@@ -53,135 +56,166 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric{
 	 * list of problematic quads
 	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
+
 	/**
-	 * This method identifies whether a given quad is a misplaced class or a misplaced property.
+	 * This method identifies whether a given quad is a misplaced class or a
+	 * misplaced property.
 	 * 
-	 * @param quad - to be identified
+	 * @param quad
+	 *            - to be identified
 	 */
+	@Override
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
-		
+
 		try {
-			
-			Node subject = quad.getSubject(); //retrieve subject
-			Node predicate = quad.getPredicate(); //retrieve predicate
-			Node object = quad.getObject(); //retrieve object
-			
-			
-			if (subject.isURI()){ //check if subject is URI (not Blank)
+
+			Node subject = quad.getSubject(); // retrieve subject
+			Node predicate = quad.getPredicate(); // retrieve predicate
+			Node object = quad.getObject(); // retrieve object
+
+			if (subject.isURI()) { // check if subject is URI (not Blank)
 				this.totalClassesCount++;
-				//load model
+				// load model
 				Model subjectModel = VocabularyReader.read(subject.getURI());
-				if (subjectModel != null){ //check if system is able to retrieve model
+				if (subjectModel != null) { // check if system is able to
+											// retrieve model
 					// search for URI resource from Model
-					if (subjectModel.getResource(subject.getURI()).isURIResource()){
+					if (subjectModel.getResource(subject.getURI())
+							.isURIResource()) {
 						// search for its domain and range properties
 						// if it has one then it is a property not class.
-						if ( subjectModel.getResource(subject.getURI()).hasProperty(RDFS.domain) || 
-							 subjectModel.getResource(subject.getURI()).hasProperty(RDFS.range)) {
-							logger.debug("Misplace Class Found in Subject::" + subject);
+						if (subjectModel.getResource(subject.getURI())
+								.hasProperty(RDFS.domain)
+								|| subjectModel.getResource(subject.getURI())
+										.hasProperty(RDFS.range)) {
+							logger.debug("Misplace Class Found in Subject::"
+									+ subject);
 							this.misplacedClassesCount++;
 							this.problemList.add(quad);
 						}
 					}
 				}
 			}
-			
-			if(predicate.isURI()){ //check if predicate is URI
+
+			if (predicate.isURI()) { // check if predicate is URI
 				this.totalPropertiesCount++;
-				//load model
-				Model predicateModel = VocabularyReader.read(predicate.getURI());
-				if (predicateModel  != null){ //check if system is able to retrieve model
-					// search for URI resource from Model					
-					if(predicateModel.getResource(predicate.getURI()).isURIResource()) {
+				// load model
+				Model predicateModel = VocabularyReader
+						.read(predicate.getURI());
+				if (predicateModel != null) { // check if system is able to
+												// retrieve model
+					// search for URI resource from Model
+					if (predicateModel.getResource(predicate.getURI())
+							.isURIResource()) {
 						// search for its domain and range properties
-						// if it does NOT have some domain and range than its NOT a property
-						if (!( predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.domain) && 
-							 predicateModel.getResource(predicate.getURI()).hasProperty(RDFS.range))) {
-							logger.debug("Misplace Property Found in Predicate ::" + predicate);
+						// if it does NOT have some domain and range than its
+						// NOT a property
+						if (!(predicateModel.getResource(predicate.getURI())
+								.hasProperty(RDFS.domain) && predicateModel
+								.getResource(predicate.getURI()).hasProperty(
+										RDFS.range))) {
+							logger.debug("Misplace Property Found in Predicate ::"
+									+ predicate);
 							this.misplacedPropertiesCount++;
 							this.problemList.add(quad);
 						}
 					}
 				}
 			}
-			
-			if (object.isURI()){ //check if object is URI (not blank or literal)
+
+			if (object.isURI()) { // check if object is URI (not blank or
+									// literal)
 				this.totalClassesCount++;
-				//load model
-				Model objectModel =  VocabularyReader.read(object.getURI());
-				if (objectModel != null){ //check if system is able to retrieve model
+				// load model
+				Model objectModel = VocabularyReader.read(object.getURI());
+				if (objectModel != null) { // check if system is able to
+											// retrieve model
 					// search for URI resource from Model
-					if (objectModel.getResource(object.getURI()).isURIResource()){
+					if (objectModel.getResource(object.getURI())
+							.isURIResource()) {
 						// search for its domain and range properties
 						// if it has one then it is a property not class.
-						if ( objectModel.getResource(object.getURI()).hasProperty(RDFS.domain) || 
-								objectModel.getResource(object.getURI()).hasProperty(RDFS.range)) {
-							logger.debug("Misplace Class Found in Object ::" + object);
+						if (objectModel.getResource(object.getURI())
+								.hasProperty(RDFS.domain)
+								|| objectModel.getResource(object.getURI())
+										.hasProperty(RDFS.range)) {
+							logger.debug("Misplace Class Found in Object ::"
+									+ object);
 							this.misplacedClassesCount++;
 							this.problemList.add(quad);
 						}
 					}
 				}
 			}
-		
-		}
-		catch (Exception exception){
+
+		} catch (Exception exception) {
 			logger.debug(exception);
-        	logger.error(exception.getMessage());
-        	exception.printStackTrace();
+			logger.error(exception.getMessage());
+			exception.printStackTrace();
 		}
-		
+
 		logger.trace("compute() --Ended--");
 	}
+
 	/**
 	 * This method computes metric value for the object of this class.
 	 * 
-	 *  @return (total number of undefined classes or properties) / (total number of classes or properties)
+	 * @return (total number of undefined classes or properties) / (total number
+	 *         of classes or properties)
 	 */
+	@Override
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
-		logger.debug("Number of Misplaced Classes :: " +  this.misplacedClassesCount);
-		logger.debug("Number of Classes :: " +  this.totalClassesCount);
-		logger.debug("Number of Misplaced Properties :: " +  this.misplacedPropertiesCount);
-		logger.debug("Number of Properties :: " +  this.totalPropertiesCount);
-		
-		long tmpTotalUndefinedClassesAndUndefinedProperties = this.misplacedClassesCount + this.misplacedPropertiesCount;
-		long tmpTotalClassesAndProperties = this.totalClassesCount + this.totalPropertiesCount;
-		//return ZERO if total number of RDF literals are ZERO [WARN]
+		logger.debug("Number of Misplaced Classes :: "
+				+ this.misplacedClassesCount);
+		logger.debug("Number of Classes :: " + this.totalClassesCount);
+		logger.debug("Number of Misplaced Properties :: "
+				+ this.misplacedPropertiesCount);
+		logger.debug("Number of Properties :: " + this.totalPropertiesCount);
+
+		long tmpTotalUndefinedClassesAndUndefinedProperties = this.misplacedClassesCount
+				+ this.misplacedPropertiesCount;
+		long tmpTotalClassesAndProperties = this.totalClassesCount
+				+ this.totalPropertiesCount;
+		// return ZERO if total number of RDF literals are ZERO [WARN]
 		if (tmpTotalClassesAndProperties <= 0) {
 			logger.warn("Total number of classes and properties in given document is found to be zero.");
 			return 0.0;
 		}
-		
-		double metricValue = (double) tmpTotalUndefinedClassesAndUndefinedProperties / tmpTotalClassesAndProperties;
-		logger.debug("Metric Value :: " +  metricValue);
+
+		double metricValue = (double) tmpTotalUndefinedClassesAndUndefinedProperties
+				/ tmpTotalClassesAndProperties;
+		logger.debug("Metric Value :: " + metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
+
 	/**
 	 * Returns Metric URI
 	 * 
 	 * @return metric URI
 	 */
+	@Override
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
+
 	/**
 	 * Returns list of problematic Quads
 	 * 
 	 * @return list of problematic quads
 	 */
+	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList); 
-		} 
-		catch (ProblemListInitialisationException problemListInitialisationException){
+			tmpProblemList = new ProblemList<Quad>(this.problemList);
+		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.debug(problemListInitialisationException);
-        	logger.error(problemListInitialisationException.getMessage());
+			logger.error(problemListInitialisationException.getMessage());
 		}
-		return tmpProblemList;	
+		return tmpProblemList;
 	}
 
 }

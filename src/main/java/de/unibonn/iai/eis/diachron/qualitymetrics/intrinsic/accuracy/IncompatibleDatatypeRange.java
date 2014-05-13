@@ -26,81 +26,88 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * This class is responsible for detection of literals incompatible with range data type.
+ * The metric computes a ratio of literals incompatible with range data type
+ * defined by the corresponding vocabulary.
  * 
  * @author Muhammad Ali Qasmi
  * @date 20th Feb 2014
  */
-public class IncompatibleDatatypeRange extends AbstractQualityMetric{
-    /**
-     * Metic URI
-     */
-    private final Resource METRIC_URI = DQM.IncompatibleDatatypeRangeMetric;
+public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 	/**
-	 *  logger object
+	 * Metic URI
 	 */
-    static Logger logger = Logger.getLogger(IncompatibleDatatypeRange.class);
+	private final Resource METRIC_URI = DQM.IncompatibleDatatypeRangeMetric;
 	/**
-	 *  cache frequently used Properties
+	 * logger object
 	 */
-	static Map<String, Statement> cacheProperty = new HashMap<String,Statement>();
+	static Logger logger = Logger.getLogger(IncompatibleDatatypeRange.class);
 	/**
-	 *  list of problematic quads
+	 * cache frequently used Properties
+	 */
+	static Map<String, Statement> cacheProperty = new HashMap<String, Statement>();
+	/**
+	 * list of problematic quads
 	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
 	/**
-	 *  total number of literals
+	 * total number of literals
 	 */
 	private double totalLiterals = 0;
 	/**
-	 *  total number of incompatiable data type literals.
+	 * total number of incompatiable data type literals.
 	 */
 	private double incompatiableDataTypeLiterals = 0;
+
 	/**
 	 * Clears Property Cache
 	 */
-	public static void clearCache(){
+	public static void clearCache() {
 		cacheProperty.clear();
 	}
+
 	/**
-	 * Reads vocabulary from given URL 
+	 * Reads vocabulary from given URL
 	 * 
-	 * @param url - for the model to be retrieved
+	 * @param url
+	 *            - for the model to be retrieved
 	 */
-	protected Model loadVocabulary(String url){
-        Model model = ModelFactory.createDefaultModel();
-        try{
-        	model.read(url);
-        	logger.debug(url + " :: vocabulary loaded from web.");
-        }catch (RiotException roitException){
-        	logger.debug(roitException);
-        	logger.error(roitException.getMessage());
-        	return null;
-        }
-        catch (HttpException httpException){
-        	logger.debug(httpException);
-        	logger.error(httpException.getMessage());
-        	return null;
-        }
-        return model;
+	protected Model loadVocabulary(String url) {
+		Model model = ModelFactory.createDefaultModel();
+		try {
+			model.read(url);
+			logger.debug(url + " :: vocabulary loaded from web.");
+		} catch (RiotException roitException) {
+			logger.debug(roitException);
+			logger.error(roitException.getMessage());
+			return null;
+		} catch (HttpException httpException) {
+			logger.debug(httpException);
+			logger.error(httpException.getMessage());
+			return null;
+		}
+		return model;
 	}
 
 	/**
 	 * Validates data type of literal by comparing its Data Type URI with the
 	 * Data Type URI specified in the range of the Object's predicate
+	 * 
 	 * @param literalDateTypeURI
 	 * @param RangeDataTypeURI
 	 * @return true - if validated
 	 */
-	protected boolean checkTypeByComparingURI(URI literalDataTypeURI, URI rangeReferredURI){
-	
+	protected boolean checkTypeByComparingURI(URI literalDataTypeURI,
+			URI rangeReferredURI) {
+
 		// case: literDataTyprURI NOT null but RangeReferredURI is null
 		if (literalDataTypeURI != null && rangeReferredURI == null) {
 			logger.warn("literalDataTypeURI is NOT null but RangeReferredURI is null.");
 			return true;
 		}
 		// case: literDataType is NUll and RangeRefferedURI is a literal
-		else if (literalDataTypeURI == null && rangeReferredURI.getFragment().toLowerCase().equals("literal")) {
+		else if (literalDataTypeURI == null
+				&& rangeReferredURI.getFragment().toLowerCase()
+						.equals("literal")) {
 			return true;
 		}
 		// case: literalDataTypeURI is null
@@ -114,21 +121,20 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 			return true;
 		}
 		// case: Both are EQUAL
-		else if (literalDataTypeURI.equals(rangeReferredURI)) 
-		{
+		else if (literalDataTypeURI.equals(rangeReferredURI)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Computes whether a given quad is incompatible data type
-	 * literal or not
+	 * Computes whether a given quad is incompatible data type literal or not
 	 * 
-	 * @param quad - to be processed 
+	 * @param quad
+	 *            - to be processed
 	 */
+	@Override
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
 		try {
@@ -136,125 +142,152 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric{
 			Node predicate = quad.getPredicate();
 			// retrieve object
 			Node object = quad.getObject();
-			
-			//check if predicate and object are NOT null
+
+			// check if predicate and object are NOT null
 			if (predicate != null && object != null) {
-				
+
 				logger.debug("Processing for object ::" + object.toString());
-				
-				if (object.isLiteral()){ // check if the object is literal
-					
+
+				if (object.isLiteral()) { // check if the object is literal
+
 					this.totalLiterals++; // increment total number of literals
-					
+
 					// retrieve predicate URI
-					if (predicate.getURI() != null){  
-							
-							Statement tmpProperty = null;
-							
-							 // check if the property is present in cache
-							if (cacheProperty.containsKey(predicate.getURI())){
-								logger.debug(predicate.getURI() + " :: found in cache.");
-								tmpProperty = cacheProperty.get(predicate.getURI()); 
+					if (predicate.getURI() != null) {
+
+						Statement tmpProperty = null;
+
+						// check if the property is present in cache
+						if (cacheProperty.containsKey(predicate.getURI())) {
+							logger.debug(predicate.getURI()
+									+ " :: found in cache.");
+							tmpProperty = cacheProperty.get(predicate.getURI());
+						} else { // load property from given URI source
+							logger.debug("predicate vocabulary not found in cache.");
+							logger.debug("loading vocabulary for predicate from :: "
+									+ predicate.getURI());
+							Model tmpModel = loadVocabulary(predicate.getURI()); // load
+																					// vocabulary
+																					// from
+																					// the
+																					// URI
+							tmpProperty = (tmpModel != null) ? (tmpModel
+									.getResource(predicate.getURI()))
+									.getProperty(RDFS.range) : null;
+						}
+
+						// check if property is not empty
+						if (tmpProperty != null) {
+							// store new statement in cache
+							if (!cacheProperty.containsKey(predicate.getURI())) {
+								cacheProperty.put(predicate.getURI(),
+										tmpProperty);
 							}
-							else { // load property from given URI source
-								logger.debug("predicate vocabulary not found in cache.");
-								logger.debug("loading vocabulary for predicate from :: " + predicate.getURI());
-								Model tmpModel = loadVocabulary(predicate.getURI()); // load vocabulary from the URI
-								tmpProperty = (tmpModel != null ) ? (tmpModel.getResource(predicate.getURI())).getProperty(RDFS.range) : null;
-							}
-							
-							// check if property is not empty		
-							if (tmpProperty != null){
-								 // store new statement in cache
-								if (!cacheProperty.containsKey(predicate.getURI())){
-									cacheProperty.put(predicate.getURI(), tmpProperty);
-								}
-								
-								Triple triple = tmpProperty.asTriple();
-								
-								String predicateURI = predicate.getURI().toString(); //given predicate
-								String subject = triple.getSubject().toString(); //retrieved predicate	
-								
-								// check if retrieved predicate matches with the given predicate
-								if (subject.equals(predicateURI)) { 
-								
-									logger.debug("Object DataType URI :: " + object.getLiteralDatatypeURI());
-									logger.debug("Range Referred DateType URI :: " + triple.getObject());
-									
-									
-									try {
-										
-										URI givenObjectDateTypeURI = (object.getLiteralDatatypeURI() != null ) ? new URI(object.getLiteralDatatypeURI()) : null;
-										URI rangeObjectURI = (triple.getObject().toString() != null) ? new URI (triple.getObject().toString()) : null;
-										if (!checkTypeByComparingURI(givenObjectDateTypeURI,rangeObjectURI)){
-											this.incompatiableDataTypeLiterals++;
-											this.problemList.add(quad);
-										}
-									} catch (URISyntaxException e) {
-										logger.error("Malformed URI exception for " + e.getMessage());
-										logger.debug(e.getStackTrace());
+
+							Triple triple = tmpProperty.asTriple();
+
+							String predicateURI = predicate.getURI().toString(); // given
+																					// predicate
+							String subject = triple.getSubject().toString(); // retrieved
+																				// predicate
+
+							// check if retrieved predicate matches with the
+							// given predicate
+							if (subject.equals(predicateURI)) {
+
+								logger.debug("Object DataType URI :: "
+										+ object.getLiteralDatatypeURI());
+								logger.debug("Range Referred DateType URI :: "
+										+ triple.getObject());
+
+								try {
+
+									URI givenObjectDateTypeURI = (object
+											.getLiteralDatatypeURI() != null) ? new URI(
+											object.getLiteralDatatypeURI())
+											: null;
+									URI rangeObjectURI = (triple.getObject()
+											.toString() != null) ? new URI(
+											triple.getObject().toString())
+											: null;
+									if (!checkTypeByComparingURI(
+											givenObjectDateTypeURI,
+											rangeObjectURI)) {
+										this.incompatiableDataTypeLiterals++;
+										this.problemList.add(quad);
 									}
-									
-								} //End-if (subject.equals(predicateURI))
-								
-							} // End-if (tmpProperty != null)  
-							
-						} // End-if (predicate.getURI() != null)
-					
-				} //End-if (object.isLiteral())
+								} catch (URISyntaxException e) {
+									logger.error("Malformed URI exception for "
+											+ e.getMessage());
+									logger.debug(e.getStackTrace());
+								}
+
+							} // End-if (subject.equals(predicateURI))
+
+						} // End-if (tmpProperty != null)
+
+					} // End-if (predicate.getURI() != null)
+
+				} // End-if (object.isLiteral())
 			}
-		}
-		catch (Exception exception){
+		} catch (Exception exception) {
 			logger.debug(exception);
-        	logger.error(exception.getMessage());
+			logger.error(exception.getMessage());
 		}
 		logger.trace("compute() --Ended--");
 	}
-	
+
 	/**
 	 * Returns value of the metric based on
 	 * 
-	 * @return ( number of incompatiable Data type literls ) / ( total number of literls )
+	 * @return ( number of incompatiable Data type literls ) / ( total number of
+	 *         literls )
 	 */
+	@Override
 	public double metricValue() {
 		logger.trace("metricValue() --Started--");
-		logger.debug("Incompatiable DataType Literals :: " +  this.incompatiableDataTypeLiterals);
-		logger.debug("Total Literals :: " +  this.totalLiterals);
-		
-		//return ZERO if total number of RDF literals are ZERO [WARN]
+		logger.debug("Incompatiable DataType Literals :: "
+				+ this.incompatiableDataTypeLiterals);
+		logger.debug("Total Literals :: " + this.totalLiterals);
+
+		// return ZERO if total number of RDF literals are ZERO [WARN]
 		if (this.totalLiterals <= 0) {
 			logger.warn("Total number of RDF data type literals in given document is found to be zero.");
 			return 0.0;
 		}
-		
-		double metricValue = this.incompatiableDataTypeLiterals / this.totalLiterals;
-		logger.debug("Metric Value :: " +  metricValue);
+
+		double metricValue = this.incompatiableDataTypeLiterals
+				/ this.totalLiterals;
+		logger.debug("Metric Value :: " + metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
+
 	/**
 	 * Returns Metric URI
 	 * 
-	 * @return metric URI 
+	 * @return metric URI
 	 */
+	@Override
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
+
 	/**
 	 * Returns list of problematic Quads
 	 * 
 	 * @return list of problematic Quads
 	 */
+	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList); 
-		} 
-		catch (ProblemListInitialisationException problemListInitialisationException){
+			tmpProblemList = new ProblemList<Quad>(this.problemList);
+		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.debug(problemListInitialisationException);
-        	logger.error(problemListInitialisationException.getMessage());
+			logger.error(problemListInitialisationException.getMessage());
 		}
-		return tmpProblemList;	
+		return tmpProblemList;
 	}
 
 }

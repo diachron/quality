@@ -16,20 +16,22 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * This class is responsible for Detection of malformed Data type Literals - typed literals like "13"^^xsd:int"
+ * This class tests if the value of a typed literal is valid with regards to the
+ * given xsd datatype.
  * 
  * @author Muhammad Ali Qasmi
  * @date 13th Feb 2014
  */
 public class MalformedDatatypeLiterals extends AbstractQualityMetric {
-    /**
-     * Metic URI
-     */
+	/**
+	 * Metic URI
+	 */
 	private final Resource METRIC_URI = DQM.MalformedDatatypeLiteralsMetric;
 	/**
 	 * logger static object
 	 */
-	private static Logger logger = Logger.getLogger(MalformedDatatypeLiterals.class);
+	private static Logger logger = Logger
+			.getLogger(MalformedDatatypeLiterals.class);
 	/**
 	 * total number of literals
 	 */
@@ -42,11 +44,14 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	 * list of problematic quads
 	 */
 	protected List<Quad> problemList = new ArrayList<Quad>();
+
 	/**
 	 * This method identify whether a given quad is malformed or not.
 	 * 
-	 * @param quad - to be identified
+	 * @param quad
+	 *            - to be identified
 	 */
+	@Override
 	public void compute(Quad quad) {
 		logger.trace("compute() --Started--");
 		// retrieves object from statement
@@ -61,7 +66,8 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 				if (!rdfdataType.isValidLiteral(object.getLiteral())) {
 					this.malformedLiterals++;
 					this.problemList.add(quad);
-					logger.debug("MalformedRDFDataTypeLiteral :: " + object.toString());
+					logger.debug("MalformedRDFDataTypeLiteral :: "
+							+ object.toString());
 				}
 				this.totalLiterals++;
 			}
@@ -72,10 +78,11 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	}
 
 	/**
-	 * Returns metric value for object this class 
+	 * Returns metric value for object this class
 	 * 
-	 * @return  (number of malformed literals) / (total number of literals)
+	 * @return (number of malformed literals) / (total number of literals)
 	 */
+	@Override
 	public double metricValue() {
 
 		logger.trace("metricValue() --Started--");
@@ -93,11 +100,13 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
 	}
+
 	/**
 	 * Returns the metric URI
 	 * 
 	 * @return the metric URI
 	 */
+	@Override
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
@@ -107,15 +116,15 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	 * 
 	 * @return list of problematic quads
 	 */
+	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList); 
-		} 
-		catch (ProblemListInitialisationException problemListInitialisationException){
+			tmpProblemList = new ProblemList<Quad>(this.problemList);
+		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.debug(problemListInitialisationException);
-        	logger.error(problemListInitialisationException.getMessage());
+			logger.error(problemListInitialisationException.getMessage());
 		}
-		return tmpProblemList;	
+		return tmpProblemList;
 	}
 }
