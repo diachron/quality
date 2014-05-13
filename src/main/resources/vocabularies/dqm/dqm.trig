@@ -159,6 +159,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the delay between the submission of a request to the data source and the reception of the respective response (or the first part of it)" ;
 		rdfs:label	"LowLatencyMetric" .
+		
+	dqm:HighThroughputMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Measures the number of answered HTTP requests responsed by the source of the dataset, per second" ;
+		rdfs:label	"HighThroughputMetric" .
 
 	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
@@ -317,10 +323,18 @@
 	dqm:hasLowLatencyMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Accessibility Dimension with Low Latency Metric (Low Latency Metric belongs to the Accessibility Dimension)" ;
+		rdfs:comment	"Links the Performance Dimension with Low Latency Metric (Low Latency Metric belongs to the Performance Dimension)" ;
 		rdfs:label	"hasLowLatencyMetric" ;
-		rdfs:domain	dqm:Accessibility ;
+		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:LowLatencyMetric .
+		
+	dqm:hasHighThroughputMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Performance Dimension with High Throughput Metric (High Throughput Metric belongs to the Performance Dimension)" ;
+		rdfs:label	"hasHighThroughputMetric" ;
+		rdfs:domain	dqm:Performance ;
+		rdfs:range	dqm:HighThroughputMetric .
 
 	#Accuracy Dimensions Properties
 	dqm:hasAccuracyDimension
