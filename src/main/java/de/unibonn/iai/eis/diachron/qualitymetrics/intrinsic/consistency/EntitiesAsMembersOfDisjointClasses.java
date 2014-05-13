@@ -96,33 +96,6 @@ public class EntitiesAsMembersOfDisjointClasses extends AbstractQualityMetric {
 	}
 
 	/**
-	 * This method identifies whether a given property is heterogeneous or not.
-	 * 
-	 * @param givenTable
-	 *            - property (its rdf type and its count)
-	 * @param threshold
-	 *            - to declare a property as heterogeneous
-	 * @return true - if heterogeneous
-	 */
-	protected boolean isHeterogeneousDataType(
-			Hashtable<RDFDatatype, Long> givenTable, Long threshold) {
-
-		Long tmpMax = new Long(0); // for count of Max dataType
-		Long tmpTotal = new Long(0); // for count of total
-
-		Enumeration<RDFDatatype> enumKey = givenTable.keys();
-
-		while (enumKey.hasMoreElements()) {
-			RDFDatatype key = enumKey.nextElement();
-			Long value = givenTable.get(key);
-			tmpMax = (value > tmpMax) ? value : tmpMax; // get Max Datatype
-			tmpTotal += value; // count total
-		}
-
-		return (((tmpMax / tmpTotal) * 100) >= threshold) ? true : false;
-	}
-
-	/**
 	 * counts number of entities that are members of disjoint classes
 	 * 
 	 * @return the number of entities that are members of disjoint classes
