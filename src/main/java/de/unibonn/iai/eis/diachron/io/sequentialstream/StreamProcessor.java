@@ -1,5 +1,12 @@
 package de.unibonn.iai.eis.diachron.io.sequentialstream;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,12 +18,26 @@ import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
 import org.apache.jena.riot.lang.PipedTriplesStream;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.Object2Quad;
 import de.unibonn.iai.eis.diachron.exceptions.ProcessorNotInitialised;
 import de.unibonn.iai.eis.diachron.io.IOProcessor;
+import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.DAQHelper;
+import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 
 public class StreamProcessor implements IOProcessor {
@@ -51,6 +72,18 @@ public class StreamProcessor implements IOProcessor {
 		}
 		
 		this.isInitalised = true;
+		
+		
+		// load Usecase specific metrics -- added for review year 1 prototype TODO: modify to be generic
+		try {
+			this.loadUsecaseSpecificMetrics("ebi");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void startProcessing() throws ProcessorNotInitialised{
@@ -67,12 +100,20 @@ public class StreamProcessor implements IOProcessor {
 	
 
 		// loop which will go through the statements one by one
+		int counter = 1;
 		while (this.iterator.hasNext()){
+			System.out.print("Triples read: " + counter + "\r");
 			Object2Quad stmt = new Object2Quad(this.iterator.next());
 			
-			System.out.println(stmt.getStatement().toString());
+			for(String className : this.metricInstances.keySet()){
+				QualityMetric m = this.metricInstances.get(className);
+				m.compute(stmt.getStatement());
+			}
+			counter++;
+			//System.out.println(stmt.getStatement().toString());
 			//pass it to metrics
 		}
+		this.generateQualityGraph();
 	}
 
 
@@ -83,6 +124,92 @@ public class StreamProcessor implements IOProcessor {
 			this.executor.shutdown();
 		}
 	}
+	
+	///// TESTING /////
+	private Map<String, QualityMetric> metricInstances = new ConcurrentHashMap<String, QualityMetric>();
+	
+	private void loadUsecaseSpecificMetrics(String pilot) throws ClassNotFoundException, InstantiationException, IllegalAccessException{	
+		String filename = this.getClass().getClassLoader().getResource("metrics_initalisations/metrics.trig").toExternalForm();
+
+		Model m = ModelFactory.createDefaultModel();
+		m.read(filename, null);
+		
+		String classPrefix = "de.unibonn.iai.eis.diachron.qualitymetrics.";
+		Resource pilotResourceURI = m.createResource("http://www.diachron-fp7.eu/diachron#"+pilot);
+		Property metricClass = m.createProperty("http://www.diachron-fp7.eu/diachron#metric");
+				
+		StmtIterator si = m.listStatements(pilotResourceURI, metricClass, (RDFNode) null);
+		
+		while(si.hasNext()){
+			String className = si.next().getObject().toString();
+			className = classPrefix.concat(className);
+			
+			Class<? extends QualityMetric> clazz = (Class<? extends QualityMetric>) Class.forName(className);
+			QualityMetric metric = clazz.newInstance();
+			metricInstances.put(className, metric);
+		}	
+	}
+	
+	public void generateQualityGraph(){
+		HashMap<String,Resource> generatedURI = new HashMap<String,Resource>();
+		
+		Model m = ModelFactory.createDefaultModel();
+		
+			for(String className : this.metricInstances.keySet()){
+				QualityMetric met = this.metricInstances.get(className);
+				List<Statement> daqTrips = met.toDAQTriples();
+				m.add(daqTrips);
+				
+				Resource dim = DAQHelper.getDimensionResource(met.getMetricURI());
+				if (!(generatedURI.containsKey(dim.getURI()))){
+					Resource dimURI = Commons.generateURI();
+					generatedURI.put(dim.getURI(), dimURI);
+				}
+				Statement dtype = new StatementImpl(generatedURI.get(dim.getURI()), RDF.type, dim);
+				Property p = m.createProperty(DAQHelper.getPropertyResource(met.getMetricURI()).getURI());
+				Statement dhasMet = new StatementImpl(generatedURI.get(dim.getURI()), p , daqTrips.get(0).getSubject());
+				m.add(dtype);
+				m.add(dhasMet);
+				
+				Resource cat = DAQHelper.getCategoryResource(met.getMetricURI());
+				if (!(generatedURI.containsKey(cat.getURI()))){
+					Resource catURI = Commons.generateURI();
+					generatedURI.put(cat.getURI(), catURI);
+				}
+				
+				Statement ctype = new StatementImpl(generatedURI.get(cat.getURI()), RDF.type, cat);
+				p = m.createProperty(DAQHelper.getPropertyResource(dim).getURI());
+				Statement chasDim = new StatementImpl(generatedURI.get(cat.getURI()), p, daqTrips.get(0).getSubject());
+				m.add(ctype);
+				m.add(chasDim);
+			}
+		
+		try {
+			String filename = "/Users/jeremy/Documents/Workspaces/eis/quality/src/main/resources/output/qg.trig";
+			RDFDataMgr.write(new FileOutputStream(filename), m, Lang.TRIG);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) throws ProcessorNotInitialised, ClassNotFoundException, InstantiationException, IllegalAccessException{
+		String filename = StreamProcessor.class.getClassLoader().getResource("testfiles/ebi/efo-2.34.rdf").toExternalForm();
+		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+		StreamProcessor sp = new StreamProcessor(filename);
+		sp.setUpProcess();
+		try {
+			sp.startProcessing();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			sp.cleanUp();
+		}
+		System.out.println("finished");
+	}
+	
+	
+	
 //	public static void main(String[] args) throws ProcessorNotInitialised{
 //		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
 //		String filename = "D:\\Users\\jdebattist\\Desktop\\raw_infobox_properties_en.nq";

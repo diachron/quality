@@ -34,7 +34,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		// <owl:ontologyVersion> should be defined only on something of type owl:Ontology
-		if (quad.getObject().getURI().equals(OWL.Ontology.getURI().toString())){
+		if ((quad.getObject().isURI()) && (quad.getObject().getURI().equals(OWL.Ontology.getURI().toString()))){
 			if (ontologyInstances.containsKey(quad.getSubject())){
 				int instance = ontologyInstances.get(quad.getSubject()) + 1;
 				ontologyInstances.put(quad.getSubject(), instance);
