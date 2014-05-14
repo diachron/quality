@@ -10,6 +10,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 
 public class InternalModelConf {
+	
 	// creates an empty model for the default dataset - a dataset is readonly.
 	private static Dataset semanticModel = DatasetFactory.create(ModelFactory.createDefaultModel()); 
 	
@@ -21,7 +22,8 @@ public class InternalModelConf {
 		semanticModel.addNamedModel(DAQ.NS, temp);
 		
 		temp.removeAll();
-		temp.read(InternalModelConf.class.getClassLoader().getResourceAsStream("vocabularies/dqm/dqm.trig"), null);
+		// Loading DQM ontology into memory
+		temp.read(InternalModelConf.class.getClassLoader().getResourceAsStream("vocabularies/dqm/dqm.rdf"), "RDF/XML");
 		semanticModel.addNamedModel(DQM.NS, temp);
 	}
 	
@@ -32,5 +34,12 @@ public class InternalModelConf {
 
 	public static Model getDQMModel(){
 		return semanticModel.getNamedModel(DQM.NS);
+	}
+	
+	public static Model getFlatModel(){
+		Model m = ModelFactory.createDefaultModel();
+		m.add(getDAQModel());
+		m.add(getDQMModel());
+		return m;
 	}
 }
