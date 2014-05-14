@@ -126,9 +126,7 @@ public class EntitiesAsMembersOfDisjointClasses extends AbstractQualityMetric {
 					for (StmtIterator i = model.listStatements(classAsResource, OWL.disjointWith, (RDFNode) null); i.hasNext(); ) {
 						Node otherClass = i.next().getObject().asNode();
 						// if ?otherClass is among the set of classes of our entity, the entity is a member of disjoint classes
-						if (classes.contains(otherClass)
-								/* TODO actually we'd only have to check whether the set of classes we've not yet iterated over contains(otherClass) */
-								) {
+						if (classes.contains(otherClass)) {
 							count++;
 							problemList.add(entity);
 							break classesLoop;
