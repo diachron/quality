@@ -165,6 +165,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Measures the number of answered HTTP requests responsed by the source of the dataset, per second" ;
 		rdfs:label	"High throughput metric" .
+		
+	dqm:ScalabilityOfDataSourceMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Determines whether the time required to answer a set of N requests divided by N, is not longer than the time it takes to answer a single request" ;
+		rdfs:label	"Scalability of a data source metric" .
 
 	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
@@ -365,6 +371,14 @@
 		rdfs:label	"Performance has high throughput metric" ;
 		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:HighThroughputMetric .
+		
+	dqm:hasScalabilityOfDataSourceMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Performance Dimension with Scalability of a Data Source Metric (Scalability of a Data Source Metric belongs to the Performance Dimension)" ;
+		rdfs:label	"Performance has scalability of a data source metric" ;
+		rdfs:domain	dqm:Performance ;
+		rdfs:range	dqm:ScalabilityOfDataSourceMetric .
 
 	#Accuracy Dimensions Properties
 	dqm:hasAccuracyDimension
@@ -428,7 +442,7 @@
 	dqm:hasMisplacedClassesOrPropertiesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with misplaced classes or properties metric ;
+		rdfs:comment	"Links Consistency Dimension with misplaced classes or properties metric" ;
 		rdfs:label	"hasMisplacedClassesOrPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:hasMisplacedClassesOrPropertiesMetric .
