@@ -14,6 +14,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
@@ -26,7 +27,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.VOID;
  *     Check if data dumps (void:dataDump) exists and are reachable and parsable.
  *      
  */
-public class RDFAccessibility implements QualityMetric {
+public class RDFAccessibility extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.RDFAvailabilityMetric;
 	
@@ -40,14 +41,8 @@ public class RDFAccessibility implements QualityMetric {
 
 			countRDF++;
 			
-			try {
-				HTTPConnectorReport report = HTTPConnector.connectToURI(quad.getObject(), "", false, true);
-				if (report.getResponseCode() == 200) positiveRDF++; 
-			} catch (MalformedURLException e) {
-			} catch (ProtocolException e) {
-			} catch (UnknownHostException e) {
-			} catch (IOException e) {
-			}
+			HTTPConnectorReport report = HTTPConnector.connectToURI(quad.getObject().getURI(), "", false, true);
+			if (report.getResponseCode() == 200) positiveRDF++; 
 		}
 
 	}
@@ -58,9 +53,6 @@ public class RDFAccessibility implements QualityMetric {
 		return metricValue;
 	}
 
-	public List<Statement> toDAQTriples() {
-		return null;
-	}
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;

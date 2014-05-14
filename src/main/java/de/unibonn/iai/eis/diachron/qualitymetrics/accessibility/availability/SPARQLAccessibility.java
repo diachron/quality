@@ -12,6 +12,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.VOID;
@@ -22,7 +23,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.VOID;
  * Check if a SPARQL endpoint (matching void:sparqlEndpoint) is available and returns a result. 
  * 
  */
-public class SPARQLAccessibility implements QualityMetric {
+public class SPARQLAccessibility extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.EndPointAvailabilityMetric;
 	
@@ -54,11 +55,6 @@ public class SPARQLAccessibility implements QualityMetric {
 
 	public double metricValue() {
 		return metricValue;
-	}
-
-	public List<Statement> toDAQTriples() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Resource getMetricURI() {
