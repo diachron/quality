@@ -9,8 +9,8 @@ import java.net.ProtocolException;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
@@ -58,7 +58,7 @@ public class RDFAccessibility implements QualityMetric {
 		return metricValue;
 	}
 
-	public List<Triple> toDAQTriples() {
+	public List<Statement> toDAQTriples() {
 		return null;
 	}
 

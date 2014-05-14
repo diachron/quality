@@ -10,8 +10,8 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
@@ -90,7 +90,7 @@ public class MisreportedContentType implements QualityMetric {
 		return metricValue;
 	}
 
-	public List<Triple> toDAQTriples() {
+	public List<Statement> toDAQTriples() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -2,13 +2,13 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.List;
 
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
@@ -56,7 +56,7 @@ public class SPARQLAccessibility implements QualityMetric {
 		return metricValue;
 	}
 
-	public List<Triple> toDAQTriples() {
+	public List<Statement> toDAQTriples() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -2,8 +2,8 @@ package de.unibonn.iai.eis.diachron.qualitymetrics;
 
 import java.util.List;
 
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
@@ -32,7 +32,7 @@ public interface QualityMetric {
 	 * 
 	 * @return a list of daQ triples
 	 */
-	List<Triple> toDAQTriples();
+	List<Statement> toDAQTriples();
 
 	/**
 	 * @return returns the daQ URI of the Quality Metric
