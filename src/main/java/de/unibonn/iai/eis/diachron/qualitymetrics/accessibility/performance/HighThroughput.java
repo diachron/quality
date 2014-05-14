@@ -24,7 +24,7 @@ public class HighThroughput extends AbstractQualityMetric {
 	/**
 	 * Amount of HTTP requests that will be sent to the data source in order to estimate how many requests are served per second. 
 	 */
-	private static final int NUM_HTTP_REQUESTS = 1;
+	private static final int NUM_HTTP_REQUESTS = 3;
 	
 	/**
 	 * Holds the total delay as currently calculated by the compute method
@@ -45,7 +45,7 @@ public class HighThroughput extends AbstractQualityMetric {
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the total delay associated to the current dataset
 		if(datasetURI != null) {
-			totalDelay = LowLatency.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
+			totalDelay = HttpPerformanceUtil.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 		}
 	}

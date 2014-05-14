@@ -1,10 +1,5 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.performance;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +50,8 @@ public class LowLatency extends AbstractQualityMetric {
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the total delay associated to the current dataset
 		if(datasetURI != null) {
-			totalDelay = measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
+			totalDelay = HttpPerformanceUtil.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
+			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 		}
 	}
 	
@@ -87,57 +83,6 @@ public class LowLatency extends AbstractQualityMetric {
 		}
 		
 		return null;
-	}
-	
-	/**
-	 * Calculates the time required to obtain the response resulting of a request to the specified dataset URL. 
-	 * The calculation is performed by executing several requests to the dataSetUrl and counting the time elapsed until a response is received.  
-	 * Note that the contents nor the code of the responses are taken into account
-	 * @param dataSetUrl URL to which the requests will be sent
-	 * @param numRequests total requests to be sent in the burst
-	 * @return Total delay between the sending of the requests and the reception of the corresponding responses
-	 */
-	protected static long measureReqsBurstDelay(String dataSetUrl, int numRequests) {
-		HttpURLConnection httpConn = null;
-		InputStream responseStream = null;
-		long accumDelay = 0;
-		
-		try {
-			URL targetUrl = new URL(dataSetUrl);
-			long startTimeStamp = 0;
-			
-			for(int i = 0; i < numRequests; i++) {
-				// Create a new HttpURLConnection object for each request, since each instance is intended to perform a single request (view Javadoc)
-				// note that this call does not establish the actual network connection to the target resource and thus the timer is not initiated here
-				httpConn = (HttpURLConnection)targetUrl.openConnection();
-				
-				// Getting the input-stream of the response actually connects to the target and retrieves contents, which won't be consumed in this case
-				try {
-					// Initiate the timer, as the call to getInputStream connects to the target resource and sends GET and HEADers
-					startTimeStamp = System.currentTimeMillis();
-					responseStream = httpConn.getInputStream();
-					// Response received, calculate delay
-					accumDelay += (System.currentTimeMillis() - startTimeStamp);
-				} finally {
-					// Make sure the stream is closed, thereby freeing network resources associated to this particular trial
-					if(responseStream != null) {
-						responseStream.close();
-					}
-				}
-			}
-		} catch (IOException e) {
-			// Something went wrong, numbers are not accurate anymore, return -1 indicating that total delay could not be determined
-			logger.error("Error calculating requests burst delay: {}", e);
-			return -1;
-		} finally {
-			// No need to reuse the connection anymore, disconnect
-			if(httpConn != null) {
-				httpConn.disconnect();
-			}
-		}
-		
-		// Return as result, the total time in seconds elapsed between requests and responses
-		return accumDelay;
 	}
 
 	/**
