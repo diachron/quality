@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.jena.riot.RiotException;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -116,7 +117,15 @@ public class EntitiesAsMembersOfDisjointClasses extends AbstractQualityMetric {
 					// retrieve an RDF description of the class (and possibly of more stuff, maybe even the whole vocabularies) in an LOD way
 					// TODO it's terribly inefficient to do this all the time.  We need a library that caches downloaded vocabularies
 					Model model = ModelFactory.createDefaultModel();
-					model.read(_class.getURI());
+
+					//Quick hack to break the loop when URIs resolve into bad RDF models
+					//TODO: fix
+					try{
+						model.read(_class.getURI());
+					} catch (RiotException riotExc){
+						riotExc.getStackTrace();
+						break classesLoop;
+					}
 					
 					// wrap the class under consideration into something that we can use to query the model
 					// TODO can this be done more elegantly?
