@@ -407,21 +407,13 @@
 		
 		
 		#Consistency Dimensions Properties
-	dqm:hasConsistencyDimension
-		a	rdfs:Property ;
-		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"Links Intrinsic Category with Consistency Dimnsion" ;
-		rdfs:label	"ConsistencyDimension" ;
-		rdfs:domain	dqm:Intrinsic ;
-		rdfs:range	dqm:Consistency .
-		
 	dqm:hasHomogeneousDatatypesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Consistency Dimension with Homogeneous data types Metric" ;
 		rdfs:label	"hasHomogeneousDatatypesMetric" ;
 		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:hasHomogeneousDatatypesMetric .
+		rdfs:range	dqm:HomogeneousDatatypesMetric .
 		
 	dqm:hasUndefinedClassesOrPropertiesMetric
 		a	rdfs:Property ;
@@ -429,7 +421,7 @@
 		rdfs:comment	"Links Consistency Dimension with Undefined classes or properties metric" ;
 		rdfs:label	"hasUndefinedClassesOrPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:hasUndefinedClassesOrPropertiesMetric .
+		rdfs:range	dqm:UndefinedClassesOrPropertiesMetric .
 		
 	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Property ;
@@ -437,7 +429,7 @@
 		rdfs:comment	"Links Consistency Dimension with Misuse Owl- datatype or object properties metric" ;
 		rdfs:label	"hasMisuseOwlDatatypeOrObjectPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric .
+		rdfs:range	dqm:MisuseOwlDatatypeOrObjectPropertiesMetric .
 		
 	dqm:hasMisplacedClassesOrPropertiesMetric
 		a	rdfs:Property ;
@@ -445,7 +437,7 @@
 		rdfs:comment	"Links Consistency Dimension with misplaced classes or properties metric" ;
 		rdfs:label	"hasMisplacedClassesOrPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:hasMisplacedClassesOrPropertiesMetric .
+		rdfs:range	dqm:MisplacedClassesOrPropertiesMetric .
 		
 
 	#Contextual Dimensions Properties
@@ -660,14 +652,14 @@ dqm:hasObsoleteConceptsInOntologyMetric
 	rdfs:comment	"Links Consistency Dimension with Obsolete Concepts In Ontology Metric" ;
 	rdfs:label	"Understandability has obsolete concepts in ontology metric" ;
 	rdfs:domain	dqm:Understandability ;
-	rdfs:range	dqm:LowBlankNodesUsageMetric .	
+	rdfs:range	dqm:ObsoleteConceptsInOntologyMetric .	
 	
 dqm:ObsoleteConceptsInOntologyMetric
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"Provides a measure for the number of classes and properties in an ontology which are marked as depricated. If an ontology is making lots of obsolete concepts between different versions, then this is an indicator that the ontology is going through a lot of changes, and is potentially in a state of poor quality" ;
 	rdfs:label	"Obsolete concepts in ontology metric" .
-	
+		
 #Synonym Usage in Ontology Classes
 	dqm:hasSynonymUsageMetric
 		a	rdfs:Property ;
