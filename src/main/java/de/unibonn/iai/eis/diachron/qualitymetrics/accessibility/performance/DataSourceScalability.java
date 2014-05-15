@@ -69,7 +69,7 @@ public class DataSourceScalability extends AbstractQualityMetric {
 				logger.trace("Total scalability differential factor for dataset {} was {}", datasetURI, scalabilityDiff);
 			} else {
 				logger.trace("Calculation of scalability differential factor failed for dataset {}", datasetURI);
-				scalabilityDiff = -1;
+				scalabilityDiff = 0; //return 0 when test fails
 			}
 		}		
 	}

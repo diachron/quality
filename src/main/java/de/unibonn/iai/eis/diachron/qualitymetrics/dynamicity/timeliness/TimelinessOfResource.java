@@ -104,7 +104,7 @@ public class TimelinessOfResource extends AbstractQualityMetric {
 			return (((double)accuValidTimeDiffs)/((double)countTotalAccountedSubjects));
 		} else {
 			logger.trace("Timeliness of the Resource could not be calculated. Insufficient information");
-			return -1;
+			return 0; //If insufficient information, return 0 - lowest possible
 		}
 	}
 	
