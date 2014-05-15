@@ -4,12 +4,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import de.unibonn.iai.eis.diachron.datatypes.Object2Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
@@ -41,8 +46,8 @@ public class ObsoleteConceptsInOntology extends AbstractQualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		if  (quad.getPredicate().getURI().equals(RDFS.subClassOf.getURI()) && 
-				((quad.getObject().getURI().equals(OBSOLETE_CLASS)) ||
-				(quad.getObject().getURI().equals(OBSOLETE_PROPERTY)))){
+				(((quad.getObject().isURI()) && (quad.getObject().getURI().equals(OBSOLETE_CLASS))) ||
+				((quad.getObject().isURI()) &&(quad.getObject().getURI().equals(OBSOLETE_PROPERTY))))){
 			if (!(concepts.contains(quad.getSubject()))) concepts.add(quad.getSubject());
 			deprConcept++;
 		}
@@ -70,5 +75,4 @@ public class ObsoleteConceptsInOntology extends AbstractQualityMetric {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

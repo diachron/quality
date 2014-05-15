@@ -2,7 +2,9 @@ package de.unibonn.iai.eis.diachron.io.sequentialstream;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,18 +102,13 @@ public class StreamProcessor implements IOProcessor {
 	
 
 		// loop which will go through the statements one by one
-		int counter = 1;
 		while (this.iterator.hasNext()){
-			System.out.print("Triples read: " + counter + "\r");
 			Object2Quad stmt = new Object2Quad(this.iterator.next());
 			
 			for(String className : this.metricInstances.keySet()){
 				QualityMetric m = this.metricInstances.get(className);
 				m.compute(stmt.getStatement());
 			}
-			counter++;
-			//System.out.println(stmt.getStatement().toString());
-			//pass it to metrics
 		}
 		this.generateQualityGraph();
 	}
@@ -157,6 +154,7 @@ public class StreamProcessor implements IOProcessor {
 		
 			for(String className : this.metricInstances.keySet()){
 				QualityMetric met = this.metricInstances.get(className);
+				//System.out.println(met.getMetricURI());
 				List<Statement> daqTrips = met.toDAQTriples();
 				m.add(daqTrips);
 				
@@ -186,7 +184,7 @@ public class StreamProcessor implements IOProcessor {
 		
 		try {
 			String filename = "/Users/jeremy/Documents/Workspaces/eis/quality/src/main/resources/output/qg.trig";
-			RDFDataMgr.write(new FileOutputStream(filename), m, Lang.TRIG);
+			RDFDataMgr.write(new FileOutputStream(filename,true), m, Lang.TRIG);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -194,8 +192,17 @@ public class StreamProcessor implements IOProcessor {
 	}
 	
 	public static void main(String[] args) throws ProcessorNotInitialised, ClassNotFoundException, InstantiationException, IllegalAccessException{
-		String filename = StreamProcessor.class.getClassLoader().getResource("testfiles/ebi/efo-2.34.rdf").toExternalForm();
-		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+		
+		for (int i=34; i<=44; i++){
+			if (i == 40) i++;
+			String filename = StreamProcessor.class.getClassLoader().getResource("testfiles/ebi/efo-2."+i+".rdf").toExternalForm();
+			
+			System.out.println("Processing efo-2."+i+".rdf");
+			process(filename);
+		}
+	}
+	
+	public static void process(String filename) throws ProcessorNotInitialised, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		StreamProcessor sp = new StreamProcessor(filename);
 		sp.setUpProcess();
 		try {

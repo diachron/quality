@@ -65,6 +65,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 			instances += this.ontologyInstances.get(n);
 		}
 	
+		if (ontologies == 0) return 0;
 		return instances / ontologies;
 	}
 
