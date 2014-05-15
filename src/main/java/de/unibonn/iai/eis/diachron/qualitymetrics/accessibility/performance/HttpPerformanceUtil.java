@@ -151,20 +151,17 @@ public class HttpPerformanceUtil {
 			httpConn = (HttpURLConnection)targetUrl.openConnection();
 			httpConn.setRequestProperty("Content-Type", "application/rdf+xml");
 			
+			// Initiate the timer, as the call to getInputStream connects to the target resource and sends GET and HEADers
+			startTimeStamp = System.currentTimeMillis();
 			// Getting the input-stream of the response actually connects to the target and retrieves contents, which won't be consumed in this case
-			try {
-				// Initiate the timer, as the call to getInputStream connects to the target resource and sends GET and HEADers
-				startTimeStamp = System.currentTimeMillis();
-				responseStream = httpConn.getInputStream();
-				// Response received, calculate delay
-				delay = (System.currentTimeMillis() - startTimeStamp);
-			} finally {
-				// Make sure the stream is closed, thereby freeing network resources associated to this particular trial
-				if(responseStream != null) {
-					responseStream.close();
-				}
-			}
+			responseStream = httpConn.getInputStream();
+			// Response received, calculate delay
+			delay = (System.currentTimeMillis() - startTimeStamp);
 		} finally {
+			// Make sure the stream is closed, thereby freeing network resources associated to this particular trial
+			if(responseStream != null) {
+				responseStream.close();
+			}
 			// No need to reuse the connection anymore, disconnect
 			if(httpConn != null) {
 				httpConn.disconnect();

@@ -51,6 +51,12 @@
 		rdfs:comment	"Metrics in this dimension measure the extent to which information (or some portion of it) is present, obtainable and ready for use" ;
 		rdfs:label	"Availability" .
 		
+	dqm:Security
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Refers to the extent to which data is protected against illegal alteration and it's authenticity can be guaranteed and to the confidentiality of the communication between a source and its consumers" ;
+		rdfs:label	"Security" .
+		
 	dqm:Performance
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -346,6 +352,15 @@
 		rdfs:label	"Availability has misreported content types metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:MisreportedContentTypesMetric .
+		
+	#Security Dimension Properties
+	dqm:hasSecurityDimension
+		a	rdfs:Property ;	
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"Links Accessibility Category with Security Dimension" ;
+		rdfs:label	"Accessibility has security dimension" ;
+		rdfs:domain	dqm:Accessibility ;
+		rdfs:range	dqm:Security .
 	
 	#Performance Dimension Properties
 	dqm:hasPerformanceDimension
@@ -712,3 +727,17 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Checks whether the creator <efo:creator> is defined in the ontology." ;
 		rdfs:label	"Defined ontology author" .
+		
+	dqm:HTTPSDataAccessMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Verifies if access to the dataset is performed through a sound, HTTPS/SSL connection and thus, connection is confidential" ;
+		rdfs:label	"Access to data through HTTPS metric" .
+		
+	dqm:hasHTTPSDataAccessMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links security dimension with access to data through HTTPS metric" ;
+		rdfs:label	"Security has access to data through HTTPS metric" ;
+		rdfs:domain	dqm:Security ;
+		rdfs:range	dqm:HTTPSDataAccessMetric .	
