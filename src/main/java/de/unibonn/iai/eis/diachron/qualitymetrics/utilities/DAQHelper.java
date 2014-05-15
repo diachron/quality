@@ -58,7 +58,7 @@ public class DAQHelper {
 		Query qry = QueryFactory.create(query);
 	    QueryExecution qe = QueryExecutionFactory.create(qry, m);
 	    ResultSet rs = qe.execSelect();
-	    
+
 	    while (rs.hasNext()){
 	    	r = rs.next().get("domain").asResource();
 	    }

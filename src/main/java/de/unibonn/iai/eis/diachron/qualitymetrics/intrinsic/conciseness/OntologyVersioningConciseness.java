@@ -25,11 +25,11 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 	private final Resource METRIC_URI = DQM.OntologyVersionConcisenessMetric;
 	private HashMap<Node, Integer> ontologyInstances = new HashMap<Node, Integer>();
 	
-	private final String ONTOLOGY_VERSION = "http://www.w3.org/2002/07/owl#ontologyVersion";
+	private final String ONTOLOGY_VERSION = "http://www.w3.org/2002/07/owl#versionInfo";
 	
 	
 	/**
-	 * This method will check if the quad defines the <owl:ontologyVersion> property
+	 * This method will check if the quad defines the <owl:versionInfo> property
 	 */
 	@Override
 	public void compute(Quad quad) {
@@ -48,7 +48,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 				// We have an ontologyVersion property defined in the ontology
 				int instance = ontologyInstances.get(quad.getSubject()) + 1;
 				ontologyInstances.put(quad.getSubject(), instance);
-			}
+			} 
 		}
 	}
 
@@ -61,7 +61,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 		int ontologies = 0;
 		int instances = 0;
 		for (Node n : this.ontologyInstances.keySet()){
-			ontologies = ontologies++;
+			ontologies++;
 			instances += this.ontologyInstances.get(n);
 		}
 	
