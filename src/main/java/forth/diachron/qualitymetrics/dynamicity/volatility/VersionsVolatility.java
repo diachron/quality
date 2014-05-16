@@ -37,7 +37,9 @@ public class VersionsVolatility extends AbstractQualityMetric {
 	private static final int VIRTUOSO_PORT = 1111;
 	private static final String VIRTUOSO_USERNAME = "dba";
 	private static final String VIRTUOSO_PASSWORD = "dba";
-
+	private String old_version_uri = "http://www.diachron-fp7.eu/resource/recordset/efo/2.43/0CE6051A873C76DE869861B2858AC646";
+	private String new_version_uri = "http://www.diachron-fp7.eu/resource/recordset/efo/2.44/EE4C343E460F87536B9C759803160143";
+	
 	//Counts the number of changes
 	private long numberOfChanges = 0;
 	private String old_version = "";
@@ -57,8 +59,8 @@ public class VersionsVolatility extends AbstractQualityMetric {
                 + "?simple_change rdfs:subClassOf co:Simple_Change." 
                 + "?instance co:new_version ?nversion." 
                 + "?instance co:old_version ?oversion." 
-                +"filter(?oversion = <http://www.diachron-fp7.eu/resource/recordset/efo/2.43/0CE6051A873C76DE869861B2858AC646>)" 
-                + "filter(?nversion =<http://www.diachron-fp7.eu/resource/recordset/efo/2.44/EE4C343E460F87536B9C759803160143>)" 
+                +"filter(?oversion = <"+old_version_uri +">)" 
+                +"filter(?nversion = <"+new_version_uri +">)"
                 + "}"; 
 		
 		RepositoryConnection con = this.getVirtuosoConnection();
