@@ -50,7 +50,17 @@ public class VersionsVolatility extends AbstractQualityMetric {
 	
 		//TODO check if quad parsing can be used
 		logger.trace("Start computing volatility accross two versions");
-		String sparqlQuery = "";
+		String sparqlQuery = "select ?instance ?simple_change ?nversion ?oversion "
+                + "FROM <http://detected_changes/copy>"
+                + " where {"
+                + "?instance a ?simple_change." 
+                + "?simple_change rdfs:subClassOf co:Simple_Change." 
+                + "?instance co:new_version ?nversion." 
+                + "?instance co:old_version ?oversion." 
+                +"filter(?oversion = <http://www.diachron-fp7.eu/resource/recordset/efo/2.43/0CE6051A873C76DE869861B2858AC646>)" 
+                + "filter(?nversion =<http://www.diachron-fp7.eu/resource/recordset/efo/2.44/EE4C343E460F87536B9C759803160143>)" 
+                + "}"; 
+		
 		RepositoryConnection con = this.getVirtuosoConnection();
 		if (con!= null){
 			logger.trace("Connecting to Virtuoso:" +VIRTUOSO_INSTANCE +":" +VIRTUOSO_PORT);	
