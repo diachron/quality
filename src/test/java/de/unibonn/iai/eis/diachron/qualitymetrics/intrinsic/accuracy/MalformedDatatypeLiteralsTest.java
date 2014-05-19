@@ -3,6 +3,9 @@
  */
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
@@ -15,6 +18,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
+import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -51,10 +55,30 @@ public class MalformedDatatypeLiteralsTest extends Assert {
 	 */
 	@Test
 	public final void testCompute() {
-		List<Quad> streamingQuads = loader.getStreamingQuads();
+	    List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
 			malformedDatatypeLiterals.compute(quad);
 		}
 		assertEquals(0.166666,malformedDatatypeLiterals.metricValue(), 0.00001);
+	}
+	
+	/**
+	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.MalformedDatatypeLiterals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+	 */
+	@Test
+	public final void testOutProblematicInstancesToStream() {
+        try {
+                
+            List<Quad> streamingQuads = loader.getStreamingQuads();
+            for(Quad quad : streamingQuads){
+                malformedDatatypeLiterals.compute(quad);
+            }
+                
+            OutputStream tmpStream = null;
+            tmpStream = new FileOutputStream(OutputFileMappingForQualityProblems.MalformedDatatypeLiterals);
+            malformedDatatypeLiterals.outProblematicInstancesToStream(DataSetMappingForTestCase.MalformedDatatypeLiterals,tmpStream);
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        }
 	}
 }

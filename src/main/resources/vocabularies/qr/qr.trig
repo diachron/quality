@@ -15,6 +15,15 @@ qr:QualityProblem a rdfs:Class ;
 	rdfs:comment "Represents a quality problem detected during the assessment of quality metrics on triples" ;
 	rdfs:label "Quality Problem" .
 	
+qr:QualityProblem a rdfs:Class ;
+	rdfs:comment "Represents a quality problem detected during the assessment of quality metrics on triples" ;
+	rdfs:label "Quality Problem" .
+
+qr:MalformedDatatypeLiterals a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which value is not consistent with data type" ;
+	rdfs:label "Malformed Datatype literals" . 
+
 # Properties
 qr:computedOn a rdf:Property ;
 	rdfs:comment "Represents the dataset URI on which quality metrics where computed" ;
