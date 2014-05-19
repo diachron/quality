@@ -2,6 +2,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -69,7 +70,10 @@ public class IncompatibleDatatypeRangeTest extends Assert {
             OutputStream tmpStream = null;
             tmpStream = new FileOutputStream(OutputFileMappingForQualityProblems.IncompatibleDatatypeRange);
             incompatibleDatatypeRange.outProblematicInstancesToStream(DataSetMappingForTestCase.IncompatibleDatatypeRange,tmpStream);
+            tmpStream.close();
         } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
                 e.printStackTrace();
         }
     }
