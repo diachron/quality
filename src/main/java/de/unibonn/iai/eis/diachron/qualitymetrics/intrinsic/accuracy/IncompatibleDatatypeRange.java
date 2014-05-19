@@ -1,5 +1,6 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
  * The metric computes a ratio of literals incompatible with range data type
@@ -289,5 +291,27 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 		}
 		return tmpProblemList;
 	}
+	
+	/**
+     * Writes problematic instances to given stream
+     * 
+     * @param inputSource - name/URI of source
+     * @param outputStream - stream where instances are to be written
+     */
+    public void outProblematicInstancesToStream(String inputSource, OutputStream outputStream) {
+           
+           Model model = ModelFactory.createDefaultModel();
+           
+           Resource qp = QR.IncompatibleDatatypeRange;
+           qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
+           
+           for(int i=0; i < this.problemList.size(); i++){
+                   model.add(qp,QR.problematicThing,this.problemList.get(i).getObject().toString());     
+           }
+           
+           model.add(QR.QualityReport,QR.computedOn,inputSource);
+           model.add(QR.QualityReport,QR.hasProblem,qp);
+           model.write(outputStream);
+    }
 
 }

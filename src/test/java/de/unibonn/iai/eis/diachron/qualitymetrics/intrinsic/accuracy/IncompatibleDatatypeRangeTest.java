@@ -1,5 +1,8 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
@@ -12,6 +15,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
+import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -49,5 +53,25 @@ public class IncompatibleDatatypeRangeTest extends Assert {
 		}
 		assertEquals(0.153846153,incompatibleDatatypeRange.metricValue(), 0.00001);
 	}
+	
+	/**
+     * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.IncompatibleDatatypeRange#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+     */
+	@Test
+    public final void testOutProblematicInstancesToStream() {
+        try {
+                
+            List<Quad> streamingQuads = loader.getStreamingQuads();
+            for(Quad quad : streamingQuads){
+                incompatibleDatatypeRange.compute(quad);
+            }
+                
+            OutputStream tmpStream = null;
+            tmpStream = new FileOutputStream(OutputFileMappingForQualityProblems.IncompatibleDatatypeRange);
+            incompatibleDatatypeRange.outProblematicInstancesToStream(DataSetMappingForTestCase.IncompatibleDatatypeRange,tmpStream);
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        }
+    }
 
 }

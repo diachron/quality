@@ -133,21 +133,24 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	}
 	
 	/**
+     * Writes problematic instances to given stream
      * 
+     * @param inputSource - name/URI of source
+     * @param outputStream - stream where instances are to be written
      */
     public void outProblematicInstancesToStream(String inputSource, OutputStream outputStream) {
            
-           Model incompatibleDatatypeRangeModel = ModelFactory.createDefaultModel();
+           Model model = ModelFactory.createDefaultModel();
            
            Resource qp = QR.MalformedDatatypeLiterals;
            qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
            
            for(int i=0; i < this.problemList.size(); i++){
-                   incompatibleDatatypeRangeModel.add(qp,QR.problematicThing,this.problemList.get(i).getObject().toString());     
+                   model.add(qp,QR.problematicThing,this.problemList.get(i).getObject().toString());     
            }
            
-           incompatibleDatatypeRangeModel.add(QR.QualityReport,QR.computedOn,inputSource);
-           incompatibleDatatypeRangeModel.add(QR.QualityReport,QR.hasProblem,qp);
-           incompatibleDatatypeRangeModel.write(outputStream);
+           model.add(QR.QualityReport,QR.computedOn,inputSource);
+           model.add(QR.QualityReport,QR.hasProblem,qp);
+           model.write(outputStream);
     }
 }

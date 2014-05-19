@@ -24,6 +24,16 @@ qr:MalformedDatatypeLiterals a rdfs:Class ;
 	rdfs:comment "Represents a kind of quality problems in which value is not consistent with data type" ;
 	rdfs:label "Malformed Datatype literals" . 
 
+qr:IncompatibleDatatypeRange a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which range of data type is not consistent with object's data type" ;
+	rdfs:label "Incompatible Datatype Range " . 
+
+qr:HomogeneousDatatypes a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which data type are not Homogeneous" ;
+	rdfs:label "Homogeneous Datatype " . 
+
 # Properties
 qr:computedOn a rdf:Property ;
 	rdfs:comment "Represents the dataset URI on which quality metrics where computed" ;
