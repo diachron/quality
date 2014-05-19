@@ -1,5 +1,6 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -14,6 +17,7 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
  * This class tests if the value of a typed literal is valid with regards to the
@@ -127,4 +131,26 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 		}
 		return tmpProblemList;
 	}
+	
+	/**
+     * Writes problematic instances to given stream
+     * 
+     * @param inputSource - name/URI of source
+     * @param outputStream - stream where instances are to be written
+     */
+    public void outProblematicInstancesToStream(String inputSource, OutputStream outputStream) {
+           
+           Model model = ModelFactory.createDefaultModel();
+           
+           Resource qp = QR.MalformedDatatypeLiterals;
+           qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
+           
+           for(int i=0; i < this.problemList.size(); i++){
+                   model.add(qp,QR.problematicThing,this.problemList.get(i).getObject().toString());     
+           }
+           
+           model.add(QR.QualityReport,QR.computedOn,inputSource);
+           model.add(QR.QualityReport,QR.hasProblem,qp);
+           model.write(outputStream);
+    }
 }
