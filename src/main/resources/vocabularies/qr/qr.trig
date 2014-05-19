@@ -34,6 +34,21 @@ qr:HomogeneousDatatypes a rdfs:Class ;
 	rdfs:comment "Represents a kind of quality problems in which data type are not Homogeneous" ;
 	rdfs:label "Homogeneous Datatype " . 
 
+qr:MisplacedClassesOrProperties a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which classes or properties are not places properly" ;
+	rdfs:label "Misplaced classes or properties " . 
+
+qr:MisuseOwlDatatypeOrObjectProperties a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which owl classes or owl properties are not used properly" ;
+	rdfs:label "Misuse Owl Datatype Or Object Properties " .
+
+qr:UndefinedClassesOrProperties a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which classes or properties are not defined" ;
+	rdfs:label "Undefined Classes Or Properties " .
+
 # Properties
 qr:computedOn a rdf:Property ;
 	rdfs:comment "Represents the dataset URI on which quality metrics where computed" ;

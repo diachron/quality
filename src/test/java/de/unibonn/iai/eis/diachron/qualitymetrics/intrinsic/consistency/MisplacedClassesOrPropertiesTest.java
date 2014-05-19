@@ -1,5 +1,9 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
@@ -12,6 +16,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
+import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
@@ -50,5 +55,28 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 		}
 		assertEquals(0.15384615, misplacedClassesOrProperties.metricValue(), 0.00001);
 	}
+	
+	@Test
+	/**
+     * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+     */
+    public final void testOutProblematicInstancesToStream() {
+        try {
+                
+            List<Quad> streamingQuads = loader.getStreamingQuads();
+            for(Quad quad : streamingQuads){
+                misplacedClassesOrProperties.compute(quad);
+            }
+                
+            OutputStream tmpStream = null;
+            tmpStream = new FileOutputStream(OutputFileMappingForQualityProblems.MisplacedClassesOrProperties);
+            misplacedClassesOrProperties.outProblematicInstancesToStream(DataSetMappingForTestCase.MisplacedClassesOrProperties,tmpStream);
+            tmpStream.close();
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
 
 }

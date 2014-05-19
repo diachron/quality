@@ -20,4 +20,16 @@ public class OutputFileMappingForQualityProblems {
       * For Homogeneous Datatypes Quality Problems
       */
      public static String HomogeneousDatatypes = "C:/HomogeneousDatatypes.rdf";
+     /**
+      * For Misplaced Classes Or Properties Quality Problems
+      */
+     public static String MisplacedClassesOrProperties = "C:/MisplacedClassesOrProperties.rdf";
+     /**
+      * For Misuse Owl Datatype Or Object Properties Quality Problems
+      */
+     public static String MisuseOwlDatatypeOrObjectProperties = "C:/MisuseOwlDatatypeOrObjectProperties.rdf";
+     /**
+      * For Undefined Classes Or Properties Quality Problems 
+      */
+     public static String UndefinedClassesOrProperties = "C:/UndefinedClassesOrProperties.rdf";
 }

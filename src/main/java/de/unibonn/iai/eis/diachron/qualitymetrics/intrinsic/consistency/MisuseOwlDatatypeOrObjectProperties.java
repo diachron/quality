@@ -1,5 +1,6 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.apache.log4j.Logger;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -18,6 +20,7 @@ import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
  * 
@@ -279,4 +282,26 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 		}
 		return tmpProblemList;
 	}
+	
+	/**
+     * Writes problematic instances to given stream
+     * 
+     * @param inputSource - name/URI of source
+     * @param outputStream - stream where instances are to be written
+     */
+    public void outProblematicInstancesToStream(String inputSource, OutputStream outputStream) {
+           
+           Model model = ModelFactory.createDefaultModel();
+           
+           Resource qp = QR.MisuseOwlDatatypeOrObjectProperties;
+           qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
+           
+           for(int i=0; i < this.problemList.size(); i++){
+                   model.add(qp,QR.problematicThing,this.problemList.get(i).toString());     
+           }
+           
+           model.add(QR.QualityReport,QR.computedOn,inputSource);
+           model.add(QR.QualityReport,QR.hasProblem,qp);
+           model.write(outputStream);
+    }
 }
