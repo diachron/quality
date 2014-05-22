@@ -51,6 +51,12 @@
 		rdfs:comment	"Metrics in this dimension measure the extent to which information (or some portion of it) is present, obtainable and ready for use" ;
 		rdfs:label	"Availability" .
 		
+	dqm:Licensing
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Indicates whether consumers of the dataset are explicitly granted permissions to use it, under defined conditions (if any)" ;
+		rdfs:label	"Licensing" .
+		
 	dqm:Security
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -159,6 +165,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Checks whether the content is suitable for consumption and if such content should be accessed" ;
 		rdfs:label	"Misreported content types metric" .	
+		
+	dqm:MachineReadableLicenseMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Verifies that the resource is annotated with a machine-readable indication of the license (e.g. a VoID description or dcterms:license property)" ;
+		rdfs:label	"Machine-readable indication of a license metric" .
 
 	dqm:LowLatencyMetric
 		a	rdfs:Class ;
@@ -352,6 +364,23 @@
 		rdfs:label	"Availability has misreported content types metric" ;
 		rdfs:domain	dqm:Availability ;
 		rdfs:range	dqm:MisreportedContentTypesMetric .
+		
+	#Licensing Dimensions Properties
+	dqm:hasLicensingDimension
+		a	rdfs:Property ;	
+		rdfs:subPropertyOf	daq:hasDimension ;
+		rdfs:comment	"Links Accessibility Category with Licensing Dimension" ;
+		rdfs:label	"Accessibility has licensing dimension" ;
+		rdfs:domain	dqm:Accessibility ;
+		rdfs:range	dqm:Licensing .
+		
+	dqm:hasMachineReadableLicenseMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Licensing Dimension with Machine-readable Indication of a License Metric (Machine-readable Indication of a License Metric belongs to the Licensing Dimension)" ;
+		rdfs:label	"Licensing has machine-readable indication of a license metric" ;
+		rdfs:domain	dqm:Licensing ;
+		rdfs:range	dqm:MachineReadableLicenseMetric .
 		
 	#Security Dimension Properties
 	dqm:hasSecurityDimension
