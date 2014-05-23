@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
@@ -51,6 +52,9 @@ public class MachineReadableLicense extends AbstractQualityMetric {
 		setLicenseProperties.add(DCTerms.license.getURI());
 		setLicenseProperties.add(DCTerms.accessRights.getURI());
 		setLicenseProperties.add(DCTerms.rights.getURI());
+		setLicenseProperties.add(DC.rights.getURI());
+		setLicenseProperties.add("http://www.w3.org/1999/xhtml/vocab#license");
+		setLicenseProperties.add("http://creativecommons.org/ns#license");
 	}
 
 	/**

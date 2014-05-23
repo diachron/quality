@@ -15,7 +15,7 @@ import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 public class MachineReadableLicenseTest extends Assert {
-	
+
 private static Logger logger = LoggerFactory.getLogger(MachineReadableLicenseTest.class);
 	
 	protected TestLoader loaderPositive = new TestLoader();
