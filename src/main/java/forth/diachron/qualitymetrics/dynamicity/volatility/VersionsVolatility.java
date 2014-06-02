@@ -22,17 +22,19 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import forth.diachron.qualitymetrics.EvolutionQualityMetric;
 
 /**
  * @author Ioannis Chrysakis
  * 
  */
-public class VersionsVolatility extends AbstractQualityMetric {
+public class VersionsVolatility extends EvolutionQualityMetric {
 	
 	private final Resource METRIC_URI = null; //= DQM.CurrencyOfDocumentStatementsMetric;
 	
 	private static Logger logger = Logger.getLogger(VersionsVolatility.class);
 	
+	// Virtuoso DB info
 	private static final String VIRTUOSO_INSTANCE = "139.91.183.65";
 	private static final int VIRTUOSO_PORT = 1111;
 	private static final String VIRTUOSO_USERNAME = "dba";
@@ -48,9 +50,9 @@ public class VersionsVolatility extends AbstractQualityMetric {
 	
 	
 	@Override
-	public void compute(Quad quad) {
+	public void compute() {
 	
-		//TODO check if quad parsing can be used
+		
 		logger.trace("Start computing volatility accross two versions");
 		String sparqlQuery = "select ?instance ?simple_change ?nversion ?oversion "
                 + "FROM <http://detected_changes/copy>"
