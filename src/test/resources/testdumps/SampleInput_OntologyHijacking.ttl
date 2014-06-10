@@ -20,7 +20,7 @@
 <#Pat> 
 	a <#Person> .
 
-<#Woman> 
+rdf:type 
 	a rdfs:Class; 
 	rdfs:subClassOf <#Person> .
 
@@ -28,5 +28,5 @@
 	a rdf:Property .
 
 <#sister> 
-	rdfs:domain <#Person> ; 
+	rdfs:domain rdfs:Class ; 
     rdfs:range <#Woman> .
