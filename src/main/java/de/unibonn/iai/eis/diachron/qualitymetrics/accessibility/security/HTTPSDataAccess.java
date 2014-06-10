@@ -10,15 +10,13 @@ import javax.net.ssl.HttpsURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.performance.LowLatency;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
-import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 
 /**
  * @author Santiago Londono
@@ -53,7 +51,7 @@ public class HTTPSDataAccess extends AbstractQualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = extractDatasetURI(quad);
+		String datasetURI = LowLatency.extractDatasetURI(quad);
 
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		if(datasetURI != null) {
@@ -117,36 +115,6 @@ public class HTTPSDataAccess extends AbstractQualityMetric {
 				httpConn.disconnect();
 			}
 		}
-	}
-	
-	/**
-	 * TODO: Move this method to a common's class, since it could be useful for several metrics
-	 * Tries to figure out the URI of the dataset wherefrom the quads were obtained. This is done by checking whether the 
-	 * current quads corresponds to the rdf:type property stating that the resource is a void:Dataset, if so, the URI is extracted 
-	 * from the corresponding subject and returned 
-	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
-	 * @return URI of the dataset wherefrom the quad originated, null if the quad does not contain such information
-	 */
-	protected static String extractDatasetURI(Quad quad) {
-		// Get all parts of the quad required to analyze the quad
-		Node subject = quad.getSubject();
-		Node predicate = quad.getPredicate();
-		Node object = quad.getObject();
-
-		// First level validation: all parts of the triple will be required
-		if(subject != null && predicate != null && object != null) {			
-			// Second level validation: all parts of the triple must be URIs
-			if(subject.isURI() && predicate.isURI() && object.isURI()) {				
-				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
-				if(predicate.getURI().equals(RDF.type.getURI()) && object.getURI().equals(VOID.Dataset.getURI())) {
-					// The URI of the subject of such quad, should be the dataset's URL. 
-					// Try to calculate the latency associated to the current dataset
-					return subject.getURI();
-				}
-			}
-		}
-		
-		return null;
 	}
 
 	/**

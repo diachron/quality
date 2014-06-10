@@ -63,7 +63,7 @@ public class LowLatency extends AbstractQualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 * @return URI of the dataset wherefrom the quad originated, null if the quad does not contain such information
 	 */
-	protected static String extractDatasetURI(Quad quad) {
+	public static String extractDatasetURI(Quad quad) {
 		// Get all parts of the quad required to analyze the quad
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();

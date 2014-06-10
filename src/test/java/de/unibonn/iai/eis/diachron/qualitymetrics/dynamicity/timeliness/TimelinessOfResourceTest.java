@@ -82,7 +82,7 @@ private static Logger logger = Logger.getLogger(TimelinessOfResourceTest.class);
 		}
 
 		// The value of the metric is calculated according to the formula:
-		// AVG(<Observation Time> / <Expiration/Valid Time>)
+		// AVG(<Observation Time> - <Expiration/Valid Time>)
 		double actual = ((double)accumValidityDifferences) / (countTotalValidSubjects);
 		double delta = 0.0001;
 		double metricValue = metric.metricValue();

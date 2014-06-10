@@ -22,18 +22,16 @@ public class DAQ {
     
     /** <p>Quality metrics can be (in principle) calculated on various forms of data 
      *  (such as datasets, graphs, set of triples etc...). This vocabulary allow the 
-     *  owner/user of such RDF data to calculate metrics on multiple (and different) 
-     *  resources.</p>
+     *  owner/user of such RDF data to create multiple quality graphs and identify 
+     *  the corresponding dataset resource (e.g. the dataset URI) for the quality 
+     *  graph.</p>
      */
     public static final Property computedOn = m_model.createProperty( "http://purl.org/eis/vocab/daq#computedOn" );
     
     /** <p>A timestamp which shows when the metric was computed last</p> */
     public static final Property dateComputed = m_model.createProperty( "http://purl.org/eis/vocab/daq#dateComputed" );
     
-    /** <p>Each metric should have an expect data type for it's observed value (e.g. 
-     *  xsd:boolean, xsd:double etc...)</p>
-     */
-    public static final Property expectedDataType = m_model.createProperty( "http://purl.org/eis/vocab/daq#expectedDataType" );
+    public static final Property doubleValue = m_model.createProperty( "http://purl.org/eis/vocab/daq#doubleValue" );
     
     /** <p>The category concept classifies dimensions related to the measurement of quality 
      *  for a specific criteria. This is an abstract property and should not be used 
@@ -48,14 +46,6 @@ public class DAQ {
      */
     public static final Property hasMetric = m_model.createProperty( "http://purl.org/eis/vocab/daq#hasMetric" );
     
-    /** <p>Computed metrics can have 1 or more quality observations, where each computed 
-     *  resource has one observation.</p>
-     */
-    public static final Property hasObservation = m_model.createProperty( "http://purl.org/eis/vocab/daq#hasObservation" );
-    
-    /** <p>Represents the metric being observed.</p> */
-    public static final Property metric = m_model.createProperty( "http://purl.org/eis/vocab/daq#metric" );
-    
     /** <p>A metric might require a number of external resources (e.g. a gold standard) 
      *  in order to be able to measure the quality. In order to cater for the most 
      *  generic requirement, this abstract property links a metric to the required 
@@ -64,8 +54,9 @@ public class DAQ {
     public static final Property requires = m_model.createProperty( "http://purl.org/eis/vocab/daq#requires" );
     
     /** <p>Each metric will have a value computed. In order to deal with the different 
-     *  return type of the metric computation, this property links a metric with a 
-     *  value object (e.g. boolean, double, Literal).</p>
+     *  return type of the metric computation, this generic (abstract) property links 
+     *  a metric with a value object (e.g. boolean, double, Literal). This property 
+     *  should not be used directly.</p>
      */
     public static final Property value = m_model.createProperty( "http://purl.org/eis/vocab/daq#value" );
     
@@ -108,7 +99,5 @@ public class DAQ {
      *  by quality.</p>
      */
     public static final Resource __ = m_model.createResource( "http://purl.org/eis/vocab/daq#" );
-    
-    public static final Resource dsd = m_model.createResource( "http://purl.org/eis/vocab/daq#dsd" );
     
 }
