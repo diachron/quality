@@ -102,22 +102,27 @@ public class OntologyHijacking extends AbstractQualityMetric{
          */
         @Override
         public void compute(Quad quad) {
-                
-                if (isDefinedClassOrProperty(quad, "type")){ // quad represent a locally defined statement
-                        this.totalLocallyDefinedClassesOrPropertiesCount++; // increments defined class or property count
-                        Node subject = quad.getSubject(); // retrieve subject
-                        if (isHijacked(subject)){ 
-                                this.hijackedClassesOrPropertiesCount++; // increments redefined class or property count
-                                this.problemList.add(quad);
-                        }
+                try {
+                    if (isDefinedClassOrProperty(quad, "type")){ // quad represent a locally defined statement
+                            this.totalLocallyDefinedClassesOrPropertiesCount++; // increments defined class or property count
+                            Node subject = quad.getSubject(); // retrieve subject
+                            if (isHijacked(subject)){ 
+                                    this.hijackedClassesOrPropertiesCount++; // increments redefined class or property count
+                                    this.problemList.add(quad);
+                            }
+                    }
+                    else if (isDefinedClassOrProperty(quad, "domain")){ // quad represent a locally defined statement
+                            this.totalLocallyDefinedClassesOrPropertiesCount++; // increments defined class or property count
+                            Node object = quad.getObject(); // retrieve object
+                            if (isHijacked(object)){ 
+                                    this.hijackedClassesOrPropertiesCount++; // increments redefined class or property count
+                                    this.problemList.add(quad);
+                            }
+                    }
                 }
-                else if (isDefinedClassOrProperty(quad, "domain")){ // quad represent a locally defined statement
-                        this.totalLocallyDefinedClassesOrPropertiesCount++; // increments defined class or property count
-                        Node object = quad.getObject(); // retrieve object
-                        if (isHijacked(object)){ 
-                                this.hijackedClassesOrPropertiesCount++; // increments redefined class or property count
-                                this.problemList.add(quad);
-                        }
+                catch (Exception e) {
+                     logger.debug(e.getStackTrace());
+                     logger.error(e.getMessage());
                 }
         }
         

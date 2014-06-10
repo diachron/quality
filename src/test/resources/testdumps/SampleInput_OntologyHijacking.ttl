@@ -20,7 +20,7 @@
 <#Pat> 
 	a <#Person> .
 
-rdf:type 
+rdf:type	# ontology hijacked 
 	a rdfs:Class; 
 	rdfs:subClassOf <#Person> .
 
@@ -28,5 +28,5 @@ rdf:type
 	a rdf:Property .
 
 <#sister> 
-	rdfs:domain rdfs:Class ; 
+	rdfs:domain rdfs:Class ; # ontology hijacked
     rdfs:range <#Woman> .
