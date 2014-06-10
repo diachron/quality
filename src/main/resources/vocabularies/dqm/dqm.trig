@@ -213,6 +213,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Detects undefined classes and properties" ;
 		rdfs:label	"Undefined classes or properties metric" .
+		
+	dqm:OntologyHijackingMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Detects the redefinition by third parties of external classes/properties such that reasoning over data using those external terms is affected" ;
+		rdfs:label	"Ontology hijacking metric" .	
 			
 	dqm:AmountOfTriplesMetric
 		a	rdfs:Class ;

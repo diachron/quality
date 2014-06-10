@@ -16,6 +16,7 @@ public class DataSetMappingForTestCase {
 	public static String MisplacedClassesOrProperties = "testdumps/SampleInput_MisplacedClassesOrProperties.ttl";
 	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisuseOwlDatatypeObjectProperty.ttl";
 	public static String HomogeneousDatatypes = "testdumps/SampleInput_HomogeneousDatatypes.ttl";
+	public static String OntologyHijacking = "testdumps/SampleInput_OntologyHijacking.ttl";
 	// For...qualitymetric.intrinsic.conciseness
 	public static String DuplicateInstance = "testdumps/SampleInput_DuplicateInstance.ttl";
 	// For...qualitymetrics.dynamicity.currency.CurrencyDocumentStatements
