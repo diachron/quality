@@ -10,6 +10,9 @@ import java.util.Hashtable;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.RiotException;
 import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
+import org.apache.xerces.util.URI;
+import org.apache.xerces.util.URI.MalformedURIException;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -34,7 +37,20 @@ public final class VocabularyReader {
 	 * @return url as fileName
 	 */
 	private static String urlAsFileName(String url) {
-	        return url.replace('/', '_').replace('.', '_').replace(':', '_').replace('#','_');
+	        String fileName = null;
+	        try {
+	                if (url != null) {
+    	                fileName = url.replace('/', '_').replace('.', '_').replace(':', '_').replace('#','_');
+                        URI tmpUrl = new URI(url);
+                        if (tmpUrl.getFragment() != null) {
+                                fileName = fileName.replace(tmpUrl.getFragment(), ""); 
+                        }
+	                }
+	        } catch (MalformedURIException e) {
+	                logger.debug(e.getStackTrace());
+                    logger.debug(e.getMessage());
+            }
+	        return fileName;
 	}
 	/**
 	 * Writes contents of model to file

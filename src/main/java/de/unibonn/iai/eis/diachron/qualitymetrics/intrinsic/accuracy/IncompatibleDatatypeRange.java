@@ -24,6 +24,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
@@ -73,6 +74,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 	 * @param url
 	 *            - for the model to be retrieved
 	 */
+	/*
 	protected Model loadVocabulary(String url) {
 		Model model = ModelFactory.createDefaultModel();
 		try {
@@ -88,7 +90,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 			return null;
 		}
 		return model;
-	}
+	}*/
 
 	/**
 	 * Validates data type of literal by comparing its Data Type URI with the
@@ -168,7 +170,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 							logger.debug("predicate vocabulary not found in cache.");
 							logger.debug("loading vocabulary for predicate from :: "
 									+ predicate.getURI());
-							Model tmpModel = loadVocabulary(predicate.getURI()); // load
+							Model tmpModel = VocabularyReader.read(predicate.getURI()); // load
 																					// vocabulary
 																					// from
 																					// the

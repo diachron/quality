@@ -55,10 +55,11 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 		assertEquals(0.076923076, undefinedClassesOrProperties.metricValue(), 0.00001);
 	}
 	
-	@Test
-	/**
+    /**
      * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
      */
+	/*
+	@Test
 	public final void testOutProblematicInstancesToStream() {
 	        try {
 	                
@@ -77,5 +78,5 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 	                e.printStackTrace();
 	        }
 	    }
-
+	 */   
 }
