@@ -246,6 +246,7 @@
 	dqm:OntologyHijackingMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ;
+		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Detects the redefinition by third parties of external classes/properties such that reasoning over data using those external terms is affected" ;
 		rdfs:label	"Ontology hijacking metric" .	
 			
