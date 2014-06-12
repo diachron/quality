@@ -39,7 +39,6 @@ public class ReputationOfDataset extends AbstractQualityMetric{
         @Override
         public void compute(Quad quad) {
                 // TODO Auto-generated method stub
-                
         }
 
         @Override
