@@ -1,0 +1,84 @@
+<rdf:RDF
+    xmlns:projects="http://aksw.org/Projects/"
+    xmlns:ns19="http://aksw.org/Events/2014/"
+    xmlns:ns20="http://twitter.com/"
+    xmlns:ns10="http://de.linkedin.com/pub/andreas-both/22/672/942#"
+    xmlns:ns15="http://aksw.org/Events/2013/LeipzigerSemanticWebTag/Presenter/"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:people="http://aksw.org/"
+    xmlns:ns11="http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#"
+    xmlns:doap="http://usefulinc.com/ns/doap#"
+    xmlns:ns0="http://139.18.2.164:8080/"
+    xmlns:ns3="http://nlp2rdf.lod2.eu/"
+    xmlns:aksw="http://aksw.org/schema/"
+    xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+    xmlns:ns16="http://www.mmt.inf.tu-dresden.de/Team/mitarbeiter.xhtml?id=309#"
+    xmlns:ns22="http://aksw.org/Event/"
+    xmlns:ns6="http://aksw.org/Events/2013/"
+    xmlns:ns21="http://www.xing.com/profile/"
+    xmlns:void="http://rdfs.org/ns/void#"
+    xmlns:ns8="http://hans.uszkoreit.net/#"
+    xmlns:sioc="http://rdfs.org/sioc/ns#"
+    xmlns:ns18="http://www.wolterskluwer.de/person#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:sysont="http://ns.ontowiki.net/SysOnt/"
+    xmlns:ns7="https://twitter.com/alex_siebert#"
+    xmlns:partner="http://aksw.org/Partner/"
+    xmlns:ov="http://open.vocab.org/terms/"
+    xmlns:ns4="http://vocab.ox.ac.uk/projectfunding#"
+    xmlns:aiiso="http://purl.org/vocab/aiiso/schema#"
+    xmlns:schema="http://schema.org/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:umbel="http://umbel.org/umbel#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:ns2="http://139.18.2.164:4444/demo/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:groups="http://aksw.org/Groups/"
+    xmlns:ns9="http://www.nittka.de/index_e.html#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:lswt2013="http://aksw.org/Events/2013/LeipzigerSemanticWebTag/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:ns23="http://aksw.org/Demo/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dbpedia="http://dbpedia.org/resource/"
+    xmlns:vann="http://purl.org/vocab/vann/"
+    xmlns:lod2="http://lod2.eu/schema/"
+    xmlns:v="http://www.w3.org/2006/vcard/ns#"
+    xmlns:ns17="https://twitter.com/FroehlichMarcel#"
+    xmlns:label="http://purl.org/net/vocab/2004/03/label#"
+    xmlns:sioct="http://rdfs.org/sioc/types#"
+    xmlns:ns5="http://aksw.org/SchemaEvent/"
+    xmlns:ns1="http://cstadler.aksw.org/"
+    xmlns:vs="http://www.w3.org/2003/06/sw-vocab-status/ns#"
+    xmlns:ns14="https://twitter.com/Daniel_hladky#"
+    xmlns:ns12="http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#"
+    xmlns:site="http://ns.ontowiki.net/SysOnt/Site/"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:ns13="http://www.xing.com/profile/Mario_Lenz#" > 
+  <rdf:Description rdf:about="http://aksw.org/NatanaelArndt">
+    <foaf:familyName>Arndt</foaf:familyName>
+    <foaf:homepage rdf:resource="http://natanael.comiles.eu/blog/"/>
+    <skos:hiddenLabel>white_gecko</skos:hiddenLabel>
+    <skos:hiddenLabel>Nate</skos:hiddenLabel>
+    <foaf:currentProject rdf:resource="http://aksw.org/Projects/OntoWiki"/>
+    <skos:hiddenLabel>NatanaelArndt</skos:hiddenLabel>
+    <skos:hiddenLabel>white-gecko</skos:hiddenLabel>
+    <site:templateOption>minimal</site:templateOption>
+    <foaf:name>Natanael Arndt</foaf:name>
+    <foaf:currentProject rdf:resource="http://aksw.org/Projects/MobileSocialSemanticWeb"/>
+    <aksw:publicationTag>arndt</aksw:publicationTag>
+    <foaf:currentProject rdf:resource="http://aksw.org/Projects/AKSWorg"/>
+    <rdfs:seeAlso rdf:resource="http://fb.comiles.eu/?c=person&amp;id=natanael"/>
+    <schema:location rdf:resource="http://aksw.org/Address/InfAI"/>
+    <schema:location rdf:resource="http://aksw.org/Address/InsightCentre-Galway"/>
+    <foaf:mbox rdf:resource="mailto:arndt@informatik.uni-leipzig.de"/>
+    <foaf:currentProject rdf:resource="http://aksw.org/Events/2013/DigitaleForschungskollaboration"/>
+    <foaf:currentProject rdf:resource="http://aksw.org/Projects/DSSN"/>
+    <foaf:nick>Nate</foaf:nick>
+    <foaf:phone rdf:resource="tel:+49-341-39280372"/>
+    <foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&amp;value=arndt"/>
+    <foaf:currentProject rdf:resource="http://aksw.org/Projects/ERM"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <owl:sameAs rdf:resource="http://people.comiles.eu/natanael"/>
+  </rdf:Description>
+</rdf:RDF>
