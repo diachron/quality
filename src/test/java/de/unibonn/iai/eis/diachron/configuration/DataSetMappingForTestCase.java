@@ -23,5 +23,7 @@ public class DataSetMappingForTestCase {
 	public static String CurrencyDocumentStatements = "testdumps/SampleInput_Currency.ttl";
 	// For...qualitymetrics.accessibility.security.HTTPSDataAccessTest
 	public static String SecureDataAccess = "testdumps/SampleInput_HttpsAccess.ttl";
-	
+	// For..qualitymetric.reputation
+	public static String ReputationOfDataset = "testdumps/SampleInput_ReputationOfDataset.ttl";
+	public static String OBOFoundry = "testdumps/SampleInput_OBOFoundry.ttl";
 }
