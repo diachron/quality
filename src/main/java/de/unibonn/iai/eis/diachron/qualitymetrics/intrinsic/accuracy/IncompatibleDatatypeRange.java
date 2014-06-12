@@ -69,30 +69,6 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 	}
 
 	/**
-	 * Reads vocabulary from given URL
-	 * 
-	 * @param url
-	 *            - for the model to be retrieved
-	 */
-	/*
-	protected Model loadVocabulary(String url) {
-		Model model = ModelFactory.createDefaultModel();
-		try {
-			model.read(url);
-			logger.debug(url + " :: vocabulary loaded from web.");
-		} catch (RiotException roitException) {
-			logger.debug(roitException);
-			logger.error(roitException.getMessage());
-			return null;
-		} catch (HttpException httpException) {
-			logger.debug(httpException);
-			logger.error(httpException.getMessage());
-			return null;
-		}
-		return model;
-	}*/
-
-	/**
 	 * Validates data type of literal by comparing its Data Type URI with the
 	 * Data Type URI specified in the range of the Object's predicate
 	 * 
