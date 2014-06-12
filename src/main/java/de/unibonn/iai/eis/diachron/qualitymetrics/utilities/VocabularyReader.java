@@ -10,7 +10,6 @@ import java.util.Hashtable;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.RiotException;
 import org.apache.log4j.Logger;
-import org.apache.log4j.varia.NullAppender;
 import org.apache.xerces.util.URI;
 import org.apache.xerces.util.URI.MalformedURIException;
 
@@ -18,7 +17,12 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 /**
  * Responsible for reading vocabulary (Models) from Web.
- * Also stores vocabulary in cache.
+ * Stores vocabulary in memory and file cache.
+ * 
+ * Note : file cache path ..src/main/resources/models
+ * 
+ * to enable file cache create a directory with name 'models' from ../src/main/resources.
+ * to disable file cache delete directory with name 'models' from ../src/main/resources.
  * 
  * @author Muhammad Ali Qasmi
  * @date 13th March 2014
@@ -31,22 +35,46 @@ public final class VocabularyReader {
 	private static Hashtable<String, Model>vocabularies = new Hashtable<String, Model>();
 	
 	/**
+	 * Creates directory for given url
+	 * 
+	 * @param url
+	 * @return
+	 */
+	private static void createDir(String url){
+	        try {
+	                if (url != null) {
+                        URI tmpUrl = new URI(url);
+                        if (tmpUrl.getHost() != null) {
+                                new File(modelsFolderPath + "/" +tmpUrl.getHost())
+                                .mkdirs();
+                        }
+                    }
+            } catch (MalformedURIException e) {
+                    logger.debug(e.getStackTrace());
+                    logger.debug(e.getMessage());
+            }
+	}
+	
+	/**
 	 * Converts url into a format that can be used as file name.
 	 * 
 	 * @param url
 	 * @return url as fileName
 	 */
 	private static String urlAsFileName(String url) {
-	        String fileName = null;
+	        String fileName = "";
 	        try {
 	                if (url != null) {
-    	                fileName = url.replace('/', '_').replace('.', '_').replace(':', '_').replace('#','_');
                         URI tmpUrl = new URI(url);
-                        if (tmpUrl.getFragment() != null) {
-                                fileName = fileName.replace(tmpUrl.getFragment(), ""); 
+                        if (tmpUrl.getHost() != null) {
+                                fileName += tmpUrl.getHost(); 
+                        }
+                        if (tmpUrl.getPath() != null ){
+                                fileName += "/" + tmpUrl.getPath(false,false).replace('/', '_');
                         }
 	                }
 	        } catch (MalformedURIException e) {
+	                fileName = "";
 	                logger.debug(e.getStackTrace());
                     logger.debug(e.getMessage());
             }
@@ -57,10 +85,17 @@ public final class VocabularyReader {
 	 */
 	private static void writeModelToFile(Model model, String url){
 	        try {
-	                String tmpFullPath = VocabularyReader.modelsFolderPath + "/" + VocabularyReader.urlAsFileName(url) + ".rdf";
-	                FileOutputStream fileOut = new FileOutputStream(tmpFullPath);
-	                model.write(fileOut);
+	                if ((new File(modelsFolderPath)).exists()){
+    	                VocabularyReader.createDir(url);
+    	                String tmpFullPath = VocabularyReader.modelsFolderPath + "/" + VocabularyReader.urlAsFileName(url) + ".rdf";
+    	                FileOutputStream fileOut = new FileOutputStream(tmpFullPath);
+    	                model.write(fileOut);
+    	                fileOut.close();
+	                }
                 } catch (FileNotFoundException e) {
+                        logger.debug(e.getStackTrace());
+                        logger.debug(e.getMessage());
+                } catch (IOException e) {
                         logger.debug(e.getStackTrace());
                         logger.debug(e.getMessage());
                 }
@@ -120,11 +155,11 @@ public final class VocabularyReader {
         try {
 	        if (VocabularyReader.vocabularies.containsKey(url)){
 	            // load vocabularies from memory    
-	        	logger.debug(url + " :: vocabulary loaded from cache.");
+	        	logger.debug(url + " :: vocabulary loaded from memory cache.");
 	        	model = VocabularyReader.vocabularies.get(url);
 	        } else if (VocabularyReader.hasModelInFile(url)){
 	            // load vocabularies from file    
-                logger.debug(url + " :: vocabulary loaded from file.");
+	            logger.debug(url + " :: vocabulary loaded from file cache.");
                 model = VocabularyReader.readModelFromFile(url);
                 if (model != null) {
                         VocabularyReader.vocabularies.put(url, model);
