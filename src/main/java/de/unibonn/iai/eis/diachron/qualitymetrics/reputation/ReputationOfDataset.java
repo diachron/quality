@@ -1,10 +1,16 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.reputation;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -35,6 +41,39 @@ public class ReputationOfDataset extends AbstractQualityMetric{
          * list of problematic quads
          */
         protected List<Quad> problemList = new ArrayList<Quad>();
+        /**
+         * Directory containing reputable sources
+         */
+        protected String reputableSourceDirectory = "src/main/resources/reputable";         
+        /**
+         * Models of reputable sources
+         */
+        protected List<Model> reputableSourcesList = new ArrayList<Model>();
+        /**
+         * loads reputable sources models
+         */
+        protected void loadReputableSources() {
+                try {
+                File[] files = new File(reputableSourceDirectory).listFiles();
+                for (File file : files) {
+                        if (file.isFile()) {
+                                System.out.println("loading : " + file.getName());
+                                Model model = ModelFactory.createDefaultModel();
+                                FileInputStream fileInputStream = new FileInputStream(file);
+                                model.read(fileInputStream, null);
+                                fileInputStream.close();
+                                reputableSourcesList.add(model);
+                        }
+                    }
+                System.out.println(reputableSourcesList.size());
+                } catch (FileNotFoundException e) {
+                        logger.debug(e.getStackTrace());
+                        logger.error(e.getMessage());
+                } catch (IOException e) {
+                        logger.debug(e.getStackTrace());
+                        logger.error(e.getMessage());
+                }
+        }
         
         @Override
         public void compute(Quad quad) {

@@ -27,6 +27,7 @@ public class ReputationOfDatasetTest {
         @Before
         public void setUp() throws Exception {
                 BasicConfigurator.configure();
+                reputationOfDataset.loadReputableSources();
                 loader.loadDataSet(DataSetMappingForTestCase.ReputationOfDataset);
         }
 
