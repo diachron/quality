@@ -18,6 +18,8 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
  * external links or page rank (semi-automated)" - Quality Assessment for Linked Open Data: A
  * Survey, Amrapali Zaveri, et al.
  * 
+ * This metric is Specific to the EBI use-case
+ * 
  * @author Muhammad Ali Qasmi
  * @date 12th June 2014
  */
