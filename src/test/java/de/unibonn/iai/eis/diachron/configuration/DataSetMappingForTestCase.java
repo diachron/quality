@@ -25,5 +25,5 @@ public class DataSetMappingForTestCase {
 	public static String SecureDataAccess = "testdumps/SampleInput_HttpsAccess.ttl";
 	// For..qualitymetric.reputation
 	public static String ReputationOfDataset = "testdumps/SampleInput_ReputationOfDataset.ttl";
-	public static String OBOFoundry = "testdumps/SampleInput_OBOFoundry.ttl";
+	public static String OBOFoundry = "testdumps/SampleInput_OBOFoundry.owl";
 }

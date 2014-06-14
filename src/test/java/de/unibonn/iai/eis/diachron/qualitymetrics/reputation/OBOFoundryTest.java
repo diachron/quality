@@ -2,11 +2,15 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.reputation;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.OntologyHijackingTest;
@@ -36,10 +40,19 @@ public class OBOFoundryTest {
         
         /**
          * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.reputation.OBOFoundry#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+         * 
+         * Total not Reputable Resources : 358815
+         * Total Resources : 438133
+         * 
+         * metric Value = 358815 / 438133 = 0.818963
          */
         @Test
         public final void testCompute() {
-                fail("Not yet implemented"); // TODO
+                List<Quad> streamingQuads = loader.getStreamingQuads();
+                for(Quad quad : streamingQuads){
+                        oBOFoundry.compute(quad);
+                }
+                assertEquals(0.818963, oBOFoundry.metricValue(), 0.00001);
         }
 
 }
