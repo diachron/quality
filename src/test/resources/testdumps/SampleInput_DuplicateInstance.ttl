@@ -56,6 +56,7 @@
 @prefix ns25: <http://cstadler.aksw.org/> .
 @prefix ns26: <http://aksw.org/Events/2013/LeipzigerSemanticWebTag/Presenter/> .
 @prefix ns27: <http://aksw.org/SchemaEvent/> .
+@prefix swp: <http://www.w3.org/2004/03/trix/swp-2/#> .
 
 people:NatanaelArndt a foaf:Person ;
                      rdfs:seeAlso <http://fb.comiles.eu/?c=person&id=natanael> ;

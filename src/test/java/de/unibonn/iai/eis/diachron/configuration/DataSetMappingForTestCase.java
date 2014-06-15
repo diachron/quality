@@ -20,5 +20,9 @@ public class DataSetMappingForTestCase {
 	public static String DuplicateInstance = "testdumps/SampleInput_DuplicateInstance.ttl";
 	// For...qualitymetrics.dynamicity.currency.CurrencyDocumentStatements
 	public static String CurrencyDocumentStatements = "testdumps/SampleInput_Currency.ttl";
+	// For...qualitymetrics.trust.verifiability
+	public static String CurrencyDocumentStatementsCM = "testdumps/SampleInput_Currency_CM.ttl";
+	public static String CurrencyDocumentStatementsCM2 = "testdumps/SampleInput_Currency_CM2.ttl";
+	
 	
 }
