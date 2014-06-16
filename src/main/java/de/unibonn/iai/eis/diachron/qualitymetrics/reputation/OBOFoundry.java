@@ -14,17 +14,23 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * "By assigning explicit ratings to the dataset (manual) and analyzing
- * external links or page rank (semi-automated)" - Quality Assessment for Linked Open Data: A
- * Survey, Amrapali Zaveri, et al.
+ * Detects non reputable resources by retrieving URI of resources from
+ * data sets and prefix match with "http://purl.obolibrary.org/obo/" .
  * 
  * This metric is Specific to the EBI use-case
+ *  
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 12th June 2014
  */
 public class OBOFoundry extends AbstractQualityMetric{
-
+        /**
+         * URI for OBO Foundry 
+         */
+        protected String OBO_Foundry_URI =  "http://purl.obolibrary.org/obo";
         /**
          * Metic URI
          */
@@ -37,16 +43,72 @@ public class OBOFoundry extends AbstractQualityMetric{
          * list of problematic quads
          */
         protected List<Quad> problemList = new ArrayList<Quad>();
+        /**
+         * total number of resources 
+         */
+        protected long totalResources = 0;
+        /**
+         * total number of not reputable resources
+         */
+        protected long totalNotReputableResources = 0;
         
+        /**
+         * Retrieves URI (with path) of each subject, predicate and object.
+         * Checks is those URI (with path) prefix matches with OBO_Foundry_URI
+         */
         @Override
         public void compute(Quad quad) {
-                // TODO Auto-generated method stub
+                try {
+                        
+                        boolean isProblematicQuad = false;
+                        if (quad.getSubject().isURI()){
+                                this.totalResources++;    
+                                if (!(quad.getSubject().getURI().startsWith(OBO_Foundry_URI))){
+                                        this.totalNotReputableResources++;
+                                        isProblematicQuad = true;
+                                } 
+                            }
+                        
+                        if (quad.getPredicate().isURI()){
+                            this.totalResources++;    
+                            if (!(quad.getPredicate().getURI().startsWith(OBO_Foundry_URI))){
+                                    this.totalNotReputableResources++;
+                                    isProblematicQuad = true;
+                            } 
+                        }
+                        
+                        if (quad.getObject().isURI()){
+                                this.totalResources++;    
+                                if (!(quad.getObject().getURI().startsWith(OBO_Foundry_URI))){
+                                        this.totalNotReputableResources++;
+                                        isProblematicQuad = true;
+                                }
+                            }
+                        
+                        if (isProblematicQuad){
+                                this.problemList.add(quad);
+                        }
+                        
+                    } catch (Exception e){
+                            logger.debug(e.getStackTrace());
+                            logger.error(e.getMessage());
+                    }
         }
-
+        
+        /**
+         * metric value = total number of NOT reputable resources divided by total number of reputable resources
+         * 
+         * @return  (total number of NOT reputable resources / total number of reputable resources)
+         */
         @Override
         public double metricValue() {
-                // TODO Auto-generated method stub
-                return 0;
+                logger.debug("Total not Reputable Resources : " + this.totalNotReputableResources);
+                logger.debug("Total Resources : " + this.totalResources);
+                if (this.totalResources <= 0) {
+                        logger.warn("Number of total resource are ZERO");
+                        return 0;
+                }
+                return ((double) this.totalNotReputableResources / (double) this.totalResources);
         }
 
         /*
