@@ -9,10 +9,10 @@ public class TestEvolutionQualityMetrics {
 		vv.compute();
 		System.out.println("VersionsVolatility Result:" +vv.metricValue());
 		
-		/*AverageVolatility av = new AverageVolatility();
+		AverageVolatility av = new AverageVolatility();
 		System.out.println("Counting AverageVolatility...");
 		av.compute();
 		System.out.println("AverageVolatility Result:" +av.metricValue());
-		*/
+		
 	}
 }

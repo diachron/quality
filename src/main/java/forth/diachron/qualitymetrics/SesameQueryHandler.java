@@ -42,7 +42,7 @@ public class SesameQueryHandler {
 		count = 0;
 	}
 	  
-	  System.out.println("...............countTupleQueryResult......"+count);
+	  //System.out.println("...............countTupleQueryResult......"+count);
 	  return count;
 	}
 	
@@ -50,27 +50,34 @@ public class SesameQueryHandler {
 	public Value[][] doTupleQuery(RepositoryConnection con, String query) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		TupleQuery resultsTable = con.prepareTupleQuery(QueryLanguage.SPARQL, query);
 		TupleQueryResult bindings = resultsTable.evaluate();
-		
-		
+		String name = "";
+		Value value = null;
+		int row;
 		Vector<Value[]> results = new Vector<Value[]>();
-		for (int row = 0; bindings.hasNext(); row++) {
-			//System.out.println("RESULT " + (row + 1) + ": ");
-			BindingSet pairs = bindings.next();
+		BindingSet pairs = null;
+		
+		
+		for (row = 0; bindings.hasNext(); row++) {
+			System.out.println("RESULT " + (row + 1) + ": ");
+			pairs = bindings.next();
+			
 			List<String> names = bindings.getBindingNames();
 			Value[] rv = new Value[names.size()];
 			for (int i = 0; i < names.size(); i++) {
-				String name = names.get(i);
-				Value value = pairs.getValue(name);
-                               System.out.println("Value:" +value);
-				rv[i] = value;
-				// if(column > 0) System.out.print(", ");
-				// System.out.println("\t" + name + "=" + value);
-				// vars.add(value);
-				// if(column + 1 == names.size()) System.out.println(";");
+				 name = names.get(i);
+				 System.out.println("Name:" +name);
+				 value = pairs.getValue(name);
+                 System.out.println("Value:" +value);
+				 rv[i] = value;
+				
+				 
 			}
+			System.out.println("-----------------------------");
+			
 			results.add(rv);
 		}
-               System.out.println("VECTOR RESULTS:" +results.toString());
+			
+             
 		return (Value[][]) results.toArray(new Value[0][0]);
 	}
 	

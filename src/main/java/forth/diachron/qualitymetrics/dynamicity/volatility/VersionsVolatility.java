@@ -41,7 +41,7 @@ public class VersionsVolatility implements EvolutionQualityMetricInterface {
 		RepositoryConnection con = chan.getVirtuosoConnection();
 		if (con!= null){
 			logger.trace("Connecting to Virtuoso");		
-			numberOfChanges = evohand.countDeltas();
+			numberOfChanges = evohand.countDeltas(old_version_uri,new_version_uri);
 			logger.trace("Finish computing volatility accross two versions");
 		}
 		logger.trace("Error while connecting to Virtuoso!");	
@@ -52,7 +52,7 @@ public class VersionsVolatility implements EvolutionQualityMetricInterface {
 	double retValue = 0;
 	
 	retValue = (double) this.numberOfChanges / 2;
-	logger.trace("Returning Volatility accross version " +old_version_uri +" and version " +new_version_uri + "Ratio is" +retValue);
+	logger.trace("Returning VersionsVolatility Metric Value (Ratio): " +retValue);
 		
 	return retValue;
 	}

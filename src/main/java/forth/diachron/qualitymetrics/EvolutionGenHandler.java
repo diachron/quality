@@ -18,11 +18,12 @@ private SesameQueryHandler seshan = new SesameQueryHandler();
 	}
 	
 	public int countDeltas (String old_version_uri, String new_version_uri){
+		int result = 0;
 		if (old_version_uri == null || old_version_uri.equals("")){
 			old_version_uri = VirtuosoHandler.old_version_uri;
 		}
 		if (new_version_uri == null || new_version_uri.equals("")){
-			new_version_uri = VirtuosoHandler.old_version_uri;
+			new_version_uri = VirtuosoHandler.new_version_uri;
 		}
 		
 		String sparqlQuery = "select ?instance ?simple_change ?nversion ?oversion "
@@ -35,9 +36,11 @@ private SesameQueryHandler seshan = new SesameQueryHandler();
                 +"filter(?oversion = <"+old_version_uri +">)" 
                 +"filter(?nversion = <"+new_version_uri +">)"
                 + "}"; 
-		
+		//System.out.println("countDeltas_sparqlQuery:"+sparqlQuery);
 		RepositoryConnection con = virhan.getVirtuosoConnection();
-		return seshan.countTupleQueryResult (con,sparqlQuery);
+		result = seshan.countTupleQueryResult (con,sparqlQuery);
+		System.out.println("countDeltas between:"+old_version_uri+" vs. "+new_version_uri +"\nDeltas:"+result);
+		return result;
 	}
 	
 }
