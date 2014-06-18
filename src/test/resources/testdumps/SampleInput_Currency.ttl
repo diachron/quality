@@ -22,7 +22,8 @@
 
 <> a void:Dataset ;
 	dcterms:title "Pleiades Places Range 9,z" ; 
-	dcterms:issued "2010-05-10T17:03:45Z" .
+	dcterms:issued "2010-05-10T17:03:45Z" ;
+	foaf:homepage <http://pleiades.stoa.org/places/90032637> .
 
 <http://pleiades.stoa.org/places/90032637#this> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Balāwāt";
