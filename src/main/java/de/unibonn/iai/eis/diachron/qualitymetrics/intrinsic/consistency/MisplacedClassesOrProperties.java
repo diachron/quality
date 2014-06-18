@@ -27,12 +27,16 @@ import de.unibonn.iai.eis.diachron.vocabularies.QR;
  * class but also appear on predicate position in other triples. The metric is
  * computed as a ratio of misplaced classes and properties
  * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
+ * 
  * @author Muhammad Ali Qasmi
  * @date 13th March 2014
  */
 public class MisplacedClassesOrProperties extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
 	/**
