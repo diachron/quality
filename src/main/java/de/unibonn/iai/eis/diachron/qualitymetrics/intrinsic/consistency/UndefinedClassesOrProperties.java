@@ -62,8 +62,8 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 	protected List<Quad> problemList = new ArrayList<Quad>();
 
 	/**
-	 * This method identifies whether given quad is an undefined class or
-	 * property.
+	 * This method identifies whether a component (subject, predicate or object)
+	 * of the given quad references an undefined class or property.
 	 * 
 	 * @param quad
 	 *            - to be identified
