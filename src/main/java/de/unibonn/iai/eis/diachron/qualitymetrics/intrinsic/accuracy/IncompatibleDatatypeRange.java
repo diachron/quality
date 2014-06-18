@@ -29,15 +29,19 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
- * The metric computes a ratio of literals incompatible with range data type
- * defined by the corresponding vocabulary.
+ * Detects incompatible data type of literals by comparing its Data Type URI with the
+ * Data Type URI specified in the range of the Object's predicate
+ * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 20th Feb 2014
  */
 public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.IncompatibleDatatypeRangeMetric;
 	/**

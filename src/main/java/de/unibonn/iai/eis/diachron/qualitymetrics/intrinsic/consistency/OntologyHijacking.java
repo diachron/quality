@@ -37,7 +37,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 public class OntologyHijacking extends AbstractQualityMetric{
         
         /**
-         * Metic URI
+         * Metric URI
          */
         private final Resource METRIC_URI = DQM.OntologyHijackingMetric;
         /**

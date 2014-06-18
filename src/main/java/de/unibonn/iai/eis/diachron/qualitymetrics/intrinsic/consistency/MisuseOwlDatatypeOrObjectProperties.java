@@ -24,18 +24,20 @@ import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
  * 
- * 
  * Detect properties that are defined as a owl:datatype property but is used as
  * object property and properties defined as a owl:object property and used as
  * datatype property The metric is computed as a ratio of misused properties
  * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 12th May 2014
  */
 public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.MisuseOwlDatatypeOrObjectPropertiesMetric;
 	/**

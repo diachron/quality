@@ -21,14 +21,19 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
- * The metric compute the ratio of undefined classes and properties.
+ * Detects undefined classes and properties from data set by checking for 
+ * its definition in their respective referred vocabulary.
+ * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014
  */
 public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.UndefinedClassesOrPropertiesMetric;
 	/**
