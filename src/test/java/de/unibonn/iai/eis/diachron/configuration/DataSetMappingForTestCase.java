@@ -26,4 +26,7 @@ public class DataSetMappingForTestCase {
 	// For..qualitymetric.reputation
 	public static String ReputationOfDataset = "testdumps/SampleInput_ReputationOfDataset.ttl";
 	public static String OBOFoundry = "testdumps/SampleInput_OBOFoundry.owl";
+	// For ..qualitymetrics.representational.understandability
+	public static String EmptyAnnotationValue = "testdumps/SampleInput_EmptyAnnotationValue.ttl";
+	
 }
