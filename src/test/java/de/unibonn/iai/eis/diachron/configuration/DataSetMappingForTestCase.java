@@ -14,7 +14,7 @@ public class DataSetMappingForTestCase {
 	// For...qualitymetric.intrinsic.consistency
 	public static String UndefinedClassesOrProperties = "testdumps/SampleInput_UndefinedClassesOrProperties.ttl";
 	public static String MisplacedClassesOrProperties = "testdumps/SampleInput_MisplacedClassesOrProperties.ttl";
-	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisuseOwlDatatypeObjectProperty.ttl";
+	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisusedOwlDatatypeObjectProperty.ttl";
 	public static String HomogeneousDatatypes = "testdumps/SampleInput_HomogeneousDatatypes.ttl";
 	public static String OntologyHijacking = "testdumps/SampleInput_OntologyHijacking.ttl";
 	// For...qualitymetric.intrinsic.conciseness

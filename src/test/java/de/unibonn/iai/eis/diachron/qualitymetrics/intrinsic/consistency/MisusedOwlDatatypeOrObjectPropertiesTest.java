@@ -19,30 +19,30 @@ import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 /**
- * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisuseOwlDatatypeOrObjectProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisusedOwlDatatypeOrObjectProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
  * 
  * @author Muhammad Ali Qasmi
  * @data 12th May 2014
  *
  */
-public class MisuseOwlDatatypeOrObjectPropertiesTest extends Assert {
+public class MisusedOwlDatatypeOrObjectPropertiesTest extends Assert {
 
-	static Logger logger = Logger.getLogger(MisuseOwlDatatypeOrObjectPropertiesTest.class);
+	static Logger logger = Logger.getLogger(MisusedOwlDatatypeOrObjectPropertiesTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected MisuseOwlDatatypeOrObjectProperties misuseOwlDatatypeOrObjectProperty =  new MisuseOwlDatatypeOrObjectProperties();
+	protected MisusedOwlDatatypeOrObjectProperties misuseOwlDatatypeOrObjectProperty =  new MisusedOwlDatatypeOrObjectProperties();
 	
 	
 	@Before
 	public void setUp() throws Exception {
 		BasicConfigurator.configure();
 		loader.loadDataSet(DataSetMappingForTestCase.MisuseOwlDataTypeOrObjectProperties);
-		MisuseOwlDatatypeOrObjectProperties.filterAllOwlProperties((loader.getStreamingQuads()));
+		MisusedOwlDatatypeOrObjectProperties.filterAllOwlProperties((loader.getStreamingQuads()));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-	    MisuseOwlDatatypeOrObjectProperties.clearAllOwlPropertiesList();
+	    MisusedOwlDatatypeOrObjectProperties.clearAllOwlPropertiesList();
 	}
 
 	@Test
