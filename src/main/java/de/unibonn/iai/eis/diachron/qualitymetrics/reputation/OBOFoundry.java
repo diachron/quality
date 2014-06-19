@@ -32,7 +32,7 @@ public class OBOFoundry extends AbstractQualityMetric{
          */
         protected String OBO_Foundry_URI =  "http://purl.obolibrary.org/obo";
         /**
-         * Metic URI
+         * Metric URI
          */
         private final Resource METRIC_URI = null;
         /**
