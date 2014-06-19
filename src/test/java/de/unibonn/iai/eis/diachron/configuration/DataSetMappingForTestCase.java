@@ -29,5 +29,6 @@ public class DataSetMappingForTestCase {
 	// For ..qualitymetrics.representational.understandability
 	public static String EmptyAnnotationValue = "testdumps/SampleInput_EmptyAnnotationValue.ttl";
 	public static String WhitespaceInAnnotation = "testdumps/SampleInput_WhitespaceInAnnotation.ttl";
+	public static String LabelsUsingCapitals = "testdumps/SampleInput_LabelsUsingCapitals.ttl";
 	
 }
