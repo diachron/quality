@@ -8,12 +8,12 @@
     rel:enemyOf <#spiderman> ;
     a foaf:Person ;    # in the context of the Marvel universe
     foaf:name "Green Goblin" ;
-	rdfs:label "Green Goblin" ; 
+	rdfs:label "GreenGoblin" ; # LabelsUsingCapitals literal case 1
 	rdfs:comment "Name of Green Goblin" .
 
 <#spiderman>
     rel:enemyOf <#green-goblin> ;
     a foaf:Person ;
-    rdfs:label "SpiderMan" ;	# LabelsUsingCapitals literal case 1
+    rdfs:label "Spiderman" ;	
 	rdfs:comment "Name of Spiderman" .
 

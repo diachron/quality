@@ -61,7 +61,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
          */
         protected long totalNumberOfLiterals = 0;
         /**
-         * Number of empty literals count
+         * Number of white space literals count
          */
         protected long totalNumberOfWhitespaceLiterals = 0;
         /**
@@ -71,6 +71,10 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
         
         /**
          * loads list of annotation properties in set
+         * 
+         * if filePathName is null then default path will be used.
+         * 
+         * @param filePathName - file Path and name, default : src/main/resources/AnnotationPropertiesList.txt 
          */
         public static void loadAnnotationPropertiesSet(String filePathName) {
                 File file = null;

@@ -22,13 +22,11 @@ import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
 /**
- * EmptyAnnotationValue consider the following widely used annotation 
- * properties (labels, comments, notes, etc.) and identifies triples 
- * whose property is from a pre-configured list of annotation properties, 
- * and whose object is an empty string.
+ * LabelsUsingCapitals identifies triples whose property is from a pre-configured list 
+ * of label properties, and whose object uses a bad style of capitalization 
  * 
  * list of widely used annotation properties are stored 
- * in ..src/main/resources/AnnotationPropertiesList.txt 
+ * in ..src/main/resources/LabelPropertiesList.txt 
  * 
  * Metric value Range = [0 - 1]
  * Best Case = 0
@@ -37,8 +35,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * @author Muhammad Ali Qasmi
  * @date 19th June 2014
  */
-public class EmptyAnnotationValue extends AbstractQualityMetric {
-
+public class LabelsUsingCapitals extends AbstractQualityMetric {
         /**
          * Metric URI
          */
@@ -46,7 +43,7 @@ public class EmptyAnnotationValue extends AbstractQualityMetric {
         /**
          * logger static object
          */
-        static Logger logger = Logger.getLogger(EmptyAnnotationValue.class);
+        static Logger logger = Logger.getLogger(LabelsUsingCapitalsTest.class);
         /**
          * list of problematic quads
          */
@@ -55,26 +52,29 @@ public class EmptyAnnotationValue extends AbstractQualityMetric {
          * Default file path and name for the file that contains
          * list of annotation properties
          */
-        protected static String defaultFilePathName = "src/main/resources/AnnotationPropertiesList.txt";
+        protected static String defaultFilePathName = "src/main/resources/LabelPropertiesList.txt";
         /**
          * Number of literals count
          */
         protected long totalNumberOfLiterals = 0;
         /**
-         * Number of empty literals count
+         * Number of bad capitalization literals count
          */
-        protected long totalNumberOfEmptyLiterals = 0;
+        protected long totalNumberOfBadCapitalizationLiterals = 0;
         /**
          * list of annotation properties to be evaluated.        
          */
         protected static Set<String> annotationPropertiesSet = new HashSet<String>();
-        
+        /**
+         * Regex to find words with camelCase
+         */
+        protected static String regexForCamelCase = "[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*";
         /**
          * loads list of annotation properties in set
          * 
          * if filePathName is null then default path will be used.
          * 
-         * @param filePathName - file Path and name, default : src/main/resources/AnnotationPropertiesList.txt 
+         * @param filePathName - file Path and name, default : src/main/resources/LabelPropertiesList.txt 
          */
         public static void loadAnnotationPropertiesSet(String filePathName) {
                 File file = null;
@@ -112,59 +112,49 @@ public class EmptyAnnotationValue extends AbstractQualityMetric {
         
         /**
          * Checks whether given quad has predicate with URI found in annotation properties set
-         * if true then checks the object's value in that quad; whether it is empty or not.
+         * if true then checks the object's value in that quad; whether it is bad capitalization or not.
          *    
          */
         @Override
         public void compute(Quad quad) {
-            try {
-                Node predicate = quad.getPredicate();
-                if (predicate.isURI()){ // check is the predicate is URI or not
-                    if (EmptyAnnotationValue.annotationPropertiesSet.contains(predicate.getURI())){ // check if given predicate is found in annotation properties list
-                            boolean isEmptyLiteral = false; // set empty literal to false
-                            Node object = quad.getObject();
-                            this.totalNumberOfLiterals++; // increment total number of literals
-                            if (object.isBlank()) { // check blank object
-                                    isEmptyLiteral = true; // set empty literal to true
-                            }
-                            else if (object.isLiteral()){ // check whether object is literal or not
-                                    String  value = object.getLiteralValue().toString(); // retrieve object's value
-                                    value = value.trim(); // removes whitespace from both ends
-                                    if (value == null) { // check if object's value is null or not
-                                            isEmptyLiteral = true; // set empty literal to true
-                                    } else if (value.isEmpty()){ // check is object's value is empty 
-                                            isEmptyLiteral = true; // set empty literal to true
+                try {
+                        Node predicate = quad.getPredicate();
+                        if (predicate.isURI()){ // check is the predicate is URI or not
+                            if (EmptyAnnotationValue.annotationPropertiesSet.contains(predicate.getURI())){ // check if given predicate is found in annotation properties list
+                                    Node object = quad.getObject();
+                                    this.totalNumberOfLiterals++; // increment total number of literals
+                                    if (object.isLiteral()){ // check whether object is literal or not
+                                            String  value = object.getLiteralValue().toString(); // retrieve object's value
+                                            value = value.trim(); // removes whitespace from both ends
+                                            if (value != null && !value.isEmpty()) { // check if object's value is null or empty
+                                                    if (value.matches(regexForCamelCase)){ // matches regex for CamelCase 
+                                                        this.totalNumberOfBadCapitalizationLiterals++; // increment whitespace literal count
+                                                        this.problemList.add(quad); // add invalid quad in problem list
+                                                    }
+                                            } 
                                     }
-                            } else {
-                                    isEmptyLiteral = true;
                             }
-                            
-                            if (isEmptyLiteral) {
-                                    this.totalNumberOfEmptyLiterals++; // increment empty literal count
-                                    this.problemList.add(quad); // add invalid quad in problem list
-                            }
+                        }
+                    }  catch (Exception e){
+                        logger.debug(e.getStackTrace());
+                        logger.debug(e.getMessage());
                     }
-                }
-            }  catch (Exception e){
-                logger.debug(e.getStackTrace());
-                logger.debug(e.getMessage());
-            }
         }
         
         /**
-         * metric value  = total number of empty literals / total number of literals
+         * metric value  = total number of bad capitalization literals / total number of literals
          * 
-         * @return ( (total number of empty literals) / (total number of literals) )
+         * @return ( (total number of bad capitalization literals) / (total number of literals) )
          */
         @Override
         public double metricValue() {
-                logger.debug("Total number of empty literals : " + this.totalNumberOfEmptyLiterals);
+                logger.debug("Total number of bad capitalization literals : " + this.totalNumberOfBadCapitalizationLiterals);
                 logger.debug("Total total number of literals : " + this.totalNumberOfLiterals);
                 if (this.totalNumberOfLiterals <= 0) {
                         logger.warn("Total total number of literals are ZERO");
                         return 0;
                 }
-                return ((double) this.totalNumberOfEmptyLiterals / (double) this.totalNumberOfLiterals);
+                return ((double) this.totalNumberOfBadCapitalizationLiterals / (double) this.totalNumberOfLiterals);
         }
 
         /*
