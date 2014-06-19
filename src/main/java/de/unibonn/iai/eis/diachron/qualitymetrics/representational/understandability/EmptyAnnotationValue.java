@@ -30,6 +30,10 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * list of widely used annotation properties are stored 
  * in ..src/main/resources/AnnotationPropertiesList.txt 
  * 
+ * Metric value Range = [0 - 1]
+ * Best Case = 0
+ * Worst Case = 1
+ * 
  * @author Muhammad Ali Qasmi
  * @date 19th June 2014
  */
