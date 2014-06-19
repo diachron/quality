@@ -28,5 +28,6 @@ public class DataSetMappingForTestCase {
 	public static String OBOFoundry = "testdumps/SampleInput_OBOFoundry.owl";
 	// For ..qualitymetrics.representational.understandability
 	public static String EmptyAnnotationValue = "testdumps/SampleInput_EmptyAnnotationValue.ttl";
+	public static String WhitespaceInAnnotation = "testdumps/SampleInput_WhitespaceInAnnotation.ttl";
 	
 }
