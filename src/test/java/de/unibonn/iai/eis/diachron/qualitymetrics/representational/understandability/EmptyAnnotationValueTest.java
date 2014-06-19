@@ -1,6 +1,5 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability;
 
-import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -14,7 +13,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.qualitymetrics.reputation.ReputationOfDatasetTest;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -42,23 +40,30 @@ public class EmptyAnnotationValueTest extends Assert{
         public void setUp() throws Exception {
                 BasicConfigurator.configure();
                 loader.loadDataSet(DataSetMappingForTestCase.EmptyAnnotationValue);
+                EmptyAnnotationValue.loadAnnotationPropertiesSet(null);
         }
 
         @After
         public void tearDown() throws Exception {
+                EmptyAnnotationValue.clearAnnotationPropertiesSet();
         }
         
         /**
          * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics..representational.understandability.EmptyAnnotationValue#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
+         * Total number of empty literals : 2
+         * Total total number of literals : 4
+         * 
+         * Metric Value = 2 / 4 = 0.500000
+         * 
          */
         @Test
-        public final void testComputer() {
+        public final void testCompute() {
                 List<Quad> streamingQuads = loader.getStreamingQuads();
                 for(Quad quad : streamingQuads){
                         emptyAnnotationValue.compute(quad);
                 }
-                assertEquals(0.00000, emptyAnnotationValue.metricValue(), 0.00001);
+                assertEquals(0.500000, emptyAnnotationValue.metricValue(), 0.00001);
         }
 
 }
