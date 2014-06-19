@@ -43,7 +43,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 public class ReputationOfDataset extends AbstractQualityMetric{
 
         /**
-         * Metic URI
+         * Metric URI
          */
         private final Resource METRIC_URI = null;
         /**
