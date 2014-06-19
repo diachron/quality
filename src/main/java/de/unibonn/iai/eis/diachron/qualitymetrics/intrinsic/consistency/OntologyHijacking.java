@@ -20,8 +20,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * Detects the redefinition by third parties of external classes/properties such that 
- * reasoning over data using those external terms is affected.
+ * The Ontology Hijacking detects the redefinition by analyzing defined classes or 
+ * properties in data set and looks of same definition in its respective vocabulary. 
  * 
  * Metric Value Range : [0 - 1]
  * Best Case : 0
