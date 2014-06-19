@@ -87,7 +87,6 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 						.read(predicate.getURI());
 				if (predicateModel == null) { // check if system is able to
 												// retrieve model
-				        System.out.println("predicate : " + predicate);
                         this.undefinedPropertiesCount++;
                         this.problemList.add(quad);
 				} else {
@@ -105,32 +104,52 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 						}
 					}
 				}
-			}
-
-
-			if (predicate.isURI()){
-			        URI tmpURI = new URI(predicate.getURI());
-			        String fragment = tmpURI.getFragment();
-			        if (fragment != null && fragment.toLowerCase().equals("type")){
-			                if (object.isURI()) { // check if object is URI (not blank or
-                                    // literal)
-                                this.totalClassesCount++;
-                                // load model
-                                Model objectModel = VocabularyReader.read(object.getURI());
-                                if (objectModel == null) { // check if system is able to
-                                                            // retrieve model
+				
+				URI tmpURI = new URI(predicate.getURI());
+                String fragment = tmpURI.getFragment();
+                if (fragment != null && 
+                                ( fragment.toLowerCase().equals("type") || 
+                                  fragment.toLowerCase().equals("domain") ||
+                                  fragment.toLowerCase().equals("range") ||
+                                  fragment.toLowerCase().equals("subclassof") ) ){
+                        if (object.isURI()) { // check if object is URI (not blank or
+                                // literal)
+                            this.totalClassesCount++;
+                            // load model
+                            Model objectModel = VocabularyReader.read(object.getURI());
+                            if (objectModel == null) { // check if system is able to
+                                                        // retrieve model
+                                    this.undefinedClassesCount++;
+                                    this.problemList.add(quad);
+                            } else {
+                                 // search for URI resource from Model
+                                    if (!objectModel.getResource(object.getURI())
+                                                    .isURIResource()) {
                                         this.undefinedClassesCount++;
                                         this.problemList.add(quad);
-                                } else {
-                                     // search for URI resource from Model
-                                        if (!objectModel.getResource(object.getURI())
-                                                        .isURIResource()) {
-                                            this.undefinedClassesCount++;
-                                            this.problemList.add(quad);
-                                        }      
-                                }
+                                    }      
                             }
-			        }
+                        }
+                } else if (fragment != null && fragment.toLowerCase().equals("subPropertyOf")) {
+                    if (object.isURI()) { // check if object is URI (not blank or
+                            // literal)
+                        this.totalPropertiesCount++;
+                        // load model
+                        Model objectModel = VocabularyReader.read(object.getURI());
+                        if (objectModel == null) { // check if system is able to
+                                                    // retrieve model
+                                this.undefinedPropertiesCount++;
+                                this.problemList.add(quad);
+                        } else {
+                             // search for URI resource from Model
+                                if (!objectModel.getResource(object.getURI())
+                                                .isURIResource()) {
+                                    this.undefinedPropertiesCount++;
+                                    this.problemList.add(quad);
+                                }      
+                        }      
+                    }
+                }
 			}
 
 		} catch (MalformedURIException exception){
