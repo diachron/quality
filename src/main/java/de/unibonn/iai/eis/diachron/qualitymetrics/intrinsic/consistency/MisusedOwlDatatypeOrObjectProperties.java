@@ -35,28 +35,28 @@ import de.unibonn.iai.eis.diachron.vocabularies.QR;
  * @author Muhammad Ali Qasmi
  * @date 12th May 2014
  */
-public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
+public class MisusedOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = DQM.MisuseOwlDatatypeOrObjectPropertiesMetric;
+	private final Resource METRIC_URI = DQM.MisusedOwlDatatypeOrObjectPropertiesMetric;
 	/**
 	 * static logger object
 	 */
 	protected static Logger logger = Logger
-			.getLogger(MisuseOwlDatatypeOrObjectProperties.class);
+			.getLogger(MisusedOwlDatatypeOrObjectProperties.class);
 	/**
 	 * owl prefix
 	 */
-	private static String NAMESPACE_MATCH_SUBSTRING = "/owl#";
+	private static String NAMESPACE_MATCH_SUBSTRING = "http://www.w3.org/2002/07/owl#";
 	/**
 	 * owl data type propetry
 	 */
-	private static String OWL_DATA_TYPE_PROPERTY = "datatypeproperty";
+	private static String OWL_DATA_TYPE_PROPERTY = "DatatypeProperty";
 	/**
 	 * owl object property
 	 */
-	private static String OWL_OBJECT_PROPERTY = "objectproperty";
+	private static String OWL_OBJECT_PROPERTY = "ObjectProperty";
 	/**
 	 * list of owl data type properties
 	 */
@@ -91,8 +91,8 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 	 * owlObjectPropertyList
 	 */
 	public static void clearAllOwlPropertiesList() {
-		MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList.clear();
-		MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList.clear();
+		MisusedOwlDatatypeOrObjectProperties.owlDatatypePropertyList.clear();
+		MisusedOwlDatatypeOrObjectProperties.owlObjectPropertyList.clear();
 	}
 
 	/**
@@ -131,21 +131,18 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 									// retrieve predicate value
 									String tmpPropertyName = tmpObject.getURI()
 											.split("#")[1];
-									if (tmpPropertyName.toLowerCase().equals(
-											OWL_DATA_TYPE_PROPERTY
-													.toLowerCase())) {
+									if (tmpPropertyName.equals(
+											OWL_DATA_TYPE_PROPERTY )) {
 
 										logger.debug(quad.getSubject()
 												+ " is of owl data type property");
-										MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList
+										MisusedOwlDatatypeOrObjectProperties.owlDatatypePropertyList
 												.add(quad.getSubject());
-									} else if (tmpPropertyName.toLowerCase()
-											.equals(OWL_OBJECT_PROPERTY
-													.toLowerCase())) {
+									} else if (tmpPropertyName.equals(OWL_OBJECT_PROPERTY)) {
 
 										logger.debug(quad.getSubject()
 												+ " is of owl object property");
-										MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList
+										MisusedOwlDatatypeOrObjectProperties.owlObjectPropertyList
 												.add(quad.getSubject());
 									}
 								}
@@ -168,14 +165,14 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 
 						logger.debug(quad.getSubject()
 								+ " is of owl data type property");
-						MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList
+						MisusedOwlDatatypeOrObjectProperties.owlDatatypePropertyList
 								.add(quad.getSubject());
-					} else if (tmpPropertyName.toLowerCase().equals(
-							OWL_OBJECT_PROPERTY.toLowerCase())) {
+					} else if (tmpPropertyName.equals(
+							OWL_OBJECT_PROPERTY)) {
 
 						logger.debug(quad.getSubject()
 								+ " is of owl object property");
-						MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList
+						MisusedOwlDatatypeOrObjectProperties.owlObjectPropertyList
 								.add(quad.getSubject());
 					}
 				}
@@ -200,7 +197,7 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 			Node predicate = quad.getPredicate();
 			Node object = quad.getObject();
 			// owl:DatatypeProperty relates some resource to a literal
-			if (MisuseOwlDatatypeOrObjectProperties.owlDatatypePropertyList
+			if (MisusedOwlDatatypeOrObjectProperties.owlDatatypePropertyList
 					.contains(predicate)) {
 				this.totalDatatypeProperties++;
 				if (!object.isLiteral()) {
@@ -209,7 +206,7 @@ public class MisuseOwlDatatypeOrObjectProperties extends AbstractQualityMetric {
 				}
 			}
 			// owl:ObjectProperty relates some resource another resource
-			else if (MisuseOwlDatatypeOrObjectProperties.owlObjectPropertyList
+			else if (MisusedOwlDatatypeOrObjectProperties.owlObjectPropertyList
 					.contains(predicate)) {
 				this.totalObjectProperties++;
 				if (!object.isURI()) {

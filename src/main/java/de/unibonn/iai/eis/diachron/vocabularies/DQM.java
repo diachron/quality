@@ -76,7 +76,7 @@ public class DQM {
      */
     public static final Property hasEndPointAvailabilityMetric = m_model.createProperty( "http://www.diachron-fp7.eu/dqm#hasEndPointAvailabilityMetric" );
     
-    /** <p>Links Consistency Dimension with ‘entities as members of disjoint classes’ 
+    /** <p>Links Consistency Dimension with ï¿½entities as members of disjoint classesï¿½ 
      *  Metric (Entities as Members of Disjoint Classes Metric belongs to the Consistency 
      *  Dimension)</p>
      */
@@ -392,7 +392,7 @@ public class DQM {
      *  as object property and properties defined as a owl:object property and used 
      *  as datatype property The metric is computed as a ratio of misused properties</p>
      */
-    public static final Resource MisuseOwlDatatypeOrObjectPropertiesMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#MisuseOwlDatatypeOrObjectPropertiesMetric" );
+    public static final Resource MisusedOwlDatatypeOrObjectPropertiesMetric = m_model.createResource( "http://www.diachron-fp7.eu/dqm#MisusedOwlDatatypeOrObjectPropertiesMetric" );
     
     /** <p>Provides a measure for the number of classes and properties in an ontology 
      *  which are marked as depricated. If an ontology is making lots of obsolete 

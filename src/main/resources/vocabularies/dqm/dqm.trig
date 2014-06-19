@@ -229,7 +229,7 @@
 		rdfs:comment	"Find resources that are - defined as a property but also appear on subject or object positions in other triples (except cases like ex:prop rdf:type rdfs:Property, ex:prop rds:subPropetyOf) - defined as a class but also appear on predicate position in other triples. The metric is computed as a ratio of misplaced classes and properties" ;
 		rdfs:label	"Misplaced classes or properties metric" .
 	
-	dqm:MisuseOwlDatatypeOrObjectPropertiesMetric
+	dqm:MisusedOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
 		daq:expectedDataType xsd:double ;
