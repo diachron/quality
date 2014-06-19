@@ -96,9 +96,9 @@ public class OBOFoundry extends AbstractQualityMetric{
         }
         
         /**
-         * metric value = total number of NOT reputable resources divided by total number of reputable resources
+         * metric value = total number of NOT reputable resources divided by total number of resources
          * 
-         * @return  (total number of NOT reputable resources / total number of reputable resources)
+         * @return  (total number of NOT reputable resources / total number of resources)
          */
         @Override
         public double metricValue() {
