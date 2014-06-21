@@ -345,6 +345,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Assesses if document contain information related with the provenance of the information" ;
 		rdfs:label	"Provenance Information metric" .	
+		
+	dqm:TrustworthinessRDFStatementMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Assesses if document contain information related with the trustworthiness of the information" ;
+		rdfs:label	"Trustworthiness of the RDF statement metric" .
 	
 	#Properties
 	#Trust Dimensions Properties
@@ -400,10 +406,19 @@
 	dqm:hasProvenanceInformationMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Believability Dimension with Provenance Inforamtion Metric" ;
+		rdfs:comment	"Links Believability Dimension with Provenance Information Metric" ;
 		rdfs:label	"Believability has end-point provenance information metric" ;
 		rdfs:domain	dqm:Believability ;
 		rdfs:range	dqm:ProvenanceInformationMetric .	
+		
+	dqm:hasTrustworthinessRDFStatementMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Believability Dimension with Trustworthiness of the RDF statement Metric" ;
+		rdfs:label	"Believability has end-point Trustworthiness information metric" ;
+		rdfs:domain	dqm:Believability ;
+		rdfs:range	dqm:TrustworthinessRDFStatementMetric .
+		
 		
 	#Verifiability Metric Properties
 	dqm:hasAuthenticityDatasetMetric

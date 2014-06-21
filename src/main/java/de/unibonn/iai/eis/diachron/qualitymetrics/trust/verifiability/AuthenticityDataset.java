@@ -48,6 +48,7 @@ public class AuthenticityDataset extends AbstractQualityMetric {
 		setProvenanceProperties.add(DCTerms.source.getURI());
 		setProvenanceProperties.add("http://purl.org/net/provenance/ns#DataPublisher"); //Attribute find in http://trdf.sourceforge.net/provenance/ns.html#DataPublisher
 		setProvenanceProperties.add("http://www.w3.org/TR/prov-o/#wasDerivedFrom");
+		setProvenanceProperties.add("http://purl.org/pav/createdBy");
 	}
 
 	/**
