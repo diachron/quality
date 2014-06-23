@@ -66,6 +66,7 @@ public class MalformedDatatypeLiteralsTest extends Assert {
 	/**
 	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.MalformedDatatypeLiterals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
 	 */
+	/*
 	@Test
 	public final void testOutProblematicInstancesToStream() {
         try {
@@ -85,4 +86,5 @@ public class MalformedDatatypeLiteralsTest extends Assert {
                 e.printStackTrace();
         }
 	}
+	*/
 }

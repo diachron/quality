@@ -229,7 +229,7 @@
 		rdfs:comment	"Find resources that are - defined as a property but also appear on subject or object positions in other triples (except cases like ex:prop rdf:type rdfs:Property, ex:prop rds:subPropetyOf) - defined as a class but also appear on predicate position in other triples. The metric is computed as a ratio of misplaced classes and properties" ;
 		rdfs:label	"Misplaced classes or properties metric" .
 	
-	dqm:MisuseOwlDatatypeOrObjectPropertiesMetric
+	dqm:MisusedOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
 		daq:expectedDataType xsd:double ;
@@ -242,6 +242,13 @@
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Detects undefined classes and properties" ;
 		rdfs:label	"Undefined classes or properties metric" .
+		
+	dqm:OntologyHijackingMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Detects the redefinition by third parties of external classes/properties such that reasoning over data using those external terms is affected" ;
+		rdfs:label	"Ontology hijacking metric" .	
 			
 	dqm:AmountOfTriplesMetric
 		a	rdfs:Class ;

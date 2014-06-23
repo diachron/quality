@@ -24,19 +24,24 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
- * The metric computes a ratio of literals incompatible with range data type
- * defined by the corresponding vocabulary.
+ * Detects incompatible data type of literals by comparing its Data Type URI with the
+ * Data Type URI specified in the range of the Object's predicate
+ * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 20th Feb 2014
  */
 public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.IncompatibleDatatypeRangeMetric;
 	/**
@@ -65,29 +70,6 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 	 */
 	public static void clearCache() {
 		cacheProperty.clear();
-	}
-
-	/**
-	 * Reads vocabulary from given URL
-	 * 
-	 * @param url
-	 *            - for the model to be retrieved
-	 */
-	protected Model loadVocabulary(String url) {
-		Model model = ModelFactory.createDefaultModel();
-		try {
-			model.read(url);
-			logger.debug(url + " :: vocabulary loaded from web.");
-		} catch (RiotException roitException) {
-			logger.debug(roitException);
-			logger.error(roitException.getMessage());
-			return null;
-		} catch (HttpException httpException) {
-			logger.debug(httpException);
-			logger.error(httpException.getMessage());
-			return null;
-		}
-		return model;
 	}
 
 	/**
@@ -168,7 +150,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
 							logger.debug("predicate vocabulary not found in cache.");
 							logger.debug("loading vocabulary for predicate from :: "
 									+ predicate.getURI());
-							Model tmpModel = loadVocabulary(predicate.getURI()); // load
+							Model tmpModel = VocabularyReader.read(predicate.getURI()); // load
 																					// vocabulary
 																					// from
 																					// the

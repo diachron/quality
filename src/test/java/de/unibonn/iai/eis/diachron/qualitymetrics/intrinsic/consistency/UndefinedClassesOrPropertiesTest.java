@@ -46,19 +46,26 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 	@Test
 	/**
 	 * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+	 * 
+	 * Number of Undefined Classes = 1
+     * Number of Classes = 3
+     * Number of Undefined Properties = 1
+     * Number of Properties = 6
+     * Metric Value = 2 /9 = 0.2222222222222222
 	 */
 	public final void testCompute() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
 			undefinedClassesOrProperties.compute(quad);
 		}
-		assertEquals(0.076923076, undefinedClassesOrProperties.metricValue(), 0.00001);
+		assertEquals(0.222222, undefinedClassesOrProperties.metricValue(), 0.00001);
 	}
 	
-	@Test
-	/**
+    /**
      * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
      */
+	/*
+	@Test
 	public final void testOutProblematicInstancesToStream() {
 	        try {
 	                
@@ -77,5 +84,5 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 	                e.printStackTrace();
 	        }
 	    }
-
+	 */   
 }

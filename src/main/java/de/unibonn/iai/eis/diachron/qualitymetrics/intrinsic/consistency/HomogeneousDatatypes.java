@@ -32,13 +32,16 @@ import de.unibonn.iai.eis.diachron.vocabularies.QR;
  * 2) if there is no obvious ratio of possibly wrong and possibly right triples
  * the conflicting view candidates are reported
  * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 12th May 2014
  */
 public class HomogeneousDatatypes extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.HomogeneousDatatypesMetric;
 	/**

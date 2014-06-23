@@ -14,13 +14,21 @@ public class DataSetMappingForTestCase {
 	// For...qualitymetric.intrinsic.consistency
 	public static String UndefinedClassesOrProperties = "testdumps/SampleInput_UndefinedClassesOrProperties.ttl";
 	public static String MisplacedClassesOrProperties = "testdumps/SampleInput_MisplacedClassesOrProperties.ttl";
-	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisuseOwlDatatypeObjectProperty.ttl";
+	public static String MisuseOwlDataTypeOrObjectProperties = "testdumps/SampleInput_MisusedOwlDatatypeObjectProperty.ttl";
 	public static String HomogeneousDatatypes = "testdumps/SampleInput_HomogeneousDatatypes.ttl";
+	public static String OntologyHijacking = "testdumps/SampleInput_OntologyHijacking.ttl";
 	// For...qualitymetric.intrinsic.conciseness
 	public static String DuplicateInstance = "testdumps/SampleInput_DuplicateInstance.ttl";
 	// For...qualitymetrics.dynamicity.currency.CurrencyDocumentStatements
 	public static String CurrencyDocumentStatements = "testdumps/SampleInput_Currency.ttl";
 	// For...qualitymetrics.accessibility.security.HTTPSDataAccessTest
 	public static String SecureDataAccess = "testdumps/SampleInput_HttpsAccess.ttl";
+	// For..qualitymetric.reputation
+	public static String ReputationOfDataset = "testdumps/SampleInput_ReputationOfDataset.ttl";
+	public static String OBOFoundry = "testdumps/SampleInput_OBOFoundry.owl";
+	// For ..qualitymetrics.representational.understandability
+	public static String EmptyAnnotationValue = "testdumps/SampleInput_EmptyAnnotationValue.ttl";
+	public static String WhitespaceInAnnotation = "testdumps/SampleInput_WhitespaceInAnnotation.ttl";
+	public static String LabelsUsingCapitals = "testdumps/SampleInput_LabelsUsingCapitals.ttl";
 	
 }

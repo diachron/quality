@@ -58,6 +58,7 @@ public class IncompatibleDatatypeRangeTest extends Assert {
 	/**
      * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.accuracy.IncompatibleDatatypeRange#compute(com.hp.hpl.jena.sparql.core.Quad)}.
      */
+	/*
 	@Test
     public final void testOutProblematicInstancesToStream() {
         try {
@@ -77,5 +78,6 @@ public class IncompatibleDatatypeRangeTest extends Assert {
                 e.printStackTrace();
         }
     }
+    */
 
 }

@@ -56,10 +56,11 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
 		assertEquals(0.15384615, misplacedClassesOrProperties.metricValue(), 0.00001);
 	}
 	
-	@Test
 	/**
      * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
      */
+	/*
+	@Test
     public final void testOutProblematicInstancesToStream() {
         try {
                 
@@ -78,5 +79,6 @@ public class MisplacedClassesOrPropertiesTest extends Assert {
                 e.printStackTrace();
         }
     }
+    */
 
 }

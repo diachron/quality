@@ -20,15 +20,19 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
- * This class tests if the value of a typed literal is valid with regards to the
+ * Detects whether the value of a typed literal is valid with respect to its
  * given xsd datatype.
+ * 
+ * Metric Value Range : [0 - 1]
+ * Best Case : 0
+ * Worst Case : 1
  * 
  * @author Muhammad Ali Qasmi
  * @date 13th Feb 2014
  */
 public class MalformedDatatypeLiterals extends AbstractQualityMetric {
 	/**
-	 * Metic URI
+	 * Metric URI
 	 */
 	private final Resource METRIC_URI = DQM.MalformedDatatypeLiteralsMetric;
 	/**
