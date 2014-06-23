@@ -3,6 +3,11 @@ package de.unibonn.iai.eis.diachron.qualitymetrics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Node_ANY;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
@@ -11,6 +16,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.Commons;
+import de.unibonn.iai.eis.diachron.vocabularies.CUBE;
 import de.unibonn.iai.eis.diachron.vocabularies.DAQ;
 
 public abstract class AbstractQualityMetric implements QualityMetric{
@@ -19,16 +25,28 @@ public abstract class AbstractQualityMetric implements QualityMetric{
 	public List<Statement> toDAQTriples() {
 		List<Statement> lst = new ArrayList<Statement>();
 		
-		Resource generatedURI = Commons.generateURI();
+		//Resource generatedURI = Commons.generateURI();
+		Resource generatedObs = Commons.generateURI();
 		
-		Statement type = new StatementImpl(generatedURI, RDF.type, this.getMetricURI().asResource());
-		Statement dc = new StatementImpl(generatedURI, DAQ.dateComputed, Commons.generateCurrentTime());
-		Statement val = new StatementImpl(generatedURI, DAQ.doubleValue, Commons.generateDoubleTypeLiteral(this.metricValue()));
+//		Statement type = new StatementImpl(generatedURI, RDF.type, this.getMetricURI().asResource());
+//		Statement hasObs = new StatementImpl(generatedURI, DAQ.hasObservation, generatedObs);
 		
+		Statement obsType = new StatementImpl(generatedObs, RDF.type, CUBE.Observation);
+		Statement dc = new StatementImpl(generatedObs, DAQ.dateComputed, Commons.generateCurrentTime());
+		Statement val = new StatementImpl(generatedObs, DAQ.value, Commons.generateDoubleTypeLiteral(this.metricValue()));
+		Statement met = new StatementImpl(generatedObs, DAQ.metric, this.getMetricURI().asResource());
+		Statement qbDS = new StatementImpl(generatedObs, CUBE.dataSet, Commons.generateRDFBlankNode());
+		Statement computedOn = new StatementImpl(generatedObs, DAQ.computedOn, Commons.generateRDFBlankNode());
+
 		
-		lst.add(type);
+//		lst.add(type);
+//		lst.add(hasObs);
 		lst.add(dc);
 		lst.add(val);
+		lst.add(obsType);
+		lst.add(met);
+		lst.add(qbDS);
+		lst.add(computedOn);
 		
 		return lst;
 	}

@@ -3,8 +3,10 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.utilities;
 import java.util.Calendar;
 import java.util.UUID;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class Commons {
@@ -23,5 +25,9 @@ public class Commons {
 	
 	public static Literal generateDoubleTypeLiteral(double d){
 		return ModelFactory.createDefaultModel().createTypedLiteral(d);
+	}
+	
+	public static RDFNode generateRDFBlankNode(){
+		return ModelFactory.createDefaultModel().asRDFNode(Node.ANY);
 	}
 }
