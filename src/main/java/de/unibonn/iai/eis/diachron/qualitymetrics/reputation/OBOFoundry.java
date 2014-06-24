@@ -34,7 +34,7 @@ public class OBOFoundry extends AbstractQualityMetric{
         /**
          * Metric URI
          */
-        private final Resource METRIC_URI = null;
+        private final Resource METRIC_URI = DQM.OBOFoundryMetric;
         /**
          * logger static object
          */
