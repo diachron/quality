@@ -31,7 +31,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * ..src/main/resources/AnnotationPropertiesList.txt
  * 
  * The metric value is defined as the ratio of annotations with empty objects to 
- * all annotations (i.e. all triples having such properties).
+ * all annotations (triples having such properties).
  * 
  * Metric value Range = [0 - 1] Best Case = 0 Worst Case = 1
  * 

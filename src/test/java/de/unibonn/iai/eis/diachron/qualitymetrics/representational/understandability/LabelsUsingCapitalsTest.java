@@ -53,7 +53,7 @@ public class LabelsUsingCapitalsTest extends Assert{
          * 
          * Case1 => rdfs:label "GreenGoblin"
          *   
-         * Total number of capitalized literals in annotation : 1
+         * Total number of capitalized  label literals : 1
          * Total total number of annotation literals : 2
          * 
          * Metric Value = 1 / 2 = 0.50000

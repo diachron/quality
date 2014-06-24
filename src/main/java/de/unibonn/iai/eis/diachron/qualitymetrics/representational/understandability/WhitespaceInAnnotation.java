@@ -33,7 +33,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * Metric value Range = [0 - 1] Best Case = 0 Worst Case = 1
  * 
  * The metric value is defined as the ratio of annotations with whitespace to 
- * all annotations (i.e. all triples having such properties).
+ * all annotations (triples having such properties).
  * 
  * This metric is from the list of constrains for scientific pilots and is
  * introduced in the Deliverable 3.1 (Table 20)
