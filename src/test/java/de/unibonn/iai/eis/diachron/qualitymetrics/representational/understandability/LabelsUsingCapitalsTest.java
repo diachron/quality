@@ -49,7 +49,7 @@ public class LabelsUsingCapitalsTest extends Assert{
         }
 
         /**
-         * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics..representational.understandability.LabelsUsingCapitals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+         * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
          * Case1 => rdfs:label "GreenGoblin"
          *   
