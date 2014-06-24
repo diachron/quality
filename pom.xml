@@ -118,6 +118,12 @@
 								<java classname="jena.schemagen" classpath="${runtime_classpath}">
 									<arg line="-i src/main/resources/vocabularies/qr/qr.trig -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n QR" />
 								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+										<arg line="--inference -i src/main/resources/vocabularies/cube/cube.ttl -e TTL  --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n CUBE" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i src/main/resources/vocabularies/cube/sdmx-attribute.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n SDMXATTRIBUTE	" />
+								</java>
 							</tasks>
 						</configuration>
 						<goals>
