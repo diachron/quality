@@ -21,6 +21,8 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+
 /**
  * EmptyAnnotationValue consider the following widely used annotation properties
  * (labels, comments, notes, etc.) and identifies triples whose property is from
@@ -46,7 +48,7 @@ public class EmptyAnnotationValue extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = null;
+	private final Resource METRIC_URI = DQM.EmptyAnnotationValueMetric;
 	/**
 	 * logger static object
 	 */

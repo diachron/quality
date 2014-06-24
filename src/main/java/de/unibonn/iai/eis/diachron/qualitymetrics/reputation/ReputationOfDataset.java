@@ -45,7 +45,7 @@ public class ReputationOfDataset extends AbstractQualityMetric{
         /**
          * Metric URI
          */
-        private final Resource METRIC_URI = null;
+        private final Resource METRIC_URI = DQM.ReputationOfDatasetMetric;
         /**
          * logger static object
          */

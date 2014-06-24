@@ -21,6 +21,8 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+
 /**
  * LabelsUsingCapitals identifies triples whose property is from a
  * pre-configured list of label properties, and whose object uses a bad style of
@@ -44,11 +46,11 @@ public class LabelsUsingCapitals extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = null;
+	private final Resource METRIC_URI = DQM.LabelsUsingCapitalsMetric;
 	/**
 	 * logger static object
 	 */
-	static Logger logger = Logger.getLogger(LabelsUsingCapitalsTest.class);
+	static Logger logger = Logger.getLogger(LabelsUsingCapitals.class);
 	/**
 	 * list of problematic quads
 	 */
@@ -97,7 +99,7 @@ public class LabelsUsingCapitals extends AbstractQualityMetric {
 					while ((strLine = in.readLine()) != null) {
 						URI tmpURI = new URI(strLine);
 						if (tmpURI != null) {
-							EmptyAnnotationValue.annotationPropertiesSet
+							LabelsUsingCapitals.annotationPropertiesSet
 									.add(strLine);
 						}
 					}
@@ -117,7 +119,7 @@ public class LabelsUsingCapitals extends AbstractQualityMetric {
 	 * clears list of annotation properties in set
 	 */
 	public static void clearAnnotationPropertiesSet() {
-		EmptyAnnotationValue.annotationPropertiesSet.clear();
+		LabelsUsingCapitals.annotationPropertiesSet.clear();
 	}
 
 	/**
@@ -131,7 +133,7 @@ public class LabelsUsingCapitals extends AbstractQualityMetric {
 		try {
 			Node predicate = quad.getPredicate();
 			if (predicate.isURI()) { // check is the predicate is URI or not
-				if (EmptyAnnotationValue.annotationPropertiesSet
+				if (LabelsUsingCapitals.annotationPropertiesSet
 						.contains(predicate.getURI())) { // check if given
 															// predicate is
 															// found in

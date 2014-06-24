@@ -20,6 +20,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * WhitespaceInAnnotation consider the following widely used annotation
@@ -46,7 +47,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = null;
+	private final Resource METRIC_URI = DQM.WhitespaceInAnnotationMetric;
 	/**
 	 * logger static object
 	 */
@@ -84,7 +85,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
 	 */
 	public static void loadAnnotationPropertiesSet(String filePathName) {
 		File file = null;
-		String tmpFilePathName = (filePathName == null) ? EmptyAnnotationValue.defaultFilePathName
+		String tmpFilePathName = (filePathName == null) ? WhitespaceInAnnotation.defaultFilePathName
 				: filePathName;
 		try {
 			if (!tmpFilePathName.isEmpty()) {
@@ -95,7 +96,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
 					while ((strLine = in.readLine()) != null) {
 						URI tmpURI = new URI(strLine);
 						if (tmpURI != null) {
-							EmptyAnnotationValue.annotationPropertiesSet
+							WhitespaceInAnnotation.annotationPropertiesSet
 									.add(strLine);
 						}
 					}
@@ -115,7 +116,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
 	 * clears list of annotation properties in set
 	 */
 	public static void clearAnnotationPropertiesSet() {
-		EmptyAnnotationValue.annotationPropertiesSet.clear();
+		WhitespaceInAnnotation.annotationPropertiesSet.clear();
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
 		try {
 			Node predicate = quad.getPredicate();
 			if (predicate.isURI()) { // check is the predicate is URI or not
-				if (EmptyAnnotationValue.annotationPropertiesSet
+				if (WhitespaceInAnnotation.annotationPropertiesSet
 						.contains(predicate.getURI())) { // check if given
 															// predicate is
 															// found in
