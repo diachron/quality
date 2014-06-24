@@ -334,6 +334,27 @@
 		rdfs:comment	"Assesses the percentage of entities having an rdfs:label or rdfs:comment" ;
 		rdfs:label	"Human-readable labelling metric" .
 	
+	dqm:EmptyAnnotationValueMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment "EmptyAnnotationValue consider the following widely used annotation properties (labels, comments, notes, etc.) and identifies triples whose property is from a pre-configured list of annotation properties, and whose object is an empty string" ;
+		rdfs:label "Empty annotation value metric" .
+		
+	dqm:LabelsUsingCapitalsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment "Labels using capitals identifies triples whose property is from a pre-configured list of label properties, and whose object uses a bad style of capitalization" ;
+		rdfs:label "Labels using capitals metric" .
+		
+	dqm:WhitespaceInAnnotationMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment " Whitespace in annotation consider the following widely used annotation properties (labels, comments, notes, etc.) and identifies triples whose property is from a pre-configured list of annotation properties, and whose object value has leading or ending white space in string." ; 
+		rdfs:label "Whitespace in annotation metric" .
+				
 	#Properties
 	#Accessibility Dimensions Properties
 	dqm:hasAvailabilityDimension
@@ -620,7 +641,31 @@
 		rdfs:label	"Understandability has short URIs metric" ;
 		rdfs:domain	dqm:Understandability ;
 		rdfs:range	dqm:HumanReadableLabellingMetric .
+	
+	dqm:hasEmptyAnnotationValueMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment "Links Understandability Dimension with Empty annotation value metric" ;
+		rdfs:label "Understandability has empty annotation value metric" ;
+		rdfs:domain	dqm:Understandability ;
+		rdfs:range	dqm:EmptyAnnotationValueMetric .
+	
+	dqm:hasLabelsUsingCapitalsMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment "Links Understandability Dimension with labels using capitals metric" ;
+		rdfs:label "Understandability has labels using capitals metric" ;
+		rdfs:domain	dqm:Understandability ;
+		rdfs:range	dqm:LabelsUsingCapitalsMetric .
 		
+	dqm:hasWhitespaceInAnnotationMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment "Links Understandability Dimension with Whitespace in annotation" ;
+		rdfs:label "Understandability has whitespace in annotation" ;
+		rdfs:domain	dqm:Understandability ;
+		rdfs:range	dqm:WhitespaceInAnnotationMetric .
+				
 	#Currency Dimension Properties
 	dqm:hasCurrencyDimension
 		a rdfs:Property ;
