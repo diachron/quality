@@ -21,6 +21,8 @@ import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+
 /**
  * LabelsUsingCapitals identifies triples whose property is from a
  * pre-configured list of label properties, and whose object uses a bad style of
@@ -41,7 +43,7 @@ public class LabelsUsingCapitals extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = null;
+	private final Resource METRIC_URI = DQM.LabelsUsingCapitalsMetric;
 	/**
 	 * logger static object
 	 */

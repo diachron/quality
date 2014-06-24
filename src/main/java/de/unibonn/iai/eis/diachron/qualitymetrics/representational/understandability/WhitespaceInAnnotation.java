@@ -20,6 +20,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
+import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * WhitespaceInAnnotation consider the following widely used annotation
@@ -43,7 +44,7 @@ public class WhitespaceInAnnotation extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = null;
+	private final Resource METRIC_URI = DQM.WhitespaceInAnnotationMetric;
 	/**
 	 * logger static object
 	 */
