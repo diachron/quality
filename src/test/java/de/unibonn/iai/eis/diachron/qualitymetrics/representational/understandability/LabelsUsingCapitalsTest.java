@@ -56,7 +56,7 @@ public class LabelsUsingCapitalsTest extends Assert{
          * Total number of empty literals : 1
          * Total total number of literals : 4
          * 
-         * Metric Value = 1 / 4 = 0.250000
+         * Metric Value = 1 / 2 = 0.500000
          * 
          */
         @Test
@@ -65,7 +65,7 @@ public class LabelsUsingCapitalsTest extends Assert{
                 for(Quad quad : streamingQuads){
                         labelsUsingCapitals.compute(quad);
                 }
-                assertEquals(0.250000, labelsUsingCapitals.metricValue(), 0.00001);
+                assertEquals(0.500000, labelsUsingCapitals.metricValue(), 0.00001);
         }
 
 }
