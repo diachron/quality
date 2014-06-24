@@ -53,10 +53,10 @@ public class LabelsUsingCapitalsTest extends Assert{
          * 
          * Case1 => rdfs:label "GreenGoblin"
          *   
-         * Total number of empty literals : 1
-         * Total total number of literals : 4
+         * Total number of capitalized literals in annotation : 1
+         * Total total number of annotation literals : 2
          * 
-         * Metric Value = 1 / 4 = 0.250000
+         * Metric Value = 1 / 2 = 0.50000
          * 
          */
         @Test
@@ -65,7 +65,7 @@ public class LabelsUsingCapitalsTest extends Assert{
                 for(Quad quad : streamingQuads){
                         labelsUsingCapitals.compute(quad);
                 }
-                assertEquals(0.250000, labelsUsingCapitals.metricValue(), 0.00001);
+                assertEquals(0.50000, labelsUsingCapitals.metricValue(), 0.00001);
         }
 
 }

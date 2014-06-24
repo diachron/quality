@@ -53,7 +53,7 @@ public class WhitespaceInAnnotationTest extends Assert{
          * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics..representational.understandability.WhitespaceInAnnotation#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
          * Total number of white space literals : 3
-         * Total total number of literals : 4
+         * Total total number of annotation literals : 4
          * 
          * Metric Value = 3 / 4 = 0.750000
          * 

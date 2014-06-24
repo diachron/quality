@@ -30,6 +30,9 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
  * list of widely used annotation properties are stored in
  * ..src/main/resources/AnnotationPropertiesList.txt
  * 
+ * The metric value is defined as the ratio of annotations with empty objects to 
+ * all annotations (i.e. all triples having such properties).
+ * 
  * Metric value Range = [0 - 1] Best Case = 0 Worst Case = 1
  * 
  * This metric is from the list of constrains for scientific pilots and is
