@@ -631,7 +631,7 @@ public class VirtuosoTest {
 	}
 	
 	public static void test(String args[]) {
-		try {
+	try {
 			String url;
 			url = "jdbc:virtuoso://localhost:1111";
 			Class.forName("virtuoso.jdbc3.Driver");
@@ -697,6 +697,7 @@ public class VirtuosoTest {
 		}
 		System.out.println("eof");
 		System.exit(0);
+		
 	}
 
 }
