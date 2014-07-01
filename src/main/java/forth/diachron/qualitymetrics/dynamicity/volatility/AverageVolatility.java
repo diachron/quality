@@ -45,7 +45,7 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 	
 	public void compute() {
 	
-		
+		//STEPS:
 		//1. find total number of versions (findDeltas) - versionsQ
 		//2. find deltas per pair deltas[versions]  (sparql2...N)
 		//3. aggregate deltas sum per pair
@@ -58,7 +58,7 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
                 + "?instance co:new_version ?nversion." 
                 + "?instance co:old_version ?oversion." 
                 +" filter(?nversion != diachron:Entity && ?oversion != diachron:Entity )" 
-                + "}"; 
+                + "} ORDER BY ?nversion"; 
 		//System.out.println("versionsQ:" +versionsQmetr);
 		RepositoryConnection con = chan.getVirtuosoConnection();
 		if (con!= null){
