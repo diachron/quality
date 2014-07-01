@@ -27,7 +27,7 @@ public class VirtuosoHandler {
 		Repository repository = new VirtuosoRepository("jdbc:virtuoso://" + VIRTUOSO_INSTANCE + ":" + VIRTUOSO_PORT, VIRTUOSO_USERNAME, VIRTUOSO_PASSWORD);
 		RepositoryConnection con = null;
 		try {
-			con = repository.getConnection();
+		
 			con = repository.getConnection();
 			con.setAutoCommit(true);
 			return con;
