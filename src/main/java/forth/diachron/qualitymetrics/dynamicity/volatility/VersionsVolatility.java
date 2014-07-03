@@ -52,8 +52,8 @@ public class VersionsVolatility implements EvolutionQualityMetricInterface {
 	public double metricValue() {
 	double retValue = 0;
 	
-	retValue = (double) this.numberOfChanges / 2;
-	logger.trace("Returning VersionsVolatility Metric Value (Ratio): " +retValue);
+	retValue = (double) this.numberOfChanges;
+	logger.trace("Returning VersionsVolatility Metric Value (Number): " +retValue);
 		
 	return retValue;
 	}
