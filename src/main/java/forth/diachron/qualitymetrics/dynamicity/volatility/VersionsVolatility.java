@@ -42,7 +42,7 @@ public class VersionsVolatility implements EvolutionQualityMetricInterface {
 		if (con!= null){
 			logger.trace("Connecting to Virtuoso");	
 			System.out.println("Connecting to Virtuoso");
-			numberOfChanges = evohand.countDeltas(old_version_uri,new_version_uri);
+			numberOfChanges = evohand.countSimpleChanges(old_version_uri,new_version_uri);
 			logger.trace("Finish computing volatility accross two versions");
 		}
 		logger.trace("Error while connecting to Virtuoso!");	

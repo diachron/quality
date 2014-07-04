@@ -40,16 +40,16 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 	private SesameQueryHandler seshand = new SesameQueryHandler();
 	private double retValue = 0;
 	private int versionsNO = 1;
-	private int deltasTotal = 0;
+	private int changesTotal = 0;
 	
 	
 	public void compute() {
 	
 		//STEPS:
-		//1. find total number of versions (findDeltas) - versionsQ
-		//2. find deltas per pair deltas[versions]  (sparql2...N)
-		//3. aggregate deltas sum per pair
-		//4  calculate the ratio sum of deltas / nversions - 1
+		//1. find total number of versions - versionsQ
+		//2. find simple changes per pair sc[versions]  (sparql2...N)
+		//3. aggregate simple changes sum per pair
+		//4  calculate the ratio sum of sc / nversions - 1
 		
 			
 		String versionsQ = "select distinct ?oversion ?nversion "
@@ -89,8 +89,8 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 						
 						
 					}
-					logger.trace("Computing total number of deltas and versions");
-					deltasTotal = deltasTotal + this.evohand.countDeltas(rv[0].stringValue(),rv[1].stringValue());			
+					logger.trace("Computing total number of changes and versions");
+					changesTotal = changesTotal + this.evohand.countSimpleChanges(rv[0].stringValue(),rv[1].stringValue());			
 					versionsNO ++;
 					//System.out.println("-----------------------------");
 					//results.add(rv);
@@ -116,7 +116,7 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 	
 	public double metricValue() {
 	
-    retValue = deltasTotal / (versionsNO-1);
+    retValue = changesTotal / (versionsNO-1);
     logger.trace("Returning AverageVolatility Metric Value (Ratio): " +retValue);
 	return retValue;
 	}

@@ -13,11 +13,11 @@ public class EvolutionGenHandler {
 private VirtuosoHandler virhan = new VirtuosoHandler();
 private SesameQueryHandler seshan = new SesameQueryHandler();
 	
-	public int countDeltas (){
-		return countDeltas ("","");
+	public int countSC (){
+		return countSimpleChanges ("","");
 	}
 	
-	public int countDeltas (String old_version_uri, String new_version_uri){
+	public int countSimpleChanges (String old_version_uri, String new_version_uri){
 		int result = 0;
 		if (old_version_uri == null || old_version_uri.equals("")){
 			old_version_uri = VirtuosoHandler.old_version_uri;

@@ -43,9 +43,9 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 	private EvolutionGenHandler evohand = new EvolutionGenHandler();
 	private double retValue = 0;
 	private int versionsNO = 1;
-	private double aggregDeltas = 0;
+	private double aggregSChanges = 0;
 	private double evo_weights[] = {0.1,0.05,0.12,0.18,0.20,0.1,0.01,0.09,0.15}; // An array do declare evolution weights for each pair of versions
-	private ArrayList weightList = null; 
+	private ArrayList<Double> weightList = null; 
 	
 	
 	
@@ -53,10 +53,10 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 	
 		//STEPS:
 		//1. Load evolution weights preference table. The total number of versions (nversions) should agree with the size of weights table. 	
-		//2. Find deltas per pair and multiply with the corresponding weight
-		//3. Calculate the ratio weighted sum of deltas / nversions - 1
+		//2. Find changes per pair and multiply with the corresponding weight
+		//3. Calculate the ratio weighted sum of changes / nversions - 1
 		
-		weightList = new ArrayList();
+		weightList = new ArrayList<Double>();
 		for(int i=0; i<evo_weights.length; i++){
 			weightList.add(evo_weights[i]);
 		}
@@ -86,7 +86,7 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 				int row;
 				//Vector<Value[]> results = new Vector<Value[]>();
 				BindingSet pairs = null;
-				Iterator it = weightList.iterator();	
+				Iterator<Double> it = weightList.iterator();	
 				
 				
 				for (row = 0; bindings.hasNext(); row++) {
@@ -104,7 +104,7 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 						
 						
 					}
-					logger.trace("Computing total number of deltas and versions");
+					logger.trace("Computing total number of changes and versions");
 					
 					
 					// Fetching weights to each pair
@@ -113,16 +113,16 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 				      Object weig = it.next();
 				      cur_weight = new Double(weig.toString());
 				      System.out.println("--------------------------------------------------------");
-				      cur_sum =  cur_weight* this.evohand.countDeltas(rv[0].stringValue(),rv[1].stringValue());
+				      cur_sum =  cur_weight* this.evohand.countSimpleChanges(rv[0].stringValue(),rv[1].stringValue());
 				      //System.out.println("cur_weight:"+cur_weight);
 				     // System.out.println("cur_sum:"+cur_sum);
-				      aggregDeltas = aggregDeltas + cur_sum;			   
+				      aggregSChanges = aggregSChanges + cur_sum;			   
 				      versionsNO ++;
 				}
 				      
 
 					//results.add(rv);
-					System.out.println("-----------------------------deltasTotal:"+aggregDeltas);
+					System.out.println("-----------------------------changesTotal:"+aggregSChanges);
 					System.out.println("-----------------------------versionsNO:"+versionsNO);
 					System.out.println("-----------------------------evo_weightsNO:"+evo_weights.length);
 				
@@ -146,7 +146,7 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 	
 	public double metricValue() {
 	
-    retValue = aggregDeltas / (versionsNO-1);
+    retValue = aggregSChanges / (versionsNO-1);
     logger.trace("Returning AverageVolatility Metric Value (Ratio): " +retValue);
 	return retValue;
 	}
