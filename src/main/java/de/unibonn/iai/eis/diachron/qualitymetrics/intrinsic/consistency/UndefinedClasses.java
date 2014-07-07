@@ -13,6 +13,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
@@ -33,15 +35,17 @@ import de.unibonn.iai.eis.diachron.vocabularies.QR;
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014
  */
-public class UndefinedClassesOrProperties extends AbstractQualityMetric {
+public class UndefinedClasses extends AbstractQualityMetric {
+	
+	final  String RDF_PREFIX="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	/**
 	 * Metric URI
 	 */
-	private final Resource METRIC_URI = DQM.UndefinedClassesOrPropertiesMetric;
+	private final Resource METRIC_URI = DQM.UndefinedClassesMetric;
 	/**
 	 * static logger object
 	 */
-	static Logger logger = Logger.getLogger(UndefinedClassesOrProperties.class);
+	static Logger logger = Logger.getLogger(UndefinedClasses.class);
 	/**
 	 * total number of undefined classes
 	 */
@@ -50,14 +54,8 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 	 * total number classes
 	 */
 	protected long totalClassesCount = 0;
-	/**
-	 * total number of undefined properties
-	 */
-	protected long undefinedPropertiesCount = 0;
-	/**
-	 * total number of properties
-	 */
-	protected long totalPropertiesCount = 0;
+	
+	
 	/**
 	 * list of problematic quads
 	 */
@@ -65,13 +63,15 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 
 	/**
 	 * This method identifies whether a component (subject, predicate or object)
-	 * of the given quad references an undefined class or property.
+	 * of the given quad references an undefined class .
 	 * 
 	 * @param quad
 	 *            - to be identified
 	 */
 	@Override
 	public void compute(Quad quad) {
+		
+		
 
 		logger.trace("compute() --Started--");
 
@@ -80,38 +80,24 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 			Node predicate = quad.getPredicate(); // retrieve predicate
 			Node object = quad.getObject(); // retrieve object
 			
-			if (predicate.isURI()) { // check if predicate is URI
-				this.totalPropertiesCount++;
-				// load model
-				Model predicateModel = VocabularyReader
-						.read(predicate.getURI());
-				if (predicateModel == null) { // check if system is able to
-												// retrieve model
-                        this.undefinedPropertiesCount++;
-                        this.problemList.add(quad);
-				} else {
-					// search for URI resource from Model
-					if (predicateModel.getResource(predicate.getURI())
-							.isURIResource()) {
-						// search for its domain and range properties
-						if (!(predicateModel.getResource(predicate.getURI())
-								.hasProperty(RDFS.domain) && predicateModel
-								.getResource(predicate.getURI()).hasProperty(
-										RDFS.range))) {
-					        System.out.println("predicate : " + predicate);    
-							this.undefinedPropertiesCount++;
-							this.problemList.add(quad);
-						}
-					}
-				}
-				
-				URI tmpURI = new URI(predicate.getURI());
-                String fragment = tmpURI.getFragment();
-                if (fragment != null && 
-                                ( fragment.toLowerCase().equals("type") || 
-                                  fragment.toLowerCase().equals("domain") ||
-                                  fragment.toLowerCase().equals("range") ||
-                                  fragment.toLowerCase().equals("subclassof") ) ){
+						
+				String tmpURI = predicate.getURI();
+			
+              
+                if (tmpURI != null && 
+                                (tmpURI.equals(RDF.type.toString()) || 
+                                tmpURI.equals(RDFS.domain.toString()) ||
+                                tmpURI.equals(RDFS.range.toString()) ||
+                                tmpURI.equals(RDFS.subPropertyOf.toString())||
+                                tmpURI.equals(OWL.allValuesFrom.toString())||
+                                tmpURI.equals(OWL.someValuesFrom.toString())||
+                                tmpURI.equals(OWL.equivalentClass.toString())||                               		
+                                tmpURI.equals(OWL.complementOf.toString())||	
+                                tmpURI.equals(OWL.oneOf.toString())||
+                                tmpURI.equals(OWL.disjointWith.toString())
+                                		) ){
+                
+                
                         if (object.isURI()) { // check if object is URI (not blank or
                                 // literal)
                             this.totalClassesCount++;
@@ -130,32 +116,12 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
                                     }      
                             }
                         }
-                } else if (fragment != null && fragment.toLowerCase().equals("subPropertyOf")) {
-                    if (object.isURI()) { // check if object is URI (not blank or
-                            // literal)
-                        this.totalPropertiesCount++;
-                        // load model
-                        Model objectModel = VocabularyReader.read(object.getURI());
-                        if (objectModel == null) { // check if system is able to
-                                                    // retrieve model
-                                this.undefinedPropertiesCount++;
-                                this.problemList.add(quad);
-                        } else {
-                             // search for URI resource from Model
-                                if (!objectModel.getResource(object.getURI())
-                                                .isURIResource()) {
-                                    this.undefinedPropertiesCount++;
-                                    this.problemList.add(quad);
-                                }      
-                        }      
-                    }
-                }
-			}
+                } 
+		}
+	
+			
 
-		} catch (MalformedURIException exception){
-	        logger.debug(exception);
-            logger.error(exception.getMessage());
-		} catch (Exception exception) {
+		 catch (Exception exception) {
 			logger.debug(exception);
 			logger.error(exception.getMessage());
 		}
@@ -166,8 +132,8 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 	/**
 	 * This method returns metric value for the object of this class
 	 * 
-	 * @return (total number of undefined classes and undefined properties) / (
-	 *         total number of classes and properties)
+	 * @return (total number of undefined classes ) / (
+	 *         total number of classes )
 	 */
 	@Override
 	public double metricValue() {
@@ -176,22 +142,18 @@ public class UndefinedClassesOrProperties extends AbstractQualityMetric {
 		logger.debug("Number of Undefined Classes :: "
 				+ this.undefinedClassesCount);
 		logger.debug("Number of Classes :: " + this.totalClassesCount);
-		logger.debug("Number of Undefined Properties :: "
-				+ this.undefinedPropertiesCount);
-		logger.debug("Number of Properties :: " + this.totalPropertiesCount);
+	
 
-		long tmpTotalUndefinedClassesAndUndefinedProperties = this.undefinedClassesCount
-				+ this.undefinedPropertiesCount;
-		long tmpTotalClassesAndProperties = this.totalClassesCount
-				+ this.totalPropertiesCount;
+		long tmpTotalUndefinedClasses = this.undefinedClassesCount;
+		long tmpTotalClasses = this.totalClassesCount;
 		// return ZERO if total number of RDF literals are ZERO [WARN]
-		if (tmpTotalClassesAndProperties <= 0) {
-			logger.warn("Total number of classes and properties in given document is found to be zero.");
+		if (tmpTotalClasses <= 0) {
+			logger.warn("Total number of classes  in given document is found to be zero.");
 			return 0.0;
 		}
 
-		double metricValue = (double) tmpTotalUndefinedClassesAndUndefinedProperties
-				/ tmpTotalClassesAndProperties;
+		double metricValue = (double) tmpTotalUndefinedClasses
+				/ tmpTotalClasses;
 		logger.debug("Metric Value :: " + metricValue);
 		logger.trace("metricValue() --Ended--");
 		return metricValue;
