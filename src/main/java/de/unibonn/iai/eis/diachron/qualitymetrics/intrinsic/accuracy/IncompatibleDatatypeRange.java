@@ -284,7 +284,7 @@ public class IncompatibleDatatypeRange extends AbstractQualityMetric {
            
            Model model = ModelFactory.createDefaultModel();
            
-           Resource qp = QR.IncompatibleDatatypeRange;
+           Resource qp = QR.IncompatibleDatatypeRangeProblem;
            qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
            
            for(int i=0; i < this.problemList.size(); i++){

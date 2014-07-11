@@ -146,7 +146,7 @@ public class MalformedDatatypeLiterals extends AbstractQualityMetric {
            
            Model model = ModelFactory.createDefaultModel();
            
-           Resource qp = QR.MalformedDatatypeLiterals;
+           Resource qp = QR.MalformedDatatypeLiteralsProblem;
            qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
            
            for(int i=0; i < this.problemList.size(); i++){

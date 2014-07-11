@@ -252,7 +252,7 @@ public class HomogeneousDatatypes extends AbstractQualityMetric {
            
            Model model = ModelFactory.createDefaultModel();
            
-           Resource qp = QR.HomogeneousDatatypes;
+           Resource qp = QR.HomogeneousDatatypesProblem;
            qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
            
            for(int i=0; i < this.problemList.size(); i++){

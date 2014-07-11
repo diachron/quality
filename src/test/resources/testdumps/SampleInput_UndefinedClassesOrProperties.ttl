@@ -16,4 +16,6 @@ people:MichaelMartin foaf:know people:NatanaelArndt . # invalid case foaf:know s
 
 people:InvalidCase a notatype:NotAType . # invalid case notatype:NotaType
 
+
+
  

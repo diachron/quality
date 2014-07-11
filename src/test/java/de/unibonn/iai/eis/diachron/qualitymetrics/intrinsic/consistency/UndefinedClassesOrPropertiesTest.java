@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
@@ -21,7 +22,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
- * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClasses#compute(com.hp.hpl.jena.sparql.core.Quad)}.
  * 
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014
@@ -31,7 +32,8 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 	static Logger logger = Logger.getLogger(UndefinedClassesOrPropertiesTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected UndefinedClassesOrProperties undefinedClassesOrProperties = new UndefinedClassesOrProperties(); 
+	protected UndefinedClasses undefinedClasses = new UndefinedClasses(); 
+	protected UndefinedProperties undefinedProperties = new UndefinedProperties(); 
 	@Before
 	public void setUp() throws Exception {
 		BasicConfigurator.configure();
@@ -56,11 +58,17 @@ public class UndefinedClassesOrPropertiesTest extends Assert {
 	public final void testCompute() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		for(Quad quad : streamingQuads){
-			undefinedClassesOrProperties.compute(quad);
+			undefinedClasses.compute(quad);
+			undefinedProperties.compute(quad);
 		}
-		assertEquals(0.222222, undefinedClassesOrProperties.metricValue(), 0.00001);
+		assertEquals(0.3333333, undefinedClasses.metricValue(), 0.00001);
+		assertEquals(0.1666666, undefinedProperties.metricValue(), 0.00001);
 	}
 	
+	@Test
+	public final void test() {
+		System.out.println("UndefinedClassesOrPropertiesTest.test() "+ RDFS.range.toString());
+	}
     /**
      * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClassesOrProperties#compute(com.hp.hpl.jena.sparql.core.Quad)}.
      */

@@ -242,12 +242,19 @@
 		rdfs:comment	"Detect properties that are defined as a owl:datatype property but is used as object property and properties defined as a owl:object property and used as datatype property The metric is computed as a ratio of misused properties" ;
 		rdfs:label	"Misuse Owl datatype or object properties metric" .
 		
-	dqm:UndefinedClassesOrPropertiesMetric
+	dqm:UndefinedClassesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
 		daq:expectedDataType xsd:double ;
-		rdfs:comment	"Detects undefined classes and properties" ;
-		rdfs:label	"Undefined classes or properties metric" .
+		rdfs:comment	"Detects undefined classes" ;
+		rdfs:label	"Undefined classes metric" .
+		
+	dqm:UndefinedPropertiesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Detects undefined properties" ;
+		rdfs:label	"Undefined properties metric" .
 		
 	dqm:OntologyHijackingMetric
 		a	rdfs:Class ;
@@ -529,13 +536,21 @@
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:HomogeneousDatatypesMetric .
 		
-	dqm:hasUndefinedClassesOrPropertiesMetric
+	dqm:hasUndefinedClassesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with Undefined classes or properties metric" ;
-		rdfs:label	"hasUndefinedClassesOrPropertiesMetric" ;
+		rdfs:comment	"Links Consistency Dimension with Undefined classes metric" ;
+		rdfs:label	"hasUndefinedClassesMetric" ;
 		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:UndefinedClassesOrPropertiesMetric .
+		rdfs:range	dqm:UndefinedClassesMetric .
+		
+	dqm:hasUndefinedPropertiesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Consistency Dimension with Undefined  properties metric" ;
+		rdfs:label	"hasUndefinedPropertiesMetric" ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:UndefinedPropertiesMetric .
 		
 	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Property ;

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
->
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
   <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#hasHighThroughputMetric">
     <rdfs:label>Performance has high throughput metric</rdfs:label>
     <rdfs:domain rdf:resource="http://www.diachron-fp7.eu/dqm#Performance"/>
@@ -27,11 +26,19 @@
     <rdfs:label>Accessibility has availability dimension</rdfs:label>
     <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasDimension"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#hasUndefinedClassesOrPropertiesMetric">
-    <rdfs:range rdf:resource="http://www.diachron-fp7.eu/dqm#UndefinedClassesOrPropertiesMetric"/>
+  <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#hasUndefinedPropertiesMetric">
+    <rdfs:range rdf:resource="http://www.diachron-fp7.eu/dqm#UndefinedPropertiesMetric"/>
     <rdfs:domain rdf:resource="http://www.diachron-fp7.eu/dqm#Consistency"/>
-    <rdfs:comment>Links Consistency Dimension with Undefined classes or properties metric</rdfs:comment>
-    <rdfs:label>hasUndefinedClassesOrPropertiesMetric</rdfs:label>
+    <rdfs:comment>Links Consistency Dimension with Undefined or properties metric</rdfs:comment>
+    <rdfs:label>hasUndefinedPropertiesMetric</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
+  </rdf:Description>
+   <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#hasUndefinedClassesMetric">
+    <rdfs:range rdf:resource="http://www.diachron-fp7.eu/dqm#UndefinedClassesMetric"/>
+    <rdfs:domain rdf:resource="http://www.diachron-fp7.eu/dqm#Consistency"/>
+    <rdfs:comment>Links Consistency Dimension with Undefined classes  metric</rdfs:comment>
+    <rdfs:label>hasUndefinedClassesMetric</rdfs:label>
     <rdfs:subPropertyOf rdf:resource="http://purl.org/eis/vocab/daq#hasMetric"/>
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
   </rdf:Description>
@@ -435,9 +442,15 @@
     <rdfs:label>Amount of triples metric</rdfs:label>
     <rdfs:comment>Counts the total number of triples present in the dataset</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#UndefinedClassesOrPropertiesMetric">
-    <rdfs:comment>Detects undefined classes and properties</rdfs:comment>
-    <rdfs:label>Undefined classes or properties metric</rdfs:label>
+  <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#UndefinedClassesMetric">
+    <rdfs:comment>Detects undefined classes </rdfs:comment>
+    <rdfs:label>Undefined classes metric</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+   <rdf:Description rdf:about="http://www.diachron-fp7.eu/dqm#UndefinedPropertiesMetric">
+    <rdfs:comment>Detects undefined properties</rdfs:comment>
+    <rdfs:label>Undefined properties metric</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://purl.org/eis/vocab/daq#Metric"/>
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
   </rdf:Description>

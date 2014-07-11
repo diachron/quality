@@ -8,47 +8,167 @@
 
 # Classes
 qr:QualityReport a rdfs:Class ;
-	rdfs:comment "Represents a report on the problems detected during the assessment of quality on a dataset" ;
+	rdfs:comment "Represents a report on the problems detected during the assessment of quality on a dataset." ;
 	rdfs:label "Quality Report" .
 	
 qr:QualityProblem a rdfs:Class ;
-	rdfs:comment "Represents a quality problem detected during the assessment of quality metrics on triples" ;
+	rdfs:comment "Represents a quality problem detected during the assessment of quality metrics on triples." ;
 	rdfs:label "Quality Problem" .
 	
-qr:QualityProblem a rdfs:Class ;
-	rdfs:comment "Represents a quality problem detected during the assessment of quality metrics on triples" ;
-	rdfs:label "Quality Problem" .
-
-qr:MalformedDatatypeLiterals a rdfs:Class ;
+qr:CleaningRecommendation a rdfs:Class ;
+	rdfs:comment "Represents recommendation for how to solve the corresponding quality problem." ;
+	rdfs:label "Cleaning Suggestion" .
+	
+qr:MalformedDatatypeLiteralsProblem a rdfs:Class ;
 	rdfs:subClassOf qr:QualityProblem ;
-	rdfs:comment "Represents a kind of quality problems in which value is not consistent with data type" ;
-	rdfs:label "Malformed Datatype literals" . 
+	rdfs:comment "Represents a kind of quality problems in which literal value is not consistent with defined data type" ;
+	qr:problemDescription "Literal value is not consistent with the defined data type.";
+	rdfs:label "Malformed Datatype literals Problem" . 
+	
+qr:MalformedDatatypeLiteralsRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation ;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Parse or convert literal into the value space of the data type." ;
+	rdfs:label "Malformed Datatype literals Recommendation" .
 
-qr:IncompatibleDatatypeRange a rdfs:Class ;
+qr:IncompatibleDatatypeRangeProblem a rdfs:Class ;
 	rdfs:subClassOf qr:QualityProblem ;
-	rdfs:comment "Represents a kind of quality problems in which range of data type is not consistent with object's data type" ;
-	rdfs:label "Incompatible Datatype Range " . 
+	rdfs:comment "Represents a kind of quality problems in which literal value is not consistent with data type defined by property range" ; 
+	qr:problemDescription "Literal value is not consistent with data type defined by property range" ;
+	rdfs:label "Incompatible Datatype Range Problem " . 
+	
+qr:IncompatibleDatatypeRangeRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation ;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Parse or convert the literal value into the value space of the range datatype" ;
+	rdfs:label "Incompatible Datatype Range Recommendation " .
 
-qr:HomogeneousDatatypes a rdfs:Class ;
+qr:HomogeneousDatatypesProblem a rdfs:Class ;
 	rdfs:subClassOf qr:QualityProblem ;
-	rdfs:comment "Represents a kind of quality problems in which data type are not Homogeneous" ;
-	rdfs:label "Homogeneous Datatype " . 
+	qr:problemDescription "Data type of literals corresponding to the same property is not homogeneous" ;
+	rdfs:comment "Represents a kind of quality problems in which data type are not homogeneous" ;
+	rdfs:label "Homogeneous Datatype Problem " . 
+	
+qr:HomogeneousDatatypesRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation ;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Parse or convert literal values to unique data type" ;
+	rdfs:label "Homogeneous Datatype Recommendation " . 
 
-qr:MisplacedClassesOrProperties a rdfs:Class ;
+qr:MisplacedClassesOrPropertiesProblem a rdfs:Class ;
 	rdfs:subClassOf qr:QualityProblem ;
-	rdfs:comment "Represents a kind of quality problems in which classes or properties are not places properly" ;
-	rdfs:label "Misplaced classes or properties " . 
+	rdfs:comment "Represents a kind of quality problems in which classes or properties are not places properly." ;
+	rdfs:label "Misplaced classes or properties Problem " . 
 
-qr:MisuseOwlDatatypeOrObjectProperties a rdfs:Class ;
+qr:MisuseOwlDatatypeOrObjectPropertiesProblem a rdfs:Class ;
 	rdfs:subClassOf qr:QualityProblem ;
-	rdfs:comment "Represents a kind of quality problems in which owl classes or owl properties are not used properly" ;
-	rdfs:label "Misuse Owl Datatype Or Object Properties " .
+	rdfs:comment "Represents a kind of quality problems in which owl classes or owl properties are not used properly." ;
+	rdfs:label "Misuse Owl Datatype Or Object Properties Problem" .
 
-qr:UndefinedClassesOrProperties a rdfs:Class ;
+qr:UndefinedClassesProblem a rdfs:Class ;
 	rdfs:subClassOf qr:QualityProblem ;
+	qr:problemDescription "Class is not defined." ;
+	rdfs:comment "Represents a kind of quality problems in which classes are not defined" ;
+	rdfs:label "Undefined Classes Problem" .
+	
+qr:UndefinedClassesRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;	
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Please define the class" ;
+	rdfs:label "Undefined Classes Recommendation" .
+	
+qr:UndefinedPropertiesProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	qr:problemDescription "Property is not defined." ;
 	rdfs:comment "Represents a kind of quality problems in which classes or properties are not defined" ;
-	rdfs:label "Undefined Classes Or Properties " .
+	rdfs:label "Undefined Properties Problem".
+	
+qr:UndefinedPropertiesRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Please define the property." ;
+	rdfs:label "Undefined Properties Recommendation".
+	
+qr:WhitespaceInAnnotationProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	qr:problemDescription "Literal value contains white spaces";
+	rdfs:comment "Represents a kind of quality problems in which object in annotation property contains white spaces." ;
+	rdfs:label "Whitespace in Annotation Problem".
+	
+qr:WhitespaceInAnnotationRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Remove white spaces from the literal value" ;
+	rdfs:label "Whitespace in Annotation Recommendation".
+	
+qr:EmptyAnnotationValueProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which literal value in annotation property is empty." ;
+	rdfs:label "Empty Annotation Value Problem".
+	
+qr:EmptyAnnotationValueRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Remove the triple or add literal value" ;
+	rdfs:label "Empty Annotation Value Recommendation".
+	
+qr:LabelsUsingCapitalsProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which object value in label property uses a bad style of capitalization." ;
+	rdfs:label "Labels Using Capitals Problem".
+	
+qr:LabelsUsingCapitalsRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Change the capitalization of the literal";
+	rdfs:label "Labels Using Capitals Recommendation".
+	
+qr:BlankNodeUsageProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems in which blank nodes are used in subject or object position." ;
+	rdfs:label "Blank Node Usage Problem".
+	
+qr:BlankNodeUsageRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Assign an URI to the node";
+	rdfs:label "Blank Node Usage Recommendation".
 
+qr:RDFAccessibilityProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems when RDF can not be accessed." ;
+	rdfs:label "RDF Accessibility Problem".
+	
+qr:RDFAccessibilityRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Check the path to RDF dump or remove the triple";
+	rdfs:label "RDF Accessibility Recommendation".
+	
+qr:SPARQLAccessibilityProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Represents a kind of quality problems when SPARQL Endpoint can not be accessed." ;
+	rdfs:label "SPARQL Accessibility Problem".
+	
+qr:SPARQLAccessibilityRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Check the SPARQL Endpoint  URI or remove the triple";
+	rdfs:label "SPARQL Accessibility Recommendation".
+		
+qr:DefinedOntologyAuthorProblem a rdfs:Class ;
+	rdfs:subClassOf qr:QualityProblem ;
+	rdfs:comment "Identifies when an ontology author is not defined." ;
+	rdfs:label "Defined Ontology Author Problem".	
+	
+		
+qr:DefinedOntologyAuthorRecommendation a rdfs:Class ;
+	rdfs:subClassOf qr:CleaningRecommendation;
+	rdfs:comment "Represents recommendation of how to solve the corresponding quality problem";
+	qr:recommedation "Define the ontology author";
+	rdfs:label "Defined Ontology Author Recommendation".	
+	
+	
 # Properties
 qr:computedOn a rdf:Property ;
 	rdfs:comment "Represents the dataset URI on which quality metrics where computed" ;
@@ -73,3 +193,24 @@ qr:problematicThing a rdf:Property;
 	rdfs:domain qr:QualityProblem;
 	rdfs:label "affects";
 	rdfs:range rdfs:Resource.
+	
+qr:aplicableTo a rdf:Property ;
+	rdfs:comment "Represents the relation between cleaning recommendation and quality problem." ;
+	rdfs:domain qr:CleaningRecommendation ;
+	rdfs:label "aplicableTo" ;
+	rdfs:range qr:QualityProblem.
+	
+qr:problemDescription
+		a	rdf:Property, owl:DatatypeProperty ;
+		rdfs:label	"problemDescription" ;
+		rdfs:comment	"Contains brief summary of the quality problem that is presented to the user." ;
+		rdfs:domain	qr:QualityProblem;
+		rdfs:range	 xsd:string.
+		
+qr:recommedation
+		a	rdf:Property, owl:DatatypeProperty ;
+		rdfs:label	"recommendation" ;
+		rdfs:comment	"Contains recommendation of how to solve the corresponding quality problem." ;
+		rdfs:domain	qr:CleaningRecommendation;
+		rdfs:range	 xsd:string.
+		
