@@ -196,7 +196,7 @@ public class UndefinedClasses extends AbstractQualityMetric {
            
            Model model = ModelFactory.createDefaultModel();
            
-           Resource qp = QR.UndefinedClassesOrProperties;
+           Resource qp = QR.UndefinedClassesProblem;
            qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
            
            for(int i=0; i < this.problemList.size(); i++){

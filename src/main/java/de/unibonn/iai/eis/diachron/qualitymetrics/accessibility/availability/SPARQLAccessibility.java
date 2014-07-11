@@ -1,6 +1,9 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -12,8 +15,10 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
+import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.qualitymetrics.QualityMetric;
+import de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability.EmptyAnnotationValue;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 
@@ -26,6 +31,13 @@ import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 public class SPARQLAccessibility extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.EndPointAvailabilityMetric;
+	
+	static Logger logger = Logger.getLogger(EmptyAnnotationValue.class);
+	
+	/**
+	 * list of problematic quads
+	 */
+	protected List<Quad> problemList = new ArrayList<Quad>();
 	
 	double metricValue = 0.0;
 
@@ -45,7 +57,12 @@ public class SPARQLAccessibility extends AbstractQualityMetric {
 			if (results.hasNext())
 				metricValue = 1;
 			else
+			{
 				metricValue = 0;
+				problemList.add(quad);
+				
+			}
+			
 
 			// Release the resources used to query
 			qexec.close();
@@ -61,8 +78,24 @@ public class SPARQLAccessibility extends AbstractQualityMetric {
 		return this.METRIC_URI;
 	}
 
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric#
+	 * getQualityProblems()
+	 */
+	@Override
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			tmpProblemList = new ProblemList<Quad>(this.problemList);
+		} catch (ProblemListInitialisationException problemListInitialisationException) {
+			logger.debug(problemListInitialisationException.getStackTrace());
+			logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;
 	}
+	
+	
 }

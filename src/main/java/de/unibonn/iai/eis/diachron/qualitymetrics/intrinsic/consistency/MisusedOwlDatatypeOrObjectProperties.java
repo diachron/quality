@@ -292,7 +292,7 @@ public class MisusedOwlDatatypeOrObjectProperties extends AbstractQualityMetric 
            
            Model model = ModelFactory.createDefaultModel();
            
-           Resource qp = QR.MisuseOwlDatatypeOrObjectProperties;
+           Resource qp = QR.MisuseOwlDatatypeOrObjectPropertiesProblem;
            qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
            
            for(int i=0; i < this.problemList.size(); i++){
