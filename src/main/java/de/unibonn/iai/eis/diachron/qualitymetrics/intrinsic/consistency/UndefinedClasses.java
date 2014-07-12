@@ -83,17 +83,22 @@ public class UndefinedClasses extends AbstractQualityMetric {
 						
 				String tmpURI = predicate.getURI();
 			
+
               
                 if (tmpURI != null && 
                                 (tmpURI.equals(RDF.type.toString()) || 
                                 tmpURI.equals(RDFS.domain.toString()) ||
                                 tmpURI.equals(RDFS.range.toString()) ||
                                 tmpURI.equals(RDFS.subPropertyOf.toString())||
+                                tmpURI.equals(RDFS.subClassOf.toString())||
                                 tmpURI.equals(OWL.allValuesFrom.toString())||
+                                tmpURI.equals(OWL.unionOf.toString())||
+                                tmpURI.equals(OWL.intersectionOf.toString())||
                                 tmpURI.equals(OWL.someValuesFrom.toString())||
                                 tmpURI.equals(OWL.equivalentClass.toString())||                               		
                                 tmpURI.equals(OWL.complementOf.toString())||	
                                 tmpURI.equals(OWL.oneOf.toString())||
+                                tmpURI.equals(OWL.complementOf.toString())||
                                 tmpURI.equals(OWL.disjointWith.toString())
                                 		) ){
                 
