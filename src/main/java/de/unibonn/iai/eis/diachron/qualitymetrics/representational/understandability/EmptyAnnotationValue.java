@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,14 +15,16 @@ import org.apache.log4j.Logger;
 import org.apache.xerces.util.URI;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.ProblemList;
 import de.unibonn.iai.eis.diachron.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
-
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+import de.unibonn.iai.eis.diachron.vocabularies.QR;
 
 /**
  * EmptyAnnotationValue consider the following widely used annotation properties
@@ -223,5 +226,27 @@ public class EmptyAnnotationValue extends AbstractQualityMetric {
 		}
 		return tmpProblemList;
 	}
+	
+	/**
+     * Writes problematic instances to given stream
+     * 
+     * @param inputSource - name/URI of source
+     * @param outputStream - stream where instances are to be written
+     */
+    public void outProblematicInstancesToStream(String inputSource, OutputStream outputStream) {
+           
+           Model model = ModelFactory.createDefaultModel();
+           
+           Resource qp = QR.EmptyAnnotationValueProblem;
+           qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
+           
+           for(int i=0; i < this.problemList.size(); i++){
+                   model.add(qp,QR.problematicThing,this.problemList.get(i).toString());     
+           }
+           
+           model.add(QR.QualityReport,QR.computedOn,inputSource);
+           model.add(QR.QualityReport,QR.hasProblem,qp);
+           model.write(outputStream);
+    }
 
 }

@@ -4,6 +4,7 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.UnknownHostException;
@@ -12,6 +13,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -24,6 +27,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandabi
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnector;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
+import de.unibonn.iai.eis.diachron.vocabularies.QR;
 import de.unibonn.iai.eis.diachron.vocabularies.VOID;
 
 /**
@@ -91,4 +95,26 @@ public class RDFAccessibility extends AbstractQualityMetric {
 		}
 		return tmpProblemList;
 	}
+	
+	/**
+     * Writes problematic instances to given stream
+     * 
+     * @param inputSource - name/URI of source
+     * @param outputStream - stream where instances are to be written
+     */
+    public void outProblematicInstancesToStream(String inputSource, OutputStream outputStream) {
+           
+           Model model = ModelFactory.createDefaultModel();
+           
+           Resource qp = QR.RDFAccessibilityProblem;
+           qp.addProperty(QR.isDescribedBy, this.METRIC_URI);
+           
+           for(int i=0; i < this.problemList.size(); i++){
+                   model.add(qp,QR.problematicThing,this.problemList.get(i).toString());     
+           }
+           
+           model.add(QR.QualityReport,QR.computedOn,inputSource);
+           model.add(QR.QualityReport,QR.hasProblem,qp);
+           model.write(outputStream);
+    }
 }
