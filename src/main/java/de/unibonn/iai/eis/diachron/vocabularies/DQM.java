@@ -79,7 +79,7 @@ public class DQM {
      */
     public static final Property hasEndPointAvailabilityMetric = m_model.createProperty( "http://www.diachron-fp7.eu/dqm#hasEndPointAvailabilityMetric" );
     
-    /** <p>Links Consistency Dimension with ‘entities as members of disjoint classes’ 
+    /** <p>Links Consistency Dimension with ï¿½entities as members of disjoint classesï¿½ 
      *  Metric (Entities as Members of Disjoint Classes Metric belongs to the Consistency 
      *  Dimension)</p>
      */
@@ -177,8 +177,8 @@ public class DQM {
      */
     public static final Property hasRDFAvailabilityMetric = m_model.createProperty( "http://www.diachron-fp7.eu/dqm#hasRDFAvailabilityMetric" );
     
-    /** <p>Links Representational Category with Understandability DimensionLinks Representational 
-     *  Category with Representational-Conciseness Dimension</p>
+    /** <p>Links Representational Category with Representational-Conciseness DimensionLinks 
+     *  Representational Category with Understandability Dimension</p>
      */
     public static final Property hasRepresentationalConcisenessDimension = m_model.createProperty( "http://www.diachron-fp7.eu/dqm#hasRepresentationalConcisenessDimension" );
     
