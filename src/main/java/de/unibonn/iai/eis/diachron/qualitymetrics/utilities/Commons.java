@@ -28,6 +28,6 @@ public class Commons {
 	}
 	
 	public static RDFNode generateRDFBlankNode(){
-		return ModelFactory.createDefaultModel().asRDFNode(Node.ANY);
+		return ModelFactory.createDefaultModel().asRDFNode(Node.NULL);
 	}
 }
