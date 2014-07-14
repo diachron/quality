@@ -3,11 +3,14 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.utilities;
 import java.util.Calendar;
 import java.util.UUID;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.NodeFactory;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.impl.ModelCom;
 
 public class Commons {
 
@@ -28,6 +31,11 @@ public class Commons {
 	}
 	
 	public static RDFNode generateRDFBlankNode(){
-		return ModelFactory.createDefaultModel().asRDFNode(Node.NULL);
+		return ModelFactory.createDefaultModel().asRDFNode(NodeFactory.createAnon());
+	}
+	
+	public static RDFNode asRDFNode(Node n){
+		ModelCom mc = new ModelCom(Graph.emptyGraph);
+		return mc.asRDFNode(n);
 	}
 }
