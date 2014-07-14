@@ -1,0 +1,53 @@
+# ... prefixes
+ 
+# ... dataset triples
+
+ex:qualityGraph1 a daq:QualityGraph ;
+	qb:structure daq:dsd . 
+	
+ex:qualityGraph1 {
+
+	# ... quality triples
+	ex:accessibilityCategory a dqm:Accessibility ;
+		dqm:hasAvailabilityDimension ex:availabilityDimension .
+	
+	ex:availabilityDimension a dqm:Availability ;
+		dqm:hasEndPointAvailabilityMetric ex:endPointMetric ;
+		dqm:hasRDFAvailabilityMetric ex:rdfAvailMetric .
+	
+	ex:endPointMetric a dqm:EndPointAvailabilityMetric ;
+		daq:hasObservation ex:obs1, ex:obs2 .
+			
+	ex:obs1 a qb:Observation ;
+		daq:computedOn <efo-2.43> ;
+		daq:dateComputed "2014-01-23T14:53:00"^^xsd:dateTime ;
+		daq:value "1.0"^^xsd:double ;
+		daq:metric ex:endPointMetric ;
+		qb:dataSet ex:qualityGraph1 .
+	
+	ex:obs2 a qb:Observation ;
+		daq:computedOn <efo-2.44> ;
+		daq:dateComputed "2014-01-25T14:53:00"^^xsd:dateTime ;
+		daq:value "1.0"^^xsd:double ;
+		daq:metric ex:endPointMetric ;
+		qb:dataSet ex:qualityGraph1 .
+	
+	ex:rdfAvailMetric a dqm:RDFAvailabilityMetric ;
+			daq:hasObservation ex:obs3, ex:obs4 .
+				
+	ex:obs3 a qb:Observation ;
+		daq:computedOn <efo-2.43> ;
+		daq:dateComputed "2014-01-23T14:53:01"^^xsd:dateTime ;
+		daq:value "1.0"^^xsd:double ;
+		daq:metric ex:rdfAvailMetric ;
+		qb:dataSet ex:qualityGraph1 .
+	
+	ex:obs4 a qb:Observation ;
+		daq:computedOn <efo-2.44> ;
+		daq:dateComputed "2014-01-25T14:53:01"^^xsd:dateTime ;
+		daq:value "0.0"^^xsd:double ;
+		daq:metric ex:rdfAvailMetric ;
+		qb:dataSet ex:qualityGraph1 .
+		
+	# ... more quality triples
+}
