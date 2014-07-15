@@ -53,7 +53,7 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 		
 			
 		String versionsQ = "select distinct ?oversion ?nversion "
-                + "FROM <http://detected_changes/copy>"
+			    + "FROM <"+VirtuosoHandler.detectedChangesGraph+">"
                 + " WHERE {"
                 + "?instance co:new_version ?nversion." 
                 + "?instance co:old_version ?oversion." 
@@ -92,7 +92,7 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 					logger.trace("Computing total number of changes and versions");
 					changesTotal = changesTotal + this.evohand.countSimpleChanges(rv[0].stringValue(),rv[1].stringValue());			
 					versionsNO ++;
-					//System.out.println("-----------------------------");
+					System.out.println("versionsNO-----------------------------"+versionsNO);
 					//results.add(rv);
 				}	
 				
@@ -115,8 +115,10 @@ public class AverageVolatility implements EvolutionQualityMetricInterface {
 
 	
 	public double metricValue() {
-	
+	if(versionsNO > 1){
     retValue = changesTotal / (versionsNO-1);
+	}
+	else retValue = 0;
     logger.trace("Returning AverageVolatility Metric Value (Ratio): " +retValue);
 	return retValue;
 	}

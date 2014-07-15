@@ -3,6 +3,7 @@ package forth.diachron.qualitymetrics;
 import org.openrdf.repository.RepositoryConnection;
 
 import forth.diachron.connectivity.VirtuosoHandler;
+import forth.diachron.qualitymetrics.dynamicity.volatility.VirtuosoTest;
 
 /**
  * @author Ioannis Chrysakis
@@ -12,6 +13,7 @@ import forth.diachron.connectivity.VirtuosoHandler;
 public class EvolutionGenHandler {
 private VirtuosoHandler virhan = new VirtuosoHandler();
 private SesameQueryHandler seshan = new SesameQueryHandler();
+
 	
 	public int countSC (){
 		return countSimpleChanges ("","");
@@ -27,7 +29,7 @@ private SesameQueryHandler seshan = new SesameQueryHandler();
 		}
 		
 		String sparqlQuery = "select ?instance ?simple_change ?nversion ?oversion "
-                + "FROM <http://detected_changes/copy>"
+                + "FROM <"+VirtuosoHandler.detectedChangesGraph+">"
                 + " where {"
                 + "?instance a ?simple_change." 
                 + "?simple_change rdfs:subClassOf co:Simple_Change." 

@@ -65,7 +65,7 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 		double cur_sum = 0.0;
 		
 		String versionsQ = "select distinct ?oversion ?nversion "
-                + "FROM <http://detected_changes/copy>"
+			    + "FROM <"+VirtuosoHandler.detectedChangesGraph+">"
                 + " WHERE {"
                 + "?instance co:new_version ?nversion." 
                 + "?instance co:old_version ?oversion." 
@@ -108,16 +108,17 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 					
 					
 					// Fetching weights to each pair
-					
-					
-				      Object weig = it.next();
-				      cur_weight = new Double(weig.toString());
-				      System.out.println("--------------------------------------------------------");
-				      cur_sum =  cur_weight* this.evohand.countSimpleChanges(rv[0].stringValue(),rv[1].stringValue());
+					Object weig; 
+					  if(it.hasNext()){
+				       weig = it.next();
+				       cur_weight = new Double(weig.toString());
+				       System.out.println("--------------------------------------------------------");
+				       cur_sum =  cur_weight* this.evohand.countSimpleChanges(rv[0].stringValue(),rv[1].stringValue());
 				      //System.out.println("cur_weight:"+cur_weight);
 				     // System.out.println("cur_sum:"+cur_sum);
 				      aggregSChanges = aggregSChanges + cur_sum;			   
 				      versionsNO ++;
+					  }
 				}
 				      
 
@@ -145,8 +146,12 @@ public class WeightedVolatility implements EvolutionQualityMetricInterface {
 
 	
 	public double metricValue() {
-	
-    retValue = aggregSChanges / (versionsNO-1);
+		if(versionsNO > 1){
+			retValue = aggregSChanges / (versionsNO-1);
+		}
+		else{
+			retValue = 0;
+		}
     logger.trace("Returning AverageVolatility Metric Value (Ratio): " +retValue);
 	return retValue;
 	}
