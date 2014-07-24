@@ -25,6 +25,7 @@ public class LowBlankNodeUsage extends AbstractQualityMetric {
 	
 	/**
 	 * Simply checks if the subject or the object of a quad is a blank node.
+	 * TODO: fix, since we are streaming triple by triple - the same blank node might be added more than once!
 	 */
 	@Override
 	public void compute(Quad quad) {

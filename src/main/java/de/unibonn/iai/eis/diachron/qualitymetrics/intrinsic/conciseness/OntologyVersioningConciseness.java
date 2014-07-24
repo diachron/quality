@@ -14,9 +14,7 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 /**
  * @author jeremy
  *
- * This checks that an ontology has only a single instance of <owl:ontologyVersion>.
- * <owl:ontologyVersion> property is not defined in OWL but it is a property defined
- * by EBI, where the domain is an owl:Ontology and the range is an xsd:string.
+ * This checks that an ontology has only a single instance of <owl:versionInfo>.
  * 
  * This is a specific property required for the EBI usecase.
  */
@@ -25,7 +23,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 	private final Resource METRIC_URI = DQM.OntologyVersionConcisenessMetric;
 	private HashMap<Node, Integer> ontologyInstances = new HashMap<Node, Integer>();
 	
-	private final String ONTOLOGY_VERSION = "http://www.w3.org/2002/07/owl#versionInfo";
+	private final String ONTOLOGY_VERSION = OWL.versionInfo.getURI();
 	
 	
 	/**
@@ -54,6 +52,7 @@ public class OntologyVersioningConciseness extends AbstractQualityMetric {
 
 	/**
 	 * The metric value will return the number of owl:ontologyVersion instances per ontology
+	 * TODO: this is incorrect (23/7/2014) - should return 1 if only one version exists, 0 if more (maybe true/false is better?)
 	 */
 	@Override
 	public double metricValue() {
