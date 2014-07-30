@@ -12,7 +12,7 @@ import virtuoso.sesame2.driver.VirtuosoRepository;
 public class VirtuosoHandler {
 
 	// Virtuoso DB info
-	public static final String VIRTUOSO_INSTANCE = "83.212.122.116";
+	public static final String VIRTUOSO_INSTANCE = "83.212.99.102"; //139.91.183.65
 	public static final int VIRTUOSO_PORT = 1111;
 	public static final String VIRTUOSO_USERNAME = "dba";
 	public static final String VIRTUOSO_PASSWORD = "dba";
