@@ -17,11 +17,11 @@ public interface ComplexQualityMetric extends QualityMetric {
 	 * If pre-processing is required, it should be done
 	 * here rather than in the constructor.
 	 */
-	 void before();
+	 void before(Object ... args);
 	
 	/**
 	 * Implement this method if the quality metric
 	 * requires any post-processing
 	 */
-	void after();
+	void after(Object ... args);
 }
