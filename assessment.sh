@@ -10,7 +10,7 @@ if [ "$1" == build ] ; then
 	cp src/main/resources/vocabularies/dqm/dqm.trig Luzzu/luzzu-communications/externalvocab/;
 	echo "Compiling Luzzu Quality Framework";
 	cd Luzzu/;
-	mvn clean compile;
+	mvn clean install;
 	echo "Build Finished"
 elif [ "$1" == run ] ; then
 	cd Luzzu/luzzu-communications/;

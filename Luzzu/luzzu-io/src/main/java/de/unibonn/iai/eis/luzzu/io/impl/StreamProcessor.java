@@ -200,10 +200,10 @@ public class StreamProcessor implements IOProcessor {
 		}
 		
 		try {
-			File theDir = new File("qualityMetadata");
+			File theDir = new File(System.getProperty("user.dir")+"/qualityMetadata");
 			 if (!theDir.exists()) theDir.mkdir();
 			
-			File f = new File("qualityMetadata/"+Commons.generateURI().toString().replace(":", ""));
+			File f = new File("qualityMetadata/"+Commons.generateURI().toString().replace(":", "")+".trig");
 			if (!f.exists()) f.createNewFile();
 			
 			OutputStream out = new FileOutputStream(f);
