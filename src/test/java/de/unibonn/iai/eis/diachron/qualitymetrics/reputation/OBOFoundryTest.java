@@ -15,6 +15,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.OntologyHijackingTest;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.reputation.OBOFoundry;
 
 /**
  * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.reputation.OBOFoundry(com.hp.hpl.jena.sparql.core.Quad)}.
@@ -39,7 +40,7 @@ public class OBOFoundryTest {
         }
         
         /**
-         * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.reputation.OBOFoundry#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+         * Test method for {@link eu.diachron.qualitymetrics.reputation.OBOFoundry#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
          * Total not Reputable Resources : 358815
          * Total Resources : 438133

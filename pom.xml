@@ -41,6 +41,10 @@
 				<checksumPolicy>fail</checksumPolicy>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>dropbox</id>
+			<url>http://dl.dropboxusercontent.com/u/5895290/mvn-repo</url>
+		</repository>
 	</repositories>
 
 
@@ -66,6 +70,17 @@
 			<version>1.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>de.unibonn.iai.eis</groupId>
+			<artifactId>luzzu-assessment</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.unibonn.iai.eis</groupId>
+			<artifactId>luzzu-operations</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Logging -->
 		<dependency>
@@ -93,7 +108,33 @@
 			<artifactId>slf4j-jdk14</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore-nio</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpasyncclient</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpasyncclient-cache</artifactId>
+			<version>4.0.2</version>
+		</dependency>
 	</dependencies>
+
+
 
 	<build>
 		<plugins>
@@ -107,22 +148,8 @@
 								<property name="runtime_classpath" refid="maven.runtime.classpath" />
 								<echo message="Compiling Vocabularies into Classes" />
 								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/daq/daq.trig -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n DAQ" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/dqm/dqm.trig -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n DQM" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-										<arg line="--inference -i src/main/resources/vocabularies/void/void.ttl -e TTL  --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n VOID" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/qr/qr.trig -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n QR" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-										<arg line="--inference -i src/main/resources/vocabularies/cube/cube.ttl -e TTL  --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n CUBE" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/cube/sdmx-attribute.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.vocabularies -o src/main/java -n SDMXATTRIBUTE	" />
+									<arg
+										line="-i src/main/resources/vocabularies/dqm/dqm.trig -e N3 --inference --package eu.diachron.semantics.vocabulary -o src/main/java -n DQM" />
 								</java>
 							</tasks>
 						</configuration>

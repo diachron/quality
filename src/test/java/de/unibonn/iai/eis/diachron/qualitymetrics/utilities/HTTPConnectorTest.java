@@ -14,6 +14,8 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
+import eu.diachron.qualitymetrics.utilities.HTTPConnector;
+
 public class HTTPConnectorTest extends Assert{
 
 	private Model m = ModelFactory.createDefaultModel();

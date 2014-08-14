@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.amountofdata.AmountOfTriples;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.contextual.amountofdata.AmountOfTriples;
 
 public class AmountofTriplesTest extends Assert{
 	

@@ -14,8 +14,9 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.qualitymetrics.dynamicity.currency.TemporalDataAnalyzer;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.dynamicity.currency.TemporalDataAnalyzer;
+import eu.diachron.qualitymetrics.dynamicity.volatility.TimeValidityInterval;
 
 public class TimeValidityIntervalTest extends Assert {
 	

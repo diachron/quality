@@ -19,10 +19,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.VocabularyReader;
+import eu.diachron.qualitymetrics.intrinsic.consistency.UndefinedClasses;
+import eu.diachron.qualitymetrics.intrinsic.consistency.UndefinedProperties;
+import eu.diachron.qualitymetrics.utilities.VocabularyReader;
 
 /**
- * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.UndefinedClasses#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+ * Test class for {@link eu.diachron.qualitymetrics.intrinsic.consistency.UndefinedClasses#compute(com.hp.hpl.jena.sparql.core.Quad)}.
  * 
  * @author Muhammad Ali Qasmi
  * @date 11th March 2014

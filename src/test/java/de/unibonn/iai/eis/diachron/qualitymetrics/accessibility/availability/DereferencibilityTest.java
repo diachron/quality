@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.CommonDataStructures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.accessibility.availability.Dereferencibility;
+import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 
 public class DereferencibilityTest extends Assert{
 	

@@ -10,6 +10,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.intrinsic.consistency.EntitiesAsMembersOfDisjointClasses;
 
 public class EntitiesAsMembersOfDisjointClassesTest extends Assert{
 	

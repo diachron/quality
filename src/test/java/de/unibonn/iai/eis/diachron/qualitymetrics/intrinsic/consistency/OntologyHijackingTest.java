@@ -13,6 +13,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.intrinsic.consistency.OntologyHijacking;
 
 /**
  * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.OntologyHijacking(com.hp.hpl.jena.sparql.core.Quad)}.
@@ -39,7 +40,7 @@ public class OntologyHijackingTest extends Assert{
         }
 
         /**
-         * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency.OntologyHijacking#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+         * Test method for {@link eu.diachron.qualitymetrics.intrinsic.consistency.OntologyHijacking#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
          * Test Case explanation
          * 

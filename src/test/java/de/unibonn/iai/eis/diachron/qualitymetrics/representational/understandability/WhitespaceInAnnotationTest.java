@@ -15,6 +15,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.representational.understandability.WhitespaceInAnnotation;
 
 /**
  * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability.WhitespaceInAnnotation(com.hp.hpl.jena.sparql.core.Quad)}.

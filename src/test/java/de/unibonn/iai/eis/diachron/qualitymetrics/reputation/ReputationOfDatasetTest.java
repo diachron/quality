@@ -14,6 +14,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.reputation.ReputationOfDataset;
 
 /**
  * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.reputation.ReputationOfDataset(com.hp.hpl.jena.sparql.core.Quad)}.
@@ -30,7 +31,7 @@ public class ReputationOfDatasetTest {
         @Before
         public void setUp() throws Exception {
                 BasicConfigurator.configure();
-                reputationOfDataset.loadReputableSources();
+//                reputationOfDataset.loadReputableSources();
                 loader.loadDataSet(DataSetMappingForTestCase.ReputationOfDataset);
         }
 
@@ -39,7 +40,7 @@ public class ReputationOfDatasetTest {
         }
         
         /**
-         * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.reputation.ReputationOfDataset#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+         * Test method for {@link eu.diachron.qualitymetrics.reputation.ReputationOfDataset#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
          * Total Resources [Count = 27]
          * Total Not Reputable Resources [Count = 20]

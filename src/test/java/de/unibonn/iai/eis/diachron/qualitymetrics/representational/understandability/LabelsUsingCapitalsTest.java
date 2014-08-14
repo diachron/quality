@@ -15,6 +15,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals;
 
 /**
  * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals(com.hp.hpl.jena.sparql.core.Quad)}.
@@ -49,7 +50,7 @@ public class LabelsUsingCapitalsTest extends Assert{
         }
 
         /**
-         * Test method for {@link de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
+         * Test method for {@link eu.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
          * 
          * Case1 => rdfs:label "GreenGoblin"
          *   

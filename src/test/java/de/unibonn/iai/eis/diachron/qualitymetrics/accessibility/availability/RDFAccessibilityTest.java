@@ -3,6 +3,7 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 import java.util.List;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.accessibility.availability.RDFAccessibility;
 
 import org.junit.After;
 import org.junit.Assert;

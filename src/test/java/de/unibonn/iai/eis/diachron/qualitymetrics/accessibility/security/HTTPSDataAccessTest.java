@@ -13,6 +13,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.accessibility.security.HTTPSDataAccess;
 
 public class HTTPSDataAccessTest extends Assert {
 	
