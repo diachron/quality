@@ -83,13 +83,14 @@ public class StreamProcessor implements IOProcessor {
 			this.executor.shutdown();
 		}
 	}
-//	public static void main(String[] args) throws ProcessorNotInitialised{
-//		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-//		String filename = "D:\\Users\\jdebattist\\Desktop\\raw_infobox_properties_en.nq";
-//		
-//		StreamProcessor sp = new StreamProcessor(uri);
-//		sp.setUpProcess();
-//		sp.startProcessing();
-//		sp.cleanUp();
-//	}
+	
+	public static void main(String[] args) throws ProcessorNotInitialised{
+		String uri = "http://dbpedia.org/sparql";
+		//String filename = "D:\\Users\\jdebattist\\Desktop\\raw_infobox_properties_en.nq";
+		
+		StreamProcessor sp = new StreamProcessor(uri);
+		sp.setUpProcess();
+		sp.startProcessing();
+		sp.cleanUp();
+	}
 }

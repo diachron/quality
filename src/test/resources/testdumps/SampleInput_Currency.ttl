@@ -5071,6 +5071,7 @@
     dcterms:description "A place from the TAVO Index";
     dcterms:modified "2014-01-11 12:34:31";
     dcterms:title "Balāwāt";
+    dcterms:subject <http://example.com/subject23>;
     cito:citesAsRelated <http://en.wikipedia.org/wiki/Balawat>;
     skos:altLabel "Balāwāt, Balawat"@arb,
         "Balāwāt, Balawat"@ku,
@@ -5138,6 +5139,7 @@
     dcterms:description "A place name from the TAVO Index (Vol. 2, p. 799)";
     dcterms:modified "11.01.2014 04:55:31";
     dcterms:title "Imgur-Bēl";
+    dcterms:subject <http://example.com/subject23>; 
     cito:cites <http://www.worldcat.org/oclc/32624915>;
     prov:wasDerivedFrom [ rdfs:label "TAVO Index" ] .
 

@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output16"
+    PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="logout::#logout.xhtml" NAME="output"
+    PATH="/logout.xhtml" TARGET="rules:#logout.xhtml" TITLE="logout" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="inicio::#index2.xhtml" NAME="output1"
+    PATH="/index2.xhtml" TARGET="rules:#index2.xhtml" TITLE="inicio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="renuncia::#renunciado.xhtml" NAME="output2"
+    PATH="/renunciado.xhtml" TARGET="rules:#renunciado.xhtml"
+    TITLE="renuncia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoAcademica::#formulario#infoAcademica.xhtml" NAME="output3"
+    PATH="/formulario/infoAcademica.xhtml"
+    TARGET="rules:#formulario#infoAcademica.xhtml" TITLE="infoAcademica" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoDocumento::#formulario#infoDocumento.xhtml" NAME="output7"
+    PATH="/formulario/infoDocumento.xhtml"
+    TARGET="rules:#formulario#infoDocumento.xhtml" TITLE="infoDocumento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="infoEnsayo::#formulario#infoEnsayo.xhtml"
+    NAME="output8" PATH="/formulario/infoEnsayo.xhtml"
+    TARGET="rules:#formulario#infoEnsayo.xhtml" TITLE="infoEnsayo" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoEstadistica::#formulario#infoEstadistica.xhtml"
+    NAME="output9" PATH="/formulario/infoEstadistica.xhtml"
+    TARGET="rules:#formulario#infoEstadistica.xhtml"
+    TITLE="infoEstadistica" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="infoLaboral::#formulario#infoLaboral.xhtml"
+    NAME="output10" PATH="/formulario/infoLaboral.xhtml"
+    TARGET="rules:#formulario#infoLaboral.xhtml" TITLE="infoLaboral" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoCuentaBancaria::#formulario#infoCuentaBancaria.xhtml"
+    NAME="output4" PATH="/formulario/infoCuentaBancaria.xhtml"
+    TARGET="rules:#formulario#infoCuentaBancaria.xhtml"
+    TITLE="infoCuentaBancaria" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPersonal::#formulario#infoPersonal.xhtml" NAME="output11"
+    PATH="/formulario/infoPersonal.xhtml"
+    TARGET="rules:#formulario#infoPersonal.xhtml" TITLE="infoPersonal" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPosgrado::#formulario#infoPosgrado.xhtml" NAME="output12"
+    PATH="/formulario/infoPosgrado.xhtml"
+    TARGET="rules:#formulario#infoPosgrado.xhtml" TITLE="infoPosgrado" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPresupuestoColfuturo::#formulario#infoPresupuestoColfuturo.xhtml"
+    NAME="output13" PATH="/formulario/infoPresupuestoColfuturo.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoColfuturo.xhtml"
+    TITLE="infoPresupuestoColfuturo" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPresupuestoPropio::#formulario#infoPresupuestoPropio.xhtml"
+    NAME="output14" PATH="/formulario/infoPresupuestoPropio.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoPropio.xhtml"
+    TITLE="infoPresupuestoPropio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPresupuestoTotal::#formulario#infoPresupuestoTotal.xhtml"
+    NAME="output15" PATH="/formulario/infoPresupuestoTotal.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoTotal.xhtml"
+    TITLE="infoPresupuestoTotal" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="enviarSolicitud::#formulario#enviarSolicitud.xhtml"
+    NAME="output5" PATH="/formulario/enviarSolicitud.xhtml"
+    TARGET="rules:#formulario#enviarSolicitud.xhtml"
+    TITLE="enviarSolicitud" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="infoCandidato::#credito#infoCandidato.xhtml"
+    NAME="output6" PATH="/credito/infoCandidato.xhtml"
+    TARGET="rules:#credito#infoCandidato.xhtml" TITLE="infoCandidato" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoBienesCandidato::#credito#infoBienesCandidato.xhtml"
+    NAME="output18" PATH="/credito/infoBienesCandidato.xhtml"
+    TARGET="rules:#credito#infoBienesCandidato.xhtml"
+    TITLE="infoBienesCandidato" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoCodeudores::#credito#infoCodeudoresColciencias.xhtml"
+    NAME="output19" PATH="/credito/infoCodeudoresColciencias.xhtml"
+    TARGET="rules:#credito#infoCodeudoresColciencias.xhtml"
+    TITLE="infoCodeudores" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="revisarSolicitudesFinComercio::#finComercio#revisarSolicitudes.xhtml"
+    NAME="output20" PATH="/finComercio/revisarSolicitudes.xhtml"
+    TARGET="rules:#finComercio#revisarSolicitudes.xhtml"
+    TITLE="revisarSolicitudesFinComercio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoCandidatoFinComercio::#finComercio#infoCandidato.xhtml"
+    NAME="output21" PATH="/finComercio/infoCandidato.xhtml"
+    TARGET="rules:#finComercio#infoCandidato.xhtml"
+    TITLE="infoCandidatoFinComercio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoBienesCandidatoFinComercio::#finComercio#infoBienesCandidato.xhtml"
+    NAME="output22" PATH="/finComercio/infoBienesCandidato.xhtml"
+    TARGET="rules:#finComercio#infoBienesCandidato.xhtml"
+    TITLE="infoBienesCandidatoFinComercio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoCodeudoresFinComercio::#finComercio#infoCodeudoresColciencias.xhtml"
+    NAME="output23" PATH="/finComercio/infoCodeudoresColciencias.xhtml"
+    TARGET="rules:#finComercio#infoCodeudoresColciencias.xhtml"
+    TITLE="infoCodeudoresFinComercio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoCitaLegalizacion::#legalizacion#infoCitaLegalizacion.xhtml"
+    NAME="output24" PATH="/legalizacion/infoCitaLegalizacion.xhtml"
+    TARGET="rules:#legalizacion#infoCitaLegalizacion.xhtml"
+    TITLE="infoCitaLegalizacion" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPresupuestoDoctorado::#legalizacion#infoPresupuestoDoctorado.xhtml"
+    NAME="output25" PATH="/legalizacion/infoPresupuestoDoctorado.xhtml"
+    TARGET="rules:#legalizacion#infoPresupuestoDoctorado.xhtml"
+    TITLE="infoPresupuestoDoctorado" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="infoPresupuestoIdioma::#legalizacion#infoPresupuestoIdioma.xhtml"
+    NAME="output26" PATH="/legalizacion/infoPresupuestoIdioma.xhtml"
+    TARGET="rules:#legalizacion#infoPresupuestoIdioma.xhtml"
+    TITLE="infoPresupuestoIdioma" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="encuestaLegalizacion::#legalizacion#encuestaCitaLegalizacion.xhtml"
+    NAME="output27" PATH="/legalizacion/encuestaCitaLegalizacion.xhtml"
+    TARGET="rules:#legalizacion#encuestaCitaLegalizacion.xhtml"
+    TITLE="encuestaLegalizacion" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="confirmarCitaIdioma::#legalizacion#confirmarCitaIdioma.xhtml"
+    NAME="output17" PATH="/legalizacion/confirmarCitaIdioma.xhtml"
+    TARGET="rules:#legalizacion#confirmarCitaIdioma.xhtml"
+    TITLE="confirmarCitaIdioma" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="confirmarCitaDoctorado::#legalizacion#confirmarCitaDoctorado.xhtml"
+    NAME="output28" PATH="/legalizacion/confirmarCitaDoctorado.xhtml"
+    TARGET="rules:#legalizacion#confirmarCitaDoctorado.xhtml"
+    TITLE="confirmarCitaDoctorado" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="enviarEstudioCredito::#credito#enviarEstudioCredito.xhtml"
+    NAME="output29" PATH="/credito/enviarEstudioCredito.xhtml"
+    TARGET="rules:#credito#enviarEstudioCredito.xhtml"
+    TITLE="enviarEstudioCredito" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="generarCartaPatrocinio::#formulario#generarCartaPatrocinio.xhtml"
+    NAME="output30" PATH="/formulario/generarCartaPatrocinio.xhtml"
+    TARGET="rules:#formulario#generarCartaPatrocinio.xhtml"
+    TITLE="generarCartaPatrocinio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="estadoSolicitud::#formulario#histEstadoSolicitud.xhtml"
+    NAME="output31" PATH="/formulario/histEstadoSolicitud.xhtml"
+    TARGET="rules:#formulario#histEstadoSolicitud.xhtml"
+    TITLE="estadoSolicitud" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="revisarEnsayosAsignados::#revisoresEnsayo#revisarEnsayosAsignados.xhtml"
+    NAME="output32"
+    PATH="/revisoresEnsayo/revisarEnsayosAsignados.xhtml"
+    TARGET="rules:#revisoresEnsayo#revisarEnsayosAsignados.xhtml"
+    TITLE="revisarEnsayosAsignados" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="errorUsuario::#errorUsuario.xhtml"
+    NAME="output33" PATH="/errorUsuario.xhtml"
+    TARGET="rules:#errorUsuario.xhtml" TITLE="errorUsuario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoPersonal.xhtml"
+  PATH="/formulario/infoPersonal.xhtml" SHAPE="304,1089,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoPersonal.xhtml:0" NAME="item"
+   PATH="/formulario/infoPersonal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="siguiente::#formulario#infoPosgrado.xhtml"
+    NAME="output" PATH="/formulario/infoPosgrado.xhtml"
+    TARGET="rules:#formulario#infoPosgrado.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoAcademica.xhtml"
+  PATH="/formulario/infoAcademica.xhtml" SHAPE="544,1073,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoAcademica.xhtml:0" NAME="item"
+   PATH="/formulario/infoAcademica.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#formulario#infoPosgrado.xhtml"
+    NAME="output" PATH="/formulario/infoPosgrado.xhtml"
+    TARGET="rules:#formulario#infoPosgrado.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="siguiente::#formulario#infoLaboral.xhtml"
+    NAME="output1" PATH="/formulario/infoLaboral.xhtml"
+    TARGET="rules:#formulario#infoLaboral.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoLaboral.xhtml"
+  PATH="/formulario/infoLaboral.xhtml" SHAPE="784,1089,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoLaboral.xhtml:0" NAME="item"
+   PATH="/formulario/infoLaboral.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#formulario#infoAcademica.xhtml"
+    NAME="output" PATH="/formulario/infoAcademica.xhtml"
+    TARGET="rules:#formulario#infoAcademica.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#infoCuentaBancaria.xhtml" NAME="output1"
+    PATH="/formulario/infoCuentaBancaria.xhtml"
+    TARGET="rules:#formulario#infoCuentaBancaria.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoEnsayo.xhtml"
+  PATH="/formulario/infoEnsayo.xhtml" SHAPE="1024,1073,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#formulario#infoPosgrado.xhtml"
+  PATH="/formulario/infoPosgrado.xhtml" SHAPE="1264,1089,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoPosgrado.xhtml:0" NAME="item"
+   PATH="/formulario/infoPosgrado.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#formulario#infoPersonal.xhtml"
+    NAME="output" PATH="/formulario/infoPersonal.xhtml"
+    TARGET="rules:#formulario#infoPersonal.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="siguiente::#formulario#infoAcademica.xhtml"
+    NAME="output1" PATH="/formulario/infoAcademica.xhtml"
+    TARGET="rules:#formulario#infoAcademica.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoEstadistica.xhtml"
+  PATH="/formulario/infoEstadistica.xhtml" SHAPE="1504,1073,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoEstadistica.xhtml:0"
+   NAME="item" PATH="/formulario/infoEstadistica.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#infoCuentaBancaria.xhtml" NAME="output"
+    PATH="/formulario/infoCuentaBancaria.xhtml"
+    TARGET="rules:#formulario#infoCuentaBancaria.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="siguiente::#formulario#infoDocumento.xhtml"
+    NAME="output1" PATH="/formulario/infoDocumento.xhtml"
+    TARGET="rules:#formulario#infoDocumento.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoPresupuestoTotal.xhtml"
+  PATH="/formulario/infoPresupuestoTotal.xhtml" SHAPE="1744,1089,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoPresupuestoTotal.xhtml:0"
+   NAME="item" PATH="/formulario/infoPresupuestoTotal.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#formulario#infoEstadistica.xhtml"
+    NAME="output" PATH="/formulario/infoEstadistica.xhtml"
+    TARGET="rules:#formulario#infoEstadistica.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#infoPresupuestoPropio.xhtml"
+    NAME="output1" PATH="/formulario/infoPresupuestoPropio.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoPropio.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoPresupuestoPropio.xhtml"
+  PATH="/formulario/infoPresupuestoPropio.xhtml" SHAPE="1984,1073,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoPresupuestoPropio.xhtml:0"
+   NAME="item" PATH="/formulario/infoPresupuestoPropio.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#infoPresupuestoTotal.xhtml" NAME="output"
+    PATH="/formulario/infoPresupuestoTotal.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoTotal.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#infoPresupuestoColfuturo.xhtml"
+    NAME="output1" PATH="/formulario/infoPresupuestoColfuturo.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoColfuturo.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoPresupuestoColfuturo.xhtml"
+  PATH="/formulario/infoPresupuestoColfuturo.xhtml"
+  SHAPE="2224,1089,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoPresupuestoColfuturo.xhtml:0"
+   NAME="item" PATH="/formulario/infoPresupuestoColfuturo.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#infoPresupuestoPropio.xhtml" NAME="output"
+    PATH="/formulario/infoPresupuestoPropio.xhtml"
+    TARGET="rules:#formulario#infoPresupuestoPropio.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="siguiente::#formulario#infoDocumento.xhtml"
+    NAME="output1" PATH="/formulario/infoDocumento.xhtml"
+    TARGET="rules:#formulario#infoDocumento.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal01.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal01.xhtml"
+  SHAPE="32,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal01.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal01.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal02.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal02.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal02.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal02.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal02.xhtml"
+  SHAPE="256,1713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal02.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal02.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal01.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal01.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal01.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal03.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal03.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal03.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal03.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal03.xhtml"
+  SHAPE="480,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal03.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal03.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal02.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal02.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal02.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal04.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal04.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal04.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal04.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal04.xhtml"
+  SHAPE="704,1713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal04.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal04.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal03.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal03.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal03.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal05.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal05.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal05.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal05.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal05.xhtml"
+  SHAPE="928,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal05.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal05.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal04.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal04.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal04.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal06.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal06.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal06.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal06.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal06.xhtml"
+  SHAPE="1152,1713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal06.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal06.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal05.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal05.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal05.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal07.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal07.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal07.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal07.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal07.xhtml"
+  SHAPE="1376,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal07.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal07.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal06.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal06.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal06.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal08.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal08.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal08.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal08.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal08.xhtml"
+  SHAPE="1600,1713,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal08.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal08.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal07.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal07.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal07.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#presupuesto#presupuestoTotal09.xhtml"
+    NAME="output1"
+    PATH="/formulario/presupuesto/presupuestoTotal09.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal09.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#formulario#presupuesto#presupuestoTotal09.xhtml"
+  PATH="/formulario/presupuesto/presupuestoTotal09.xhtml"
+  SHAPE="1824,1697,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#formulario#presupuesto#presupuestoTotal09.xhtml:0"
+   NAME="item" PATH="/formulario/presupuesto/presupuestoTotal09.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#formulario#presupuesto#presupuestoTotal08.xhtml"
+    NAME="output"
+    PATH="/formulario/presupuesto/presupuestoTotal08.xhtml"
+    TARGET="rules:#formulario#presupuesto#presupuestoTotal08.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#infoDocumento.xhtml"
+  PATH="/formulario/infoDocumento.xhtml" SHAPE="2448,1073,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoDocumento.xhtml:0" NAME="item"
+   PATH="/formulario/infoDocumento.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#formulario#infoEstadistica.xhtml"
+    NAME="output" PATH="/formulario/infoEstadistica.xhtml"
+    TARGET="rules:#formulario#infoEstadistica.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#enviarSolicitud.xhtml"
+  PATH="/formulario/enviarSolicitud.xhtml" SHAPE="304,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#enviarSolicitud.xhtml:0"
+   NAME="item" PATH="/formulario/enviarSolicitud.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="confirmar::#formulario#confirmarEnvioSolicitud.xhtml"
+    NAME="output" PATH="/formulario/confirmarEnvioSolicitud.xhtml"
+    TARGET="rules:#formulario#confirmarEnvioSolicitud.xhtml"
+    TITLE="confirmar" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#credito#infoCandidato.xhtml"
+  PATH="/credito/infoCandidato.xhtml" SHAPE="304,945,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#credito#infoCandidato.xhtml:0" NAME="item"
+   PATH="/credito/infoCandidato.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#credito#infoBienesCandidato.xhtml" NAME="output"
+    PATH="/credito/infoBienesCandidato.xhtml"
+    TARGET="rules:#credito#infoBienesCandidato.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#credito#infoBienesCandidato.xhtml"
+  PATH="/credito/infoBienesCandidato.xhtml" SHAPE="544,929,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#credito#infoBienesCandidato.xhtml:0"
+   NAME="item" PATH="/credito/infoBienesCandidato.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#credito#infoCandidato.xhtml"
+    NAME="output" PATH="/credito/infoCandidato.xhtml"
+    TARGET="rules:#credito#infoCandidato.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="siguiente::#credito#infoCodeudores.xhtml"
+    NAME="output1" PATH="/credito/infoCodeudores.xhtml"
+    TARGET="rules:#credito#infoCodeudores.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#credito#infoCodeudores.xhtml"
+  PATH="/credito/infoCodeudores.xhtml" SHAPE="784,945,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#credito#infoCodeudores.xhtml:0" NAME="item"
+   PATH="/credito/infoCodeudores.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#credito#infoBienesCandidato.xhtml" NAME="output"
+    PATH="/credito/infoBienesCandidato.xhtml"
+    TARGET="rules:#credito#infoBienesCandidato.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#confirmarEnvioSolicitud.xhtml"
+  PATH="/formulario/confirmarEnvioSolicitud.xhtml" SHAPE="544,17,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#formulario#generarCartaPatrocinio.xhtml"
+  PATH="/formulario/generarCartaPatrocinio.xhtml" SHAPE="304,721,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
+  SHAPE="304,1233,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#soporte#soporteCandidato.xhtml"
+  PATH="/soporte/soporteCandidato.xhtml" SHAPE="304,1457,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#revisoresEnsayo#revisarEnsayosAsignados.xhtml"
+  PATH="/revisoresEnsayo/revisarEnsayosAsignados.xhtml"
+  SHAPE="304,753,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#credito#enviarEstudioCredito.xhtml"
+  PATH="/credito/enviarEstudioCredito.xhtml" SHAPE="560,1521,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#credito#enviarEstudioCredito.xhtml:0"
+   NAME="item" PATH="/credito/enviarEstudioCredito.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="confirmar::#credito#confirmarEnvioEstudioCredito.xhtml"
+    NAME="output" PATH="/credito/confirmarEnvioEstudioCredito.xhtml"
+    TARGET="rules:#credito#confirmarEnvioEstudioCredito.xhtml"
+    TITLE="confirmar" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#finComercio#infoCandidato.xhtml"
+  PATH="/finComercio/infoCandidato.xhtml" SHAPE="560,1121,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#finComercio#infoCandidato.xhtml:0"
+   NAME="item" PATH="/finComercio/infoCandidato.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#finComercio#infoBienesCandidato.xhtml" NAME="output"
+    PATH="/finComercio/infoBienesCandidato.xhtml"
+    TARGET="rules:#finComercio#infoBienesCandidato.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#finComercio#infoBienesCandidato.xhtml"
+  PATH="/finComercio/infoBienesCandidato.xhtml" SHAPE="320,1137,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#finComercio#infoBienesCandidato.xhtml:0"
+   NAME="item" PATH="/finComercio/infoBienesCandidato.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#finComercio#infoCandidato.xhtml"
+    NAME="output" PATH="/finComercio/infoCandidato.xhtml"
+    TARGET="rules:#finComercio#infoCandidato.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#finComercio#infoCodeudores.xhtml" NAME="output1"
+    PATH="/finComercio/infoCodeudores.xhtml"
+    TARGET="rules:#finComercio#infoCodeudores.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#finComercio#infoCodeudores.xhtml"
+  PATH="/finComercio/infoCodeudores.xhtml" SHAPE="48,1121,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#finComercio#infoCodeudores.xhtml:0"
+   NAME="item" PATH="/finComercio/infoCodeudores.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#finComercio#infoBienesCandidato.xhtml" NAME="output"
+    PATH="/finComercio/infoBienesCandidato.xhtml"
+    TARGET="rules:#finComercio#infoBienesCandidato.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal01.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal01.xhtml"
+  SHAPE="1376,865,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal01.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal01.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#legalizacion#presupuesto#presupuestoTotal02.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal02.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal02.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal02.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal02.xhtml"
+  SHAPE="1152,881,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal02.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal02.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#legalizacion#presupuesto#presupuestoTotal01.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal01.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal01.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#legalizacion#presupuesto#presupuestoTotal03.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoTotal03.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal03.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal03.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal03.xhtml"
+  SHAPE="928,865,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal03.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal03.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#legalizacion#presupuesto#presupuestoTotal02.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal02.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal02.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#legalizacion#presupuesto#presupuestoTotal04.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoTotal04.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal04.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal04.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal04.xhtml"
+  SHAPE="704,881,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal04.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal04.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#legalizacion#presupuesto#presupuestoTotal03.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal03.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal03.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#legalizacion#presupuesto#presupuestoTotal05.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoTotal05.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal05.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal05.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal05.xhtml"
+  SHAPE="480,1633,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal05.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal05.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#legalizacion#presupuesto#presupuestoTotal04.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal04.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal04.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#legalizacion#presupuesto#presupuestoTotal06.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoTotal06.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal06.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal06.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal06.xhtml"
+  SHAPE="256,1393,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal06.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal06.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#legalizacion#presupuesto#presupuestoTotal05.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal05.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal05.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#legalizacion#presupuesto#presupuestoTotal07.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoTotal07.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal07.xhtml"
+    TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoTotal07.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoTotal07.xhtml"
+  SHAPE="32,1377,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoTotal07.xhtml:0"
+   NAME="item" PATH="/legalizacion/presupuesto/presupuestoTotal07.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="anterior::#legalizacion#presupuesto#presupuestoTotal06.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoTotal06.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoTotal06.xhtml"
+    TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#credito#confirmarEnvioEstudioCredito.xhtml"
+  PATH="/credito/confirmarEnvioEstudioCredito.xhtml"
+  SHAPE="800,1537,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#index2.xhtml" PATH="/index2.xhtml"
+  SHAPE="560,865,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#renunciado.xhtml" PATH="/renunciado.xhtml"
+  SHAPE="560,1009,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#legalizacion#infoCitaLegalizacion.xhtml"
+  PATH="/legalizacion/infoCitaLegalizacion.xhtml" SHAPE="560,1265,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#legalizacion#encuestaCitaLegalizacion.xhtml"
+  PATH="/legalizacion/encuestaCitaLegalizacion.xhtml"
+  SHAPE="320,1121,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#encuestaCitaLegalizacion.xhtml:0" NAME="item"
+   PATH="/legalizacion/encuestaCitaLegalizacion.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="confirmarCitaLegalizacion::#legalizacion#confirmarCitaLegalizacion.xhtml"
+    NAME="output" PATH="/legalizacion/confirmarCitaLegalizacion.xhtml"
+    TARGET="rules:#legalizacion#confirmarCitaLegalizacion.xhtml"
+    TITLE="confirmarCitaLegalizacion" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#formulario#histEstadoSolicitud.xhtml"
+  PATH="/formulario/histEstadoSolicitud.xhtml" SHAPE="320,1233,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#errorUsuario.xhtml"
+  PATH="/errorUsuario.xhtml" SHAPE="320,1345,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#finComercio#revisarSolicitudes.xhtml"
+  PATH="/finComercio/revisarSolicitudes.xhtml" SHAPE="320,1009,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#confirmarCitaLegalizacion.xhtml"
+  PATH="/legalizacion/confirmarCitaLegalizacion.xhtml"
+  SHAPE="560,1105,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#formulario#infoCuentaBancaria.xhtml"
+  PATH="/formulario/infoCuentaBancaria.xhtml" SHAPE="304,1009,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#formulario#infoCuentaBancaria.xhtml:0"
+   NAME="item" PATH="/formulario/infoCuentaBancaria.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="anterior::#formulario#infoLaboral.xhtml"
+    NAME="output" PATH="/formulario/infoLaboral.xhtml"
+    TARGET="rules:#formulario#infoLaboral.xhtml" TITLE="anterior" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="siguiente::#formulario#infoEstadistica.xhtml" NAME="output1"
+    PATH="/formulario/infoEstadistica.xhtml"
+    TARGET="rules:#formulario#infoEstadistica.xhtml" TITLE="siguiente" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#credito#infoCodeudoresColciencias.xhtml"
+  PATH="/credito/infoCodeudoresColciencias.xhtml" SHAPE="320,1041,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#finComercio#infoCodeudoresColciencias.xhtml"
+  PATH="/finComercio/infoCodeudoresColciencias.xhtml"
+  SHAPE="304,1073,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+  SHAPE="1456,2321,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasantia::#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    NAME="output4"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    TITLE="pasantia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tesis::#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    NAME="output5"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    TITLE="tesis" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+  SHAPE="1184,2305,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasantia::#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    NAME="output4"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    TITLE="pasantia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tesis::#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    NAME="output5"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    TITLE="tesis" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+  SHAPE="912,2321,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasantia::#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    NAME="output4"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    TITLE="pasantia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tesis::#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    NAME="output5"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    TITLE="tesis" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+  SHAPE="640,2577,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasantia::#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    NAME="output4"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    TITLE="pasantia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tesis::#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    NAME="output5"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    TITLE="tesis" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+  SHAPE="368,3297,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasantia::#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    NAME="output4"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    TITLE="pasantia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tesis::#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    NAME="output5"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    TITLE="tesis" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+  SHAPE="96,3281,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasantia::#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    NAME="output4"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoPasantia.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoPasantia.xhtml"
+    TITLE="pasantia" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tesis::#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    NAME="output5"
+    PATH="/legalizacion/presupuesto/presupuestoDoctoradoTesis.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoDoctoradoTesis.xhtml"
+    TITLE="tesis" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoIdiomaMatricula.xhtml"
+  SHAPE="272,3569,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoIdiomaMatricula.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoIdiomaSostenimiento.xhtml"
+  SHAPE="48,3553,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoIdiomaSostenimiento.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoIdiomaSeguro.xhtml"
+  SHAPE="288,5345,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoIdiomaSeguro.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#legalizacion#infoPresupuestoIdioma.xhtml"
+  PATH="/legalizacion/infoPresupuestoIdioma.xhtml" SHAPE="304,1185,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#legalizacion#infoPresupuestoDoctorado.xhtml"
+  PATH="/legalizacion/infoPresupuestoDoctorado.xhtml"
+  SHAPE="304,1073,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+  PATH="/legalizacion/presupuesto/presupuestoIdiomaPasaje.xhtml"
+  SHAPE="560,5217,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM
+   ID="rules:#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml:0"
+   NAME="item"
+   PATH="/legalizacion/presupuesto/presupuestoIdiomaPasaje.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="matricula::#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    NAME="output"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaMatricula.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaMatricula.xhtml"
+    TITLE="matricula" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sostenimiento::#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    NAME="output1"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSostenimiento.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSostenimiento.xhtml"
+    TITLE="sostenimiento" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="seguro::#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    NAME="output2"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaSeguro.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaSeguro.xhtml"
+    TITLE="seguro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="pasaje::#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    NAME="output3"
+    PATH="/legalizacion/presupuesto/presupuestoIdiomaPasaje.xhtml"
+    TARGET="rules:#legalizacion#presupuesto#presupuestoIdiomaPasaje.xhtml"
+    TITLE="pasaje" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#legalizacion#confirmarCitaDoctorado.xhtml"
+  PATH="/legalizacion/confirmarCitaDoctorado.xhtml" SHAPE="304,1313,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#legalizacion#confirmarCitaIdioma.xhtml"
+  PATH="/legalizacion/confirmarCitaIdioma.xhtml" SHAPE="304,1201,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#logout.xhtml" PATH="/logout.xhtml"
+  SHAPE="304,1201,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN" "http://java.sun.com/j2ee/dtds/application_1_2.dtd">
+<application>
+	<display-name>Diachron</display-name>
+	<description>Diachron interface</description>
+	<module>
+		<ejb>ejb-diachron.jar</ejb>
+	</module>
+	<module>
+		<web>
+			<web-uri>diachron.war</web-uri>
+			<context-root>/diachron</context-root>
+		</web>
+	</module>
+</application>

@@ -1,8 +1,5 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability;
 
-import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +36,7 @@ public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 	private int content = 0;
 	private int homeurl = 0;
 	private int provenance = 0;
+	private double metricValue;
 	
 	/**
 	 * Processes a single quad being part of the dataset. It try to obtain relevant information that is identify as
@@ -150,6 +148,20 @@ public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 	@Override
 	public ProblemList<?> getQualityProblems() {
 		return null;
+	}
+
+	/**
+	 * @return the metricValue
+	 */
+	public double getMetricValue() {
+		return metricValue;
+	}
+
+	/**
+	 * @param metricValue the metricValue to set
+	 */
+	public void setMetricValue(double metricValue) {
+		this.metricValue = metricValue;
 	}
 
 }

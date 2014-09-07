@@ -30,7 +30,8 @@ public class ProvenanceInformation extends AbstractQualityMetric {
 	private boolean titleProperty;
 	private boolean contentPoperty;
 	private boolean homeurlProperty;
-	
+	private double metricValue;
+		
 	/**
 	 * Processes a single quad being part of the dataset. 
 	 * First it try to figure if the quad contain information regarding the title if yes then it store the info in the variable provided to it
@@ -77,8 +78,11 @@ public class ProvenanceInformation extends AbstractQualityMetric {
 	public double metricValue() {
 		//Check if the dataset contain all the information related with its provenance if it has title, the content and the home URL then it return 1 else return 0.
 		if(titleProperty && contentPoperty && homeurlProperty) {
-				return 1;			
+			this.setMetricValue(new Double(1));
+			return 1;			
 		}
+		this.setMetricValue(new Double(0));
+		
 		return 0;
 	}
 
@@ -90,6 +94,20 @@ public class ProvenanceInformation extends AbstractQualityMetric {
 	@Override
 	public ProblemList<?> getQualityProblems() {
 		return null;
+	}
+
+	/**
+	 * @return the metricValue
+	 */
+	public double getMetricValue() {
+		return metricValue;
+	}
+
+	/**
+	 * @param metricValue the metricValue to set
+	 */
+	public void setMetricValue(double metricValue) {
+		this.metricValue = metricValue;
 	}
 
 }

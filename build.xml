@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project name="Diachron-interface" default="deploy-ear" basedir=".">
+	
+	<property name="src.dir" value="${basedir}/src/main/interface" />
+	<property name="target.eislab.dir" value="${basedir}/target" />
+		
+	<property name="web.dir" value="${basedir}/WebContent" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="classes.dir" value="${web.dir}/WEB-INF/classes" />
+
+	<property name="xml.dir" value="${basedir}/xml" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="webc.dir" value="${basedir}/WebContent" />
+
+	<property name="app.name" value="diachron" />
+	<property name="war.name" value="${app.name}.war" />
+	<property name="ejb.name" value="ejb-${app.name}.jar" />
+	<property name="ear.name" value="${app.name}.ear" />
+
+	<property file="ant.properties" />
+	
+	<!-- ==================================== -->
+		<!-- Lib                                  -->
+		<!-- ==================================== -->
+		<pathconvert property="lib.project" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<!-- remove absolute path -->
+					<flattenmapper />
+					<!-- add lib/ prefix -->
+					<globmapper from="*" to="lib/*" />
+				</chainedmapper>
+			</mapper>
+			<path>
+				<!-- lib.home contains all jar files, in several subdirectories -->
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</path>
+		</pathconvert>
+	
+	<!-- ==================================== -->
+	<!-- Classpath                            -->
+	<!-- ==================================== -->
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${jboss.home}/client">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${jboss.home}/server/default/lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${jboss.home}/server/default/deploy/jboss-web.deployer/jsf-libs">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- ==================================== -->
+	<!-- Init                                 -->
+	<!-- ==================================== -->
+	<target name="init">
+		<delete dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
+	</target>
+
+	<!-- ==================================== -->
+	<!-- Compile                              -->
+	<!-- ==================================== -->
+	<target name="compile" depends="init">
+		<javac encoding="8859_1" destdir="${classes.dir}" debug="true">
+			<src path="${src.dir}" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<!-- ==================================== -->
+	<!-- Copy files                           -->
+	<!-- ==================================== -->
+	<target name="copy-files">
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ==================================== -->
+	<!-- Ejb-jar                              -->
+	<!-- ==================================== -->
+	<target name="ejb" depends="compile, copy-files">
+		<mkdir dir="${dist.dir}" />
+		<delete file="${dist.dir}/${ejb.name}" />
+		<delete file="${web.dir}/WEB-INF/classes/beanLocator.properties" />
+		<jar destfile="${dist.dir}/${ejb.name}">
+			<zipfileset dir="${xml.dir}" prefix="META-INF">
+				<include name="persistence.xml" />
+			</zipfileset>
+			<fileset dir="${classes.dir}" excludes="**/test/**,**/web/**" />
+		</jar>
+	</target>
+
+	<!-- ==================================== -->
+	<!-- Deploy ejb-jar                       -->
+	<!-- ==================================== -->
+	<target name="deploy-ejb" depends="ejb">
+		<copy todir="${jboss.home}/server/default/deploy" file="${dist.dir}/${ejb.name}">
+		</copy>
+	</target>
+
+	<!-- ==================================== -->
+	<!-- War                                  -->
+	<!-- ==================================== -->
+	<target name="war" depends="ejb">
+		<mkdir dir="${dist.dir}" />
+		<delete file="${dist.dir}/${war.name}" />
+		<war destfile="${dist.dir}/${war.name}" webxml="${web.dir}/WEB-INF/web.xml">
+			<fileset dir="${web.dir}" excludes="**/ejb/**,**/entities/**,**/exception/**,**/to/**,**/ws/**,**/.jar,**/interfaces/**" />
+			<manifest>
+				<attribute name="Class-Path" value="${lib.project}" />
+			</manifest>
+		</war>
+	</target>
+	
+	<!-- ==================================== -->
+	<!-- Build the jar into the interface     -->
+	<!-- ==================================== -->
+	<target name="build-diachron-jar">
+        <jar destfile="${lib.dir}/diachron.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="de.unibonn.iai.eis.qaentlod.io.Main"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${target.eislab.dir}/classes"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/apache/jena/jena-tdb/1.0.0/jena-tdb-1.0.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/apache/jena/jena-arq/2.11.0/jena-arq-2.11.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/apache/httpcomponents/httpclient/4.2.3/httpclient-4.2.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/apache/httpcomponents/httpcore/4.2.2/httpcore-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/commons-codec/commons-codec/1.6/commons-codec-1.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/apache/jena/jena-core/2.11.0/jena-core-2.11.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/apache/jena/jena-iri/1.0.0/jena-iri-1.0.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/log4j/log4j/1.2.16/log4j-1.2.16.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/slf4j/jcl-over-slf4j/1.7.5/jcl-over-slf4j-1.7.5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/slf4j/slf4j-log4j12/1.7.5/slf4j-log4j12-1.7.5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${maven.home}/org/slf4j/slf4j-jdk14/1.7.5/slf4j-jdk14-1.7.5.jar"/>
+        </jar>
+		<delete file="${dist.dir}/diachron.jar" />
+		<copy todir="${dist.dir}" file="${lib.dir}/diachron.jar">
+		</copy>
+		
+		<delete file="${webc.dir}/download/diachron.jar" />
+		<copy todir="${webc.dir}/download" file="${lib.dir}/diachron.jar">
+		</copy>
+				
+	</target>
+	
+	<!-- ==================================== -->
+	<!-- Deploy war                           -->
+	<!-- ==================================== -->
+	<target name="deploy-war" depends="war">
+		<copy todir="${jboss.home}/server/default/deploy" file="${dist.dir}/${war.name}">
+		</copy>
+	</target>
+
+	<!-- ==================================== -->
+	<!-- Ear                                  -->
+	<!-- ==================================== -->
+	<target name="ear" depends="build-diachron-jar, war">
+		<mkdir dir="${dist.dir}" />
+		<delete file="${dist.dir}/${ear.name}" />
+		<ear destfile="${dist.dir}/${ear.name}" appxml="${xml.dir}/application.xml">
+			<zipfileset dir="${dist.dir}">
+				<include name="${ejb.name}" />
+			</zipfileset>
+			<zipfileset dir="${dist.dir}">
+				<include name="${war.name}" />
+			</zipfileset>
+			<zipfileset dir="${lib.dir}" prefix="lib">
+				<include name="**/*.jar" />
+			</zipfileset>
+		</ear>
+	</target>
+
+	<!-- ==================================== -->
+	<!-- Deploy ear                           -->
+	<!-- ==================================== -->
+	<target name="deploy-ear" depends="ear">
+		<copy todir="${jboss.home}/server/default/deploy" file="${dist.dir}/${ear.name}">
+		</copy>
+	</target>
+	
+</project>

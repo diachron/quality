@@ -1,0 +1,326 @@
+.errorMessages {
+	color: #FF0000;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.footer {
+	color: #666666;
+	font-family: Arial;
+	font-size: 9px;
+	text-decoration: none;
+}
+
+.gridContent {
+	vertical-align: top;
+}
+
+.gridContentTop2 {
+	vertical-align: top;
+	width: 49%;
+}
+
+.gridContentTop3 {
+	vertical-align: top;
+	width: 5%;
+}
+
+.gridContentBottom {
+	vertical-align: bottom;
+}
+
+.headerTable {
+	background-image: url('../images/logo.png');
+	background-color: #12909c;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	height: 102px;
+}
+
+.infoMessages {
+	color: #0000FF;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+input[disabled],select[disabled] {
+	color: #000000;
+}
+
+.inputTextArea {
+	width: 100%;
+	max-width: 95%;
+	min-width: 95%;
+	height: 50px;
+	min-height: 50px;
+	max-height: 50px;
+}
+
+.inputTextArea2 {
+	width: 100%;
+	max-width: 95%;
+	min-width: 95%;
+	height: 200px;
+	min-height: 200px;
+	max-height: 200px;
+}
+
+.labelHeaderWhite {
+	font-family: Arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.labelHeaderWhite2 {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.labelWebForm {
+	font-family: Arial;
+	font-size: 11px;
+	text-align: right;
+	width: 20%;
+	padding-left: 10px;
+	vertical-align: top;
+}
+
+.labelWebForm2 {
+	font-family: Arial;
+	font-size: 11px;
+	width: 50%;
+}
+
+.labelWebForm3 {
+	font-family: Arial;
+	font-size: 11px;
+	width: 100%;
+}
+
+.labelWebForm4 {
+	font-family: Arial;
+	font-size: 11px;
+	width: 15%;
+}
+
+.labelWebForm5 {
+	font-family: Arial;
+	font-size: 11px;
+	width: 10%;
+	font-weight: bold;
+}
+
+.labelWebForm6 {
+	font-family: Arial;
+	font-size: 9px;
+}
+
+.labelWebForm7 {
+	font-family: Arial;
+	font-size: 11px;
+	text-align: right;
+	width: 30%;	
+}
+
+.labelWebForm8 {
+	font-family: Arial;
+	font-size: 11px;
+	text-align: right;
+	width: 25%;
+	padding-right: 20px;
+}
+
+.labelWebForm9 {
+	font-family: Arial;
+	font-size: 11px;
+	text-align: right;
+	width: 20%;
+	padding-right: 20px;
+}
+
+.labelWebForm10 {
+	font-family: Arial;
+	font-size: 11px;
+	text-align: right;
+	width: 20%;
+	padding-right: 30px;
+	padding-left: 5px;
+}
+
+.labelWebForm11 {
+	font-family: Arial;
+	font-size: 11px;
+	text-align: right;
+	width: 19%;
+	padding-left: 0px;
+}
+
+.redBigText {
+	color: #12909c;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.redText {
+	color: #12909c;
+	font-family: Arial;
+}
+
+.blueTextPresu {
+	color: #0000FF;
+	font-family: Arial;
+}
+
+.redTextPresuF {
+	color: #cc0001;
+	font-family: Arial;
+}
+
+.redInputTextPresuF  {
+	color: #cc0001;
+	font-family: Arial;
+	width: 50px; 
+	text-align: right;
+}
+
+.greenTextPresuP {
+	color: #088A08;
+	font-family: Arial;
+}
+
+.greenInputTextPresuP {
+	color: #088A08;
+	font-family: Arial;
+	width: 50px; 
+	text-align: right;
+}
+
+
+.redTitle {
+	color: #12909c;
+	font-family: Arial;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.rowLabel {
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.rowValue {
+	font-family: Arial;
+	font-size: 11px;
+}
+
+.selectOneMenu {
+	width: 165px;
+}
+
+.tableColumnNumber {
+	text-align: right;
+}
+
+.tableColumnNumber2 {
+	text-align: right;
+	font-weight: bold;
+}
+
+.tableColumnText {
+	text-align: left;
+}
+
+.tableColumnTextRight {
+	text-align: right;
+}
+
+.tableFooterStyle {
+	background-color: #CCEDF1;
+	text-align: right;
+	font-weight: bold;
+}
+
+.tableHeaderStyle {
+	background-color: #CCEDF1;
+}
+
+.tableRowEvenStyle {
+	background-color: #F5F5F5;
+}
+
+.tableRowEvenStyle2 {
+	background-color: #F5F5F5;
+}
+
+.tableRowOddStyle {
+	background-color: #FFFFFF;
+}
+
+.tableRowOddStyle2 {
+	background-color: #DDDDDD;
+}
+
+.tooltip {
+	text-align: justify;
+}
+
+.valueWebForm {
+	font-family: Verdana;
+	font-size: 11px;
+	width: 30%;
+}
+
+.valueWebForm2 {
+	font-family: Verdana;
+	font-size: 11px;
+	width: 80%;
+}
+
+.valueWebForm3 {
+	font-family: Verdana;
+	font-size: 11px;
+	width: 100%;
+}
+
+.valueWebForm4 {
+	font-family: Verdana;
+	font-size: 11px;
+	width: 90%;
+}
+.valueWebForm6 {
+	font-family: Verdana;
+	font-size: 11px;
+	width: 20%;
+}
+
+.valueWebForm7 {
+	font-family: Verdana;
+	font-size: 11px;
+	width: 35%;
+}
+
+.textArea {
+	width:100%;
+}
+.image {
+	vertical-align: top;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+/* Texto negro 9px */
+.texto {
+	font-size: 9px;
+	color: #000000;
+	font-family: Arial, Verdana;
+}

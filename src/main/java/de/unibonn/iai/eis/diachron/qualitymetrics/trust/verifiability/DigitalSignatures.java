@@ -23,7 +23,8 @@ public class DigitalSignatures extends AbstractQualityMetric {
 	private final Resource METRIC_URI = DQM.DigitalSignatureMetric;
 	
 	private static Logger logger = LoggerFactory.getLogger(DigitalSignatures.class);
-	
+
+	private double metricValue;
 	/**
 	 * Map containing all the resources for which an annotation about their signature has been found in the quads.
 	 * The key of the map corresponds to the URI of the resource (i.e. subject in the quads) and the value contains the 
@@ -88,9 +89,11 @@ public class DigitalSignatures extends AbstractQualityMetric {
 		if(mapSignatureResources != null) {
 			// Check that the dataset has provenance information. 
 			if(mapSignatureResources.size() > 0) {
+				this.setMetricValue(new Double(1));
 				return 1;
 			}
 		}
+		this.setMetricValue(new Double(0));
 		return 0;
 	}
 
@@ -102,6 +105,20 @@ public class DigitalSignatures extends AbstractQualityMetric {
 	@Override
 	public ProblemList<?> getQualityProblems() {
 		return null;
+	}
+
+	/**
+	 * @return the metricValue
+	 */
+	public double getMetricValue() {
+		return metricValue;
+	}
+
+	/**
+	 * @param metricValue the metricValue to set
+	 */
+	public void setMetricValue(double metricValue) {
+		this.metricValue = metricValue;
 	}
 
 }

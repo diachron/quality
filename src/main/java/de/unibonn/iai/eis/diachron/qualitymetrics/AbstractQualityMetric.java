@@ -35,4 +35,5 @@ public abstract class AbstractQualityMetric implements QualityMetric{
 	public abstract double metricValue();
 	public abstract Resource getMetricURI();
 	public abstract ProblemList<?> getQualityProblems();
+
 }

@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<body>
+	<ui:composition>
+		<a4j:keepAlive beanName="qualityBean" />
+		<table border="0.5">
+			<tbody>
+				<tr>
+					<td width="30%">
+						<h:outputText value="#{msg['tab1.dimension']}" /> 
+						<br />
+						<h:selectOneMenu value="#{qualityBean.currentCategory}">
+							<f:selectItem itemValue="#{msg['selectItem.default']}"
+								itemlabel="#{msg['selectItem.default']}" />
+							<f:selectItems value="#{qualityBean.availableCategories}" />
+							<a4j:support event="onchange"
+								actionListener="#{qualityBean.valueChanged}" reRender="metrics"
+								ajaxSingle="true" />
+						</h:selectOneMenu> 
+						<br /> 
+						<a4j:outputPanel id="metrics" ajaxRendered="true">
+							<h:outputText value="#{msg['tab1.metric']}"
+								rendered="#{not empty qualityBean.currentCategory}" />
+							<br />
+							<h:selectOneMenu value="#{qualityBean.currentMetric}"
+								rendered="#{not empty qualityBean.currentCategory}">
+								<f:selectItem itemValue="#{msg['selectItem.default']}"
+									itemlabel="#{msg['selectItem.default']}" />
+								<f:selectItems value="#{qualityBean.availableMetrics}" />
+								<a4j:support event="onchange"
+									actionListener="#{qualityBean.valueChangedMetric}"
+									reRender="datasets" ajaxSingle="true" />
+							</h:selectOneMenu>
+						</a4j:outputPanel> 
+						<br /> 
+						<a4j:outputPanel id="datasets" ajaxRendered="true">
+							<h:outputText value="#{msg['tab1.dataset']}"
+								rendered="#{not empty qualityBean.currentMetric}" />
+							<br />
+							<h:selectOneMenu value="#{qualityBean.currentDataSet}"
+								rendered="#{not empty qualityBean.currentMetric}">
+								<f:selectItem itemValue="#{msg['selectItem.default']}"
+									itemlabel="#{msg['selectItem.default']}" />
+								<f:selectItems value="#{qualityBean.availableDataSets}" />
+								<a4j:support event="onchange" reRender="results"
+									ajaxSingle="true" />
+							</h:selectOneMenu>
+						</a4j:outputPanel>
+					</td>
+					<td width="70%" align="center" valign="top">
+						<a4j:outputPanel id="results"
+							ajaxRendered="true">
+							<h2><h:outputText value="#{qualityBean.cadenaDataSet}" /></h2>
+							<br />
+							<h3><h:outputText value="#{qualityBean.cadena}" /></h3>
+							<br />
+						</a4j:outputPanel></td>
+				</tr>
+			</tbody>
+		</table>
+	</ui:composition>
+</body>
+</html>

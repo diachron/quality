@@ -23,6 +23,7 @@ public class DataSetMappingForTestCase {
 	// For...qualitymetrics.trust.verifiability
 	public static String CurrencyDocumentStatementsCM = "testdumps/SampleInput_Currency_CM.ttl";
 	public static String CurrencyDocumentStatementsCM2 = "testdumps/SampleInput_Currency_CM2.ttl";
+	public static String ResearchGroup = "testdumps/SampleInput_160114.ttl";
 	
 	
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<title>QAENTLOD&#160;::&#160;<ui:insert name="title">Title</ui:insert></title>
+<link rel="stylesheet"
+	href="${facesContext.externalContext.requestContextPath}/css/styles.css"
+	type="text/css" />
+</head>
+<body>
+	<table width="850" border="0" cellpadding="1" cellspacing="1"
+		align="center">
+		<tr>
+			<td width="100%" colspan="2"><ui:insert name="header">
+					<ui:include src="header.xhtml" />
+				</ui:insert></td>
+		</tr>
+		<tr>
+			<td valign="top" width="75%"><ui:insert name="body">Body</ui:insert></td>
+		</tr>
+		<tr>
+			<td width="100%" colspan="2"><ui:insert name="footer">
+					<ui:include src="footer.xhtml" />
+				</ui:insert></td>
+		</tr>
+	</table>
+</body>
+</html>

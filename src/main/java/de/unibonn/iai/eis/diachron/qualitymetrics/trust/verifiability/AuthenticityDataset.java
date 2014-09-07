@@ -26,6 +26,9 @@ public class AuthenticityDataset extends AbstractQualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(AuthenticityDataset.class);
 	
+	private double metricValue;
+	
+	
 	/**
 	 * Map containing all the resources for which an annotation about their provenance has been found in the quads.
 	 * The key of the map corresponds to the URI of the resource (i.e. subject in the quads) and the value contains the 
@@ -89,9 +92,11 @@ public class AuthenticityDataset extends AbstractQualityMetric {
 		if(mapProvenanceResources != null) {
 			// Check that the dataset has provenance information. 
 			if(mapProvenanceResources.size() > 0) {
+				this.setMetricValue(new Double(1));				
 				return 1;
 			}
 		}
+		this.setMetricValue(new Double(0));
 		return 0;
 	}
 
@@ -103,6 +108,20 @@ public class AuthenticityDataset extends AbstractQualityMetric {
 	@Override
 	public ProblemList<?> getQualityProblems() {
 		return null;
+	}
+
+	/**
+	 * @return the metricValue
+	 */
+	public double getMetricValue() {
+		return metricValue;
+	}
+
+	/**
+	 * @param metricValue the metricValue to set
+	 */
+	public void setMetricValue(double metricValue) {
+		this.metricValue = metricValue;
 	}
 
 }
