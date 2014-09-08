@@ -23,6 +23,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import de.unibonn.iai.eis.luzzu.io.impl.StreamProcessor;
+import de.unibonn.iai.eis.luzzu.communications.QualityResultsLoader;
 
 /**
  * REST resource, providing the functionalities to assess the quality of datasets, 
@@ -97,6 +98,9 @@ public class QualityResource {
 			jsonResponse = buildJsonResponse(datasetURI, modelQualityRep);
 			logger.debug("Quality computation request completed. Output: {}", jsonResponse);
 			
+			// Launch processing of quality assessment results. TODO: Should this be done here?
+			QualityResultsLoader.getInstance().processAllQualityResultFiles();
+			
 		} catch(Exception ex) {
 			String errorTimeStamp = Long.toString((new Date()).getTime());
 			logger.error("Error processing quality computation request [" + errorTimeStamp + "]", ex);
@@ -117,7 +121,7 @@ public class QualityResource {
 	private String buildJsonResponse(String datasetURI, Model qualityReport) {
 		StringBuilder sbJsonResponse = new StringBuilder();
 		sbJsonResponse.append("{ \"Dataset\": \"" + datasetURI + "\", ");
-		sbJsonResponse.append("\"Outcome\": SUCCESS");
+		sbJsonResponse.append("\"Outcome\": \"SUCCESS\"");
 
 		// If the quality report was generated, add its JSON representation to the response
 		if(qualityReport != null && !qualityReport.isEmpty()) {
@@ -144,7 +148,7 @@ public class QualityResource {
 	private String buildJsonErrorResponse(String datasetURI, String errorCode, String errorMessage) {
 		StringBuilder sbJsonResponse = new StringBuilder();
 		sbJsonResponse.append("{ \"Dataset\": \"" + datasetURI + "\", ");
-		sbJsonResponse.append("\"Outcome\": ERROR, ");
+		sbJsonResponse.append("\"Outcome\": \"ERROR\", ");
 		sbJsonResponse.append("\"ErrorMessage\": \"" + errorMessage + "\", ");
 		sbJsonResponse.append("\"ErrorCode\": \"" + errorCode + "\" }");
 		return sbJsonResponse.toString();
