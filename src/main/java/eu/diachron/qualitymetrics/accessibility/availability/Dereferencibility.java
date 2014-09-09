@@ -52,22 +52,16 @@ public class Dereferencibility implements ComplexQualityMetric {
 	
 	private HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
-	private Set<String> uriSet = Collections.synchronizedSet(new HashSet<String> ()); 
 	private Queue<String> uriQueue = new ConcurrentLinkedQueue<String>();
 	
 	
 	public void after(Object... arg0) {
-		// TODO Auto-generated method stub
-		List<String> uriList = new ArrayList<String>();
-		uriList.addAll(uriSet);
-		httpRetreiver.addListOfResourceToQueue(uriList);
-		httpRetreiver.startHTTPRetreiver();
+		//maybe we do not need a complex metric after all?
 		if (httpRetreiver.hasCompletedActions()) this.startDereferencingProcess();
 	}
 
 	public void before(Object... arg0) {
 		// Do Nothing
-		
 	}
 
 	public void compute(Quad quad) {
@@ -75,13 +69,13 @@ public class Dereferencibility implements ComplexQualityMetric {
 			
 			String subject = quad.getSubject().toString();
 			if (httpRetreiver.isPossibleURL(subject)){
-				uriSet.add(subject);
+				httpRetreiver.addResourceToQueue(subject);
 				uriQueue.add(subject);
 			}
 			
 			String object = quad.getObject().toString();
 			if (httpRetreiver.isPossibleURL(object)){
-				uriSet.add(object);
+				httpRetreiver.addResourceToQueue(object);
 				uriQueue.add(subject);
 			}
 		}

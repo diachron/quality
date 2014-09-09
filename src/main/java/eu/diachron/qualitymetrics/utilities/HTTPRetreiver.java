@@ -55,12 +55,12 @@ public class HTTPRetreiver {
 	
 	
 	protected HTTPRetreiver() {
-//		Runnable retreiver = new Runnable() {
-//			public void run() {
-//				runHTTPAsyncRetreiver();
-//			}
-//		};
-//		executor.submit(retreiver);
+		Runnable retreiver = new Runnable() {
+			public void run() {
+				runHTTPAsyncRetreiver();
+			}
+		};
+		executor.submit(retreiver);
 	}
 
 	public static HTTPRetreiver getInstance() {
@@ -71,21 +71,18 @@ public class HTTPRetreiver {
 
 	public void addResourceToQueue(String resourceURI) {
 		this.httpQueue.add(resourceURI);
-		//this.runHTTPRetreiver(resourceURI);
 	}
 
 	public void addListOfResourceToQueue(List<String> resourceURIs) {
 		this.httpQueue.addAll(resourceURIs);
 	}
 	
-	public void startHTTPRetreiver(){
-		runHTTPAsyncRetreiver();
-	}
 
 	/**
 	 * Stops the HTTPRetreiver Process and destroys the instance
 	 */
 	public void stopHTTPRetreiver() {
+		isRunning = false;
 		executor.shutdown();
 		instance = null;
 	}
@@ -163,7 +160,7 @@ public class HTTPRetreiver {
 		final HttpClientContext localContext = HttpClientContext.create();
 
 		httpclient.start();
-		while ((httpQueue.size() > 0)){
+		while ((httpQueue.size() > 0) || isRunning){
 			final String queuePeak = httpQueue.peek();
 			if (DiachronCacheManager.getInstance().existsInCache(
 					DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak)) {
@@ -294,13 +291,14 @@ public class HTTPRetreiver {
 
 	
 //	 public static void main(String [] args) throws InterruptedException{
-//		 HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
-//		 httpRetreiver.addResourceToQueue("http://fb.comiles.eu/?c=person&id=natanael");
-//		 Thread.sleep(5000);
-//		 CachedHTTPResource httpResource = (CachedHTTPResource)
-//		 DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,
-//		 "http://fb.comiles.eu/?c=person&id=natanael");
-//		 int i = 0;
+//		HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
+	
+//		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+//		httpRetreiver.addResourceToQueue(uri);
+//		Thread.sleep(5000);
+	
+//		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
+//		int i = 0;
 //	 }
 }
 	
