@@ -28,7 +28,7 @@ public class DereferencibilityTest extends Assert{
 	}
 
 	@Test
-	public void testDereferencibilityMetric() {
+	public void testDereferencibilityMetric() throws InterruptedException {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
 		for(Quad quad : streamingQuads){
@@ -36,6 +36,8 @@ public class DereferencibilityTest extends Assert{
 			metric.compute(quad);
 		}
 		
+		metric.after();
+
 		// The expected value is calculated by going through all possible URIs
 		// in HyperThing.org and using DEV http client for Chrome.
 		// We had a total of 59 unique URIs and 16 had a 303 See Other code

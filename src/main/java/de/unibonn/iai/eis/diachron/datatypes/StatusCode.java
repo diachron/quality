@@ -10,5 +10,5 @@ package de.unibonn.iai.eis.diachron.datatypes;
  * 
  */
 public enum StatusCode {
-	SC200,SC301,SC302,SC303,SC307,SC4XX,SC5XX,UNHASH,BAD,ANY,EMPTY
+	SC200,SC301,SC302,SC303,SC307,SC4XX,SC5XX,HASH,BAD,ANY,EMPTY
 }
