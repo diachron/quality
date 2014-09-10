@@ -7,23 +7,19 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicStatusLine;
@@ -44,31 +40,12 @@ import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 public class HTTPRetreiver {
 
 	final static Logger logger = LoggerFactory.getLogger(HTTPRetreiver.class);
-	private boolean completedActions = false;
-	private boolean isRunning = true;
 
-	private static HTTPRetreiver instance = null;
-	private ConcurrentLinkedQueue<String> httpQueue = new ConcurrentLinkedQueue<String>();
-
+	//private ConcurrentLinkedQueue<String> httpQueue = new ConcurrentLinkedQueue<String>();
+	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	protected Future<?> futureTask;
+	private CountDownLatch latch;
 	
-	
-	protected HTTPRetreiver() {
-		Runnable retreiver = new Runnable() {
-			public void run() {
-				runHTTPAsyncRetreiver();
-			}
-		};
-		executor.submit(retreiver);
-	}
-
-	public static HTTPRetreiver getInstance() {
-		if (instance == null)
-			instance = new HTTPRetreiver();
-		return instance;
-	}
-
 	public void addResourceToQueue(String resourceURI) {
 		this.httpQueue.add(resourceURI);
 	}
@@ -78,104 +55,50 @@ public class HTTPRetreiver {
 	}
 	
 
-	/**
-	 * Stops the HTTPRetreiver Process and destroys the instance
-	 */
-	public void stopHTTPRetreiver() {
-		isRunning = false;
-		executor.shutdown();
-		instance = null;
-	}
-
-	private void runHTTPRetreiver(String queuePeak) {
-		RequestConfig requestConfig = this.getRequestConfig(true);
-		CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
-		HttpClientContext localContext = HttpClientContext.create();
-//		while (httpQueue.size() > 0) {
-//			String queuePeak = httpQueue.peek();
-			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak)) {
-//				httpQueue.poll();
-//				continue;
-				return;
-			}
-
-			CachedHTTPResource newResource = new CachedHTTPResource();
-			newResource.setUri(queuePeak);
-			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak, newResource);
-
-			//HttpGet request = new HttpGet(httpQueue.poll());
-			HttpGet request = new HttpGet(queuePeak);
-			CloseableHttpResponse response;
-			try {
-				response = httpclient.execute(request, localContext);
-				newResource.setResponse(response);
-
+	public void start() throws InterruptedException{
+		//TODO: check if httpQUEUE is not empty yet 
+		latch = new CountDownLatch(httpQueue.size());
+		
+		Runnable retreiver = new Runnable() {
+			public void run() {
 				try {
-					if (localContext.getRedirectLocations().size() >= 1) {
-
-						List<URI> uriRoute = new ArrayList<URI>();
-						uriRoute.add(request.getURI());
-						uriRoute.addAll(localContext.getRedirectLocations());
-						newResource.addAllStatusLines(followRedirection(uriRoute));
-					} else {
-						newResource.addStatusLines(response.getStatusLine());
-					}
-				} catch (Exception e) {
-					logger.debug("Exception during the request for redirect locations whith the following exception : {}",e.getLocalizedMessage());
-					newResource.addStatusLines(response.getStatusLine());
+					runHTTPAsyncRetreiver();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (ClientProtocolException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException ex) {
-				newResource.setDereferencabilityStatusCode(StatusCode.BAD);
-				newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0,"Request could not be processed"));
-				DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeak, newResource);
-				logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(), ex.getLocalizedMessage());
 			}
-			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak,newResource);
-
-//		}
+		};
+		executor.submit(retreiver);
+		latch.await();
 	}
 	
-	private List<StatusLine> followRedirection(List<URI> uriRoute) throws ClientProtocolException, IOException{
-		List<StatusLine> statusLines = Collections.synchronizedList(new ArrayList<StatusLine>());
-		RequestConfig requestConfig = this.getRequestConfig(true);
-		CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
-		HttpClientContext localContext = HttpClientContext.create();
-		List<HttpGet> requests = this.toHttpGetList(uriRoute);
-
-		for (final HttpGet request : requests) {
-			CloseableHttpResponse response = httpclient.execute(request, localContext);
-			statusLines.add(response.getStatusLine());
-		}
-		
-		return statusLines;
+	/**
+	 * Stops the HTTPRetreiver Process
+	 */
+	public void stop() {
+		executor.shutdown();
 	}
 
-	private void runHTTPAsyncRetreiver() {
+	private void runHTTPAsyncRetreiver() throws InterruptedException {
 		RequestConfig requestConfig = this.getRequestConfig(true);
 		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom()
 				.setDefaultRequestConfig(requestConfig).build();
 		final HttpClientContext localContext = HttpClientContext.create();
-
+		
+		
 		httpclient.start();
-		while ((httpQueue.size() > 0) || isRunning){
-			final String queuePeak = httpQueue.peek();
-			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak)) {
-				httpQueue.poll();
-//				this.tryRemoveFromHead(queuePeak);
+		for(final String queuePeek : this.httpQueue){
+			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
 				continue;
 			}
 
 			final CachedHTTPResource newResource = new CachedHTTPResource();
-			newResource.setUri(queuePeak);
-			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak, newResource);
-
-			final HttpGet request = new HttpGet(httpQueue.poll());
-//			final HttpGet request = new HttpGet(queuePeak);
-			final CountDownLatch latch = new CountDownLatch(httpQueue.size());
-
+			newResource.setUri(queuePeek);
+			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
+																										  
+			final HttpGet request = new HttpGet(queuePeek);
+			
 			httpclient.execute(request, localContext,
 					new FutureCallback<HttpResponse>() {
 						public void completed(final HttpResponse response) {
@@ -189,8 +112,6 @@ public class HTTPRetreiver {
 										newResource.addAllStatusLines(followAsyncRedirection(uriRoute));
 									} catch (IOException e) {
 										e.printStackTrace();
-									} catch (InterruptedException e) {
-										e.printStackTrace();
 									}
 								} else {
 									newResource.addStatusLines(response.getStatusLine());
@@ -199,15 +120,15 @@ public class HTTPRetreiver {
 								logger.debug("Exception during the request for redirect locations whith the following exception : {}",e.getLocalizedMessage());
 								newResource.addStatusLines(response.getStatusLine());
 							}
-							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeak, newResource);
+							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeek, newResource);
 							latch.countDown();
 						}
 
 						public void failed(final Exception ex) {
 							newResource.setDereferencabilityStatusCode(StatusCode.BAD);
 							newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0,"Request could not be processed"));
-							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeak, newResource);
-							
+							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeek, newResource);
+
 							logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
 							latch.countDown();
 						}
@@ -219,7 +140,7 @@ public class HTTPRetreiver {
 					});
 		}
 	}
-
+	
 	protected List<StatusLine> followAsyncRedirection(List<URI> uriRoute) throws IOException, InterruptedException {
 		final List<StatusLine> statusLines = Collections.synchronizedList(new ArrayList<StatusLine>());
 		RequestConfig requestConfig = this.getRequestConfig(false);
@@ -239,10 +160,12 @@ public class HTTPRetreiver {
 							}
 
 							public void failed(final Exception ex) {
+								logger.debug("Failed in retreiving follow redirection request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
 								latch.countDown();
 							}
 
 							public void cancelled() {
+								logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
 								latch.countDown();
 							}
 
@@ -265,9 +188,7 @@ public class HTTPRetreiver {
 	}
 
 	private RequestConfig getRequestConfig(boolean followRedirects) {
-		return RequestConfig.custom().setSocketTimeout(3000)
-				.setConnectTimeout(3000).setRedirectsEnabled(followRedirects)
-				.build();
+		return RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).setRedirectsEnabled(followRedirects).build();
 	}
 
 	public boolean isPossibleURL(String url) {
@@ -275,25 +196,18 @@ public class HTTPRetreiver {
 		return ((url.startsWith("http")) || (url.startsWith("https")));
 	}
 
-	public boolean hasCompletedActions() {
-		return this.httpQueue.isEmpty();
-	}
-	
-	private void tryRemoveFromHead(String uri){
-		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-		if (httpResource.getStatusLines() != null) this.httpQueue.poll();
-	}
 
-	
-	 public static void main(String [] args) throws InterruptedException{
-		HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
-	
-		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-		httpRetreiver.addResourceToQueue(uri);
-		Thread.sleep(5000);
-	
-		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
-		int i = 0;
-	 }
+//	public static void main(String [] args) throws InterruptedException{
+//		HTTPRetreiver httpRetreiver = new HTTPRetreiver();
+//	
+//		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+//		String uri = "http://dbpedia.org/resource/Natural_language_processing";
+//		httpRetreiver.addResourceToQueue(uri);
+//		httpRetreiver.start();
+//		Thread.sleep(5000);
+//	
+//		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
+//		int i = 0;
+//	 }
 }
 	

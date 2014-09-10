@@ -129,5 +129,3 @@ people:NatanaelArndt a foaf:Person ;
                      aksw:publicationTag "arndt" ;
                      foaf:familyName "Arndt" ;
                      schema:location <http://aksw.org/Address/SLUB>, <http://aksw.org/Address/InfAI> .
-
-		

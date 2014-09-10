@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.StatusLine;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -21,7 +21,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -44,27 +43,32 @@ public class Dereferencibility implements ComplexQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityMetric;
 
-	private static Logger logger = Logger.getLogger(Dereferencibility.class);
-
+	final static Logger logger = LoggerFactory.getLogger(Dereferencibility.class);
+	
 	private double metricValue = 0.0;
 	private double totalURI = 0;
 	private double dereferencedURI = 0;
 	
-	private HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
+	private HTTPRetreiver httpRetreiver = new HTTPRetreiver();
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
 	private Queue<String> uriQueue = new ConcurrentLinkedQueue<String>();
+	private Set<String> uriSet = Collections.synchronizedSet(new HashSet<String>());
 	
 	
 	public void after(Object... arg0) {
 		//maybe we do not need a complex metric after all?
 		//if (httpRetreiver.hasCompletedActions()) 
-		while (!httpRetreiver.hasCompletedActions()){
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		
+		ArrayList<String> uriList = new ArrayList<String>();
+		uriList.addAll(uriSet);
+		httpRetreiver.addListOfResourceToQueue(uriList);
+		
+		try {
+			httpRetreiver.start();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+
 		this.startDereferencingProcess();
 	}
 
@@ -77,14 +81,12 @@ public class Dereferencibility implements ComplexQualityMetric {
 			
 			String subject = quad.getSubject().toString();
 			if (httpRetreiver.isPossibleURL(subject)){
-				httpRetreiver.addResourceToQueue(subject);
-				uriQueue.add(subject);
+				uriSet.add(subject);
 			}
 			
 			String object = quad.getObject().toString();
 			if (httpRetreiver.isPossibleURL(object)){
-				httpRetreiver.addResourceToQueue(object);
-				uriQueue.add(object);
+				uriSet.add(object);
 			}
 		}
 	}
@@ -99,6 +101,7 @@ public class Dereferencibility implements ComplexQualityMetric {
 	}
 
 	public double metricValue() {
+		System.out.println(this.dereferencedURI + " " + this.totalURI);
 		this.metricValue = this.dereferencedURI / this.totalURI;
 		return this.metricValue;
 	}
@@ -106,9 +109,10 @@ public class Dereferencibility implements ComplexQualityMetric {
 	
 	/* Private Methods */
 	private void startDereferencingProcess() {
-		while(!this.uriQueue.isEmpty()){
-			String uri = this.uriQueue.poll();
+		for(String uri : uriSet){
 			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
+			logger.debug("Dereferencing URI : {}. Having cache object : {}. Status Lines : {}", uri, httpResource, httpResource.getStatusLines());
+			
 			if (httpResource.getStatusLines() == null) {
 				this.uriQueue.add(uri);
 			} else {
@@ -125,7 +129,7 @@ public class Dereferencibility implements ComplexQualityMetric {
 			if (httpResource.getUri().contains("#") && statusCode.contains(200)) httpResource.setDereferencabilityStatusCode(StatusCode.HASH);
 			
 			if (statusCode.contains(200)){
-				if (statusCode.size() == 1) httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
+				httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
 				if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
 				else {
 					if (statusCode.contains(301)) httpResource.setDereferencabilityStatusCode(StatusCode.SC301);
