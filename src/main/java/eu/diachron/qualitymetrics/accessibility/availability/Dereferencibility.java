@@ -57,7 +57,15 @@ public class Dereferencibility implements ComplexQualityMetric {
 	
 	public void after(Object... arg0) {
 		//maybe we do not need a complex metric after all?
-		if (httpRetreiver.hasCompletedActions()) this.startDereferencingProcess();
+		//if (httpRetreiver.hasCompletedActions()) 
+		while (!httpRetreiver.hasCompletedActions()){
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		this.startDereferencingProcess();
 	}
 
 	public void before(Object... arg0) {
@@ -76,7 +84,7 @@ public class Dereferencibility implements ComplexQualityMetric {
 			String object = quad.getObject().toString();
 			if (httpRetreiver.isPossibleURL(object)){
 				httpRetreiver.addResourceToQueue(object);
-				uriQueue.add(subject);
+				uriQueue.add(object);
 			}
 		}
 	}

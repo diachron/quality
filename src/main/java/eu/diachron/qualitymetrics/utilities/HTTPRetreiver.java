@@ -162,68 +162,58 @@ public class HTTPRetreiver {
 		httpclient.start();
 		while ((httpQueue.size() > 0) || isRunning){
 			final String queuePeak = httpQueue.peek();
-			if (DiachronCacheManager.getInstance().existsInCache(
-					DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak)) {
+			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak)) {
 				httpQueue.poll();
+//				this.tryRemoveFromHead(queuePeak);
 				continue;
 			}
 
 			final CachedHTTPResource newResource = new CachedHTTPResource();
 			newResource.setUri(queuePeak);
-			DiachronCacheManager.getInstance().addToCache(
-					DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak,
-					newResource);
+			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeak, newResource);
 
 			final HttpGet request = new HttpGet(httpQueue.poll());
+//			final HttpGet request = new HttpGet(queuePeak);
 			final CountDownLatch latch = new CountDownLatch(httpQueue.size());
 
 			httpclient.execute(request, localContext,
 					new FutureCallback<HttpResponse>() {
 						public void completed(final HttpResponse response) {
-							latch.countDown();
 							newResource.setResponse(response);
 							try {
 								if (localContext.getRedirectLocations().size() >= 1) {
 									List<URI> uriRoute = new ArrayList<URI>();
 									uriRoute.add(request.getURI());
-									uriRoute.addAll(localContext
-											.getRedirectLocations());
+									uriRoute.addAll(localContext.getRedirectLocations());
 									try {
-										newResource
-												.addAllStatusLines(followAsyncRedirection(uriRoute));
+										newResource.addAllStatusLines(followAsyncRedirection(uriRoute));
 									} catch (IOException e) {
 										e.printStackTrace();
 									} catch (InterruptedException e) {
 										e.printStackTrace();
 									}
 								} else {
-									newResource.addStatusLines(response
-											.getStatusLine());
+									newResource.addStatusLines(response.getStatusLine());
 								}
 							} catch (Exception e) {
-								logger.debug(
-										"Exception during the request for redirect locations whith the following exception : {}",
-										e.getLocalizedMessage());
-								newResource.addStatusLines(response
-										.getStatusLine());
+								logger.debug("Exception during the request for redirect locations whith the following exception : {}",e.getLocalizedMessage());
+								newResource.addStatusLines(response.getStatusLine());
 							}
-							DiachronCacheManager.getInstance().addToCache(
-									DiachronCacheManager.HTTP_RESOURCE_CACHE,
-									queuePeak, newResource);
+							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeak, newResource);
+							latch.countDown();
 						}
 
 						public void failed(final Exception ex) {
 							newResource.setDereferencabilityStatusCode(StatusCode.BAD);
 							newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0,"Request could not be processed"));
 							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeak, newResource);
-
+							
 							logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
 							latch.countDown();
 						}
 
 						public void cancelled() {
-							logger.debug("The retreival for {} was cancelled.",
-									request.getURI().toString());
+							logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
 							latch.countDown();
 						}
 					});
@@ -288,17 +278,22 @@ public class HTTPRetreiver {
 	public boolean hasCompletedActions() {
 		return this.httpQueue.isEmpty();
 	}
+	
+	private void tryRemoveFromHead(String uri){
+		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
+		if (httpResource.getStatusLines() != null) this.httpQueue.poll();
+	}
 
 	
-//	 public static void main(String [] args) throws InterruptedException{
-//		HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
+	 public static void main(String [] args) throws InterruptedException{
+		HTTPRetreiver httpRetreiver = HTTPRetreiver.getInstance();
 	
-//		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-//		httpRetreiver.addResourceToQueue(uri);
-//		Thread.sleep(5000);
+		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+		httpRetreiver.addResourceToQueue(uri);
+		Thread.sleep(5000);
 	
-//		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
-//		int i = 0;
-//	 }
+		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
+		int i = 0;
+	 }
 }
 	
