@@ -23,6 +23,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.HTTPConnector;
 import eu.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 import eu.diachron.semantics.vocabulary.DQM;
@@ -30,7 +31,7 @@ import eu.diachron.semantics.vocabulary.DQM;
 /**
  * @author Jeremy Debattista
  * 
- *     Check if data dumps (void:dataDump) exists and are reachable and parsable.
+ * Check if ALL data dumps (void:dataDump) exist, are reachable and parsable.
  *     
  */
 public class RDFAccessibility implements QualityMetric {
@@ -45,17 +46,20 @@ public class RDFAccessibility implements QualityMetric {
 	private final Resource METRIC_URI = DQM.RDFAvailabilityMetric;
 	
 	private double metricValue = 0.0d;
-	private double countRDF = 0.0d;
-	private double positiveRDF = 0.0d;
+	
+	private double totalDataDumps = 0.0d;
+	private double workingDataDumps = 0.0d;
 
 	public void compute(Quad quad) {
-		// TODO Meaningful error logging
 		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
-
-			countRDF++;
+			totalDataDumps++;
+			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, quad.getObject().getURI())){
+				// check if response code is 303 -> 200
+				// check if response
+			}
 			
 			HTTPConnectorReport report = HTTPConnector.connectToURI(quad.getObject().getURI(), "", false, true);
-			if (report.getResponseCode() == 200) { positiveRDF++;}
+			if (report.getResponseCode() == 200) { workingDataDumps++;}
 			else {
 				this.problemList.add(quad);
 			}
@@ -65,7 +69,7 @@ public class RDFAccessibility implements QualityMetric {
 	}
 
 	public double metricValue() {
-		metricValue = positiveRDF / countRDF;
+		metricValue = workingDataDumps / totalDataDumps;
 
 		return metricValue;
 	}

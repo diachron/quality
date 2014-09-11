@@ -1,13 +1,17 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import eu.diachron.qualitymetrics.accessibility.availability.Dereferencibility;
@@ -41,8 +45,25 @@ public class DereferencibilityTest extends Assert{
 		// The expected value is calculated by going through all possible URIs
 		// in HyperThing.org and using DEV http client for Chrome.
 		// We had a total of 59 unique URIs and 16 had a 303 See Other code
-		// or hash URI. In HyperThing 2 URIs gave problems which was
+		// or hash URI. In HyperThing 2 URIs gave problems which were
 		// beyond our capabilities.
 		assertEquals(0.271186441,metric.metricValue(), 0.0001);
+	}
+	
+	@Ignore
+	@Test
+	public void blabla(){
+		Set<String> sh = new HashSet<String>();
+		List<Quad> streamingQuads = loader.getStreamingQuads();
+		
+		for(Quad quad : streamingQuads){
+			if (quad.getPredicate().getURI().equals(RDF.type.getURI())) continue;
+			if (quad.getSubject().isURI()) sh.add(quad.getSubject().getURI());
+			if (quad.getObject().isURI()) sh.add(quad.getObject().getURI());
+		}
+		
+		for(String s: sh){
+			if (s.contains("http")) System.out.println(s);
+		}
 	}
 }

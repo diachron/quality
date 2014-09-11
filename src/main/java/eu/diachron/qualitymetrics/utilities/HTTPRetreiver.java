@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
@@ -22,6 +24,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,9 +89,9 @@ public class HTTPRetreiver {
 				.setDefaultRequestConfig(requestConfig).build();
 		final HttpClientContext localContext = HttpClientContext.create();
 		
-		
 		httpclient.start();
 		for(final String queuePeek : this.httpQueue){
+			Thread.sleep(3000);
 			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
 				continue;
 			}
@@ -98,6 +101,8 @@ public class HTTPRetreiver {
 			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 																										  
 			final HttpGet request = new HttpGet(queuePeek);
+			Header accept = new BasicHeader("Accept", "application/rdf+xml; text/html");
+			request.addHeader(accept);
 			
 			httpclient.execute(request, localContext,
 					new FutureCallback<HttpResponse>() {
@@ -156,6 +161,7 @@ public class HTTPRetreiver {
 
 							public void completed(final HttpResponse response) {
 								latch.countDown();
+								System.out.println(response);
 								statusLines.add(response.getStatusLine());
 							}
 
@@ -188,7 +194,11 @@ public class HTTPRetreiver {
 	}
 
 	private RequestConfig getRequestConfig(boolean followRedirects) {
-		return RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).setRedirectsEnabled(followRedirects).build();
+		return RequestConfig.custom().
+				setSocketTimeout(3000).
+				setConnectTimeout(3000).
+				setRedirectsEnabled(followRedirects).
+				build();
 	}
 
 	public boolean isPossibleURL(String url) {
@@ -197,17 +207,17 @@ public class HTTPRetreiver {
 	}
 
 
-//	public static void main(String [] args) throws InterruptedException{
-//		HTTPRetreiver httpRetreiver = new HTTPRetreiver();
-//	
-//		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-//		String uri = "http://dbpedia.org/resource/Natural_language_processing";
-//		httpRetreiver.addResourceToQueue(uri);
-//		httpRetreiver.start();
-//		Thread.sleep(5000);
-//	
-//		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
-//		int i = 0;
-//	 }
+	public static void main(String [] args) throws InterruptedException{
+		HTTPRetreiver httpRetreiver = new HTTPRetreiver();
+	
+		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+		String uri = "http://aksw.org/MichaelMartin";
+		httpRetreiver.addResourceToQueue(uri);
+		httpRetreiver.start();
+		Thread.sleep(5000);
+	
+		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
+		System.out.println(httpResource.getStatusLines());
+	 }
 }
 	

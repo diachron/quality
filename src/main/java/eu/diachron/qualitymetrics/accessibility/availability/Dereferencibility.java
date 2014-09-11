@@ -110,14 +110,13 @@ public class Dereferencibility implements ComplexQualityMetric {
 	/* Private Methods */
 	private void startDereferencingProcess() {
 		for(String uri : uriSet){
-			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-			logger.debug("Dereferencing URI : {}. Having cache object : {}. Status Lines : {}", uri, httpResource, httpResource.getStatusLines());
-			
+			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
 			if (httpResource.getStatusLines() == null) {
 				this.uriQueue.add(uri);
 			} else {
 				if (this.isDereferenceable(httpResource)) this.dereferencedURI++;
 				this.totalURI++;
+				logger.debug("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
 	}
@@ -127,8 +126,7 @@ public class Dereferencibility implements ComplexQualityMetric {
 			List<Integer> statusCode = this.getStatusCodes(httpResource.getStatusLines());
 			
 			if (httpResource.getUri().contains("#") && statusCode.contains(200)) httpResource.setDereferencabilityStatusCode(StatusCode.HASH);
-			
-			if (statusCode.contains(200)){
+			else if (statusCode.contains(200)){
 				httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
 				if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
 				else {
@@ -137,6 +135,7 @@ public class Dereferencibility implements ComplexQualityMetric {
 					if (statusCode.contains(307)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
 				}
 			}
+			
 			if (has4xxCode(statusCode)) httpResource.setDereferencabilityStatusCode(StatusCode.SC4XX);
 			if (has5xxCode(statusCode)) httpResource.setDereferencabilityStatusCode(StatusCode.SC5XX);
 		} 			
