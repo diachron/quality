@@ -7,6 +7,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.RelevantT
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.IdentityInformationProvider;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.ProvenanceInformation;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.TrustworthinessRDFStatement;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.reputation.Reputation;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.verifiability.AuthenticityDataset;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.verifiability.DigitalSignatures;
 
@@ -18,6 +19,7 @@ public class StreamManager {
 	private boolean available = false; //This value is use as trafic Light
 	public QuerySolution object; //Object to be pass between elements
 	
+	
 	/**
 	 * Metrics developed
 	 */
@@ -28,7 +30,9 @@ public class StreamManager {
 	public TrustworthinessRDFStatement trusMetric = new TrustworthinessRDFStatement();
 	public Coverage coveMetric = new Coverage();
 	public RelevantTermsWithinMetaInformation releMetric = new RelevantTermsWithinMetaInformation();
+	public Reputation repuMetric = new Reputation();
 	
+	private String uriDataset;
 	
 	/**
 	 * This class obtain the values published by the producer
@@ -60,5 +64,20 @@ public class StreamManager {
 		object = value;
 		available = true;
 		notifyAll();
+	}
+
+	/**
+	 * @return the uriDataset
+	 */
+	public String getUriDataset() {
+		return uriDataset;
+	}
+
+	/**
+	 * @param uriDataset the uriDataset to set
+	 */
+	public void setUriDataset(String uriDataset) {
+		this.uriDataset = uriDataset;
+		this.repuMetric.setUriDataset(this.uriDataset);
 	}
 }

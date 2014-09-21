@@ -36,6 +36,7 @@ public class Producer extends Thread {
 	 */
 	public Producer(StreamManager streamManager, int number, String serviceUrl) {
 		this.streamManager = streamManager;
+		this.streamManager.setUriDataset(serviceUrl);
 		this.number = number;
 		this.serviceUrl = serviceUrl;
 	}
@@ -43,11 +44,10 @@ public class Producer extends Thread {
 	/**
 	 * This method start the thread to run the producer
 	 */
-	@SuppressWarnings("deprecation")
 	public void run() {
 		this.setRunning(true);
 		int iterationNumber = 0;
-		while (true && iterationNumber < 14) {
+		while (true && iterationNumber < 20) {
 		//while (true) {
 			System.out.println("*************        ITERATION NUMBER: " + iterationNumber + " TRIPLES: " +  iterationNumber*number + "*******************");
 			
@@ -71,7 +71,6 @@ public class Producer extends Thread {
 					System.out.println("Process the triples: " + this.number);
 			} catch (QueryExceptionHTTP e) {
 				System.out.println(this.serviceUrl + " is Not working or is DOWN");
-				this.stop();
 				break; //Close the cicle
 			} 		
 		}

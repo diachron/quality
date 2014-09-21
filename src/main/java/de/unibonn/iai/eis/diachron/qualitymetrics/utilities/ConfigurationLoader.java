@@ -16,6 +16,10 @@ import java.util.Properties;
  * 
  */
 public class ConfigurationLoader {
+	
+	public static final String COVERAGE_FILE = "coverage.properties";
+	public static final String CONFIGURATION_FILE = "config.properties";
+	
 	/**
 	 * This method read from a local file the directory where is saved the
 	 * Dataset processed
@@ -23,11 +27,12 @@ public class ConfigurationLoader {
 	 * @return The path of the file in the server
 	 * @throws IOException
 	 */
-	public List<String> loadAttributes() {
+	@SuppressWarnings("rawtypes")
+	public List<String> loadAttributes(String fileName) {
 		try {
 			List<String> ret = new ArrayList<String>();
 			Properties prop = new Properties();
-			String propFileName = "coverage.properties";
+			String propFileName = fileName;
 
 			InputStream inputStream = getClass().getClassLoader()
 					.getResourceAsStream(propFileName);
@@ -52,5 +57,78 @@ public class ConfigurationLoader {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * This method read from a local file the directory where is saved the Dataset processed
+	 * @return The path of the file in the server
+	 * @throws IOException
+	 */
+	public String loadDataBase(String fileName) throws IOException {
+
+		String result = "";
+		Properties prop = new Properties();
+		String propFileName = fileName;
+
+		InputStream inputStream = getClass().getClassLoader()
+				.getResourceAsStream(propFileName);
+		prop.load(inputStream);
+		if (inputStream == null) {
+			throw new FileNotFoundException("property file '" + propFileName
+					+ "' not found in the classpath");
+		}
+
+		// get the property value and print it out
+		String dataBase = prop.getProperty("dataBase");
+
+		result = dataBase;
+		return result;
+	}
+	
+	/**
+	 * This method read from a local file the directory where is saved the Dataset processed
+	 * @return The path of the file in the server
+	 * @throws IOException
+	 */
+	public String loadMailDefault(String fileName) throws IOException {
+
+		String result = "";
+		Properties prop = new Properties();
+		String propFileName = fileName;
+
+		InputStream inputStream = getClass().getClassLoader()
+				.getResourceAsStream(propFileName);
+		prop.load(inputStream);
+		if (inputStream == null) {
+			throw new FileNotFoundException("property file '" + propFileName
+					+ "' not found in the classpath");
+		}
+
+		// get the property value and print it out
+		String dataBase = prop.getProperty("defaultMail");
+
+		result = dataBase;
+		return result;
+	}
+	
+
+	public String loadByKey(String key, String fileName) throws IOException{
+		String result = "";
+		Properties prop = new Properties();
+		String propFileName = fileName;
+
+		InputStream inputStream = getClass().getClassLoader()
+				.getResourceAsStream(propFileName);
+		prop.load(inputStream);
+		if (inputStream == null) {
+			throw new FileNotFoundException("property file '" + propFileName
+					+ "' not found in the classpath");
+		}
+
+		// get the property value and print it out
+		String dataBase = prop.getProperty(key);
+
+		result = dataBase;
+		return result;
 	}
 }

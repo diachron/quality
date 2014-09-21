@@ -3,17 +3,34 @@
  */
 package de.unibonn.iai.eis.diachron.io.utilities;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ConfigurationLoader;
 
 /**
  * @author Carlos
  * 
  */
 public class UtilMail {
+
+	static String username, contrasena;
+	static Properties p;
+	static Session sesion;
+
 	/**
 	 * 
 	 * @param to
@@ -60,6 +77,52 @@ public class UtilMail {
 		} catch (Exception e) { // Handle any exceptions, print error message.
 			System.err.println(e);
 			System.err.println("Usage: java SendMail [<mailhost>]");
+		}
+	}
+
+	private static void setup() throws MessagingException, IOException {
+			
+		ConfigurationLoader conf = new ConfigurationLoader();
+		// datos de conexion
+		username = conf.loadByKey("userResponsibleMail",ConfigurationLoader.CONFIGURATION_FILE);
+		contrasena = conf.loadByKey("passResponsibleMail",ConfigurationLoader.CONFIGURATION_FILE);
+		// propiedades de la conexion
+		p = new Properties();
+		p.put("mail.smtp.auth", "true");
+		p.put("mail.smtp.starttls.enable", "true");
+		p.put("mail.smtp.host", "smtp.gmail.com");
+		p.put("mail.smtp.port", "587");
+
+		// creamos la sesion
+		sesion = crearSesion();
+	}
+
+	private static Session crearSesion() {
+		
+		Session session = Session.getInstance(p,
+				new javax.mail.Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username, contrasena);
+					}
+				});
+		return session;
+	}
+
+	public static void sendMail(String to, String subject, String content) throws MessagingException, IOException {
+		setup();
+		// Construimos el Mensaje
+		Message mensaje = new MimeMessage(sesion);
+		try {
+			mensaje.setRecipient(Message.RecipientType.TO, new InternetAddress(
+					to));
+			mensaje.setSubject(subject);
+			mensaje.setText(content);
+			// Enviamos el Mensaje
+			Transport.send(mensaje);
+			System.out.println("Mail sent it to: " + to);
+		} catch (Exception ex) {
+			System.out.println(ex.toString());
 		}
 	}
 }

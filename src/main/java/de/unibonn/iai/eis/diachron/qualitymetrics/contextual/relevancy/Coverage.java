@@ -30,11 +30,11 @@ public class Coverage extends AbstractQualityMetric{
 	private static Logger logger = LoggerFactory.getLogger(RelevantTermsWithinMetaInformation.class);
 	
 	private ConfigurationLoader loader = new ConfigurationLoader();
-	private List<String> properties = loader.loadAttributes();
+	private List<String> properties = loader.loadAttributes(ConfigurationLoader.COVERAGE_FILE);
 	private HashMap<String, List<String>> setPropertiesList;	
 	private List<String> setURIs = new ArrayList<String>();
 	private double metricValue;
-	
+	private int triplesCounter = 0;
 	
 	/**
 	 * Creator Method, It create a HashMap with every of the attributes that was found in the config properties to save the information when is loading.
@@ -54,21 +54,22 @@ public class Coverage extends AbstractQualityMetric{
 		Node object = quad.getObject();
 		
 		String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
-		
-		if(!this.isContainedInTheList(curSubjectURI, this.setURIs)){
-			this.setURIs.add(curSubjectURI);
-		}	
-		
+		this.triplesCounter++;
+					
 		// Check if the property of the quad is known to of one of the properties defined in the config file
 		if (predicate != null && predicate.isURI() && subject != null) {
 			//Goes through all the properties loaded
 			for(String aux : this.properties){
-				//Compare the predicate agains the propertie
+				//Compare the predicate against the property
 				if(predicate.getURI().equals(aux)){
 					//if the subject URI is not contained on the list, then it add the new value to the list
 					if(!this.isContainedInTheList(curSubjectURI, this.setPropertiesList.get(aux))){
 						this.setPropertiesList.get(aux).add(curSubjectURI);
-					}					
+					}	
+					//only if the value is added into one of the list then, it is added into the uris to check the value
+					if(!this.isContainedInTheList(curSubjectURI, this.setURIs)){
+						this.setURIs.add(curSubjectURI);
+					}
 					logger.trace("Quad providing " +aux+ " of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
 				}
 			}
@@ -87,6 +88,10 @@ public class Coverage extends AbstractQualityMetric{
 		return  list.contains(object) ;
 	}
 	
+	/**
+	 * This method return percentage of URIS that contained all the attributes defined in the configuration file
+	 * The number of elements that contained all the information / the total number of elements in the data set
+	 */
 	@Override
 	public double metricValue() {
 		int cont = 0;
@@ -105,14 +110,12 @@ public class Coverage extends AbstractQualityMetric{
 				cont++;
 			}
 		}
-		
-		int size = this.setURIs.size();
-		
-		double value = new Double(cont)/new Double(size); 
+						
+		double value = new Double(cont)/new Double(this.triplesCounter); 
 
 		this.setMetricValue(value);
 		
-		//Return the number of terms that contained all the metada information
+		//Return the number of terms that contained all the metadata information
 		return value;
 		
 	}

@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.io.utilities.ConfigurationLoader;
 import de.unibonn.iai.eis.diachron.io.utilities.DataSetResults;
 import de.unibonn.iai.eis.diachron.io.utilities.UtilMail;
 import de.unibonn.iai.eis.diachron.datatypes.Object2Quad;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ConfigurationLoader;
 import de.unibonn.iai.eis.diachron.util.Dimension;
 import de.unibonn.iai.eis.diachron.util.Metrics;
 import de.unibonn.iai.eis.diachron.util.ResultDataSet;
@@ -71,6 +71,9 @@ public class Consumer extends Thread {
 			this.streamManager.coveMetric.compute(value);
 			this.streamManager.releMetric.compute(value);
 			
+			// Reputation Metrics
+			this.streamManager.repuMetric.compute(value);
+			
 			setCont(getCont() + 1);
 			contAux++;
 			if (contAux == 10000) {
@@ -98,6 +101,7 @@ public class Consumer extends Thread {
 		result.provMetric = this.streamManager.provMetric;
 		result.releMetric = this.streamManager.releMetric;
 		result.trusMetric = this.streamManager.trusMetric;
+		result.repuMetric = this.streamManager.repuMetric;
 		
 		getResults().add(result);
 		
@@ -117,15 +121,20 @@ public class Consumer extends Thread {
 		dimension3.getMetrics().add(new Metrics("Provenance Information", Double.toString(result.provMetric.metricValue())));
 		dimension3.getMetrics().add(new Metrics("Trustworthiness RDF Statement", Double.toString(result.trusMetric.metricValue())));
 				
+		Dimension dimension4 = new Dimension();
+		dimension4.setName("Reputation");
+		dimension4.getMetrics().add(new Metrics("Reputation", Double.toString(result.repuMetric.metricValue())));
+				
 		Results results = new Results();
 		results.setUrl(this.producer.getServiceUrl());
 		results.getDimensions().add(dimension1);
 		results.getDimensions().add(dimension2);
 		results.getDimensions().add(dimension3);
+		results.getDimensions().add(dimension4);
 		
 		try {
 			ConfigurationLoader conf = new ConfigurationLoader();
-			ResultDataSet resultToWrite = ResultsHelper.read(conf.loadDataBase());
+			ResultDataSet resultToWrite = ResultsHelper.read(conf.loadDataBase(ConfigurationLoader.CONFIGURATION_FILE));
 
 			resultToWrite.setLastDate(new Date());
 			boolean modified = false;
@@ -148,12 +157,12 @@ public class Consumer extends Thread {
 				resultToWrite.setResults(aux);
 			}
 			
-			ResultsHelper.write(resultToWrite, conf.loadDataBase());
+			ResultsHelper.write(resultToWrite, conf.loadDataBase(ConfigurationLoader.CONFIGURATION_FILE));
+			String text = "The process is already finish, you can check now in the web site of the DIACHRON INTERFACE";
 			if (this.getMail() != null)
-				UtilMail.sendMail(this.getMail());
-			else {
-				UtilMail.sendMail(conf.loadMailDefault());
-			}
+				UtilMail.sendMail(this.getMail(),"Proccess Finish", text);
+			else 
+				UtilMail.sendMail(conf.loadMailDefault(ConfigurationLoader.CONFIGURATION_FILE),"Proccess Finish", text);
 
 		} catch (Exception e) {
 			System.out.println("****** Can't save the result because: "

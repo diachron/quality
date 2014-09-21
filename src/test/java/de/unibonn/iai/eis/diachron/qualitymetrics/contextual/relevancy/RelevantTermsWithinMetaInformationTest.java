@@ -67,7 +67,7 @@ private static Logger logger = LoggerFactory.getLogger(RelevantTermsWithinMetaIn
 		double metricValueNegative = metricNegative.metricValue();
 		logger.trace("Computed machine-readable indication of a Authentisity of the Dataset metric; positive case one: {}, negative case: {}", metricValuePositive,  metricValueNegative);
 
-		assertEquals(0.0019, metricValuePositive, delta);
+		assertEquals(0.0004, metricValuePositive, delta);
 		assertEquals(0.0, metricValueNegative, delta);
 	}
 

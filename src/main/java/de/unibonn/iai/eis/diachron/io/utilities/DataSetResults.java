@@ -8,6 +8,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.RelevantT
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.IdentityInformationProvider;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.ProvenanceInformation;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.TrustworthinessRDFStatement;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.reputation.Reputation;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.verifiability.AuthenticityDataset;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.verifiability.DigitalSignatures;
 
@@ -28,6 +29,9 @@ public class DataSetResults {
 	//Relevance
 	public Coverage coveMetric;
 	public RelevantTermsWithinMetaInformation releMetric;
+	
+	//Reputation
+	public Reputation repuMetric;
 	
 	/**
 	 * Empty creator
@@ -159,6 +163,20 @@ public class DataSetResults {
 	 */
 	public void setReleMetric(RelevantTermsWithinMetaInformation releMetric) {
 		this.releMetric = releMetric;
+	}
+
+	/**
+	 * @return the repuMetric
+	 */
+	public Reputation getRepuMetric() {
+		return repuMetric;
+	}
+
+	/**
+	 * @param repuMetric the repuMetric to set
+	 */
+	public void setRepuMetric(Reputation repuMetric) {
+		this.repuMetric = repuMetric;
 	}
 
 }

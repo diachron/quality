@@ -26,7 +26,7 @@ private static Logger logger = LoggerFactory.getLogger(CoverageTest.class);
 	
 	@Before
 	public void setUp() throws Exception {
-		loaderNegative.loadDataSet(DataSetMappingForTestCase.CurrencyDocumentStatementsCM);
+		loaderNegative.loadDataSet(DataSetMappingForTestCase.DuplicateInstance);
 		loaderPositive.loadDataSet(DataSetMappingForTestCase.CurrencyDocumentStatements);
 	}
 
@@ -67,7 +67,7 @@ private static Logger logger = LoggerFactory.getLogger(CoverageTest.class);
 		double metricValueNegative = metricNegative.metricValue();
 		logger.trace("Computed machine-readable indication of a Authentisity of the Dataset metric; positive case one: {}, negative case: {}", metricValuePositive,  metricValueNegative);
 
-		assertEquals(0.0019, metricValuePositive, delta);
+		assertEquals(0.0011, metricValuePositive, delta);
 		assertEquals(0.0, metricValueNegative, delta);
 	}
 

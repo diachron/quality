@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.model.SelectItem;
 import javax.faces.event.ActionEvent;
 
-import de.unibonn.iai.eis.diachron.io.utilities.ConfigurationLoader;
+import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ConfigurationLoader;
 import de.unibonn.iai.eis.diachron.util.Dimension;
 import de.unibonn.iai.eis.diachron.util.Metrics;
 import de.unibonn.iai.eis.diachron.util.ResultDataSet;
@@ -50,8 +50,8 @@ public class QualityBean implements Serializable {
 		super();	
 		try {
 			ConfigurationLoader conf = new ConfigurationLoader();
-			System.out.println(conf.loadDataBase());
-			results = ResultsHelper.read(conf.loadDataBase());
+			System.out.println(conf.loadDataBase(ConfigurationLoader.CONFIGURATION_FILE));
+			results = ResultsHelper.read(conf.loadDataBase(ConfigurationLoader.CONFIGURATION_FILE));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		

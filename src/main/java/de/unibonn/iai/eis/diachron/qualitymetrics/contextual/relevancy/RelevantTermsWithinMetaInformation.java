@@ -33,6 +33,7 @@ public class RelevantTermsWithinMetaInformation extends AbstractQualityMetric {
 	private List<String> setSubjectElements = new ArrayList<String>();
 	private List<String> setURIs = new ArrayList<String>();
 	private double metricValue;
+	private int triplesCounter = 0;
 		
 	/**
 	 * Processes a single quad being part of the dataset. 
@@ -49,10 +50,8 @@ public class RelevantTermsWithinMetaInformation extends AbstractQualityMetric {
 		Node object = quad.getObject();
 				
 		String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
-		
-		if(!this.isContainedInTheList(curSubjectURI, this.setURIs)){
-			this.setURIs.add(curSubjectURI);
-		}
+		boolean addToTheFinalSet = false;
+		this.triplesCounter++;
 			
 		// Check if the property of the quad is known to provide licensing information
 		if(predicate != null && predicate.isURI() && subject != null) {							
@@ -60,25 +59,30 @@ public class RelevantTermsWithinMetaInformation extends AbstractQualityMetric {
 			if(predicate.getURI().equals(DCTerms.title.getURI())) {
 				if(!this.isContainedInTheList(curSubjectURI, this.setTitleElements)){					
 					this.setTitleElements.add(curSubjectURI);
+					addToTheFinalSet = true;					
 				}				
-				logger.trace("Quad providing title of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
-				
+				logger.trace("Quad providing title of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);				
 			}//Check if the quad contain info related with the content of the data set
 			else if(predicate.getURI().equals(DCTerms.description.getURI())){
 				if(!this.isContainedInTheList(curSubjectURI, this.setDescriptionElements)){					
 					this.setDescriptionElements.add(curSubjectURI);
+					addToTheFinalSet = true;
 				}				
-				logger.trace("Quad providing description of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
-								
+				logger.trace("Quad providing description of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);								
 			}
 			else if(predicate.getURI().equals(DCTerms.subject.getURI())){
 				if(!this.isContainedInTheList(curSubjectURI, this.setSubjectElements)){					
 					this.setSubjectElements.add(curSubjectURI);
+					addToTheFinalSet = true;
 				}				
-				logger.trace("Quad providing subject of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
-				
+				logger.trace("Quad providing subject of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);				
 			}
 			
+		}
+		
+		//Add the value in the set of URIS to be evaluated
+		if(addToTheFinalSet && !this.isContainedInTheList(curSubjectURI, this.setURIs)){
+			this.setURIs.add(curSubjectURI);
 		}
 	}
 
@@ -106,8 +110,7 @@ public class RelevantTermsWithinMetaInformation extends AbstractQualityMetric {
 			}
 		}
 		
-		int size = this.setURIs.size();
-		double value = new Double(cont)/new Double(size); 
+		double value = new Double(cont)/new Double(this.triplesCounter); 
 
 		this.setMetricValue(value);
 		//Return the number of terms that contained all the metada information

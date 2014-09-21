@@ -370,6 +370,12 @@
 		rdfs:comment	"Assesses if the terms of a document contain the level of detail defined by the administrator" ;
 		rdfs:label	"Coverage of the terms in the dataset" .
 	
+	dqm:ReputationMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"By assigning explicit ratings to the dataset" ;
+		rdfs:label	"Reputation metric" .
+	
 	#Properties
 	#Trust Dimensions Properties
 	dqm:hasBelievabilityDimension
@@ -452,6 +458,14 @@
 		rdfs:label	"Relevancy has end-point Coverage metric" ;
 		rdfs:domain	dqm:Relevance ;
 		rdfs:range	dqm:CoverageMetric .
+		
+	dqm:hasReputationMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Reputation Dimension with Reputation Metric" ;
+		rdfs:label	"Reputation has end-point Reputation metric" ;
+		rdfs:domain	dqm:Reputation ;
+		rdfs:range	dqm:ReputationMetric .	
 		
 	#Verifiability Metric Properties
 	dqm:hasAuthenticityDatasetMetric
