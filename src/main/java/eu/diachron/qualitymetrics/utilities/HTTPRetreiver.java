@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.StatusLine;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -26,6 +25,9 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +40,6 @@ import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
  * 
  * Retreives HTTP resources
  */
-
-//TODO: Async methods and with consumer-producer queue
 public class HTTPRetreiver {
 
 	final static Logger logger = LoggerFactory.getLogger(HTTPRetreiver.class);
@@ -47,7 +47,8 @@ public class HTTPRetreiver {
 	//private ConcurrentLinkedQueue<String> httpQueue = new ConcurrentLinkedQueue<String>();
 	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	private CountDownLatch latch;
+	private CountDownLatch mainHTTPRetreiverLatch;
+	
 	
 	public void addResourceToQueue(String resourceURI) {
 		this.httpQueue.add(resourceURI);
@@ -60,7 +61,7 @@ public class HTTPRetreiver {
 
 	public void start() throws InterruptedException{
 		//TODO: check if httpQUEUE is not empty yet 
-		latch = new CountDownLatch(httpQueue.size());
+		mainHTTPRetreiverLatch = new CountDownLatch(httpQueue.size());
 		
 		Runnable retreiver = new Runnable() {
 			public void run() {
@@ -73,7 +74,7 @@ public class HTTPRetreiver {
 			}
 		};
 		executor.submit(retreiver);
-		latch.await();
+		mainHTTPRetreiverLatch.await();
 	}
 	
 	/**
@@ -107,14 +108,14 @@ public class HTTPRetreiver {
 			httpclient.execute(request, localContext,
 					new FutureCallback<HttpResponse>() {
 						public void completed(final HttpResponse response) {
-							newResource.setResponse(response);
+							newResource.addResponse(response);
 							try {
 								if (localContext.getRedirectLocations().size() >= 1) {
 									List<URI> uriRoute = new ArrayList<URI>();
 									uriRoute.add(request.getURI());
 									uriRoute.addAll(localContext.getRedirectLocations());
 									try {
-										newResource.addAllStatusLines(followAsyncRedirection(uriRoute));
+										newResource.addAllResponses(followAsyncRedirection(uriRoute));
 									} catch (IOException e) {
 										e.printStackTrace();
 									}
@@ -126,7 +127,7 @@ public class HTTPRetreiver {
 								newResource.addStatusLines(response.getStatusLine());
 							}
 							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeek, newResource);
-							latch.countDown();
+							mainHTTPRetreiverLatch.countDown();
 						}
 
 						public void failed(final Exception ex) {
@@ -135,19 +136,19 @@ public class HTTPRetreiver {
 							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeek, newResource);
 
 							logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
-							latch.countDown();
+							mainHTTPRetreiverLatch.countDown();
 						}
 
 						public void cancelled() {
 							logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
-							latch.countDown();
+							mainHTTPRetreiverLatch.countDown();
 						}
 					});
 		}
 	}
 	
-	protected List<StatusLine> followAsyncRedirection(List<URI> uriRoute) throws IOException, InterruptedException {
-		final List<StatusLine> statusLines = Collections.synchronizedList(new ArrayList<StatusLine>());
+	protected List<HttpResponse> followAsyncRedirection(List<URI> uriRoute) throws IOException, InterruptedException {
+		final List<HttpResponse> httpResponses = Collections.synchronizedList(new ArrayList<HttpResponse>());
 		RequestConfig requestConfig = this.getRequestConfig(false);
 		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().setDefaultRequestConfig(requestConfig).build();
 		try {
@@ -155,33 +156,31 @@ public class HTTPRetreiver {
 			httpclient.start();
 			final List<HttpGet> requests = this.toHttpGetList(uriRoute);
 
-			final CountDownLatch latch = new CountDownLatch(requests.size());
+			final CountDownLatch redirectionLatch = new CountDownLatch(requests.size());
 			for (final HttpGet request : requests) {
 				httpclient.execute(request, localContext, new FutureCallback<HttpResponse>() {
 
 							public void completed(final HttpResponse response) {
-								latch.countDown();
-								System.out.println(response);
-								statusLines.add(response.getStatusLine());
+								redirectionLatch.countDown();
+								httpResponses.add(response);
 							}
 
 							public void failed(final Exception ex) {
 								logger.debug("Failed in retreiving follow redirection request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
-								latch.countDown();
+								redirectionLatch.countDown();
 							}
 
 							public void cancelled() {
 								logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
-								latch.countDown();
+								redirectionLatch.countDown();
 							}
-
 						});
 			}
-			latch.await();
+			redirectionLatch.await();
 		} finally {
 			httpclient.close();
 		}
-		return statusLines;
+		return httpResponses;
 	}
 
 	private List<HttpGet> toHttpGetList(List<URI> uriRoute) {
@@ -217,7 +216,11 @@ public class HTTPRetreiver {
 		Thread.sleep(5000);
 	
 		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
-		System.out.println(httpResource.getStatusLines());
-	 }
+		//System.out.println(httpResource.getResponses().get(0).getEntity().getContentType().getValue());
+		//httpResource.getResponses().get(0).getHeaders("Content-Disposition");
+		String filename = httpResource.getResponses().get(0).getHeaders("Content-Disposition")[0].getValue().replace("filename=\"", "").replace("\"", "");
+		Lang language = RDFLanguages.filenameToLang(filename);
+		System.out.println(WebContent.mapLangToContentType(language));
+	}
 }
 	

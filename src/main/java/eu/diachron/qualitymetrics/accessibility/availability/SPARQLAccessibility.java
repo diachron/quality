@@ -1,6 +1,5 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +10,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -46,7 +42,6 @@ public class SPARQLAccessibility implements QualityMetric {
 	public void compute(Quad quad) {
 
 		if (quad.getPredicate().getURI().equals(VOID.sparqlEndpoint.getURI())) {
-
 			String sparqlQuerystring = "select ?s where {?s ?p ?o}limit 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
 
@@ -54,8 +49,6 @@ public class SPARQLAccessibility implements QualityMetric {
 
 			ResultSet results = qexec.execSelect();
 
-			// Iterating over the SPARQL Query results and check if any result is received
-			// set metricValue to 1 if results received otherwise set to 0
 			if (results.hasNext())
 				metricValue = 1;
 			else
@@ -64,12 +57,8 @@ public class SPARQLAccessibility implements QualityMetric {
 				problemList.add(quad);
 				
 			}
-			
-
-			// Release the resources used to query
 			qexec.close();
 		}
-
 	}
 
 	public double metricValue() {

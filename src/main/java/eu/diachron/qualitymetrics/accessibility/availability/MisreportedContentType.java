@@ -1,29 +1,26 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.UnknownHostException;
-import java.util.List;
-
-import org.apache.log4j.BasicConfigurator;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.http.HttpResponse;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.riot.WebContent;
 import org.apache.log4j.Logger;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.datatypes.URIProfile;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
-import eu.diachron.qualitymetrics.utilities.HTTPConnector;
-import eu.diachron.qualitymetrics.utilities.HTTPConnectorReport;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.HTTPRetreiver;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
- * @author Nikhil Patra
+ * @author Jeremy Debattista
  * 
  *         In "Misreported Content Type" metric we check if RDF/XML content is
  *         returned with a reported type other than application/rdf+xml
@@ -38,42 +35,32 @@ public class MisreportedContentType implements QualityMetric {
 	private final Resource METRIC_URI = DQM.MisreportedContentTypesMetric;
 
 	// TODO check why parsing slows down at
-	// http://academic.research.microsoft.com/Author/53619090
 	// TODO handle unknown host exception (people.comiles.eu,fb.comiles.eu)
-	private double misReportedType;
-	private double correctReportedType;
+	private double misReportedType=0;
+	private double correctReportedType=0;
+	
+	private HTTPRetreiver httpRetreiver = new HTTPRetreiver();
+	private boolean metricCalculated = false;
+	private Set<String> uriSet = Collections.synchronizedSet(new HashSet<String>());
+
 
 	static Logger logger = Logger.getLogger(MisreportedContentType.class);
 	boolean followRedirects = true;
 	String contentNegotiation = "application/rdf+xml";
 
-	// Constructor to Initialize our count variables
-	public MisreportedContentType() {
-		misReportedType = 0;
-		correctReportedType = 0;
-		BasicConfigurator.configure();
-	}
 
 	public void compute(Quad quad) {
-
-		// Check for Subject
-		Node subject = quad.getSubject();
-		// System.out.println(subject.toString()+ " ");
-
-		if (HTTPConnector.isPossibleURL(subject)
-				&& (!CommonDataStructures.uriExists(subject.getURI()))) {
-			this.MisreportedConetentTypeChecker(subject);
+		String subject = quad.getSubject().toString();
+		if (httpRetreiver.isPossibleURL(subject)){
+			httpRetreiver.addResourceToQueue(subject);
+			uriSet.add(subject);
 		}
-
-		// Check for object
-		Node object = quad.getObject();
-		// System.out.println(object.toString()+ " ");
-
-		if (HTTPConnector.isPossibleURL(object)
-				&& (!CommonDataStructures.uriExists(object.getURI()))) {
-			this.MisreportedConetentTypeChecker(object);
+		
+		String object = quad.getObject().toString();
+		if (httpRetreiver.isPossibleURL(object)){
+			httpRetreiver.addResourceToQueue(object);
+			uriSet.add(object);
 		}
-
 	}
 
 	public Resource getMetricURI() {
@@ -81,56 +68,48 @@ public class MisreportedContentType implements QualityMetric {
 	}
 
 	public double metricValue() {
+		if (!this.metricCalculated){
+			try {
+				httpRetreiver.start();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
-		// Returns total no. of correct reported types/(misreported types +
-		// correct)
-		double metricValue = correctReportedType
-				/ (misReportedType + correctReportedType);
+			this.checkForMisreportedContentType();
+			this.metricCalculated = true;
+		}
+		
+		double metricValue = correctReportedType / (misReportedType + correctReportedType);
 
 		return metricValue;
 	}
 
-	private void MisreportedConetentTypeChecker(Node node) {
-
-		URIProfile profile = new URIProfile();
-		HTTPConnectorReport report;
-		for (String content : CommonDataStructures.ldContentTypes) {
-			try {
-				// Connect to URI and set the profile values
-
-				report = HTTPConnector.connectToURI(node, content,
-						followRedirects, true);
-				profile.setHttpStatusCode(report.getResponseCode());
-
-				// Get if content is parsible
-				boolean isParsible = report.isContentParsable();
-
-				// If parsible then check for the content type
-				if (isParsible) {
-					// get the content type and compare if it is
-					// application/rdf+xml
-					boolean isLODtype = report.getContentType().equals(
-							contentNegotiation);
-
-					if (isLODtype) {
-						correctReportedType++;
-					} else {
-						misReportedType++;
+	
+	
+	private void checkForMisreportedContentType(){
+		for(String uri : uriSet){
+			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
+			if (httpResource.getResponses() == null) continue;
+			for (HttpResponse response : httpResource.getResponses()){
+				if (response.getStatusLine().getStatusCode() == 200){
+					if (response.getHeaders("Content-Disposition").length > 0){
+						//therefore some file can be downloaded
+						String filename = response.getHeaders("Content-Disposition")[0].getValue().replace("filename=\"", "").replace("\"", "");
+						Lang language = RDFLanguages.filenameToLang(filename); // if any other type of file but not a LOD compatible, it will return null and we skip
+						if (language == null) continue;
+						if (response.getEntity().getContentType().getValue().equals(WebContent.mapLangToContentType(language))) correctReportedType++;
+						else {
+							System.out.println(uri + " - " + response.getEntity().getContentType().getValue() + " - " + filename);
+							misReportedType++;
+						}
+						break;
 					}
 				}
-				// TODO Meaningful Logging
-			} catch (UnknownHostException e) {
-
-			} catch (MalformedURLException e) {
-			} catch (ProtocolException e) {
-			} catch (IOException e) {
 			}
-
-			CommonDataStructures.addToUriMap(node.toString(), profile);
-
+			
 		}
 	}
-
+	
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;

@@ -30,11 +30,10 @@ public class MisreportedContentTypeTest extends Assert{
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
 		for(Quad quad : streamingQuads){
-			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
 		
-		assertEquals(1.0,metric.metricValue(), 0.0);
+		assertEquals(1.0,metric.metricValue(), 0.0001);
 	}
 
 }

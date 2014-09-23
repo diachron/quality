@@ -11,6 +11,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
-import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -39,7 +40,7 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
  */
-public class Dereferencibility implements ComplexQualityMetric {
+public class Dereferencibility implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityMetric;
 
@@ -51,34 +52,12 @@ public class Dereferencibility implements ComplexQualityMetric {
 	
 	private HTTPRetreiver httpRetreiver = new HTTPRetreiver();
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
-	private Queue<String> uriQueue = new ConcurrentLinkedQueue<String>();
+	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
 	private Set<String> uriSet = Collections.synchronizedSet(new HashSet<String>());
+	private boolean metricCalculated = false;
 	
-	
-	public void after(Object... arg0) {
-		//maybe we do not need a complex metric after all?
-		//if (httpRetreiver.hasCompletedActions()) 
-		
-		ArrayList<String> uriList = new ArrayList<String>();
-		uriList.addAll(uriSet);
-		httpRetreiver.addListOfResourceToQueue(uriList);
-		
-		try {
-			httpRetreiver.start();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		this.startDereferencingProcess();
-	}
-
-	public void before(Object... arg0) {
-		// Do Nothing
-	}
-
 	public void compute(Quad quad) {
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){ // we are currently ignoring triples ?s a ?o
-			
 			String subject = quad.getSubject().toString();
 			if (httpRetreiver.isPossibleURL(subject)){
 				uriSet.add(subject);
@@ -101,7 +80,26 @@ public class Dereferencibility implements ComplexQualityMetric {
 	}
 
 	public double metricValue() {
-		System.out.println(this.dereferencedURI + " " + this.totalURI);
+		if (!this.metricCalculated){
+			ArrayList<String> uriList = new ArrayList<String>();
+			uriList.addAll(uriSet);
+			httpRetreiver.addListOfResourceToQueue(uriList);
+			
+			try {
+				httpRetreiver.start();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			do{
+				this.startDereferencingProcess();
+				uriSet.clear();
+				uriSet.addAll(this.notFetchedQueue);
+				this.notFetchedQueue.clear();
+			}while(!this.notFetchedQueue.isEmpty());
+			
+			this.metricCalculated = true;
+		}
 		this.metricValue = this.dereferencedURI / this.totalURI;
 		return this.metricValue;
 	}
@@ -112,10 +110,14 @@ public class Dereferencibility implements ComplexQualityMetric {
 		for(String uri : uriSet){
 			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
 			if (httpResource.getStatusLines() == null) {
-				this.uriQueue.add(uri);
+				this.notFetchedQueue.add(uri);
 			} else {
 				if (this.isDereferenceable(httpResource)) this.dereferencedURI++;
 				this.totalURI++;
+
+				if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200)
+					this.dereferencedURI = (this.is200AnRDF(httpResource)) ? this.dereferencedURI + 1 : this.dereferencedURI;
+								
 				logger.debug("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
@@ -159,6 +161,14 @@ public class Dereferencibility implements ComplexQualityMetric {
 			case SC303 : case HASH : return true;
 			default : return false;
 		}
+	}
+	
+	private boolean is200AnRDF(CachedHTTPResource resource){
+		for (HttpResponse response : resource.getResponses()){
+			if (response.getEntity().getContentType().getValue().equals("application/rdf+xml"))
+				return true;
+		}
+		return false;
 	}
 	
 	private boolean has4xxCode(List<Integer> statusCode){

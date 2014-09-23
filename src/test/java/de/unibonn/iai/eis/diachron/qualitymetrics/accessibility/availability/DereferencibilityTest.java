@@ -40,14 +40,13 @@ public class DereferencibilityTest extends Assert{
 			metric.compute(quad);
 		}
 		
-		metric.after();
 
 		// The expected value is calculated by going through all possible URIs
 		// in HyperThing.org and using DEV http client for Chrome.
-		// We had a total of 59 unique URIs and 16 had a 303 See Other code
+		// We had a total of 59 unique URIs and 15 had a 303 See Other code
 		// or hash URI. In HyperThing 2 URIs gave problems which were
 		// beyond our capabilities.
-		assertEquals(0.271186441,metric.metricValue(), 0.0001);
+		assertEquals(0.25423728813559,metric.metricValue(), 0.01);
 	}
 	
 	@Ignore

@@ -18,15 +18,25 @@ import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 public class CachedHTTPResource {
 
 	private String uri = "";
-	private HttpResponse response = null;
+	private List<HttpResponse> responses = null;
 	private List<StatusLine> statusLines = null;
 	private StatusCode dereferencabilityStatusCode = null;
 	
-	public HttpResponse getResponse() {
-		return response;
+	public List<HttpResponse> getResponses() {
+		return responses;
 	}
-	public void setResponse(HttpResponse response) {
-		this.response = response;
+	public void addResponse(HttpResponse response) {
+		if (this.responses == null) this.responses = new ArrayList<HttpResponse>();
+		this.responses.add(response);
+		this.addStatusLines(response.getStatusLine());
+	}
+	public void addAllResponses(List<HttpResponse> responses) {
+		if (this.responses == null) this.responses = new ArrayList<HttpResponse>();
+		this.responses.addAll(responses);
+		
+		for(HttpResponse res : responses){
+			this.addStatusLines(res.getStatusLine());
+		}
 	}
 	public List<StatusLine> getStatusLines() {
 		return statusLines;
