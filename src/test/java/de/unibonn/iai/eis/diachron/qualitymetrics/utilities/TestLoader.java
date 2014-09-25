@@ -8,6 +8,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
+
 public class TestLoader {
 
 	protected List<Quad> streamingQuads = new ArrayList<Quad>();
@@ -26,6 +28,9 @@ public class TestLoader {
 		while(si.hasNext()){
 			this.streamingQuads.add(new Quad(null, si.next().asTriple()));
 		}
+		
+		// Set the dataset URI into the datasetURI property, so that it's retrieved by EnvironmentProperties
+		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "http://aksw.org/");
 	}
 	
 	/**

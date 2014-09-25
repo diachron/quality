@@ -14,6 +14,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.accessibility.performance.LowLatency;
 import eu.diachron.semantics.vocabulary.DQM;
 
@@ -72,8 +73,14 @@ public class MachineReadableLicense implements QualityMetric {
 		
 		// If not found yet, try to obtain the dataset's URI from the current quad, if succeded store it in the dataSetURI attribute for future use
 		if(dataSetURI == null) {
-			logger.trace("URI of the dataset detected: {}", dataSetURI);
-			dataSetURI = LowLatency.extractDatasetURI(quad);
+			try {
+				dataSetURI = EnvironmentProperties.getInstance().getDatasetURI();
+			} catch(Exception ex) {
+				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+				// Try to get the dataset URI from the VOID property, as last resource
+				dataSetURI = LowLatency.extractDatasetURI(quad);
+			}
+			logger.trace("Trying to get dataset URI, loaded: {}", dataSetURI); 
 		}
 
 		// Check if the property of the quad is known to provide licensing information
