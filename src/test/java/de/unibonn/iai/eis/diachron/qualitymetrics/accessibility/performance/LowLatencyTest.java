@@ -46,7 +46,7 @@ public class LowLatencyTest extends Assert {
 		
 		// Obtain the average measurement of the latency elicited by accessing the dataset's URI
 		double metricValue = metric.metricValue();
-		logger.trace("Computed low-latency metric: " + metricValue);
+		System.out.println("Computed low-latency metric: " + metricValue);
 
 		assertTrue("Latency should be a positive number", metricValue > 0.0);
 		assertTrue("Latency is too high (Max. 15000 ms)", metricValue < 7000.0);

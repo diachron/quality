@@ -2,6 +2,8 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.List;
 
+import old_classes.UnstructuredData;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,7 +12,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
-import eu.diachron.qualitymetrics.accessibility.availability.UnstructuredData;
 
 public class UnstructuredDataTest extends Assert{
 

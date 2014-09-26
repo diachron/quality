@@ -75,6 +75,12 @@
 		rdfs:comment	"Assesses the efficiency with which a system can bind to the dataset and get access to the information contained into it" ;
 		rdfs:label	"Performance" .
 		
+	dqm:Interlinking
+		a rdfs:Class;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Refers to the degree to which entities that represent the same concept are linked to each other, be it within or between two or more data sources." ;
+		rdfs:label	"Interlinking" .
+		
 	dqm:Accuracy
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -375,6 +381,13 @@
 		rdfs:comment "Detects non reputable resources by retrieving URI of resources from data sets and comparing them with URI found in reputable resources." ; 
 		rdfs:label "Reputation of dataset metric" .
 		
+	dqm:InterlinkDetectionMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment "This is a complex metric that detects good quality interlinks by measuring the (i) interlink degree; (ii) clustering coefficient; (iii) centrality; (iv) open sameAs chains; (v) sameAs description richness" ; 
+		rdfs:label "Interlink Detection Metric" .
+		
 	#Properties
 	#Accessibility Dimensions Properties
 	dqm:hasAvailabilityDimension
@@ -500,6 +513,24 @@
 		rdfs:label	"Performance has scalability of a data source metric" ;
 		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:ScalabilityOfDataSourceMetric .
+		
+		#Interlink Dimensions Properties
+		dqm:hasInterlinkDimension
+			a	rdfs:Property ;	
+			rdfs:subPropertyOf	daq:hasDimension ;
+			rdfs:comment	"Links Accessibility Category with Interlink Dimension" ;
+			rdfs:label	"has interlink dimension" ;
+			rdfs:domain	dqm:Accessibility ;
+			rdfs:range	dqm:Interlinking .
+		
+		#Availability Metric Properties
+		dqm:hasInterlinkDetectionMetricMetric
+			a	rdfs:Property ;
+			rdfs:subPropertyOf	daq:hasMetric ;
+			rdfs:comment	"" ;
+			rdfs:label	"has Interlink Detection Metric" ;
+			rdfs:domain	dqm:Interlinking ;
+			rdfs:range	dqm:InterlinkDetectionMetric .
 
 	#Accuracy Dimensions Properties
 	dqm:hasAccuracyDimension
