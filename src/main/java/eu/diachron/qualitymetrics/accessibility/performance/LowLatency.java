@@ -10,6 +10,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.semantics.vocabulary.DQM;
 /**
@@ -33,6 +34,12 @@ public class LowLatency implements QualityMetric {
 	 * Holds the total delay as currently calculated by the compute method
 	 */
 	private long totalDelay = -1;
+	
+	/**
+	 * Flag stating whether the metric has been computed. This metric should be computed once, for the dataset's URI,
+	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
+	 */
+	private boolean hasBeenComputed = false;
 
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
@@ -42,14 +49,31 @@ public class LowLatency implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
+		
+		// Check if the metric has already been computed
+		if(this.hasBeenComputed) {
+			return;
+		}
+		
 		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = extractDatasetURI(quad);
+		String datasetURI = null; 
+		
+		try {
+			datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+		} catch(Exception ex) {
+			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+			// Try to get the dataset URI from the VOID property, as last resource
+			datasetURI = LowLatency.extractDatasetURI(quad);
+		}
 
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the total delay associated to the current dataset
 		if(datasetURI != null) {
 			totalDelay = HttpPerformanceUtil.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
+			
+			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
+			this.hasBeenComputed = true;
 		}
 	}
 	

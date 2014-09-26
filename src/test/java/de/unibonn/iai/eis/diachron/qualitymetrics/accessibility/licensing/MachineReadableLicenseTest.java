@@ -13,6 +13,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
 import eu.diachron.qualitymetrics.accessibility.licensing.MachineReadableLicense;
 
 public class MachineReadableLicenseTest extends Assert {
@@ -38,6 +39,10 @@ private static Logger logger = LoggerFactory.getLogger(MachineReadableLicenseTes
 
 	@Test
 	public void testMachineReadableLicense() {
+		
+		// Set the dataset URI into the datasetURI property for the positive case, so that it's retrieved by EnvironmentProperties
+		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl#drugbank-rdf");
+		
 		// Load quads for the positive test case
 		List<Quad> streamingQuads = loaderPositive.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -48,6 +53,9 @@ private static Logger logger = LoggerFactory.getLogger(MachineReadableLicenseTes
 			countLoadedQuads++;
 		}
 		logger.trace("Positive case: quads loaded, {} quads", countLoadedQuads);
+		
+		// Set the dataset URI into the datasetURI property for the negative case, so that it's retrieved by EnvironmentProperties
+		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "http://pleiades.stoa.org/places");
 		
 		streamingQuads = loaderNegative.getStreamingQuads();
 		countLoadedQuads = 0;

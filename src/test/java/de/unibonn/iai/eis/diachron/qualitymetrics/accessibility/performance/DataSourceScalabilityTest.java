@@ -36,7 +36,7 @@ public class DataSourceScalabilityTest extends Assert {
 		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
-		
+				
 		for(Quad quad : streamingQuads){
 			// Here we start streaming triples to the quality metric
 			metric.compute(quad);

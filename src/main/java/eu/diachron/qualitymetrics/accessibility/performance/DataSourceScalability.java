@@ -9,6 +9,8 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.semantics.vocabulary.DQM;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+
 /**
  * @author Santiago Londono
  * Estimates the efficiency with which a system can bind to the dataset, by determining 
@@ -36,6 +38,12 @@ public class DataSourceScalability implements QualityMetric {
 	 * response time calculated for a single request, as currently calculated by the compute method
 	 */
 	private long scalabilityDiff = -1;
+	
+	/**
+	 * Flag stating whether the metric has been computed. This metric should be computed once, for the dataset's URI,
+	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
+	 */
+	private boolean hasBeenComputed = false;
 
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
@@ -45,8 +53,22 @@ public class DataSourceScalability implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
+		
+		// Check if the metric has already been computed
+		if(this.hasBeenComputed) {
+			return;
+		}
+		
 		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = LowLatency.extractDatasetURI(quad);
+		String datasetURI = null; 
+		
+		try {
+			datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+		} catch(Exception ex) {
+			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+			// Try to get the dataset URI from the VOID property, as last resource
+			datasetURI = LowLatency.extractDatasetURI(quad);
+		}
 
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the scalability differential associated to the data source
@@ -69,7 +91,10 @@ public class DataSourceScalability implements QualityMetric {
 				logger.trace("Calculation of scalability differential factor failed for dataset {}", datasetURI);
 				scalabilityDiff = 0; //return 0 when test fails
 			}
-		}		
+			
+			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
+			this.hasBeenComputed = true;
+		}
 	}
 
 	/**
