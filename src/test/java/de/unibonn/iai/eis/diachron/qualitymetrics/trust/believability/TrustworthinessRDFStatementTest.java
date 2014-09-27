@@ -39,7 +39,7 @@ private static Logger logger = LoggerFactory.getLogger(TrustworthinessRDFStateme
 	}
 
 	@Test
-	public void testMachineReadableLicense() {
+	public void testPositiveCase() {
 		// Load quads for the positive test case
 		List<Quad> streamingQuads = loaderposone.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -50,9 +50,21 @@ private static Logger logger = LoggerFactory.getLogger(TrustworthinessRDFStateme
 			countLoadedQuads++;
 		}
 		logger.trace("Positive case: quads loaded, {} quads", countLoadedQuads);
-				
-		streamingQuads = loaderzero.getStreamingQuads();
-		countLoadedQuads = 0;
+		
+		// Obtain the value of the machine-readable indication of a license metric, for the positive case
+		double delta = 0.0001;
+		double metricValuePositive = metricPositive.metricValue();
+		
+		
+		assertEquals(0.0, metricValuePositive, delta);
+	}
+
+
+	@Test
+	public void testNeutralCase() {
+		// Load quads for the positive test case
+		List<Quad> streamingQuads = loaderzero.getStreamingQuads();
+		int countLoadedQuads = 0;
 		
 		for(Quad quad : streamingQuads){
 			// Here we start streaming triples to the quality metric
@@ -61,9 +73,20 @@ private static Logger logger = LoggerFactory.getLogger(TrustworthinessRDFStateme
 		}
 		logger.trace("Neutral case: quads loaded, {} quads", countLoadedQuads);
 		
-		streamingQuads = loadernegone.getStreamingQuads();
-		countLoadedQuads = 0;
+		// Obtain the value of the machine-readable indication of a license metric, for the positive case
+		double delta = 0.0001;
+		double metricValueNeutral = metricNeutral.metricValue();
 		
+		assertEquals(-0.25, metricValueNeutral, delta);
+	}
+	
+
+	@Test
+	public void testNegativeCase() {
+		// Load quads for the positive test case
+		List<Quad> streamingQuads = loadernegone.getStreamingQuads();
+		int countLoadedQuads = 0;
+				
 		for(Quad quad : streamingQuads){
 			// Here we start streaming triples to the quality metric
 			metricNegative.compute(quad);
@@ -73,15 +96,10 @@ private static Logger logger = LoggerFactory.getLogger(TrustworthinessRDFStateme
 
 		// Obtain the value of the machine-readable indication of a license metric, for the positive case
 		double delta = 0.0001;
-		double metricValuePositive = metricPositive.metricValue();
-		double metricValueNeutral = metricNeutral.metricValue();
-		
+			
 		double metricValueNegative = metricNegative.metricValue();
-		logger.trace("Computed machine-readable indication of a Authentisity of the Dataset metric; positive case: {}, neutral case: {}, negative case: {}", metricValuePositive, metricValueNeutral, metricValueNegative);
-
-		assertEquals(0.0, metricValuePositive, delta);
-		assertEquals(-0.25, metricValueNeutral, delta);
+		
 		assertEquals(-1.0, metricValueNegative, delta);
 	}
-
+	
 }

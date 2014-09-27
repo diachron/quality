@@ -39,7 +39,7 @@ private static Logger logger = LoggerFactory.getLogger(DigitalSignatureTest.clas
 	}
 
 	@Test
-	public void testCompute() {
+	public void testPositiveCase() {
 		// Load quads for the positive test case
 		List<Quad> streamingQuads = loaderPositive.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -51,21 +51,20 @@ private static Logger logger = LoggerFactory.getLogger(DigitalSignatureTest.clas
 		}
 		logger.trace("Positive case one: quads loaded, {} quads", countLoadedQuads);
 		
+		// Obtain the value of the machine-readable indication of a license metric, for the positive case
+		double delta = 0.0001;
+		double metricValuePositive = metricPositive.metricValue();
 		
+		assertEquals(1.0, metricValuePositive, delta);
+	}
+	
+	@Test
+	public void testNegativeCase() {
 		// Load quads for the positive test case
-		streamingQuads = loaderPositive2.getStreamingQuads();
-		countLoadedQuads = 0;
+		List<Quad> streamingQuads = loaderNegative.getStreamingQuads();
+		int countLoadedQuads = 0;
 		
-		for(Quad quad : streamingQuads){
-			// Here we start streaming triples to the quality metric
-			metricPositive2.compute(quad);
-			countLoadedQuads++;
-		}
-		logger.trace("Positive case two: quads loaded, {} quads", countLoadedQuads);
-		
-		streamingQuads = loaderNegative.getStreamingQuads();
-		countLoadedQuads = 0;
-		
+				
 		for(Quad quad : streamingQuads){
 			// Here we start streaming triples to the quality metric
 			metricNegative.compute(quad);
@@ -75,18 +74,34 @@ private static Logger logger = LoggerFactory.getLogger(DigitalSignatureTest.clas
 
 		// Obtain the value of the machine-readable indication of a license metric, for the positive case
 		double delta = 0.0001;
-		double metricValuePositive = metricPositive.metricValue();
+		
+		// Obtain the value of the machine-readable indication of a license metric, for the negative case
+		double metricValueNegative = metricNegative.metricValue();
+		
+		assertEquals(0.0, metricValueNegative, delta);
+	}
+
+	@Test
+	public void testNeutralCase() {
+		// Load quads for the positive test case
+		List<Quad> streamingQuads = loaderPositive2.getStreamingQuads();
+		int countLoadedQuads = 0;
+		
+		for(Quad quad : streamingQuads){
+			// Here we start streaming triples to the quality metric
+			metricPositive2.compute(quad);
+			countLoadedQuads++;
+		}
+		logger.trace("Positive case two: quads loaded, {} quads", countLoadedQuads);
+		
+		
+		// Obtain the value of the machine-readable indication of a license metric, for the positive case
+		double delta = 0.0001;
 		
 		// Obtain the value of the machine-readable indication of a license metric, for the positive case
 		double metricValuePositive2 = metricPositive2.metricValue();
 				
-		// Obtain the value of the machine-readable indication of a license metric, for the negative case
-		double metricValueNegative = metricNegative.metricValue();
-		logger.trace("Computed machine-readable indication of a Authentisity of the Dataset metric; positive case one: {}, positive case two: {}, negative case: {}", metricValuePositive, metricValuePositive2, metricValueNegative);
-
-		assertEquals(1.0, metricValuePositive, delta);
 		assertEquals(1.0, metricValuePositive2, delta);
-		assertEquals(0.0, metricValueNegative, delta);
 	}
-
+	
 }
