@@ -89,11 +89,9 @@ public class DigitalSignatures extends AbstractQualityMetric {
 		if(mapSignatureResources != null) {
 			// Check that the dataset has provenance information. 
 			if(mapSignatureResources.size() > 0) {
-				this.setMetricValue(new Double(1));
 				return 1;
 			}
 		}
-		this.setMetricValue(new Double(0));
 		return 0;
 	}
 

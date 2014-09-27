@@ -66,6 +66,7 @@ public class Consumer extends Thread {
 			this.streamManager.idenMetric.compute(value);
 			this.streamManager.provMetric.compute(value);
 			this.streamManager.trusMetric.compute(value);
+			this.streamManager.blacMetric.compute(value);
 			
 			// Relevancy Metrics
 			this.streamManager.coveMetric.compute(value);
@@ -102,6 +103,7 @@ public class Consumer extends Thread {
 		result.releMetric = this.streamManager.releMetric;
 		result.trusMetric = this.streamManager.trusMetric;
 		result.repuMetric = this.streamManager.repuMetric;
+		result.blacMetric = this.streamManager.blacMetric;
 		
 		getResults().add(result);
 		
@@ -120,6 +122,7 @@ public class Consumer extends Thread {
 		dimension3.getMetrics().add(new Metrics("Identity Information Provider", Double.toString(result.idenMetric.metricValue())));
 		dimension3.getMetrics().add(new Metrics("Provenance Information", Double.toString(result.provMetric.metricValue())));
 		dimension3.getMetrics().add(new Metrics("Trustworthiness RDF Statement", Double.toString(result.trusMetric.metricValue())));
+		dimension3.getMetrics().add(new Metrics("BlackListing", Double.toString(result.blacMetric.metricValue())));
 				
 		Dimension dimension4 = new Dimension();
 		dimension4.setName("Reputation");

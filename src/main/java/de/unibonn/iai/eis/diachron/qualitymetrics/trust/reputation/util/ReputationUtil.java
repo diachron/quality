@@ -10,8 +10,8 @@ import java.util.List;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ConfigurationLoader;
 
 /**
- * @author Carlos
- *
+ * @author Carlos Montoya
+ * Class to store the rating that are being used in the tests.
  */
 public class ReputationUtil {
 	
@@ -35,6 +35,10 @@ public class ReputationUtil {
 		this.storeRatings = storeRatings;
 	}
 	
+	/**
+	 * This method build the file that is used by the reputation metric.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		ReputationUtil rep = new  ReputationUtil();
 		Rating rating1 = new Rating();

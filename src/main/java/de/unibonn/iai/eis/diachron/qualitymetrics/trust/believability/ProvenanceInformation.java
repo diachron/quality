@@ -15,8 +15,8 @@ import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
  * @author Carlos Montoya
- * Verifies whether consumers of the dataset are explicitly granted permission to re-use it, under defined 
- * conditions, by annotating the resource with a machine-readable indication (e.g. a VoID description) of the license.
+ * Verifies whether the dataset are explicitly contained one of the known attributes of authenticity are
+ * present into the dataset.
  */
 public class ProvenanceInformation extends AbstractQualityMetric {
 	

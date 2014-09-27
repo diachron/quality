@@ -112,7 +112,6 @@ public class RelevantTermsWithinMetaInformation extends AbstractQualityMetric {
 		
 		double value = new Double(cont)/new Double(this.triplesCounter); 
 
-		this.setMetricValue(value);
 		//Return the number of terms that contained all the metada information
 		return value;
 	}

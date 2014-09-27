@@ -20,7 +20,10 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ConfigurationLoader;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * @author Carlos
+ * @author Carlos Montoya
+ * measuring the coverage (i.e. number of entities described in a dataset) and level of detail 
+ * (i.e. number of properties) in a dataset to ensure that there exists an appropriate volume of relevant 
+ * data for a particular task
  *
  */
 public class Coverage extends AbstractQualityMetric{

@@ -79,9 +79,9 @@ private static Logger logger = LoggerFactory.getLogger(TrustworthinessRDFStateme
 		double metricValueNegative = metricNegative.metricValue();
 		logger.trace("Computed machine-readable indication of a Authentisity of the Dataset metric; positive case: {}, neutral case: {}, negative case: {}", metricValuePositive, metricValueNeutral, metricValueNegative);
 
-		assertEquals(0.25, metricValuePositive, delta);
-		assertEquals(0.0, metricValueNeutral, delta);
-		assertEquals(-0.75, metricValueNegative, delta);
+		assertEquals(0.0, metricValuePositive, delta);
+		assertEquals(-0.25, metricValueNeutral, delta);
+		assertEquals(-1.0, metricValueNegative, delta);
 	}
 
 }

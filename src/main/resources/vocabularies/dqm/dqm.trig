@@ -333,6 +333,12 @@
 		rdfs:subClassOf	daq:Metric ;
 		rdfs:comment	"Assesses whether the provider/contributor is contained in a list of trusted providers" ;
 		rdfs:label	"Indentity Information Provider metric" .
+		
+	dqm:BlackListingMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"Assesses whether the provider/contributor is contained in a list of blacklisted providers" ;
+		rdfs:label	"Blacklisting metric" .
 	
 	dqm:AuthenticityDatasetMetric
 		a	rdfs:Class ;
@@ -426,6 +432,14 @@
 		rdfs:label	"Availability has end-point availability metric" ;
 		rdfs:domain	dqm:Believability ;
 		rdfs:range	dqm:IdentityInformationProviderMetric .	
+		
+	dqm:hasBlackListingMetric   
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Believability Dimension with BlackListing Metric" ;
+		rdfs:label	"Believability has end-point black list" ;
+		rdfs:domain	dqm:Believability ;
+		rdfs:range	dqm:BlackListingMetric .		
 		
 	dqm:hasProvenanceInformationMetric
 		a	rdfs:Property ;

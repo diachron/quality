@@ -4,6 +4,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.Coverage;
 import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.RelevantTermsWithinMetaInformation;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.BlackListing;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.IdentityInformationProvider;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.ProvenanceInformation;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.TrustworthinessRDFStatement;
@@ -31,6 +32,7 @@ public class StreamManager {
 	public Coverage coveMetric = new Coverage();
 	public RelevantTermsWithinMetaInformation releMetric = new RelevantTermsWithinMetaInformation();
 	public Reputation repuMetric = new Reputation();
+	public BlackListing blacMetric = new BlackListing();
 	
 	private String uriDataset;
 	
@@ -79,5 +81,6 @@ public class StreamManager {
 	public void setUriDataset(String uriDataset) {
 		this.uriDataset = uriDataset;
 		this.repuMetric.setUriDataset(this.uriDataset);
+		this.trusMetric.setUriDataset(this.uriDataset);
 	}
 }

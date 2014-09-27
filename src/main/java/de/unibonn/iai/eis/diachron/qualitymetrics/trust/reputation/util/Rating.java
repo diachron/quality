@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Carlos
- *
+ * @author Carlos Montoya
+ * Util class to help the Reputation Metric to navigate through the ratings given by the users.
  */
 public class Rating {
 

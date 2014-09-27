@@ -38,11 +38,11 @@ public class IdentityInformationProvider extends AbstractQualityMetric {
 	 * with the provider and/or contributors
 	 */
 	private static HashSet<String> setTrustedProviders;
-	public static int counter;
+	public int counter =0;
+	public int counterProviders=0;
 	private double metricValue;
 	
 	static {
-		counter = 0;
 		try {
 			File dir = new File(".");
 			File fin = new File(dir.getCanonicalPath() + File.separator + filePath);
@@ -76,21 +76,18 @@ public class IdentityInformationProvider extends AbstractQualityMetric {
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 
-		
+
+		String curObjectURI = ((object.isURI()) ? (object.getURI()): (object.toString()));
 		// Check if the property of the quad is known to provide licensing
 		// information
 		if (predicate != null && predicate.isURI() && subject != null) {
 			// Search for the predicate's URI in the set of license
 			// properties...
 			if(predicate.getURI().equals(DCTerms.contributor.getURI())){
-				
-				String curObjectURI = ((object.isURI()) ? (object.getURI()): (object.toString()));
-				
-				System.out.println(curObjectURI);
-				
+								
+				this.counterProviders++;		
 				if (setTrustedProviders.contains(curObjectURI)) {
-
-					counter ++;
+					this.counter ++;
 					String curSubjectURI = ((subject.isURI()) ? (subject.getURI()): (subject.toString()));
 					logger.trace(
 							"Quad providing contributor of the dataset info detected. Subject: {}, object: {}",
@@ -108,10 +105,8 @@ public class IdentityInformationProvider extends AbstractQualityMetric {
 	@Override
 	public double metricValue() {
 		if(counter>0){
-			this.setMetricValue(new Double(1));
-			return 1;
+			return new Double(this.counter)/new Double(this.counterProviders);
 		}
-		this.setMetricValue(new Double(0));
 		return 0;
 	}
 

@@ -5,6 +5,7 @@ package de.unibonn.iai.eis.diachron.io.utilities;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.Coverage;
 import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.RelevantTermsWithinMetaInformation;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.BlackListing;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.IdentityInformationProvider;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.ProvenanceInformation;
 import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.TrustworthinessRDFStatement;
@@ -25,6 +26,7 @@ public class DataSetResults {
 	public IdentityInformationProvider idenMetric;
 	public ProvenanceInformation provMetric;
 	public TrustworthinessRDFStatement trusMetric;
+	public BlackListing blacMetric;
 	
 	//Relevance
 	public Coverage coveMetric;

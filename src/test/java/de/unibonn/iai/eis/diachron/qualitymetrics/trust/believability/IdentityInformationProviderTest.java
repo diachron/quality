@@ -72,7 +72,7 @@ private static Logger logger = LoggerFactory.getLogger(IdentityInformationProvid
 		double delta = 0.0001;
 		double metricValuePositve = metricPositive.metricValue();
 		
-		assertEquals(1.0, metricValuePositve, delta);
+		assertEquals(1.0, metricValuePositve, delta); //Only one of the two providers is in the file
 	}	
 
 }

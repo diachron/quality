@@ -12,10 +12,16 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 /**
- * @author Carlos
+ * @author Carlos Montoya
  * 
  */
 public class ReputationHelper {
+	/**
+	 * This method serialize into the specify file a class, using XMLEncoder
+	 * @param f object to be serialized
+	 * @param filename name of the file to created or replace the info
+	 * @throws Exception
+	 */
 	public static void write(ReputationUtil f, String filename) throws Exception {
 		XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(
 				new FileOutputStream(filename)));
@@ -24,6 +30,12 @@ public class ReputationHelper {
 
 	}
 
+	/**
+	 * Read from the filename the object and return the object
+	 * @param filename name of the file
+	 * @return the object that were store into the file.
+	 * @throws Exception
+	 */
 	public static ReputationUtil read(String filename) throws Exception {
 		if (new File(filename).exists()) {
 

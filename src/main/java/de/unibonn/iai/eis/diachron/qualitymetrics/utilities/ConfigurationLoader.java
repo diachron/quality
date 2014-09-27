@@ -12,12 +12,18 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * @author Carlos
+ * @author Carlos Montoya
  * 
  */
 public class ConfigurationLoader {
 	
+	/**
+	 * Definition of the file that is used by the coverage metric 
+	 */
 	public static final String COVERAGE_FILE = "coverage.properties";
+	/**
+	 * Definition of the fiel that is used as configuration by the UI and by the reputation metric
+	 */
 	public static final String CONFIGURATION_FILE = "config.properties";
 	
 	/**
@@ -48,7 +54,6 @@ public class ConfigurationLoader {
 			Enumeration em = prop.keys();
 			while (em.hasMoreElements()) {
 				String str = (String) em.nextElement();
-				System.out.println(str + ": " + prop.get(str));
 				ret.add(prop.get(str).toString());
 			}
 			return ret;
@@ -112,6 +117,13 @@ public class ConfigurationLoader {
 	}
 	
 
+	/**
+	 * Given a key that should be find into the specified properties file, retrieves it value if it found 
+	 * @param key to look into the properties file
+	 * @param fileName, file that the system should look for
+	 * @return the value of the key if it is contained into the file
+	 * @throws IOException
+	 */
 	public String loadByKey(String key, String fileName) throws IOException{
 		String result = "";
 		Properties prop = new Properties();

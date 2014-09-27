@@ -14,10 +14,8 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric;
 import de.unibonn.iai.eis.diachron.vocabularies.DQM;
 
 /**
- * @author Carlos Montoya Verifies whether consumers of the dataset are
- *         explicitly granted permission to re-use it, under defined conditions,
- *         by annotating the resource with a machine-readable indication (e.g. a
- *         VoID description) of the license.
+ * @author Carlos Montoya Verifies whether dataset contained such as attributes defined to provide
+ * Trustworthiness information of the database
  */
 public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 
@@ -38,6 +36,8 @@ public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 	private int provenance = 0;
 	private double metricValue;
 	
+	private String uriDataset;
+	
 	/**
 	 * Processes a single quad being part of the dataset. It try to obtain relevant information that is identify as
 	 * trust information for a dataset, then it count every value to give the value of the metric.
@@ -54,6 +54,8 @@ public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 				
+		String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
+		
 		// Check if the property of the quad is known to provide licensing
 		// information
 		if (predicate != null && predicate.isURI() && subject != null) {
@@ -61,43 +63,37 @@ public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 			// properties...
 			if(predicate.getURI().equals(DCTerms.creator.getURI()) || predicate.getURI().equals("http://purl.org/pav/createdBy")) {
 				creator = 1;				
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing creator of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
 			}//
 			else if(predicate.getURI().equals(DCTerms.created.getURI())) {
 				created = 1;				
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing created of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
 			}
 			else if(predicate.getURI().equals(DCTerms.publisher.getURI())) {
 				publisher = 1;				
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing publisher of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
 			}
 			else if(predicate.getURI().equals(DCTerms.source.getURI())) {
 				publisher = 1;				
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing publisher of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
 			}
 			else if(predicate.getURI().equals(DCTerms.title.getURI())) {
 				title = 1;				
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing title of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
-				
 			}//Check if the quad contain info related with the content of the data set
 			else if(predicate.getURI().equals(DCTerms.description.getURI())){
 				content = 1;
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing content of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);				
 			}
 			else if(predicate.getURI().equals(FOAF.homepage.getURI())){
-				homeurl = 1;
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
-				logger.trace("Quad providing homepage of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
+				//Check that if the homepage makes reference to it self.
+				if(curSubjectURI.equals(this.getUriDataset())){
+					homeurl = 1;
+					logger.trace("Quad providing homepage of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
+				}
 			}
 			else if(predicate.getURI().equals(DCTerms.provenance.getURI())){
 				provenance = 1;
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing provenance of the dataset info detected. Subject: {}, object: {}", curSubjectURI, object);
 			}
 		}
@@ -162,6 +158,20 @@ public class TrustworthinessRDFStatement extends AbstractQualityMetric {
 	 */
 	public void setMetricValue(double metricValue) {
 		this.metricValue = metricValue;
+	}
+
+	/**
+	 * @return the uriDataset
+	 */
+	public String getUriDataset() {
+		return uriDataset;
+	}
+
+	/**
+	 * @param uriDataset the uriDataset to set
+	 */
+	public void setUriDataset(String uriDataset) {
+		this.uriDataset = uriDataset;
 	}
 
 }
