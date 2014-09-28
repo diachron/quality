@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.io.utilities.DataSetResults;
 import de.unibonn.iai.eis.diachron.io.utilities.UtilMail;
 import de.unibonn.iai.eis.diachron.datatypes.Object2Quad;
+import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.Coverage;
+import de.unibonn.iai.eis.diachron.qualitymetrics.contextual.relevancy.RelevantTermsWithinMetaInformation;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.BlackListing;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.IdentityInformationProvider;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.ProvenanceInformation;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.believability.TrustworthinessRDFStatement;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.reputation.Reputation;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.verifiability.AuthenticityDataset;
+import de.unibonn.iai.eis.diachron.qualitymetrics.trust.verifiability.DigitalSignatures;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.ConfigurationLoader;
 import de.unibonn.iai.eis.diachron.util.Dimension;
 import de.unibonn.iai.eis.diachron.util.Metrics;
@@ -34,6 +44,19 @@ public class Consumer extends Thread {
 	private String mail;
 
 	/**
+	 * Metrics developed
+	 */
+	public DigitalSignatures digiMetric = new DigitalSignatures(); //Metrics to be apply
+	public AuthenticityDataset authMetric = new AuthenticityDataset(); //Metrics to be apply
+	public IdentityInformationProvider idenMetric = new IdentityInformationProvider();
+	public ProvenanceInformation provMetric = new ProvenanceInformation();
+	public TrustworthinessRDFStatement trusMetric = new TrustworthinessRDFStatement();
+	public Coverage coveMetric = new Coverage();
+	public RelevantTermsWithinMetaInformation releMetric = new RelevantTermsWithinMetaInformation();
+	public Reputation repuMetric = new Reputation();
+	public BlackListing blacMetric = new BlackListing();
+	
+	/**
 	 * Creator of the class
 	 * 
 	 * @param streamManager
@@ -45,6 +68,9 @@ public class Consumer extends Thread {
 	public Consumer(StreamManager streamManager, Producer producer) {
 		this.streamManager = streamManager;
 		this.producer = producer;
+
+		this.repuMetric.setUriDataset(this.producer.getServiceUrl());
+		this.trusMetric.setUriDataset(this.producer.getServiceUrl());
 	}
 
 	/**
@@ -54,56 +80,62 @@ public class Consumer extends Thread {
 		Quad value;
 		int contAux = 0;
 		this.setRunning(true);
-		// Run the consumer while the producer is publishing data
-		while (producer.isRunning()) {
-			value = new Object2Quad(streamManager.get()).getStatement();
-			// Here we compute all the metrics
-			// Verifiability Metrics
-			this.streamManager.digiMetric.compute(value);
-			this.streamManager.authMetric.compute(value);
-			
-			// Believability Metrics
-			this.streamManager.idenMetric.compute(value);
-			this.streamManager.provMetric.compute(value);
-			this.streamManager.trusMetric.compute(value);
-			this.streamManager.blacMetric.compute(value);
-			
-			// Relevancy Metrics
-			this.streamManager.coveMetric.compute(value);
-			this.streamManager.releMetric.compute(value);
-			
-			// Reputation Metrics
-			this.streamManager.repuMetric.compute(value);
-			
-			setCont(getCont() + 1);
-			contAux++;
-			if (contAux == 10000) {
-				contAux = 0;
-				System.out.println("Read 10000 triples");
-			}
+		// Run the consumer while the producer is publishing data or while the streaming has some information in it
+		while (producer.isAlive() || streamManager.getCounter()>0) {
+			ResultSet aux = streamManager.get(); //Retrieves the resulset that was published
+			if(aux.hasNext()){
+				while (aux.hasNext()) {
+					value = new Object2Quad(aux.next()).getStatement();
+					// Here we compute all the metrics
+					// Verifiability Metrics
+					this.digiMetric.compute(value);
+					this.authMetric.compute(value);
+					
+					// Believability Metrics
+					this.idenMetric.compute(value);
+					this.provMetric.compute(value);
+					this.trusMetric.compute(value);
+					this.blacMetric.compute(value);
+					
+					// Relevancy Metrics
+					this.coveMetric.compute(value);
+					this.releMetric.compute(value);
+					
+					// Reputation Metrics
+					this.repuMetric.compute(value);
+					
+					this.cont++;
+					contAux++;
+					if (contAux == 10000) { //Message to control the information
+						contAux = 0;
+						System.out.println("Read 10000 triples");
+					}
+					if(this.cont % 100000 == 0){
+						this.writeFile(false);//When the dataset is to big it is better to store the information every 100000 triples processed, sometimes the service is shotdown and then the info is lost
+					}
+				}	
+				streamManager.setCounter(streamManager.getCounter()-1);//Announced that it consumer the resource
+			}			
 		}
-		this.writeFile();
-		// System.out.println("The number of quads read is: " + cont);
-		// this.stop();
-		this.setRunning(false);
-		// this.writeFile();
+		this.writeFile(true);
+		System.out.println("The number of quads read is: " + cont);
 	}
 
 	/**
-	 * 
+	 * This method writes all the information related with the processing of the metrics into a local file
 	 */
-	public void writeFile() {
+	public void writeFile(boolean sendMessage) {
 		Consumer.setResults(new ArrayList<DataSetResults>());
 		DataSetResults result = new DataSetResults();
-		result.authMetric = this.streamManager.authMetric;
-		result.coveMetric = this.streamManager.coveMetric;
-		result.digiMetric = this.streamManager.digiMetric;
-		result.idenMetric = this.streamManager.idenMetric;
-		result.provMetric = this.streamManager.provMetric;
-		result.releMetric = this.streamManager.releMetric;
-		result.trusMetric = this.streamManager.trusMetric;
-		result.repuMetric = this.streamManager.repuMetric;
-		result.blacMetric = this.streamManager.blacMetric;
+		result.authMetric = this.authMetric;
+		result.coveMetric = this.coveMetric;
+		result.digiMetric = this.digiMetric;
+		result.idenMetric = this.idenMetric;
+		result.provMetric = this.provMetric;
+		result.releMetric = this.releMetric;
+		result.trusMetric = this.trusMetric;
+		result.repuMetric = this.repuMetric;
+		result.blacMetric = this.blacMetric;
 		
 		getResults().add(result);
 		
@@ -160,12 +192,14 @@ public class Consumer extends Thread {
 				resultToWrite.setResults(aux);
 			}
 			
-			ResultsHelper.write(resultToWrite, conf.loadDataBase(ConfigurationLoader.CONFIGURATION_FILE));
-			String text = "The process is already finish, you can check now in the web site of the DIACHRON INTERFACE";
-			if (this.getMail() != null)
-				UtilMail.sendMail(this.getMail(),"Proccess Finish", text);
-			else 
-				UtilMail.sendMail(conf.loadMailDefault(ConfigurationLoader.CONFIGURATION_FILE),"Proccess Finish", text);
+			if(sendMessage){			
+				ResultsHelper.write(resultToWrite, conf.loadDataBase(ConfigurationLoader.CONFIGURATION_FILE));
+				String text = "The process is already finish, you can check now in the web site of the DIACHRON INTERFACE";
+				if (this.getMail() != null)
+					UtilMail.sendMail(this.getMail(),"Proccess Finish", text);
+				else 
+					UtilMail.sendMail(conf.loadMailDefault(ConfigurationLoader.CONFIGURATION_FILE),"Proccess Finish", text);
+			}
 
 		} catch (Exception e) {
 			System.out.println("****** Can't save the result because: "
