@@ -5181,3 +5181,38 @@
         "Kašiari";
     skos:inScheme <http://pleiades.stoa.org/places>;
     prov:wasDerivedFrom [ rdfs:label "TAVO Index" ] .
+
+# [slondono] Authors section. Added manually for testing purposes, taken from: http://atlantides.org/downloads/pleiades/rdf/authors.ttl
+
+<http://pleiades.stoa.org/author/Jweiland> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Jonathan Weiland" .
+
+<http://pleiades.stoa.org/author/ShannonMT> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Shannon Turner" .
+
+<http://pleiades.stoa.org/author/abenaissa> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Amin Benaissa" .
+
+<http://pleiades.stoa.org/author/adamp> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Adam Prins" .
+
+<http://pleiades.stoa.org/author/adan> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Anca Dan" .
+
+<http://pleiades.stoa.org/author/adavis> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Anthony Davis" .
+
+<http://pleiades.stoa.org/author/adelponte> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Andrea Del Ponte" .
+
+<http://pleiades.stoa.org/author/adgraauw> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Arthur De Graauw" .
+
+<http://pleiades.stoa.org/author/ahorsting> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "A. Horsting" .
+
+<http://pleiades.stoa.org/author/akokiousis> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Anastasia Kokiousis" .
+
+<http://pleiades.stoa.org/author/alanm> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Alan Maher" .
