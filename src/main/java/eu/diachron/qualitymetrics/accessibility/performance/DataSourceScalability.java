@@ -48,8 +48,8 @@ public class DataSourceScalability implements QualityMetric {
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
 	 * If so, the URI is extracted from the corresponding subject. A number NUM_HTTP_REQUESTS of HTTP GET requests are sent simultaneously to 
-	 * the dataset's URI and the response times are averaged, then the response time resulting of a single request is extracted from this value and 
-	 * the result is regarded as the "scalability differential factor" 
+	 * the dataset's URI and the response times are averaged, in order to estimate the response time of a single request. Then an additional, 
+	 * single request is sent and its response time measured, the result of substracting it from the average is set as "scalability differential factor" 
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
@@ -73,12 +73,13 @@ public class DataSourceScalability implements QualityMetric {
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the scalability differential associated to the data source
 		if(datasetURI != null) {
-			// Send parallel requests and average the total delay to estimate the time required to attend a single request
+			// Send parallel requests and accumulate their response times as the total delay
 			logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);
 			long requestsSwarmDelay = HttpPerformanceUtil.measureParallelReqsDelay(datasetURI, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
 			
-			// Verify if delay estimate was properly calculated (a delay of -1 indicates that one or more requests failed)
+			// Verify if the total delay was properly calculated (a delay of -1 indicates that one or more requests failed, which would spoil the avg. op.)
 			if(requestsSwarmDelay >= 0) {
+				// Estimate the response time of a single request as the average response time among the swarm of requests
 				long avgRequestsSwarmDelay = requestsSwarmDelay / NUM_HTTP_REQUESTS;
 	
 				// Send a single request, directly obtain the time required to attend that very request

@@ -28,11 +28,11 @@ public class HttpPerformanceUtil {
 	
 	/**
 	 * Calculates the time required to obtain the response resulting of a request to the specified dataset URL. 
-	 * The calculation is performed by executing several requests to the dataSetUrl and counting the time elapsed until a response is received.  
-	 * Note that the contents nor the code of the responses are taken into account
+	 * The calculation is performed by sending several requests to the dataSetUrl and adding up the times elapsed until each response is received.  
+	 * Note that the contents nor the code of the responses are taken into account.
 	 * @param dataSetUrl URL to which the requests will be sent
 	 * @param numRequests total requests to be sent in the burst
-	 * @return Total delay between the sending of the requests and the reception of the corresponding responses
+	 * @return Total delay (milliseconds) between the sending of the requests and the reception of the corresponding responses
 	 * 			-1 if any of the requests failed and thus total delay could not be calculated accurately
 	 */
 	public static long measureReqsBurstDelay(String dataSetUrl, int numRequests) {
@@ -69,12 +69,12 @@ public class HttpPerformanceUtil {
 	 * Calculates the time required to obtain the responses of a set of HTTP GET requests sent in parallel. 
 	 * The calculation is performed by simultaneously sending several requests to the dataSetUrl, each on 
 	 * a separate thread and counting the time elapsed until a response is received. 
-	 * Warning: The whole set of requests has a timeout of - seconds. 
+	 * Warning: The whole set of requests has a timeout of timeOutMillisecs seconds. 
 	 * Note that the contents nor the code of the responses are taken into account
 	 * @param dataSetUrl URL to which the requests will be sent
 	 * @param numRequests total requests to be sent in parallel
 	 * @param timeoutMillisecs maximum time to wait for all the requests to be completed, if exceeded, operation will be aborted and threads properly disposed of
-	 * @return Total delay between the sending of the requests and the reception of all the corresponding responses, 
+	 * @return Total delay (milliseconds) between the sending of the requests and the reception of all the corresponding responses, 
 	 * 			-1 if any of the requests failed and thus total delay could not be calculated accurately 
 	 */
 	public static long measureParallelReqsDelay(String dataSetUrl, int numRequests, long timeOutMillisecs) {
@@ -135,7 +135,7 @@ public class HttpPerformanceUtil {
 	 * Sends an HTTP Get request to the target URL and measures the amount of time elapsed between the instant when the request was sent
 	 * and the instant when the respective response was received, which is returned as result
 	 * @param targetUrl URL to sent the HTTP GET request to
-	 * @return Amount of time required to serve the request
+	 * @return Amount of time required to serve the request, in milliseconds
 	 * @throws IOException 
 	 */
 	private static long sendProbeHttpGetRequest(URL targetUrl) throws IOException {
