@@ -8,6 +8,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
@@ -75,7 +76,7 @@ public class DataSourceScalability implements QualityMetric {
 		if(datasetURI != null) {
 			// Send parallel requests and accumulate their response times as the total delay
 			logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);
-			long requestsSwarmDelay = HttpPerformanceUtil.measureParallelReqsDelay(datasetURI, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
+			long requestsSwarmDelay = HTTPRetriever.measureParallelReqsDelay(datasetURI, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
 			
 			// Verify if the total delay was properly calculated (a delay of -1 indicates that one or more requests failed, which would spoil the avg. op.)
 			if(requestsSwarmDelay >= 0) {
@@ -83,7 +84,7 @@ public class DataSourceScalability implements QualityMetric {
 				long avgRequestsSwarmDelay = requestsSwarmDelay / NUM_HTTP_REQUESTS;
 	
 				// Send a single request, directly obtain the time required to attend that very request
-				long singleRequestDelay = HttpPerformanceUtil.measureReqsBurstDelay(datasetURI, 1);
+				long singleRequestDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, 1);
 				
 				// Calculate the scalability differential factor
 				scalabilityDiff = avgRequestsSwarmDelay - singleRequestDelay;

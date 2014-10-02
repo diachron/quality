@@ -9,6 +9,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
 /**
  * @author Santiago Londono
@@ -64,7 +65,7 @@ public class HighThroughput implements QualityMetric {
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the total delay associated to the current dataset
 		if(datasetURI != null) {
-			totalDelay = HttpPerformanceUtil.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
+			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 			
 			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
