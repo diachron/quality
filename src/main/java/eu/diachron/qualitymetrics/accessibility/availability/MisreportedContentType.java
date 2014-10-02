@@ -16,7 +16,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.HTTPRetreiver;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
@@ -39,7 +39,7 @@ public class MisreportedContentType implements QualityMetric {
 	private double misReportedType=0;
 	private double correctReportedType=0;
 	
-	private HTTPRetreiver httpRetreiver = new HTTPRetreiver();
+	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	private boolean metricCalculated = false;
 	private Set<String> uriSet = Collections.synchronizedSet(new HashSet<String>());
 

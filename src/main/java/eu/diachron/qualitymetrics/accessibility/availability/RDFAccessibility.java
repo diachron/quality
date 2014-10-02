@@ -19,7 +19,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
-import eu.diachron.qualitymetrics.utilities.HTTPRetreiver;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
@@ -44,7 +44,7 @@ public class RDFAccessibility implements QualityMetric {
 	private double totalDataDumps = 0.0d;
 	private double workingDataDumps = 0.0d;
 	private List<String> dataDumpsURIs = new ArrayList<String>();
-	private HTTPRetreiver httpRetreiver = new HTTPRetreiver();
+	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
 	private boolean metricCalculated = false;
 
