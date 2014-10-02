@@ -11,6 +11,9 @@ if [ "$1" == build ] ; then
 	echo "Compiling Luzzu Quality Framework";
 	cd Luzzu/;
 	mvn clean install -Dmaven.test.skip=true;
+	echo "Creating symbolic links";
+	cd ..;
+	ln -s Luzzu/luzzu-operations/src/main/resources/properties/webservice.properties webservice.properties;
 	echo "Build Finished"
 elif [ "$1" == run ] ; then
 	cd Luzzu/luzzu-communications/;
