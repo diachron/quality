@@ -48,8 +48,7 @@ public class LowLatencyTest extends Assert {
 		double metricValue = metric.metricValue();
 		System.out.println("Computed low-latency metric: " + metricValue);
 
-		assertTrue("Latency should be a positive number", metricValue > 0.0);
-		assertTrue("Latency is too high (Max. 15000 ms)", metricValue < 7000.0);
+		assertTrue("Latency is out of range", (metricValue >= 0.0) && (metricValue <= 1.0));
 	}
 
 }

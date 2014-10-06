@@ -35,6 +35,14 @@ public class DataSourceScalability implements QualityMetric {
 	private static final int REQUEST_SET_IMEOUT = 30000;
 	
 	/**
+	 * The computation of this metric is based on the difference between the response time of a single request and 
+	 * the average response time of a set of NUM_HTTP_REQUESTS, issued in parallel. The DIFFERENCE_THRESHOLD is the 
+	 * number of milliseconds above which the value of the metric will start getting a value of 0 (worst ranking). 
+	 * For differences below this threshold, the value of the metric increases inverse linearly (view metricValue())
+	 */
+	private static final double DIFFERENCE_THRESHOLD = 10000.0;
+	
+	/**
 	 * Holds the difference between the averaged response time calculated for N requests and the 
 	 * response time calculated for a single request, as currently calculated by the compute method
 	 */
@@ -100,12 +108,16 @@ public class DataSourceScalability implements QualityMetric {
 	}
 
 	/**
-	 * Returns the current value of the Scalability of a Data Source metric in milliseconds, computed as the difference 
-	 * between the total time to serve N requests, divided N (average) and the time to serve a single request
+	 * The “scalability differential factor” or Sdf, is calculated as the difference between the average response time of a request, 
+	 * estimated by sending N simultaneous requests and the response time of an independent, single request. Thus, its range is [0, +inf).
+	 * This method computes the normalized value of the metric, which is in the range [0, 1], with 1 the top ranking. when the Sdf gets 
+	 * a value bigger than or equals to Thres, the value of the metric will be 0. Therefore, for Sdf values above Thres, 
+	 * the metric losses its comparative power.
 	 * @return Current value of the Scalability of a Data Source metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
-		return (double)scalabilityDiff;
+		
+		return Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, (double)scalabilityDiff));
 	}
 
 	public Resource getMetricURI() {

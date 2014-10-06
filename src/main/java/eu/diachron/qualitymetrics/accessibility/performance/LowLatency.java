@@ -41,6 +41,12 @@ public class LowLatency implements QualityMetric {
 	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
 	 */
 	private boolean hasBeenComputed = false;
+	
+	/**
+	 * Response time that is considered to be the ideal for a resource. In other words, its the amount of time in milliseconds below 
+	 * which response times for resources will get a perfect score of 1.0. 
+	 */
+	private static final double NORM_TOTAL_RESPONSE_TIME = 1.0;
 
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
@@ -109,13 +115,16 @@ public class LowLatency implements QualityMetric {
 	}
 
 	/**
-	 * Returns the current value of the Low Latency Metric in milliseconds, computed as the average of the time elapsed between the 
-	 * instant when a request is sent to the URI of the dataset and the instant when any response is received
+	 * Returns the current value of the Low Latency Metric as a ranking in the range [0, 1], with 1.0 the top ranking. 
+	 * It does so by computing the average of the time elapsed between the instant when a request is sent to the URI 
+	 * of the dataset and the instant when any response is received. Then this average response time is normalized by dividing 
+	 * NORM_TOTAL_RESPONSE_TIME, the ideal response time, by it
 	 * @return Current value of the Low Latency metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
-		// Average latency is in milliseconds
-		return ((double)totalDelay)/((double)NUM_HTTP_SAMPLES);
+
+		double avgRespTime = ((double)totalDelay) / ((double)NUM_HTTP_SAMPLES);
+		return Math.min(1.0, NORM_TOTAL_RESPONSE_TIME / avgRespTime);
 	}
 
 	public Resource getMetricURI() {
