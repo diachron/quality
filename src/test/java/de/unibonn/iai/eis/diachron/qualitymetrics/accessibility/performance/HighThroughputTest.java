@@ -48,7 +48,7 @@ public class HighThroughputTest extends Assert {
 		double metricValue = metric.metricValue();
 		logger.trace("Computed high-throughput metric: " + metricValue);
 
-		assertTrue("High Throughput should be a positive number", metricValue > 0.0);
+		assertTrue("High Throughput is out of range", (metricValue >= 0.0) && (metricValue <= 1.0));
 	}
 
 }

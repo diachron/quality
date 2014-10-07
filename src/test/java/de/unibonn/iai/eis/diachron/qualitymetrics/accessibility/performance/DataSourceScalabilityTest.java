@@ -48,7 +48,7 @@ public class DataSourceScalabilityTest extends Assert {
 		double metricValue = metric.metricValue();
 		System.out.println("Computed scalability-of-a-datasource metric: " + metricValue);
 
-		assertTrue("Scalability of a data source is out of range", (metricValue > -2000.0) && (metricValue < 40000.0));
+		assertTrue("Scalability of a data source is out of range", (metricValue >= 0.0) && (metricValue <= 1.0));
 	}
 
 }

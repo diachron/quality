@@ -28,6 +28,12 @@ public class HighThroughput implements QualityMetric {
 	private static final int NUM_HTTP_REQUESTS = 3;
 	
 	/**
+	 * Number of requests per second that ideally, should be served by a data source. In other words, its the amount of served requests 
+	 * per second above of which a resource will get a perfect score of 1.0. 
+	 */
+	private static final double NORM_SERVED_REQS_PER_MILLISEC = 1.0;
+	
+	/**
 	 * Holds the total delay as currently calculated by the compute method
 	 */
 	private long totalDelay = -1;
@@ -74,12 +80,16 @@ public class HighThroughput implements QualityMetric {
 	}
 
 	/**
-	 * Returns the current value of the High Throughput Metric as served requests per second, computed as the ration between the total 
-	 * number of requests sent to the dataset's endpoint and the total time required to obtain their responses
+	 * Returns the current value of the High Throughput Metric as a ranking in the range [0, 1], with 1.0 the top ranking. 
+	 * First estimates the number of served requests per second, computed as the ration between the total number of requests 
+	 * sent to the dataset's endpoint and the sum of their response times. Then this estimate is normalized by dividing it 
+	 * by NORM_SERVED_REQS_PER_SEC, the ideal amount of requests a resource is expected to serve per second, to get a raking of 1.0
 	 * @return Current value of the High Throughput metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
-		return ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
+
+		double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
+		return Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
 	}
 
 	public Resource getMetricURI() {
