@@ -1,0 +1,3 @@
+[submodule "Luzzu"]
+	path = Luzzu
+	url = https://github.com/EIS-Bonn/Luzzu.git
