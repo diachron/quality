@@ -1,5 +1,8 @@
 #!/bin/bash
-if [ "$1" == build ] ; then
+if [ "$1" == dependencies ] ; then
+	echo "downloading dependencies";
+	git clone https://github.com/diachron/Luzzu Luzzu;
+elif [ "$1" == build ] ; then
 	echo "Compiling Diachron Quality Metrics";
 	mvn clean install -Dmaven.test.skip=true;
 	echo "Copying Quality Metrics JAR to Luzzu Quality Framework";
