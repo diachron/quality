@@ -9,6 +9,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.accessibility.availability.ResourceBaseURIOracle;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
 /**
@@ -65,7 +66,7 @@ public class HighThroughput implements QualityMetric {
 		} catch(Exception ex) {
 			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
 			// Try to get the dataset URI from the VOID property, as last resource
-			datasetURI = LowLatency.extractDatasetURI(quad);
+			datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
 		}
 
 		// The URI of the subject of such quad, should be the dataset's URL. 

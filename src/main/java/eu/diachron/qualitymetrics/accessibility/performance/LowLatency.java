@@ -3,17 +3,16 @@ package eu.diachron.qualitymetrics.accessibility.performance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.accessibility.availability.ResourceBaseURIOracle;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
+
 /**
  * @author Santiago Londono
  * Estimates the efficiency with which a system can bind to the dataset, by measuring the delay between 
@@ -70,7 +69,7 @@ public class LowLatency implements QualityMetric {
 		} catch(Exception ex) {
 			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
 			// Try to get the dataset URI from the VOID property, as last resource
-			datasetURI = LowLatency.extractDatasetURI(quad);
+			datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
 		}
 
 		// The URI of the subject of such quad, should be the dataset's URL. 
@@ -82,36 +81,6 @@ public class LowLatency implements QualityMetric {
 			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
 			this.hasBeenComputed = true;
 		}
-	}
-	
-	/**
-	 * TODO: Move this method to a common's class, since it could be useful for several metrics
-	 * Tries to figure out the URI of the dataset wherefrom the quads were obtained. This is done by checking whether the 
-	 * current quads corresponds to the rdf:type property stating that the resource is a void:Dataset, if so, the URI is extracted 
-	 * from the corresponding subject and returned 
-	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
-	 * @return URI of the dataset wherefrom the quad originated, null if the quad does not contain such information
-	 */
-	public static String extractDatasetURI(Quad quad) {
-		// Get all parts of the quad required to analyze the quad
-		Node subject = quad.getSubject();
-		Node predicate = quad.getPredicate();
-		Node object = quad.getObject();
-
-		// First level validation: all parts of the triple will be required
-		if(subject != null && predicate != null && object != null) {			
-			// Second level validation: all parts of the triple must be URIs
-			if(subject.isURI() && predicate.isURI() && object.isURI()) {				
-				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
-				if(predicate.getURI().equals(RDF.type.getURI()) && object.getURI().equals(VOID.Dataset.getURI())) {
-					// The URI of the subject of such quad, should be the dataset's URL. 
-					// Try to calculate the latency associated to the current dataset
-					return subject.getURI();
-				}
-			}
-		}
-		
-		return null;
 	}
 
 	/**

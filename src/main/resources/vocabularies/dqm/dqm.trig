@@ -212,6 +212,13 @@
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Determines whether the time required to answer a set of N requests divided by N, is not longer than the time it takes to answer a single request" ;
 		rdfs:label	"Scalability of a data source metric" .
+		
+	dqm:NoUsageOfSlashURIsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Determines whether the extent to which hash URIs are used instead of slash URIs, as the latter usually imply that 303 redirects must be performed to gather all the elements described in the dataset" ;
+		rdfs:label	"No usage of slash URIs metric" .
 
 	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
@@ -513,6 +520,14 @@
 		rdfs:label	"Performance has scalability of a data source metric" ;
 		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:ScalabilityOfDataSourceMetric .
+		
+	dqm:hasNoUsageOfSlashURIsMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Performance Dimension with No Usage of Slash URIs Metric (No Usage of Slash URIs Metric belongs to the Performance Dimension)" ;
+		rdfs:label	"Performance has no usage of slash URIs metric" ;
+		rdfs:domain	dqm:Performance ;
+		rdfs:range	dqm:NoUsageOfSlashURIsMetric .
 		
 		#Interlink Dimensions Properties
 		dqm:hasInterlinkDimension

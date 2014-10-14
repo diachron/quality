@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.security;
+package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.performance;
 
 import java.util.List;
 
@@ -14,32 +14,33 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
-import eu.diachron.qualitymetrics.accessibility.security.HTTPSDataAccess;
+import eu.diachron.qualitymetrics.accessibility.performance.NoUsageSlashURIs;
 
-public class HTTPSDataAccessTest extends Assert {
+public class NoUsageSlashURIsTest extends Assert {
 	
-	private static Logger logger = LoggerFactory.getLogger(HTTPSDataAccessTest.class);
+	private static Logger logger = LoggerFactory.getLogger(NoUsageSlashURIsTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected HTTPSDataAccess metric = new HTTPSDataAccess();
+	
+	protected NoUsageSlashURIs metric = new NoUsageSlashURIs();
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.SecureDataAccess);
+		loader.loadDataSet(DataSetMappingForTestCase.CurrencyDocumentStatements);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		// No clean-up required
 	}
-
+	
 	@Test
-	public void testHTTPSDataAccess() {
+	public void testNoUsageSlashURIs() {
 		
 		// Set the dataset URI into the datasetURI property for the positive case, so that it's retrieved by EnvironmentProperties
-		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl#drugbank-rdf");
+		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "http://pleiades.stoa.org/places");
 		
-		// Load quads...
+		// Load quads for the positive test case
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
 		
@@ -48,16 +49,15 @@ public class HTTPSDataAccessTest extends Assert {
 			metric.compute(quad);
 			countLoadedQuads++;
 		}
-		logger.trace("Quads loaded, {} quads", countLoadedQuads);
+		logger.trace("Positive case: quads loaded, {} quads", countLoadedQuads);
 		
-		double expectedValue = 1.0;
-		double delta = 0.001;
-		
-		// Obtain the measurement of HTTPS data access for the source of the dataset
+		// Obtain the value of the dereferenciility for back-links metric, 
+		// 24 objects are of triples that are not in rdf:type statements and have an URI outside of the resource's URI
+		// The sample dataset uses 8280 URIs in total, 8074 of which are hash URIs
+		double delta = 0.0001;
 		double metricValue = metric.metricValue();
-		logger.trace("Computed HTTPS-data-access metric: " + metricValue);
 
-		assertEquals(expectedValue, metricValue, delta);
+		assertEquals(0.975120, metricValue, delta);
 	}
 
 }

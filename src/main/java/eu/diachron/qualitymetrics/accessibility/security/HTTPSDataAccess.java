@@ -15,8 +15,9 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.semantics.vocabulary.DQM;
-import eu.diachron.qualitymetrics.accessibility.performance.LowLatency;
+import eu.diachron.qualitymetrics.accessibility.availability.ResourceBaseURIOracle;
 
 /**
  * @author Santiago Londono
@@ -43,30 +44,54 @@ public class HTTPSDataAccess implements QualityMetric {
 	private boolean isHttpsConnection = false;
 	
 	/**
+	 * Flag stating whether the metric has been computed. This metric should be computed once, for the dataset's URI,
+	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
+	 */
+	private boolean hasBeenComputed = false;
+	
+	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
 	 * If so, the URI is extracted from the corresponding subject. Then, attempts to establish an HTTPS connection with the aforesaid URI, if 
 	 * successful, the isHttpsConnection is set to true, indicating that the analyzed dataset is secure 
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
+		
+		// Check if the metric has already been computed
+		if(this.hasBeenComputed) {
+			return;
+		}
+		
 		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = LowLatency.extractDatasetURI(quad);
+		String datasetURI = null; 
+		
+		try {
+			datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+		} catch(Exception ex) {
+			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+			// Try to get the dataset URI from the VOID property, as last resource
+			datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
+		}
 
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		if(datasetURI != null) {
 			try {
 				// Given the dataset's URI, try to establish a secure connection with its source endpoint
 				logger.trace("Testing HTTPS/SSL connection against dataset: {}...", datasetURI);
+				
 				// Try to connect to URI, verify that the secure connection via HTTPS can be established
 				isHttpsConnection = establishHttpsConnection(datasetURI);
 			} catch (IOException e) {
 				// An IO error occurred while trying to establish secure connection, failed
 				logger.debug("HTTPS/SSL connection failed due to IO error: {}...", e);
 				isHttpsConnection = false;
-			}			
+			} finally {
+				// Metric has been computed, prevent it from being re-computed for every quad in the dataset
+				this.hasBeenComputed = true;
+			}
 		}		
 	}
-	
+
 	/**
 	 * Tries to establish a fully-functional, sound HTTPS connection with the specified URI, and indicates if 
 	 * no errors were detected in the process and the connection was properly established
