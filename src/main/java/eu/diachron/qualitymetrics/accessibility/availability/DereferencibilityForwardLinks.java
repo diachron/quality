@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
@@ -22,28 +21,30 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Based on: Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance.
  * 
  */
-public class DereferencibilityForwardLinks {
+public class DereferencibilityForwardLinks implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityForwardLinksMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(DereferencibilityForwardLinks.class);
-	
+		
 	/**
-	 * URI of the dataset being processed
-	 */
-	private String datasetURI = null;
-	
-	/**
-	 * Counter of the number of data-level subjects found to be an URI in the resource.
-	 * Data-level subjects correspond to the definition of the ldlc(o) set, provided by Hogan et al. 
-	 */
-	private long totalDataLvlSubjects = 0;
+	* Counter of the number of subjects found to be an URI in the resource. Note that differently to the original
+	* specification given by Hogan et al, this count includes all subjects, not only data-level subjects.
+	* Data-level subjects correspond to the definition of the ldlc(o) set, provided by Hogan et al. 
+	*/
+	private long totalSubjects = 0;
 	
 	/**
 	 * Counter of the number of outlinks (subjects having the URI of the resource as prefix, 
 	 * except subjects of typeof statements) found in the resource
 	 */
 	private long totalOutlinkSubjects = 0;
+	
+	/**
+	* Object used to determine the base URI of the resource based on its contents and to count the number of 
+	* subjects being part of it
+	*/
+	private ResourceBaseURIOracle baseURIOracle = new ResourceBaseURIOracle();
 		
 	/**
 	 * Processes a single quad making part of the dataset. Extracts the subject of the quad and determines if it's part
@@ -53,25 +54,15 @@ public class DereferencibilityForwardLinks {
 	 */
 	public void compute(Quad quad) {
 		
-		// rdfs:type statements are not considered in this computation (as specified in Hogan et al.)
-		if(quad.getPredicate().isURI() && quad.getPredicate().getURI().equals(RDF.type.getURI())) {
-			return;						
-		}
-		
+		// Feed the base URI oracle, which will be used to determine the resource's base URI and to count outlinks
+		this.baseURIOracle.addHint(quad);
+
 		// Extract the URIs of current subject and of the resource, both are required to perform the computation
 		String subjectURI = (quad.getSubject().isURI())?(quad.getSubject().getURI()):("");
-		String datasetURI = this.getDatasetURI(); 
 		
-		if(datasetURI != null && !datasetURI.equals("") && !subjectURI.equals("")) {
-			
-			// This is a data-level subject...
-			this.totalDataLvlSubjects++;
-			
-			// ...now determine whether its an outlink on this resource
-			if(subjectURI.startsWith(datasetURI)) {
-				// Is an outlink, as the subject URI is part of the resource's URI (i.e. is locally minted)
-				this.totalOutlinkSubjects++;
-			}
+		if(!subjectURI.equals("")) {
+			// This is an URI subject...
+			this.totalSubjects++;
 		}
 	}
 
@@ -82,8 +73,18 @@ public class DereferencibilityForwardLinks {
 	 */
 	public double metricValue() {
 		
-		if(this.totalDataLvlSubjects != 0) {
-			return ((double)this.totalOutlinkSubjects / (double)this.totalDataLvlSubjects);
+		// Determine the base URI of the resource
+		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
+		logger.debug("Estimated resource base URI: {}", resourceBaseURI);
+		
+		if(this.totalSubjects > 0 && resourceBaseURI != null) {
+		
+			// Get the total number of outlinks (subjects part of the resource base URI) 
+			this.totalOutlinkSubjects = this.baseURIOracle.getSubjectURICount(resourceBaseURI);
+			logger.debug("Total outlinks (subjects) in base URI: {}, vs. total subject URIs in resource: {}", this.totalOutlinkSubjects, this.totalSubjects);
+			
+			// Compute the ratio between the subjects that are actually part of the resource and the total of all subjects in the resource
+			return ((double)this.totalOutlinkSubjects / (double)this.totalSubjects);
 		} else {
 			return 0;
 		}
@@ -96,24 +97,6 @@ public class DereferencibilityForwardLinks {
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	/**
-	 * Obtains the URI of the resource being currently processed. 
-	 * @return URI of the resource being processed
-	 */
-	private String getDatasetURI() {
-		
-		// Check if the URI of the resource being assessed has been determined already, if no, load it from the environment
-		if(this.datasetURI == null) {
-			try {
-				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-			} catch(Exception ex) {
-				logger.error("Error retrieving dataset URI, processor not initialised yet", ex);
-			}
-		}
-		
-		return this.datasetURI;
 	}
 
 }

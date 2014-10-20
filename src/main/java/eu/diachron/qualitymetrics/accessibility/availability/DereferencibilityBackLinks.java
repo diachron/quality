@@ -1,14 +1,15 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
@@ -22,28 +23,37 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Based on: Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance.
  * 
  */
-public class DereferencibilityBackLinks {
+public class DereferencibilityBackLinks implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(DereferencibilityBackLinks.class);
-	
+		
 	/**
-	 * URI of the dataset being processed
-	 */
-	private String datasetURI = null;
-	
-	/**
-	 * Counter of the number of data-level objects found to be an URI in the resource.
+	 * Counter of the number of objects found to be an URI in the resource. Note that differently to the original
+	 * specification given by Hogan et al, this count includes all objects, not only data-level objects.
 	 * Data-level objects correspond to the definition of the ldlc(o) set, provided by Hogan et al. 
 	 */
-	private long totalDataLvlObjects = 0;
+	private long totalObjects = 0;
 	
 	/**
 	 * Counter of the number of inlinks (objects having the URI of the resource as prefix, 
 	 * except objects of typeof statements) found in the resource
 	 */
 	private long totalInlinkObjects = 0;
+	
+	/**
+	* A table holding the set of URIs recognized as parent URIs of the objects of all the processed triples.
+	* The parent URI is obtained by taking the substring behined the last appearance of "/" in the object's URI. As values,
+	* the table contains the number of times the parent URI set as key has appeared as part of the objects of the processed triples
+	*/
+	private ConcurrentHashMap<String, Integer> tblObjectURIs = new ConcurrentHashMap<String, Integer>();
+	
+    /**
+     * Object used to determine the base URI of the resource based on its contents and to count the number of 
+     * subjects being part of it
+     */
+	private ResourceBaseURIOracle baseURIOracle = new ResourceBaseURIOracle();
 	
 	/**
 	 * Processes a single quad making part of the dataset. Extracts the object of the quad and determines if it's part
@@ -53,24 +63,26 @@ public class DereferencibilityBackLinks {
 	 */
 	public void compute(Quad quad) {
 		
-		// rdfs:type statements are not considered in this computation (as specified in Hogan et al.)
-		if(quad.getPredicate().isURI() && quad.getPredicate().getURI().equals(RDF.type.getURI())) {
-			return;						
-		}
-		
-		// Extract the URIs of current object and of the resource, both are required to perform the computation
+		// Feed the base URI oracle, which will be used to determine the resource's base URI and to count outlinks
+		this.baseURIOracle.addHint(quad);
+
+		// Extract the URIs of current subject and of the resource, both are required to perform the computation
 		String objectURI = (quad.getObject().isURI())?(quad.getObject().getURI()):("");
-		String datasetURI = this.getDatasetURI(); 
-		
-		if(datasetURI != null && !datasetURI.equals("") && !objectURI.equals("")) {
+
+		if(!objectURI.equals("")) {
 			
-			// This is a data-level object...
-			this.totalDataLvlObjects++;
+			// This is an URI object...
+			this.totalObjects++;
 			
-			// ...now determine whether its an inlink on this resource
-			if(objectURI.startsWith(datasetURI)) {
-				// Is an inlink, as the object URI is part of the resource's URI (i.e. is locally minted)
-				this.totalInlinkObjects++;
+			// Determine the parent URI of the object's URI
+			String parentURI = this.baseURIOracle.extractParentURI(quad.getObject());
+			logger.debug("Object URI detected: {} Parent URI: {}", objectURI, parentURI);
+			
+			// Add the parent URI to the table of objects or update the corresponding entry if it's already there
+			if(parentURI != null) {			
+				// Check if the current parent URI has already an entry in the table, if no, add it
+				Integer curParentURICount = this.tblObjectURIs.get(parentURI);
+				this.tblObjectURIs.put(parentURI, ((curParentURICount != null)?(curParentURICount + 1):(1)));
 			}
 		}
 	}
@@ -82,8 +94,17 @@ public class DereferencibilityBackLinks {
 	 */	
 	public double metricValue() {
 		
-		if(this.totalDataLvlObjects != 0) {
-			return ((double)this.totalInlinkObjects / (double)this.totalDataLvlObjects);
+		// Determine the base URI of the resource
+		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
+		               
+		if(resourceBaseURI != null && this.totalObjects != 0) {
+		
+			// Get the total number of inlinks (objects part of the resource base URI)
+			Integer totalObjectsInBase = this.tblObjectURIs.get(resourceBaseURI); 
+			this.totalInlinkObjects = (totalObjectsInBase != null)?(totalObjectsInBase):(0);
+			
+			return ((double)this.totalInlinkObjects / (double)this.totalObjects);
+		
 		} else {
 			return 0;
 		}
@@ -96,24 +117,6 @@ public class DereferencibilityBackLinks {
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	/**
-	 * Obtains the URI of the resource being currently processed. 
-	 * @return URI of the resource being processed
-	 */
-	private String getDatasetURI() {
-		
-		// Check if the URI of the resource being assessed has been determined already, if no, load it from the environment
-		if(this.datasetURI == null) {
-			try {
-				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-			} catch(Exception ex) {
-				logger.error("Error retrieving dataset URI, processor not initialised yet", ex);
-			}
-		}
-		
-		return this.datasetURI;
 	}
 
 }

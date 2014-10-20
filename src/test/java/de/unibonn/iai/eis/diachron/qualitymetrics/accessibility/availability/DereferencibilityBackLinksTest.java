@@ -57,7 +57,7 @@ public class DereferencibilityBackLinksTest extends Assert {
 		double delta = 0.0001;
 		double metricValue = metric.metricValue();
 		
-		assertEquals(0.97774, metricValue, delta);
+		assertEquals(0.497389, metricValue, delta);
 	}
 
 

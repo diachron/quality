@@ -53,11 +53,11 @@ public class DereferencibilityForwardLinksTest extends Assert {
 		
 		// Obtain the value of the dereferenciility for forward-links metric, 
 		// 11 subjects are of triples that are not in rdf:type statements and have an URI outside of the resource's URI
-		// The sample dataset contains 3151 data-level subjects in total
+		// The sample dataset contains 4088 data-level subjects in total
 		double delta = 0.0001;
 		double metricValue = metric.metricValue();
 		
-		assertEquals(0.9965, metricValue, delta);
+		assertEquals(0.981512, metricValue, delta);
 	}
 
 }
