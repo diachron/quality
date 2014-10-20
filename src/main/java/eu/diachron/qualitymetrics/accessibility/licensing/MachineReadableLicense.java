@@ -1,6 +1,5 @@
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
-import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -9,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.DC;
-import com.hp.hpl.jena.vocabulary.DCTerms;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -43,20 +40,9 @@ public class MachineReadableLicense implements QualityMetric {
 	private String dataSetURI = null;
 	
 	/**
-	 * Set of all the URIs of properties known to provide licensing information
+	 * Allows to determine if a predicate states what is the licensing schema of a resource
 	 */
-	private static HashSet<String> setLicenseProperties;
-	
-	static {
-		// Initialize set of properties known to provide licensing information
-		setLicenseProperties = new HashSet<String>();
-		setLicenseProperties.add(DCTerms.license.getURI());
-		setLicenseProperties.add(DCTerms.accessRights.getURI());
-		setLicenseProperties.add(DCTerms.rights.getURI());
-		setLicenseProperties.add(DC.rights.getURI());
-		setLicenseProperties.add("http://www.w3.org/1999/xhtml/vocab#license");
-		setLicenseProperties.add("http://creativecommons.org/ns#license");
-	}
+	private LicensingModelClassifier licenseClassifier = new LicensingModelClassifier();
 
 	/**
 	 * Processes a single quad being part of the dataset. Firstly, tries to figure out the URI of the dataset whence the quads come. 
@@ -85,8 +71,10 @@ public class MachineReadableLicense implements QualityMetric {
 
 		// Check if the property of the quad is known to provide licensing information
 		if(predicate != null && predicate.isURI() && subject != null) {
+			
 			// Search for the predicate's URI in the set of license properties...
-			if(setLicenseProperties.contains(predicate.getURI())) {
+			if(licenseClassifier.isLicensingPredicate(predicate)) {
+				
 				// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
 				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
 				logger.trace("Quad providing license info detected. Subject: {}, object: {}", curSubjectURI, object);

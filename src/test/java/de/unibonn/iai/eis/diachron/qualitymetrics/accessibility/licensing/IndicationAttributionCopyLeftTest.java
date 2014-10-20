@@ -14,17 +14,17 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
-import eu.diachron.qualitymetrics.accessibility.licensing.MachineReadableLicense;
+import eu.diachron.qualitymetrics.accessibility.licensing.IndicationAttributionCopyLeft;
 
-public class MachineReadableLicenseTest extends Assert {
-
-	private static Logger logger = LoggerFactory.getLogger(MachineReadableLicenseTest.class);
+public class IndicationAttributionCopyLeftTest extends Assert {
+	
+	private static Logger logger = LoggerFactory.getLogger(IndicationAttributionCopyLeftTest.class);
 	
 	protected TestLoader loaderPositive = new TestLoader();
 	protected TestLoader loaderNegative = new TestLoader();
 	
-	protected MachineReadableLicense metricPositive = new MachineReadableLicense();
-	protected MachineReadableLicense metricNegative = new MachineReadableLicense();
+	protected IndicationAttributionCopyLeft metricPositive = new IndicationAttributionCopyLeft();
+	protected IndicationAttributionCopyLeft metricNegative = new IndicationAttributionCopyLeft();
 	
 	@Before
 	public void setUp() throws Exception {
@@ -38,7 +38,7 @@ public class MachineReadableLicenseTest extends Assert {
 	}
 
 	@Test
-	public void testMachineReadableLicense() {
+	public void testIndicationAttributionCopyLeft() {
 		
 		// Set the dataset URI into the datasetURI property for the positive case, so that it's retrieved by EnvironmentProperties
 		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl#drugbank-rdf");
@@ -73,7 +73,7 @@ public class MachineReadableLicenseTest extends Assert {
 		
 		// Obtain the value of the machine-readable indication of a license metric, for the negative case
 		double metricValueNegative = metricNegative.metricValue();
-		logger.trace("Computed machine-readable indication of a license metric; positive case: {}, negative case: {}", metricValuePositve, metricValueNegative);
+		logger.trace("Computed indication of attribution CopyLeft metric; positive case: {}, negative case: {}", metricValuePositve, metricValueNegative);
 
 		assertEquals(1.0, metricValuePositve, delta);
 		assertEquals(0.0, metricValueNegative, delta);

@@ -191,6 +191,13 @@
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Verifies that the resource is annotated with a machine-readable indication of the license (e.g. a VoID description or dcterms:license property)" ;
 		rdfs:label	"Machine-readable indication of a license metric" .
+		
+	dqm:IndicationOfAttributionCopyLeftMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Detects whether the work is attributed by the author under a CopyLeft license, which guarantees that free access to the resource and any modified versions of it, will always be provided" ;
+		rdfs:label	"Indication of Attribution CopyLeft" .
 
 	dqm:LowLatencyMetric
 		a	rdfs:Class ;
@@ -478,6 +485,14 @@
 		rdfs:label	"Licensing has machine-readable indication of a license metric" ;
 		rdfs:domain	dqm:Licensing ;
 		rdfs:range	dqm:MachineReadableLicenseMetric .
+		
+	dqm:hasIndicationOfAttributionCopyLeftMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Licensing Dimension with Indication of Attribution CopyLeft Metric (Indication of Attribution CopyLeft Metric belongs to the Licensing Dimension)" ;
+		rdfs:label	"Licensing has indication of attribution CopyLeft metric" ;
+		rdfs:domain	dqm:Licensing ;
+		rdfs:range	dqm:IndicationOfAttributionCopyLeftMetric .
 		
 	#Security Dimension Properties
 	dqm:hasSecurityDimension

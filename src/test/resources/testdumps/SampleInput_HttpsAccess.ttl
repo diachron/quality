@@ -25,6 +25,7 @@
 	foaf:homepage <http://www.drugbank.ca/> ;
 	foaf:page <http://thedatahub.org/dataset/drugbank> ;
 	dcterms:license <http://www.drugbank.ca/about#cite> ;
+	<http://creativecommons.org/ns#license> <http://creativecommons.org/licenses/by-sa/4.0>;
 	pav:version "2.5" ;
 	dcterms:publisher <http://www.drugbank.ca/> ;
 	dcterms:created "2008-09-15T00:00:00Z"^^xsd:dateTime .
