@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,214 +14,128 @@ import org.apache.log4j.Logger;
 import org.apache.xerces.util.URI;
 
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
+import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import eu.diachron.qualitymetrics.utilities.Constants;
 import eu.diachron.semantics.vocabulary.DQM;
+
 /**
  * LabelsUsingCapitals identifies triples whose property is from a
  * pre-configured list of label properties, and whose object uses a bad style of
- * capitalization
- * 
- * list of widely used annotation properties are stored in
- * ..src/main/resources/LabelPropertiesList.txt
- * 
- * Metric value Range = [0 - 1] Best Case = 0 Worst Case = 1
- * 
- * The metric value is defined as the ratio of labels with "bad capitalisation" 
+ * capitalization.
+ *
+ * Metric value Range = [0 - 1]. Best Case = 0, Worst Case = 1
+ *
+ * The metric value is defined as the ratio of labels with "bad capitalization"
  * to all labels ( triples having such properties).
- * 
+ *
  * This metric is from the list of constrains for scientific pilots and is
  * introduced in the Deliverable 3.1 (Table 20)
- * 
- * @author Muhammad Ali Qasmi
- * @date 19th June 2014
  */
-public class LabelsUsingCapitals implements QualityMetric {
-	/**
-	 * Metric URI
-	 */
-	private final Resource METRIC_URI = DQM.LabelsUsingCapitalsMetric;
-	/**
-	 * logger static object
-	 */
-	static Logger logger = Logger.getLogger(LabelsUsingCapitals.class);
-	/**
-	 * list of problematic quads
-	 */
-	protected List<Quad> problemList = new ArrayList<Quad>();
-	/**
-	 * Default file path and name for the file that contains list of annotation
-	 * properties
-	 */
-	protected static String defaultFilePathName = "src/main/resources/LabelPropertiesList.txt";
-	/**
-	 * Number of literals count
-	 */
-	protected long totalNumberOfLiterals = 0;
-	/**
-	 * Number of bad capitalization literals count
-	 */
-	protected long totalNumberOfBadCapitalizationLiterals = 0;
-	/**
-	 * list of annotation properties to be evaluated.
-	 */
-	protected static Set<String> annotationPropertiesSet = new HashSet<String>();
-	/**
-	 * Regex to find words with camelCase
-	 */
-	protected static String regexForCamelCase = "[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*";
+
+public class LabelsUsingCapitals implements ComplexQualityMetric {
+	private static final Logger LOG = Logger.getLogger(LabelsUsingCapitals.class);
+
+	private int literals = 0;
+	private int capitalizationLiterals = 0;
+
+	private static final Resource METRIC_URI = DQM.LabelsUsingCapitalsMetric;
+	private Set<String> properties = new HashSet<String>();
+	private List<Quad> problems = new ArrayList<Quad>();
 
 	/**
-	 * loads list of annotation properties in set
-	 * 
-	 * if filePathName is null then default path will be used.
-	 * 
-	 * @param filePathName
-	 *            - file Path and name, default :
-	 *            src/main/resources/LabelPropertiesList.txt
+	 * Loads a list of label properties.
+	 * @param args Arguments, args[0] is a path to label properties file.
 	 */
-	public static void loadAnnotationPropertiesSet(String filePathName) {
+	public void before(Object... args) {
+		String path = (args == null || args.length == 0) ? Constants.LABEL_PROPERTIES_FILE
+			: (String) args[0];
 		File file = null;
-		String tmpFilePathName = (filePathName == null) ? LabelsUsingCapitals.defaultFilePathName
-				: filePathName;
 		try {
-			if (!tmpFilePathName.isEmpty()) {
-				file = new File(tmpFilePathName);
-				if (file.exists() && file.isFile()) {
-					String strLine = null;
-					BufferedReader in = new BufferedReader(new FileReader(file));
-					while ((strLine = in.readLine()) != null) {
-						URI tmpURI = new URI(strLine);
-						if (tmpURI != null) {
-							LabelsUsingCapitals.annotationPropertiesSet
-									.add(strLine);
-						}
+			file = new File(path);
+			if (file.exists() && file.isFile()) {
+				String line = null;
+				BufferedReader in = new BufferedReader(new FileReader(file));
+				while ((line = in.readLine()) != null && !line.isEmpty()) {
+					if (new URI(line.trim()) != null) {
+						properties.add(line);
 					}
-					in.close();
 				}
+				in.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.debug(e.getStackTrace());
-			logger.error(e.getMessage());
+			LOG.error(e.getMessage());
 		} catch (IOException e) {
-			logger.debug(e.getStackTrace());
-			logger.error(e.getMessage());
+			LOG.error(e.getMessage());
 		}
 	}
 
 	/**
-	 * clears list of annotation properties in set
-	 */
-	public static void clearAnnotationPropertiesSet() {
-		LabelsUsingCapitals.annotationPropertiesSet.clear();
-	}
-
-	/**
-	 * Checks whether given quad has predicate with URI found in annotation
-	 * properties set if true then checks the object's value in that quad;
-	 * whether it is bad capitalization or not.
+	 * The method checks an object's value for bad capitalization.
 	 * 
+	 * @param quad
+	 *          A quad to check for quality problems.
 	 */
-	
 	public void compute(Quad quad) {
-		try {
-			Node predicate = quad.getPredicate();
-			if (predicate.isURI()) { // check is the predicate is URI or not
-				if (LabelsUsingCapitals.annotationPropertiesSet
-						.contains(predicate.getURI())) { // check if given
-															// predicate is
-															// found in
-															// annotation
-															// properties list
-					Node object = quad.getObject();
-					this.totalNumberOfLiterals++; // increment total number of
-													// literals
-					if (object.isLiteral()) { // check whether object is literal
-												// or not
-						String value = object.getLiteralValue().toString(); // retrieve
-																			// object's
-																			// value
-						value = value.trim(); // removes whitespace from both
-												// ends
-						if (value != null && !value.isEmpty()) { // check if
-																	// object's
-																	// value is
-																	// null or
-																	// empty
-							if (value.matches(regexForCamelCase)) { // matches
-																	// regex for
-																	// CamelCase
-								this.totalNumberOfBadCapitalizationLiterals++; // increment
-																				// whitespace
-																				// literal
-																				// count
-								this.problemList.add(quad); // add invalid quad
-															// in problem list
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.debug(e.getStackTrace());
-			logger.debug(e.getMessage());
+		Node predicate = quad.getPredicate();
+		if (predicate.isURI() && properties.contains(predicate.getURI())) {
+			literals++;
+			assessLiteralValue(quad);
 		}
 	}
 
 	/**
-	 * metric value = total number of bad capitalization literals / total number
-	 * of literals
+	 * Checks a literal value for bad capitalization.
 	 * 
-	 * @return ( (total number of bad capitalization literals) / (total number
-	 *         of literals) )
+	 * @param quad
 	 */
-	
+	private void assessLiteralValue(Quad quad) {
+		Node object = quad.getObject();
+		if (object.isLiteral()) {
+			String value = object.getLiteralValue().toString().trim();
+			if (!value.isEmpty() && value.matches(Constants.CAMEL_CASE_REGEX)) {
+				capitalizationLiterals++;
+				problems.add(quad);
+				LOG.info(String.format("Bad capitalization is found in quad: %s", quad.toString()));
+			}
+		}
+	}
+
+	/**
+	 * Calculates a metric value. Ratio of bad capitalization literals to total
+	 * number of literals.
+	 * @return Ratio of bad capitalization literals to the total number of literals.
+	 */
 	public double metricValue() {
-		logger.debug("Total number of bad capitalization literals : "
-				+ this.totalNumberOfBadCapitalizationLiterals);
-		logger.debug("Total total number of literals : "
-				+ this.totalNumberOfLiterals);
-		if (this.totalNumberOfLiterals <= 0) {
-			logger.warn("Total total number of literals are ZERO");
+		if (literals == 0) {
+			LOG.warn("Total number of literals is 0.");
 			return 0;
 		}
-		return ((double) this.totalNumberOfBadCapitalizationLiterals / (double) this.totalNumberOfLiterals);
+		return (double) capitalizationLiterals / (double) literals;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric#getMetricURI
-	 * ()
-	 */
-	
 	public Resource getMetricURI() {
-		return this.METRIC_URI;
+		return METRIC_URI;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric#
-	 * getQualityProblems()
-	 */
-	
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> tmpProblemList = null;
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList);
-		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.debug(problemListInitialisationException.getStackTrace());
-			logger.error(problemListInitialisationException.getMessage());
+			return new ProblemList<Quad>(problems);
+		} catch (ProblemListInitialisationException e) {
+			LOG.error(e.getLocalizedMessage());
 		}
-		return tmpProblemList;
+		// TODO change ProblemList
+		return null;
 	}
-	
+
+  /**
+   * Clears a list of annotation properties.
+   */
+  public void after(Object... arg0) {
+    properties.clear();
+  }
 }

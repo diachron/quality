@@ -1,72 +1,88 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability;
 
-import static org.junit.Assert.*;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
-import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals;
 
-/**
- * Test class for {@link de.unibonn.iai.eis.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals(com.hp.hpl.jena.sparql.core.Quad)}.
- * 
- * @author Muhammad Ali Qasmi
- * @date 19th June 2014
- */
-public class LabelsUsingCapitalsTest extends Assert{
-        /**
-         * static logger object
-         */
-        static Logger logger = Logger.getLogger(LabelsUsingCapitalsTest.class);
-        /**
-         * Test data set loader object
-         */
-        protected TestLoader loader = new TestLoader();
-        /**
-         * Metric under test object
-         */
-        protected LabelsUsingCapitals labelsUsingCapitals  = new LabelsUsingCapitals();
+public class LabelsUsingCapitalsTest {
 
-        @Before
-        public void setUp() throws Exception {
-                BasicConfigurator.configure();
-                loader.loadDataSet(DataSetMappingForTestCase.LabelsUsingCapitals);
-                LabelsUsingCapitals.loadAnnotationPropertiesSet(null);
-        }
+	private static ComplexQualityMetric metric;
+	private static List<Quad> quads;
 
-        @After
-        public void tearDown() throws Exception {
-                LabelsUsingCapitals.clearAnnotationPropertiesSet();
-        }
+	@BeforeClass
+	public static void setUp() throws Exception {
 
-        /**
-         * Test method for {@link eu.diachron.qualitymetrics.representational.understandability.LabelsUsingCapitals#compute(com.hp.hpl.jena.sparql.core.Quad)}.
-         * 
-         * Case1 => rdfs:label "GreenGoblin"
-         *   
-         * Total number of capitalized  label literals : 1
-         * Total total number of annotation literals : 2
-         * 
-         * Metric Value = 1 / 2 = 0.50000
-         * 
-         */
-        @Test
-        public final void testCompute() {
-                List<Quad> streamingQuads = loader.getStreamingQuads();
-                for(Quad quad : streamingQuads){
-                        labelsUsingCapitals.compute(quad);
-                }
-                assertEquals(0.50000, labelsUsingCapitals.metricValue(), 0.00001);
-        }
+		Model model = ModelFactory.createDefaultModel();
+		model.createResource("http://example.org/#obj1")
+			.addProperty(RDFS.comment, "Some name")
+			.addProperty(RDF.type, FOAF.Person)
+			.addProperty(RDFS.label, "SomeLabel")
+			.addProperty(RDFS.label, "Otherlabel")
+			.addProperty(RDF.type, FOAF.Person);
+		model.createResource("http://example.org/#obj2")
+			.addProperty(RDFS.comment, "The comment")
+			.addProperty(RDFS.label, "OneMoreLabel")
+			.addProperty(RDFS.label, "Label");
 
+		quads = new ArrayList<Quad>();
+		StmtIterator si = model.listStatements();
+		while (si.hasNext()) {
+			quads.add(new Quad(null, si.next().asTriple()));
+		}
+	}
+
+	@Test
+	public void metric() {
+		metric = new LabelsUsingCapitals();
+		metric.before();
+
+		for (Quad quad : quads) {
+			metric.compute(quad);
+		}
+		ProblemList<?> problems = metric.getQualityProblems();
+		Assert.assertFalse(problems.getProblemList().isEmpty());
+		Assert.assertTrue(problems.getProblemList().size() == 2);
+		Assert.assertEquals(0.5, metric.metricValue(), 0.0);
+	}
+	
+//	@Test
+	public void emptyQuads() {
+		metric = new LabelsUsingCapitals();
+		metric.before();
+
+		Model model = ModelFactory.createDefaultModel();
+		List<Quad> quads = new ArrayList<Quad>();
+		StmtIterator si = model.listStatements();
+		while (si.hasNext()) {
+			quads.add(new Quad(null, si.next().asTriple()));
+		}
+		
+		for (Quad quad : quads) {
+			metric.compute(quad);
+		}
+		ProblemList<?> problems = metric.getQualityProblems();
+		Assert.assertFalse(problems.getProblemList().isEmpty());
+		Assert.assertEquals(0.0, metric.metricValue(), 0.0);
+	}
+
+	@After
+	public void tearDown() {
+		metric.after();
+	}
 }
