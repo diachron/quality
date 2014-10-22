@@ -1,187 +1,151 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.xerces.util.URI;
-import org.apache.xerces.util.URI.MalformedURIException;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
+import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import eu.diachron.semantics.vocabulary.DQM;
+import eu.diachron.qualitymetrics.utilities.Constants;
 import eu.diachron.qualitymetrics.utilities.VocabularyReader;
 
-public class UndefinedProperties implements QualityMetric {
-	
-		/**
-		 * Metric URI
-		 */
-		private final Resource METRIC_URI = DQM.UndefinedPropertiesMetric;
-		/**
-		 * static logger object
-		 */
-		static Logger logger = Logger.getLogger(UndefinedClasses.class);
-		
-		/**
-		 * total number of undefined properties
-		 */
-		protected long undefinedPropertiesCount = 0;
-		/**
-		 * total number of properties
-		 */
-		protected long totalPropertiesCount = 0;
-		/**
-		 * list of problematic quads
-		 */
-		protected List<Quad> problemList = new ArrayList<Quad>();
+public class UndefinedProperties implements ComplexQualityMetric {
 
-		/**
-		 * This method identifies whether a component (subject, predicate or object)
-		 * of the given quad references an undefined class or property.
-		 * 
-		 * @param quad
-		 *            - to be identified
-		 */
-		
-		public void compute(Quad quad) {
+	private final Resource METRIC_URI = DQM.UndefinedPropertiesMetric;
+	private static final Logger LOG = Logger.getLogger(UndefinedClasses.class);
 
-			logger.trace("compute() --Started--");
+	private long undefinedProperties = 0;
+	private long properties = 0;
 
-			try {
-				Node predicate = quad.getPredicate(); // retrieve predicate
-				Node object = quad.getObject(); // retrieve object
-				
-				if (predicate.isURI()) { // check if predicate is URI
-					this.totalPropertiesCount++;
-					// load model
-					Model predicateModel = VocabularyReader
-							.read(predicate.getURI());
-					if (predicateModel == null) { // check if system is able to
-													// retrieve model
-	                        this.undefinedPropertiesCount++;
-	                        this.problemList.add(quad);
-					} else {
-						// search for URI resource from Model
-						if (predicateModel.getResource(predicate.getURI())
-								.isURIResource()) {
-							// search for its domain and range properties
-							if (!(predicateModel.getResource(predicate.getURI())
-									.hasProperty(RDFS.domain) && predicateModel
-									.getResource(predicate.getURI()).hasProperty(
-											RDFS.range))) {
-						        System.out.println("predicate : " + predicate);    
-								this.undefinedPropertiesCount++;
-								this.problemList.add(quad);
-							}
+	private static Set<String> propertiesSet = new HashSet<String>();
+	private List<Quad> problems = new ArrayList<Quad>();
+
+	/**
+	 * Loads a list of properties.
+	 * @param args Arguments, args[0] is a path to properties file.
+	 */
+	public void before(Object... args) {
+		String path = (args == null || args.length == 0) ? Constants.UNDEFINED_PROPERTIES_FILE
+				: (String) args[0];
+		File file = null;
+		try {
+			if (!path.isEmpty()) {
+				file = new File(path);
+				if (file.exists() && file.isFile()) {
+					String line = null;
+					BufferedReader in = new BufferedReader(new FileReader(file));
+					while ((line = in.readLine()) != null && !line.isEmpty()) {
+						if (new URI(line.trim()) != null) {
+							propertiesSet.add(line);
 						}
 					}
-					
-					URI tmpURI = new URI(predicate.getURI());
-					
-
-	               if (tmpURI != null && (tmpURI.equals(RDFS.subPropertyOf.toString())||
-	            		   tmpURI.equals(OWL.onProperty.toString())||
-	            		   tmpURI.equals(OWL.equivalentProperty.toString())||
-	            		   tmpURI.equals(OWL.NS + "propertyDisjointWith")||
-	            		   tmpURI.equals(OWL.NS + "assertionProperty"))            		   
-	            		   ) {
-	                    if (object.isURI()) { // check if object is URI (not blank or
-	                            // literal)
-	                        this.totalPropertiesCount++;
-	                        // load model
-	                        Model objectModel = VocabularyReader.read(object.getURI());
-	                        if (objectModel == null) { // check if system is able to
-	                                                    // retrieve model
-	                                this.undefinedPropertiesCount++;
-	                                this.problemList.add(quad);
-	                        } else {
-	                             // search for URI resource from Model
-	                                if (!objectModel.getResource(object.getURI())
-	                                                .isURIResource()) {
-	                                    this.undefinedPropertiesCount++;
-	                                    this.problemList.add(quad);
-	                                }      
-	                        }      
-	                    }
-	                }
+					in.close();
 				}
-
-			} catch (MalformedURIException exception){
-		        logger.debug(exception);
-	            logger.error(exception.getMessage());
-			} catch (Exception exception) {
-				logger.debug(exception);
-				logger.error(exception.getMessage());
 			}
-
-			logger.trace("compute() --Ended--");
+		} catch (FileNotFoundException e) {
+			LOG.error(e.getLocalizedMessage());
+		} catch (IOException e) {
+			LOG.error(e.getLocalizedMessage());
 		}
-
-		/**
-		 * This method returns metric value for the object of this class
-		 * 
-		 * @return (total number of undefined classes and undefined properties) / (
-		 *         total number of classes and properties)
-		 */
-		
-		public double metricValue() {
-
-			logger.trace("metricValue() --Started--");
-			
-			
-			logger.debug("Number of Undefined Properties :: "
-					+ this.undefinedPropertiesCount);
-			logger.debug("Number of Properties :: " + this.totalPropertiesCount);		
-			if (this.totalPropertiesCount <= 0) {
-				logger.warn("Total number of properties in given document is found to be zero.");
-				return 0.0;
-			}
-			double metricValue = (double) this.undefinedPropertiesCount
-					/ this.totalPropertiesCount;
-			logger.debug("Metric Value :: " + metricValue);
-			logger.trace("metricValue() --Ended--");
-			return metricValue;
-		}
-
-		/**
-		 * Returns Metric URI
-		 * 
-		 * @return metric URI
-		 */
-		
-		public Resource getMetricURI() {
-			return this.METRIC_URI;
-		}
-
-		/**
-		 * Returns list of problematic Quads
-		 * 
-		 * @return list of problematic quad
-		 */
-		
-		public ProblemList<?> getQualityProblems() {
-			ProblemList<Quad> tmpProblemList = null;
-			try {
-				tmpProblemList = new ProblemList<Quad>(this.problemList);
-			} catch (ProblemListInitialisationException problemListInitialisationException) {
-				logger.debug(problemListInitialisationException);
-				logger.error(problemListInitialisationException.getMessage());
-			}
-			return tmpProblemList;
-		}
-		
 	}
 
+	/**
+	 * The method identifies whether a component (subject, predicate or object) of
+	 * the given quad references an undefined class or property.
+	 * @param quad A quad to check for quality problems.
+	 */
+	public void compute(Quad quad) {
+		String predicateURI = quad.getPredicate().getURI();
 
+		if (quad.getPredicate().isURI()) {
+			properties++;
+			Model model = VocabularyReader.read(predicateURI);
+			if (model.isEmpty()) {
+				undefinedProperties++;
+				problems.add(quad);
+				LOG.info(String.format("Undefined property is found: %s", predicateURI));
+			} else if (model.getResource(predicateURI).isURIResource()) {
+				checkDomainAndRange(model, predicateURI, quad);
+			}
+		}
 
+		if (propertiesSet.contains(predicateURI)) {
+			checkPropertyInObject(quad);
+		}
+	}
+
+	private void checkDomainAndRange(Model model, String uri, Quad quad) {
+		if (!(model.getResource(uri).hasProperty(RDFS.domain) && model.getResource(
+				uri).hasProperty(RDFS.range))) {
+			undefinedProperties++;
+			problems.add(quad);
+			LOG.info(String.format("Property has not a domain and range: %s", uri));
+		}
+	}
+
+	private void checkPropertyInObject(Quad quad) {
+		String objectURI = quad.getObject().getURI();
+		if (quad.getObject().isURI()) {
+			properties++;
+			Model model = VocabularyReader.read(objectURI);
+			if (model.isEmpty()) {
+				undefinedProperties++;
+				problems.add(quad);
+				LOG.info(String.format("Object contains an undefined property: %s", objectURI));
+			} else if (!model.getResource(objectURI).isURIResource()) {
+				undefinedProperties++;
+				problems.add(quad);
+				LOG.info(String.format("Object contains an undefined property: %s", objectURI));
+			}
+		}
+	}
+
+	/**
+	 * This method returns metric value for the object of this class.
+	 * @return The ratio of undefined properties to the total number of properties.
+	 */
+	public double metricValue() {
+		if (properties == 0) {
+			LOG.warn("Total number of properties is 0.");
+			return 0.0;
+		}
+		return (double) undefinedProperties / (double) properties;
+	}
+
+	public Resource getMetricURI() {
+		return this.METRIC_URI;
+	}
+
+	public ProblemList<?> getQualityProblems() {
+		try {
+			return new ProblemList<Quad>(problems);
+		} catch (ProblemListInitialisationException e) {
+			LOG.error(e.getLocalizedMessage());
+		}
+		// TODO change ProblemList
+		return null;
+	}
+
+	/**
+	 * Clears a list of class properties.
+	 */
+	public void after(Object... args) {
+		propertiesSet.clear();
+	}
+}
