@@ -86,7 +86,7 @@ public class OntologyHijacking implements QualityMetric{
          */
         protected boolean isHijacked(Node node){
                 Model model = VocabularyReader.read(node.getURI());
-                if (model != null){
+                if (!model.isEmpty()){
                         if (model.getResource(node.getURI()).isURIResource()){
                                 if ( model.getResource(node.getURI()).hasProperty(RDF.type)) {
                                      return true;   

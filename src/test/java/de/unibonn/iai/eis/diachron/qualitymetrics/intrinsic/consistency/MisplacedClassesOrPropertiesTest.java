@@ -1,9 +1,5 @@
 package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
@@ -16,7 +12,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.configuration.OutputFileMappingForQualityProblems;
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import eu.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties;
 import eu.diachron.qualitymetrics.utilities.VocabularyReader;

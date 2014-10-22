@@ -30,7 +30,7 @@ public class SPARQLAccessibility implements QualityMetric {
 
 	private final Resource METRIC_URI = DQM.EndPointAvailabilityMetric;
 	
-	static Logger logger = Logger.getLogger(EmptyAnnotationValue.class);
+	static Logger logger = Logger.getLogger(SPARQLAccessibility.class);
 	
 	/**
 	 * list of problematic quads
