@@ -66,7 +66,7 @@ public class DereferencibilityBackLinks implements QualityMetric {
 		// Feed the base URI oracle, which will be used to determine the resource's base URI and to count outlinks
 		this.baseURIOracle.addHint(quad);
 
-		// Extract the URIs of current subject and of the resource, both are required to perform the computation
+		// Extract the URI of the object of the quad, which is required to perform the computation
 		String objectURI = (quad.getObject().isURI())?(quad.getObject().getURI()):("");
 
 		if(!objectURI.equals("")) {

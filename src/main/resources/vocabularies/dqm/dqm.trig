@@ -402,6 +402,13 @@
 		rdfs:comment "This is a complex metric that detects good quality interlinks by measuring the (i) interlink degree; (ii) clustering coefficient; (iii) centrality; (iv) open sameAs chains; (v) sameAs description richness" ; 
 		rdfs:label "Interlink Detection Metric" .
 		
+	dqm:LinksToExternalDataProvidersMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		daq:expectedDataType xsd:double ;
+		rdfs:comment "Measures the degree to which the resource is linked to external data providers, that is, refers to the detection of links that connect the resource to external data provided by another data sources" ; 
+		rdfs:label "Existence of links to external data providers" .
+		
 	#Properties
 	#Accessibility Dimensions Properties
 	dqm:hasAvailabilityDimension
@@ -561,6 +568,14 @@
 			rdfs:label	"has Interlink Detection Metric" ;
 			rdfs:domain	dqm:Interlinking ;
 			rdfs:range	dqm:InterlinkDetectionMetric .
+			
+	dqm:hasLinkToExternalDataProvidersMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links the Interlinking Dimension with Existence of Links to External Data Providers Metric (Existence of Links to External Data Providers Metric belongs to the Interlinking Dimension)" ;
+		rdfs:label	"Interlink has existence of links to external data providers metric" ;
+		rdfs:domain	dqm:Interlinking ;
+		rdfs:range	dqm:LinksToExternalDataProvidersMetric .
 
 	#Accuracy Dimensions Properties
 	dqm:hasAccuracyDimension

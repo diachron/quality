@@ -207,5 +207,56 @@ public class ResourceBaseURIOracle {
 		
 		return null;
 	}
+	
+	/**
+	 * Extract the pay-level domain (also known simply as domain, for example http://bbc.co.uk) of the URI provided as parameter. 
+	 * About URIs: The hierarchical part of the URI is intended to hold identification information hierarchical in nature. 
+	 * If this part begins with a double forward slash ("//"), it is followed by an authority part and a path. 
+	 * If it doesn't it contains only a path and thus it doesn't have a PLD (e.g. urns).
+	 * @param resourceURI
+	 * @return
+	 */
+	public static String extractPayLevelDomainURI(String resourceURI) {
+		
+		// Argument validation. Fail fast
+		if(resourceURI == null) {
+			return null;
+		}
+		
+		String pldURI = null;
+		
+		int doubleSlashIx = resourceURI.indexOf("//");
+		int pathFirstSlashIx = -1;
+		int portStart = -1;
+		int userInfoEnd = -1;
+		
+		// Check that the URI contains a double-slash, as the PLD is in the authority part (refer to the method comments)
+		if(doubleSlashIx > 0 && (doubleSlashIx + 1) < resourceURI.length()) {
+			
+			pathFirstSlashIx = resourceURI.indexOf('/', doubleSlashIx + 2);
+			
+			// The PLD is in the authority part, situated between the scheme and the path, plus the scheme
+			if(pathFirstSlashIx > (doubleSlashIx + 1)) {
+				pldURI = resourceURI.substring(0, pathFirstSlashIx);
+			} else {
+				// There's no path part in the URI
+				pldURI = resourceURI;
+			}
+						
+			// Remove user-info, if found
+			userInfoEnd = pldURI.indexOf('@', doubleSlashIx + 2);
+			if(userInfoEnd > 0 && userInfoEnd < pldURI.length()) {
+				pldURI = (pldURI.substring(0, doubleSlashIx + 2) + pldURI.substring(userInfoEnd + 1)); 
+			}
+			
+			// Remove the port, if found
+			portStart = pldURI.indexOf(':', doubleSlashIx + 2);
+			if(portStart > 0) {
+				pldURI = pldURI.substring(0, portStart);
+			}
+		}
+		
+		return pldURI;
+	}
 
 }
