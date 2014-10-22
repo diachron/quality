@@ -1,0 +1,13 @@
+http://www.w3.org/2000/01/rdf-schema#domain
+http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+http://www.w3.org/2000/01/rdf-schema#range
+http://www.w3.org/2000/01/rdf-schema#subPropertyOf
+http://www.w3.org/2000/01/rdf-schema#subClassOf
+http://www.w3.org/2002/07/owl#allValuesFrom
+http://www.w3.org/2002/07/owl#unionOf
+http://www.w3.org/2002/07/owl#intersectionOf
+http://www.w3.org/2002/07/owl#someValuesFrom
+http://www.w3.org/2002/07/owl#equivalentClass
+http://www.w3.org/2002/07/owl#oneOf
+http://www.w3.org/2002/07/owl#complementOf
+http://www.w3.org/2002/07/owl#disjointWith

@@ -1,0 +1,5 @@
+http://www.w3.org/2000/01/rdf-schema#subPropertyOf
+http://www.w3.org/2002/07/owl#onProperty
+http://www.w3.org/2002/07/owl#equivalentProperty
+http://www.w3.org/2002/07/owl#propertyDisjointWith
+http://www.w3.org/2002/07/owl#assertionProperty
