@@ -1,6 +1,5 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -84,7 +82,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 				this.totalClassesCount++;
 				// load model
 				Model subjectModel = VocabularyReader.read(subject.getURI());
-				if (subjectModel != null) { // check if system is able to
+				if (!subjectModel.isEmpty()) { // check if system is able to
 											// retrieve model
 					// search for URI resource from Model
 					if (subjectModel.getResource(subject.getURI())
@@ -109,7 +107,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 				// load model
 				Model predicateModel = VocabularyReader
 						.read(predicate.getURI());
-				if (predicateModel != null) { // check if system is able to
+				if (!predicateModel.isEmpty()) { // check if system is able to
 												// retrieve model
 					// search for URI resource from Model
 					if (predicateModel.getResource(predicate.getURI())
@@ -135,7 +133,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 				this.totalClassesCount++;
 				// load model
 				Model objectModel = VocabularyReader.read(object.getURI());
-				if (objectModel != null) { // check if system is able to
+				if (!objectModel.isEmpty()) { // check if system is able to
 											// retrieve model
 					// search for URI resource from Model
 					if (objectModel.getResource(object.getURI())

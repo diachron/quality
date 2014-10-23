@@ -1,6 +1,5 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import org.apache.log4j.Logger;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -114,7 +112,7 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 																// in list
 
 					Model tmpModel = VocabularyReader.read(predicate.getURI());
-					if (tmpModel != null) {
+					if (!tmpModel.isEmpty()) {
 						StmtIterator stmtIt = tmpModel.listStatements();
 						while (stmtIt.hasNext()) {
 							Statement statement = stmtIt.next();

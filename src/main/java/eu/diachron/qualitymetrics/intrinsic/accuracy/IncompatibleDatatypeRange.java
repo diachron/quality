@@ -154,7 +154,7 @@ public class IncompatibleDatatypeRange implements QualityMetric {
 																					// from
 																					// the
 																					// URI
-							tmpProperty = (tmpModel != null) ? (tmpModel
+							tmpProperty = (!tmpModel.isEmpty()) ? (tmpModel
 									.getResource(predicate.getURI()))
 									.getProperty(RDFS.range) : null;
 						}
