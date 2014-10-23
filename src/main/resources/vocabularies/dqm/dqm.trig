@@ -192,6 +192,13 @@
 		rdfs:comment	"Verifies that the resource is annotated with a machine-readable indication of the license (e.g. a VoID description or dcterms:license property)" ;
 		rdfs:label	"Machine-readable indication of a license metric" .
 		
+	dqm:HumanReadableLicenseMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Verifies whether a human-readable text, stating the licensing model attributed to the resource, has been provided as part of the dataset" ;
+		rdfs:label	"Human-readable indication of a license metric" .
+		
 	dqm:IndicationOfAttributionCopyLeftMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
@@ -492,6 +499,14 @@
 		rdfs:label	"Licensing has machine-readable indication of a license metric" ;
 		rdfs:domain	dqm:Licensing ;
 		rdfs:range	dqm:MachineReadableLicenseMetric .
+		
+	dqm:hasHumanReadableLicenseMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Licensing Dimension with Human-readable Indication of a License Metric (Human-readable Indication of a License Metric belongs to the Licensing Dimension)" ;
+		rdfs:label	"Licensing has human-readable indication of a license metric" ;
+		rdfs:domain	dqm:Licensing ;
+		rdfs:range	dqm:HumanReadableLicenseMetric .
 		
 	dqm:hasIndicationOfAttributionCopyLeftMetric
 		a	rdfs:Property ;

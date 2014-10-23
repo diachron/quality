@@ -85,7 +85,7 @@ public class MachineReadableLicense implements QualityMetric {
 	}
 
 	/**
-	 * Returns the current value of the Machine-readable indication of a license metric in milliseconds, the value of the metric will be 1, 
+	 * Returns the current value of the Machine-readable indication of a license metric, the value of the metric will be 1, 
 	 * if the dataset containing the processed quads contains an annotation providing information about its license. 0 otherwise.
 	 * @return Current value of the Machine-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */

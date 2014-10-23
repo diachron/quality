@@ -13,6 +13,7 @@
 <>	rdf:type void:DatasetDescription ;
 	dcterms:title "DrugBank VoID Description"@en ;
 	dcterms:description "The VoID description for the RDF representation of the DrugBank dataset."@en ;
+	dcterms:description "Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material." ; 
 	pav:createdBy <https://orcid.org/0000-0002-5711-4872> ;
 	pav:createdOn "2012-10-30T16:08:36Z"^^xsd:dateTime ;
 	pav:lastUpdateOn "2012-11-05T12:39:54Z"^^xsd:dateTime ;
