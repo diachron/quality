@@ -22,44 +22,44 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.intrinsic.consistency.UndefinedClasses;
 
 public class UndefinedClassesTest {
-	private static ComplexQualityMetric metric;
-	private static List<Quad> quads;
+  private static ComplexQualityMetric metric;
+  private static List<Quad> quads;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws ClassNotFoundException {
+  @BeforeClass
+  public static void setUpBeforeClass() throws ClassNotFoundException {
 
-		Model model = ModelFactory.createDefaultModel();
-		Resource rdfResource = model.createResource("http://example.org/them");
-		model.createResource("http://example.org/#spiderman")
-				.addProperty(RDFS.subClassOf, FOAF.Person)
-				.addProperty(RDFS.domain, FOAF.Agent)
-				.addProperty(RDFS.range, FOAF.Agent)
-				.addProperty(OWL.allValuesFrom, rdfResource)
-				.addProperty(OWL.oneOf, rdfResource);
+    Model model = ModelFactory.createDefaultModel();
+    Resource rdfResource = model.createResource("http://example.org/them");
+    model.createResource("http://example.org/#s")
+        .addProperty(RDFS.subClassOf, FOAF.Person)
+        .addProperty(RDFS.domain, FOAF.Agent)
+        .addProperty(RDFS.range, FOAF.Agent)
+        .addProperty(OWL.allValuesFrom, rdfResource)
+        .addProperty(OWL.oneOf, rdfResource);
 
-		quads = new ArrayList<Quad>();
-		StmtIterator si = model.listStatements();
-		while (si.hasNext()) {
-			quads.add(new Quad(null, si.next().asTriple()));
-		}
-	}
+    quads = new ArrayList<Quad>();
+    StmtIterator si = model.listStatements();
+    while (si.hasNext()) {
+      quads.add(new Quad(null, si.next().asTriple()));
+    }
+  }
 
-	@Test
-	public void metric() {
-		metric = new UndefinedClasses();
-		metric.before();
-		for (Quad quad : quads) {
-			metric.compute(quad);
-		}
+  @Test
+  public void metric() {
+    metric = new UndefinedClasses();
+    metric.before();
+    for (Quad quad : quads) {
+      metric.compute(quad);
+    }
 
-		ProblemList<?> problems = metric.getQualityProblems();
-		Assert.assertFalse(problems.getProblemList().isEmpty());
-		Assert.assertTrue(problems.getProblemList().size() == 2);
-		Assert.assertEquals(0.4, metric.metricValue(), 0.0);
-	}
+    ProblemList<?> problems = metric.getQualityProblems();
+    Assert.assertFalse(problems.getProblemList().isEmpty());
+    Assert.assertTrue(problems.getProblemList().size() == 2);
+    Assert.assertEquals(0.4, metric.metricValue(), 0.0);
+  }
 
-	@AfterClass
-	public static void tearDown() {
-		metric.after();
-	}
+  @AfterClass
+  public static void tearDown() {
+    metric.after();
+  }
 }

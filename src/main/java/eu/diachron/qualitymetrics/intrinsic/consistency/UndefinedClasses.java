@@ -32,99 +32,101 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Metric Value Range : [0 - 1] Best Case : 0 Worst Case : 1
  */
 public class UndefinedClasses implements ComplexQualityMetric {
-	private static final Logger LOG = Logger.getLogger(UndefinedClasses.class);
+  private static final Logger LOG = Logger.getLogger(UndefinedClasses.class);
 
-	private static final Resource METRIC_URI = DQM.UndefinedClassesMetric;
+  private static final Resource METRIC_URI = DQM.UndefinedClassesMetric;
 
-	private long undefinedClasses = 0;
-	private long classes = 0;
+  private long undefinedClasses = 0;
+  private long classes = 0;
 
-	private static Set<String> properties = new HashSet<String>();
-	private List<Quad> problems = new ArrayList<Quad>();
+  private static Set<String> properties = new HashSet<String>();
+  private List<Quad> problems = new ArrayList<Quad>();
 
-	/**
-	 * Loads a list of class properties.
-	 * @param args Arguments, args[0] is a path to annotation properties file.
-	 */
-	public void before(Object... args) {
-		String path = (args == null || args.length == 0) ? Constants.UNDEFINED_CLASS_PROPERTIES_FILE
-				: (String) args[0];
-		File file = null;
-		try {
-			if (!path.isEmpty()) {
-				file = new File(path);
-				if (file.exists() && file.isFile()) {
-					String line = null;
-					BufferedReader in = new BufferedReader(new FileReader(file));
-					while ((line = in.readLine()) != null && !line.isEmpty()) {
-						if (new URI(line.trim()) != null) {
-							properties.add(line);
-						}
-					}
-					in.close();
-				}
-			}
-		} catch (FileNotFoundException e) {
-			LOG.error(e.getLocalizedMessage());
-		} catch (IOException e) {
-			LOG.error(e.getLocalizedMessage());
-		}
-	}
+  /**
+   * Loads a list of class properties.
+   * @param args Arguments, args[0] is a path to annotation properties file.
+   */
+  public void before(Object... args) {
+    String path = (args == null || args.length == 0) ? Constants.UNDEFINED_CLASS_PROPERTIES_FILE
+        : (String) args[0];
+    File file = null;
+    try {
+      if (!path.isEmpty()) {
+        file = new File(path);
+        if (file.exists() && file.isFile()) {
+          String line = null;
+          BufferedReader in = new BufferedReader(new FileReader(file));
+          while ((line = in.readLine()) != null && !line.isEmpty()) {
+            if (new URI(line.trim()) != null) {
+              properties.add(line);
+            }
+          }
+          in.close();
+        }
+      }
+    } catch (FileNotFoundException e) {
+      LOG.error(e.getLocalizedMessage());
+    } catch (IOException e) {
+      LOG.error(e.getLocalizedMessage());
+    }
+  }
 
-	/**
-	 * The method identifies whether a component (subject, predicate or object) of
-	 * the given quad references an undefined class.
-	 * @param quad A quad to check for quality problems.
-	 */
-	public void compute(Quad quad) {
-		Node object = quad.getObject();
+  /**
+   * The method identifies whether a component (subject, predicate or object) of
+   * the given quad references an undefined class.
+   * 
+   * @param quad
+   *        A quad to check for quality problems.
+   */
+  public void compute(Quad quad) {
+    Node object = quad.getObject();
 
-		if (properties.contains(quad.getPredicate().getURI()) && object.isURI()) {
-			classes++;
+    if (properties.contains(quad.getPredicate().getURI()) && object.isURI()) {
+      classes++;
 
-			Model model = VocabularyReader.read(object.getURI());
-			if (model.isEmpty()) {
-				undefinedClasses++;
-				problems.add(quad);
-				LOG.info(String.format("Undefined class is found in quad: %s", quad.toString()));
-			} else if (!model.getResource(object.getURI()).isURIResource()) {
-				undefinedClasses++;
-				problems.add(quad);
-				LOG.info(String.format("Undefined class is found in quad: %s", quad.toString()));
-			}
-		}
-	}
+      Model model = VocabularyReader.read(object.getURI());
+      if (model.isEmpty()) {
+        undefinedClasses++;
+        problems.add(quad);
+        LOG.info(String.format("Undefined class is found in quad: %s", quad.toString()));
+      } else if (!model.getResource(object.getURI()).isURIResource()) {
+        undefinedClasses++;
+        problems.add(quad);
+        LOG.info(String.format("Undefined class is found in quad: %s", quad.toString()));
+      }
+    }
+  }
 
-	/**
-	 * This method returns metric value for the object of this class.
-	 * @return The ratio of undefined classes to the total number of classes.
-	 */
-	public double metricValue() {
-		if (classes == 0) {
-			LOG.warn("Total number of classes is zero.");
-			return 0.0;
-		}
-		return (double) undefinedClasses / classes;
-	}
+  /**
+   * This method returns metric value for the object of this class.
+   * @return The ratio of undefined classes to the total number of classes.
+   */
+  public double metricValue() {
+    if (classes == 0) {
+      LOG.warn("Total number of classes is zero.");
+      return 0.0;
+    }
+    return (double) undefinedClasses / classes;
+  }
 
-	public Resource getMetricURI() {
-		return METRIC_URI;
-	}
+  public Resource getMetricURI() {
+    return METRIC_URI;
+  }
 
-	public ProblemList<?> getQualityProblems() {
-		try {
-			return new ProblemList<Quad>(problems);
-		} catch (ProblemListInitialisationException e) {
-			LOG.error(e.getLocalizedMessage());
-		}
-		// TODO change ProblemList
-		return null;
-	}
+  public ProblemList<?> getQualityProblems() {
+    try {
+      return new ProblemList<Quad>(problems);
+    } catch (ProblemListInitialisationException e) {
+      LOG.error(e.getLocalizedMessage());
+    }
+    // TODO change ProblemList
+    return null;
+  }
 
-	/**
-	 * Clears a list of class properties.
-	 */
-	public void after(Object... args) {
-		properties.clear();
-	}
+  /**
+   * Clears a list of class properties.
+   */
+  public void after(Object... args) {
+    properties.clear();
+  }
 }
