@@ -1,23 +1,25 @@
 package eu.diachron.qualitymetrics.intrinsic.conciseness;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
+import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.semantics.vocabulary.DQM;
+
 /**
  * @author Santiago Londono
  * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
  * Duplicate Instance metric, which is part of the Conciseness dimension.
  */
-public class DuplicateInstance implements QualityMetric {
+public class DuplicateInstance implements ComplexQualityMetric {
 	
 	private static Logger logger = Logger.getLogger(DuplicateInstance.class);
 	
@@ -28,7 +30,12 @@ public class DuplicateInstance implements QualityMetric {
 	 * URI of the subject and object of the statement (triple) declaring the instance. 
 	 * A ConcurrentHashMap is used since it is synchronized and metric instances ought to be thread safe.
 	 */
-	private ConcurrentHashMap<String, Integer> mapInstances = new ConcurrentHashMap<String, Integer>();
+	private HTreeMap<String, Integer> pMapInstances = null;
+	
+	/**
+	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
+	 */
+	private DB mapDB = null;
 	
 	/**
 	 * Counter for the number of instances violating the uniqueness rule. Counts the duplicated 
@@ -40,6 +47,22 @@ public class DuplicateInstance implements QualityMetric {
 	 * Counter for the total number of declared instances (occurrences of the triple A rdf:type C).
 	 */
 	private int countTotalInst = 0;
+	
+	/**
+	 * Metric setup and initialization. Create and initialize persistent HashMap and the underlying database 
+	 * to use temporary disk storage.
+	 */
+	public void before(Object... args) {
+		
+		// Create HashMap database in temporary folder, which will be automatically deleted when closed 
+		this.mapDB = DBMaker.newTempFileDB()
+			.closeOnJvmShutdown()
+			.deleteFilesAfterClose()
+        	.make();
+		
+		// Create Hash-tree Map to be used as a HashMap of the instances declared in the resource
+		pMapInstances = this.mapDB.createHashMap("declared-instances").make();
+	}
 
 	/**
 	 * Re-computes the value of the Duplicate Instance Metric, by considering a new quad provided.
@@ -59,12 +82,12 @@ public class DuplicateInstance implements QualityMetric {
 			logger.trace("Instance declared: " + newInstanceId);
 
 			// Check if the instance already exists in the instances map
-			Integer countPrevInstDecls = mapInstances.get(newInstanceId);
+			Integer countPrevInstDecls = pMapInstances.get(newInstanceId);
 
 			if(countPrevInstDecls == null) {
 				// Put the new instance declaration in the map, with a value of 1 indicating that such an 
 				// instance has been declared for the first time
-				mapInstances.put(newInstanceId, 1);
+				pMapInstances.put(newInstanceId, 1);
 				logger.trace("New instance declaration found");
 			} else {
 				// Instance was already declared, increase the number of appearances and the non-unique counter
@@ -99,6 +122,25 @@ public class DuplicateInstance implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * Release all resources, close the persistent HashMap and the underlying mapDB database.
+	 */
+	public void after(Object... args) {
+		
+		try {
+			// Destroy persistent HashMap and the corresponding database
+			if(this.pMapInstances != null) {
+				this.pMapInstances.close();
+			}
+			
+			if(this.mapDB != null && !this.mapDB.isClosed()) {
+				this.mapDB.close();
+			}
+		} catch(Exception ex) {
+			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		}
 	}
 
 }
