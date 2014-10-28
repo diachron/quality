@@ -105,6 +105,23 @@ public class ExtensionalConciseness implements QualityMetric {
 		
 		// Compute metric value
 		double metricValue = ((double)lstUniqueSubjects.size()) / ((double)pMapSubjects.size());
+				
+		// If any subject is equivalent to another, it will not be part of the list of unique subjects, then 
+		// the size of this list is the "Count of Unique Subjects" required to calculate the metric
+		return metricValue;
+	}
+	
+	public Resource getMetricURI() {
+		return METRIC_URI;
+	}
+
+	public ProblemList<?> getQualityProblems() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
 		
 		// Destroy persistent HashMap and the corresponding database
 		try {
@@ -114,24 +131,11 @@ public class ExtensionalConciseness implements QualityMetric {
 			if(this.mapDB != null && !this.mapDB.isClosed()) {
 				this.mapDB.close();
 			}
-		} catch(Exception ex) {
+		} catch(Throwable ex) {
 			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		} finally {
+			super.finalize();
 		}
-		
-		// If any subject is equivalent to another, it will not be part of the list of unique subjects, then 
-		// the size of this list is the "Count of Unique Subjects" required to calculate the metric
-		return metricValue;
-	}
-
-	
-	public Resource getMetricURI() {
-		return METRIC_URI;
-	}
-
-	
-	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	/**

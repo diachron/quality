@@ -98,19 +98,7 @@ public class DuplicateInstance implements QualityMetric {
 	 */
 	
 	public double metricValue() {
-		
-		// Destroy persistent HashMap and the corresponding database
-		try {
-			if(this.pMapInstances != null) {
-				this.pMapInstances.close();
-			}
-			if(this.mapDB != null && !this.mapDB.isClosed()) {
-				this.mapDB.close();
-			}
-		} catch(Exception ex) {
-			logger.warn("Persistent HashMap or backing database could not be closed", ex);
-		}
-		
+						
 		return 1.0 - ((double)countNonUniqueInst / (double)countTotalInst);
 	}
 
@@ -123,6 +111,24 @@ public class DuplicateInstance implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		
+		// Destroy persistent HashMap and the corresponding database
+		try {
+			if(this.pMapInstances != null) {
+				this.pMapInstances.close();
+			}
+			if(this.mapDB != null && !this.mapDB.isClosed()) {
+				this.mapDB.close();
+			}
+		} catch(Throwable ex) {
+			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		} finally {
+			super.finalize();
+		}
 	}
 
 }

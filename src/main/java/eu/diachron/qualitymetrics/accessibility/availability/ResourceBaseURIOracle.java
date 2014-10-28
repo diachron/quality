@@ -32,11 +32,22 @@ public class ResourceBaseURIOracle {
 	private String declaredResBaseURI = null;
 	
 	/**
+	 * If the resource's base URI has previously been guessed, it will be stored in this variable. 
+	 */
+	private String lastGuessedBaseURI = null;
+	
+	/**
 	 * A table holding the set of URIs recognized as parent URIs of the subjects of all the processed triples.
 	 * The parent URI is obtained by taking the substring behined the last appearance of "/" in the subject's URI. As values,
 	 * the table contains the number of times the parent URI set as key has appeared as subject in the processed triples
 	 */
 	private ConcurrentHashMap<String, Integer> tblSubjectURIs = null;
+	
+	/**
+	 * Maximum number of subject URIs that can be held in the table, a limit is imposed to prevent memory 
+	 * exhaustion when processing very big resources
+	 */
+	private final int maxSubjectURIs = 10000;
 	
 	/**
 	 * Default constructor
@@ -68,8 +79,9 @@ public class ResourceBaseURIOracle {
 		// Get the parent URI of the subject described by the statement
 		String parentURI = this.extractParentURI(subject);
 		
-		// Add the parent URI to the table of subjects or update the corresponding entry if it's already there
-		if(parentURI != null) {
+		// Add the parent URI to the table of subjects or update the corresponding entry if it's already there, do not 
+		// add new rows if the maximum table size has been reached, but make sure that the declaredBaseURI is added if found
+		if(parentURI != null && ((this.tblSubjectURIs.size() < this.maxSubjectURIs) || parentURI.equals(this.declaredResBaseURI) )) {
 			
 			// Check if the current parent URI has already an entry in the table, if no, add it
 			Integer curParentURICount = this.tblSubjectURIs.get(parentURI);
@@ -108,6 +120,7 @@ public class ResourceBaseURIOracle {
 				}
 			}
 
+			this.lastGuessedBaseURI = curBestGuessURI;
 			return curBestGuessURI;
 		}
 	}
@@ -117,9 +130,16 @@ public class ResourceBaseURIOracle {
 	 * @param subjectURI the parent URI for which the count of subjects belonging to it is to be returned
 	 * @return number of subjects found to be part of the specified parent URI
 	 */
-	public int getSubjectURICount(String parentURI) {
+	public int getBaseURICount() {
+		
+		String parentURI = ((this.declaredResBaseURI != null)?(this.declaredResBaseURI):(this.lastGuessedBaseURI));
+		
+		if(parentURI == null || parentURI.isEmpty()) {
+			parentURI = this.getEstimatedResourceBaseURI();
+		}
 		
 		Integer subjectsCount = this.tblSubjectURIs.get(parentURI);
+		
 		return (subjectsCount != null)?(subjectsCount):(0);
 	}
 

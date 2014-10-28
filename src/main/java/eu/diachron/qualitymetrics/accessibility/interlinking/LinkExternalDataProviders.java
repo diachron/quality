@@ -1,9 +1,9 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +33,15 @@ public class LinkExternalDataProviders implements QualityMetric {
 	final static Logger logger = LoggerFactory.getLogger(LinkExternalDataProviders.class);
 	
 	/**
+	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
+	 */
+	private DB mapDB = DBMaker.newTempFileDB().closeOnJvmShutdown().deleteFilesAfterClose().make();
+	
+	/**
 	* A set containing the of pay-level domains (or base URIs) found among all the data-level constants of the 
 	* dataset (data level constants are: subjects of triples and objects of triples not subject to an rdf:type predicate)
 	*/
-	private Set<String> setPayLevelDomainURIs = Collections.synchronizedSet(new HashSet<String>());
+	private Set<String> pSetPayLevelDomainURIs = mapDB.createHashSet("set-link-external-data-providers").make();
 	
 	/**
      * Object used to determine the base URI of the resource based on its contents
@@ -98,23 +103,17 @@ public class LinkExternalDataProviders implements QualityMetric {
 		// Count the number of external PLDs found in the resource
 		int totalExtPLDs = 0;
 		
-		// As pointed out in the Java documentation (Collections.synchronizedSet method), although the setPayLevelDomainURIs  
-		// set is thread-safe with respect to read/write access, iteration over the set should be manually synchronized. 
-		// The computational cost of the synchronized keyword is no issue here, as invocation of the metricValue method is not massive
-		synchronized(this.setPayLevelDomainURIs) {
+		for(String curPLD : this.pSetPayLevelDomainURIs) {
 			
-			for(String curPLD : this.setPayLevelDomainURIs) {
-				
-				// If currently examined PLD does not belong to the resource's PLD (or vice-versa), the current PLD is external
-				logger.debug("Comparing PLD in triples: {} with resource's PLD: {}", curPLD, resPLD);
-				
-				if(!(curPLD.contains(resPLD) || resPLD.contains(curPLD))) {
-					logger.debug("OK, PLD {} is external", curPLD);
-					totalExtPLDs++;
-				}
+			// If currently examined PLD does not belong to the resource's PLD (or vice-versa), the current PLD is external
+			logger.debug("Comparing PLD in triples: {} with resource's PLD: {}", curPLD, resPLD);
+			
+			if(!(curPLD.contains(resPLD) || resPLD.contains(curPLD))) {
+				logger.debug("OK, PLD {} is external", curPLD);
+				totalExtPLDs++;
 			}
 		}
-
+		
 		if(totalDataLevelConstURIs > 0) {
 			return (double)totalExtPLDs / (double)totalDataLevelConstURIs;
 		} else {
@@ -138,8 +137,23 @@ public class LinkExternalDataProviders implements QualityMetric {
 		
 		if(pld != null && pld.length() > 0) {
 			// Add the PLD to the set, if it doesn't exist already
-			this.setPayLevelDomainURIs.add(pld);
+			this.pSetPayLevelDomainURIs.add(pld);
 			logger.debug("PLD OK and added to set: {}", pld);
+		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		
+		// Destroy persistent HashMap and the corresponding database
+		try {
+			if(this.mapDB != null && !this.mapDB.isClosed()) {
+				this.mapDB.close();
+			}
+		} catch(Throwable ex) {
+			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		} finally {
+			super.finalize();
 		}
 	}
 

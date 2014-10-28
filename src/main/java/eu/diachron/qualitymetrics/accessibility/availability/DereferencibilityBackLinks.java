@@ -1,7 +1,8 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
-import java.util.concurrent.ConcurrentHashMap;
-
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +44,16 @@ public class DereferencibilityBackLinks implements QualityMetric {
 	private long totalInlinkObjects = 0;
 	
 	/**
+	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
+	 */
+	private DB mapDB = DBMaker.newTempFileDB().closeOnJvmShutdown().deleteFilesAfterClose().make();
+	
+	/**
 	* A table holding the set of URIs recognized as parent URIs of the objects of all the processed triples.
 	* The parent URI is obtained by taking the substring behined the last appearance of "/" in the object's URI. As values,
 	* the table contains the number of times the parent URI set as key has appeared as part of the objects of the processed triples
 	*/
-	private ConcurrentHashMap<String, Integer> tblObjectURIs = new ConcurrentHashMap<String, Integer>();
+	private HTreeMap<String, Integer> pTblObjectURIs = this.mapDB.createHashMap("deferencibility-back-links-map").make();
 	
     /**
      * Object used to determine the base URI of the resource based on its contents and to count the number of 
@@ -81,8 +87,8 @@ public class DereferencibilityBackLinks implements QualityMetric {
 			// Add the parent URI to the table of objects or update the corresponding entry if it's already there
 			if(parentURI != null) {			
 				// Check if the current parent URI has already an entry in the table, if no, add it
-				Integer curParentURICount = this.tblObjectURIs.get(parentURI);
-				this.tblObjectURIs.put(parentURI, ((curParentURICount != null)?(curParentURICount + 1):(1)));
+				Integer curParentURICount = this.pTblObjectURIs.get(parentURI);
+				this.pTblObjectURIs.put(parentURI, ((curParentURICount != null)?(curParentURICount + 1):(1)));
 			}
 		}
 	}
@@ -100,7 +106,7 @@ public class DereferencibilityBackLinks implements QualityMetric {
 		if(resourceBaseURI != null && this.totalObjects != 0) {
 		
 			// Get the total number of inlinks (objects part of the resource base URI)
-			Integer totalObjectsInBase = this.tblObjectURIs.get(resourceBaseURI); 
+			Integer totalObjectsInBase = this.pTblObjectURIs.get(resourceBaseURI); 
 			this.totalInlinkObjects = (totalObjectsInBase != null)?(totalObjectsInBase):(0);
 			
 			return ((double)this.totalInlinkObjects / (double)this.totalObjects);
@@ -117,6 +123,24 @@ public class DereferencibilityBackLinks implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		
+		// Destroy persistent HashMap and the corresponding database
+		try {
+			if(this.pTblObjectURIs != null) {
+				this.pTblObjectURIs.close();
+			}
+			if(this.mapDB != null && !this.mapDB.isClosed()) {
+				this.mapDB.close();
+			}
+		} catch(Throwable ex) {
+			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		} finally {
+			super.finalize();
+		}
 	}
 
 }

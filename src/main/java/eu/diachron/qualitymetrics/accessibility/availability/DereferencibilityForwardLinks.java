@@ -80,7 +80,7 @@ public class DereferencibilityForwardLinks implements QualityMetric {
 		if(this.totalSubjects > 0 && resourceBaseURI != null) {
 		
 			// Get the total number of outlinks (subjects part of the resource base URI) 
-			this.totalOutlinkSubjects = this.baseURIOracle.getSubjectURICount(resourceBaseURI);
+			this.totalOutlinkSubjects = this.baseURIOracle.getBaseURICount();
 			logger.debug("Total outlinks (subjects) in base URI: {}, vs. total subject URIs in resource: {}", this.totalOutlinkSubjects, this.totalSubjects);
 			
 			// Compute the ratio between the subjects that are actually part of the resource and the total of all subjects in the resource
