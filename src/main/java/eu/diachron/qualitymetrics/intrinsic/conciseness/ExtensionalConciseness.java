@@ -1,12 +1,15 @@
 package eu.diachron.qualitymetrics.intrinsic.conciseness;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -28,12 +31,20 @@ public class ExtensionalConciseness implements QualityMetric {
 	private final Resource METRIC_URI = DQM.ExtensionalConcisenessMetric;
 	
 	/**
+	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
+	 */
+	private DB mapDB = DBMaker.newTempFileDB()
+			.closeOnJvmShutdown()
+			.deleteFilesAfterClose()
+        	.make();
+	
+	/**
 	 * Map indexing the subjects detected during the computation of the metric. Every subject is identified 
 	 * by a different id (URI), which serves as key of the map. The value of each subject consists of a 
 	 * resource. A ConcurrentHashMap is used since it is synchronized and metric instances ought to be thread safe.
 	 */
-	private ConcurrentHashMap<String, ComparableSubject> mapSubjects = new ConcurrentHashMap<String, ComparableSubject>();
-
+	private HTreeMap<String, ComparableSubject> pMapSubjects = this.mapDB.createHashMap("extensional-conciseness-map").make();
+	
 	/**
 	 * Re-computes the value of the Extensional Conciseness Metric, by considering a new quad provided.
 	 * @param quad The new quad to be considered in the computation of the metric. Must be not null.
@@ -41,12 +52,12 @@ public class ExtensionalConciseness implements QualityMetric {
 	
 	public void compute(Quad quad) {
 		// Every time a new quad is considered, check whether the subject has already been identified
-		ComparableSubject subject = mapSubjects.get(quad.getSubject().getURI());
+		ComparableSubject subject = pMapSubjects.get(quad.getSubject().getURI());
 
 		if(subject == null) {
 			// The subject does not exists in the map. Add it, indexed by its URI
 			subject = new ComparableSubject(quad.getSubject().getURI());
-			mapSubjects.put(quad.getSubject().getURI(), subject);
+			pMapSubjects.put(quad.getSubject().getURI(), subject);
 			logger.trace("Added new subject: " + quad.getSubject().getURI());
 		}
 
@@ -73,7 +84,7 @@ public class ExtensionalConciseness implements QualityMetric {
 		boolean isCurSubjectUnique;
 		
 		// Compare each of the subjects with the ones already recognized as unique...
-		for(ComparableSubject curSubject : mapSubjects.values()) {
+		for(ComparableSubject curSubject : pMapSubjects.values()) {
 			isCurSubjectUnique = true;
 
 			for(ComparableSubject curUniqueSubject : lstUniqueSubjects) {
@@ -92,9 +103,24 @@ public class ExtensionalConciseness implements QualityMetric {
 			}
 		}
 		
+		// Compute metric value
+		double metricValue = ((double)lstUniqueSubjects.size()) / ((double)pMapSubjects.size());
+		
+		// Destroy persistent HashMap and the corresponding database
+		try {
+			if(this.pMapSubjects != null) {
+				this.pMapSubjects.close();
+			}
+			if(this.mapDB != null && !this.mapDB.isClosed()) {
+				this.mapDB.close();
+			}
+		} catch(Exception ex) {
+			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		}
+		
 		// If any subject is equivalent to another, it will not be part of the list of unique subjects, then 
 		// the size of this list is the "Count of Unique Subjects" required to calculate the metric
-		return ((double)lstUniqueSubjects.size()) / ((double)mapSubjects.size());
+		return metricValue;
 	}
 
 	
@@ -114,8 +140,9 @@ public class ExtensionalConciseness implements QualityMetric {
 	 * the functionality necessary to determine the equivalence of subjects according to their properties. 
 	 * - Notice: this class is not thread safe (since HashMaps are not synchronized).
 	 */
-	private static class ComparableSubject {
-		
+	private static class ComparableSubject implements Serializable {
+		private static final long serialVersionUID = 726524323796732234L;
+
 		/**
 		 * URI identifying the subject, serves as its id.
 		 */

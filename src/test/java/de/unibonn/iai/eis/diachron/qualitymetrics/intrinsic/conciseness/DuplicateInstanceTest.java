@@ -36,16 +36,12 @@ public class DuplicateInstanceTest extends Assert {
 		logger.trace("Loading quads...");
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
-		
-		metric.before();
-		
+				
 		for(Quad quad : streamingQuads){
 			// Here we start streaming triples to the quality metric
 			metric.compute(quad);
 			countLoadedQuads++;
 		}
-		
-		metric.after();
 
 		logger.trace("Quads loaded, " + countLoadedQuads + " quads");
 		
