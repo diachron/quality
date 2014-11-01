@@ -15,6 +15,7 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.semantics.vocabulary.DQM;
@@ -58,13 +59,13 @@ public class ExtensionalConciseness implements QualityMetric {
 			// The subject does not exists in the map. Add it, indexed by its URI
 			subject = new ComparableSubject(quad.getSubject().getURI());
 			pMapSubjects.put(quad.getSubject().getURI(), subject);
-			logger.trace("Added new subject: " + quad.getSubject().getURI());
+//			logger.trace("Added new subject: " + quad.getSubject().getURI());
 		}
 
 		// Add or update the property stated by the current quad into the subject, as a predicate with a value.
 		// The value of the property is extracted from the quad's object
 		subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
-		logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
+//		logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
 	}
 
 	/**
@@ -110,6 +111,7 @@ public class ExtensionalConciseness implements QualityMetric {
 		// the size of this list is the "Count of Unique Subjects" required to calculate the metric
 		return metricValue;
 	}
+	
 	
 	public Resource getMetricURI() {
 		return METRIC_URI;
@@ -228,5 +230,4 @@ public class ExtensionalConciseness implements QualityMetric {
 		}
 
 	}
-
 }
