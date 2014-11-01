@@ -12,13 +12,14 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import eu.diachron.qualitymetrics.intrinsic.conciseness.ExtensionalConciseness;
+import eu.diachron.qualitymetrics.intrinsic.conciseness.ExtensionalConcisenessNew;
 
 public class ExtensionalConcisenessTest extends Assert {
 	
 	private static Logger logger = Logger.getLogger(ExtensionalConcisenessTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected ExtensionalConciseness metric = new ExtensionalConciseness();
+	protected ExtensionalConcisenessNew metric = new ExtensionalConcisenessNew();
 
 	@Before
 	public void setUp() throws Exception {
