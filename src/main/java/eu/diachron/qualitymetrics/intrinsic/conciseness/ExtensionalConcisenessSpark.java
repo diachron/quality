@@ -2,28 +2,18 @@ package eu.diachron.qualitymetrics.intrinsic.conciseness;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.apache.log4j.Logger;
 import org.apache.spark.Accumulator;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.VoidFunction;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 
 import scala.Tuple2;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -36,7 +26,7 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
  * Extensional Conciseness metric, which is part of the Conciseness dimension.
  */
-public class ExtensionalConcisenessNew implements ComplexQualityMetric, Serializable {
+public class ExtensionalConcisenessSpark implements ComplexQualityMetric, Serializable {
 	
 	transient private static Logger logger = Logger.getLogger(ExtensionalConciseness.class);
 	
@@ -101,11 +91,11 @@ public class ExtensionalConcisenessNew implements ComplexQualityMetric, Serializ
 	private boolean afterInvoked = false;
 	
 	public void after(Object... args) {
+		//for problem list we show those instances that are duplicated.. x  a problem; x maintriple abc; x hasduplicates list[ def, ghi ]
 		afterInvoked = true;
 		final Accumulator<Integer> accum = sc.accumulator(0);
 		
 		JavaPairRDD<String, String> instances = sc.parallelizePairs(new ArrayList<Tuple2<String,String>>(pMapSubjects.values()));
-		
 		
 		JavaPairRDD<String, String> uniques = instances.reduceByKey(new Function2<String, String, String>(){
 			private static final long serialVersionUID = 6119916898726575889L;
@@ -118,7 +108,6 @@ public class ExtensionalConcisenessNew implements ComplexQualityMetric, Serializ
 		
 		uniqueInstances = uniques.count();
 
-		
 		
 //		JavaPairRDD<String, List<TupleValue>> instances = sc.parallelizePairs(new ArrayList<Tuple2<String,List<TupleValue>>>(pMapSubjects.values()));
 //		
