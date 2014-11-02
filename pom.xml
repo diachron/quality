@@ -7,7 +7,7 @@
 	<name>Diachron Quality Metrics</name>
 
 	<properties>
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>1.7</jdk.version>
 
 		<log4j.version>1.2.16</log4j.version>
 		<slf4j.version>1.7.5</slf4j.version>
@@ -165,7 +165,7 @@
 		</dependency>
 		
 		
-		        <dependency>
+		<!--         <dependency>
         	<groupId>org.apache.spark</groupId>
         	<artifactId>spark-core_2.10</artifactId>
         	<version>1.1.0</version>
@@ -176,8 +176,22 @@
         	<artifactId>spark-streaming_2.10</artifactId>
         	<version>1.1.0</version>
         </dependency>
-        
-        
+         -->
+         
+        <dependency>
+		   <groupId>org.neo4j</groupId>
+		   <artifactId>neo4j</artifactId>
+		   <version>2.1.5</version>
+		  </dependency>
+
+
+<dependency>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>2.4</version>
+</dependency>
+
+		          
 	</dependencies>
 
 
@@ -217,6 +231,8 @@
 			    <descriptorRefs>
 			      <descriptorRef>jar-with-dependencies</descriptorRef>
 			    </descriptorRefs>
+          <source>1.7</source>
+          <target>1.7</target>
 			  </configuration>
 			  <executions>
 			    <execution>
@@ -228,6 +244,15 @@
 			    </execution>
 			  </executions>
 			</plugin>
+			
+							      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
 			
 		</plugins>
 		<pluginManagement>

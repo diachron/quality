@@ -21,7 +21,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 public class InterlinkDetectionMetricTest extends Assert{
 	
 	protected TestLoader loader = new TestLoader();
-	protected InterlinkDetectionMetric metric = new InterlinkDetectionMetric();
+	protected InterlinkDetectionMetricNeo4J metric = new InterlinkDetectionMetricNeo4J();
 
 	@Before
 	public void setUp() throws Exception {
