@@ -1,8 +1,10 @@
 package eu.diachron.qualitymetrics.intrinsic.conciseness;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +46,7 @@ public class ExtensionalConcisenessNew implements ComplexQualityMetric {
 	 */
 	 private HTreeMap<String, String> pMapSubjects = mapDB.createHashMap("extensional-conciseness-map").make(); //subject , "triples string"
 	 
-	 private int totalInstances = 0;
+	 private long totalInstances = 0;
 
 	 private boolean afterInvoked = false;
 	
@@ -61,6 +63,7 @@ public class ExtensionalConcisenessNew implements ComplexQualityMetric {
 		String value = quad.getPredicate().getURI().toString() + " " + quad.getObject().toString() + " ";
 		if (triples == null) { 
 			pMapSubjects.put(quad.getSubject().getURI(), value);
+			totalInstances++;
 		} 
 		else {
 			String concat = triples + value;
@@ -75,28 +78,36 @@ public class ExtensionalConcisenessNew implements ComplexQualityMetric {
 	}
 	
 	
-	int nonUniqueInstances = 0;
+	long nonUniqueInstances = 0;
 	public void after(Object... args) {
-		totalInstances = pMapSubjects.size();
+//		totalInstances = pMapSubjects.size();
 		afterInvoked = true;
 		
+		 HTreeMap<String, String> pReversedMap = mapDB.createHashMap("extensional-conciseness-reversed-map").make(); //"triples string", Subject - the reverse of pMapSubjects
+		 HTreeMap<String, List<String>> duplicates = mapDB.createHashMap("duplicates").make(); //  "triples string", Subject - stores duplicate instances
+		 Set<String> values = mapDB.createHashSet("values").make();
+
 		
-		Iterator<Map.Entry<String,String>> iter = pMapSubjects.entrySet().iterator();
-		Set<String> duplicates = new HashSet<String>(); 
-		while (iter.hasNext()) {
-			Map.Entry<String, String> nxt = iter.next();
-			String key = nxt.getKey();
-			String value = nxt.getValue();
-			if (duplicates.contains(key)) continue; //we do not check those metrics we already checked
-			for(String otherKey : pMapSubjects.keySet()){
-				if (key.equals(otherKey)) continue;
-				if (value.equals(pMapSubjects.get(otherKey))) {
+		for(String instance : pMapSubjects.keySet()){
+			String triples = pMapSubjects.get(instance);
+			pReversedMap.put(triples, instance);
+			if (!values.add(triples)) {
+				if (duplicates.containsKey(triples)) {
+					List<String> lst = duplicates.get(triples);
+					lst.add(instance);
+					duplicates.put(triples, lst);
+				} else {
+					List<String> lst = new ArrayList<String>();
+					lst.add(instance);
+					duplicates.put(triples, lst);
 					nonUniqueInstances++;
-					duplicates.add(otherKey);
-					pMapSubjects.remove(otherKey);
-				} 
+				}
 			}
 		}
+		
+//		nonUniqueInstances = duplicates.size();
+		
+		duplicates.close();
 	}
 	
 	
