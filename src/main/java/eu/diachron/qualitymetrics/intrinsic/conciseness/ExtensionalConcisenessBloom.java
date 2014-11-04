@@ -107,13 +107,16 @@ public class ExtensionalConcisenessBloom implements ComplexQualityMetric {
 
 	@Override
 	public void before(Object... args) {
+	
+		// Bloom Filters are based on an array of bits, whose size must be defined at creation. Ideally this size should 
+		// match the max. number of items to be put into the filter. If the caller doesn't provide that number, initialize
+		// the filter to 145000000 (more than that might cause an out-of-memory error)
+		Integer numTriples = 145000000;
 		
-//		// Check that number of triples has been provided
-//		if(args.length <= 0 || args[0] == null || !(args[0] instanceof Integer )) {
-//			throw new InvalidArgumentException("Approximate number of quads is required", null);
-//		}
-//		
-//		Integer numTriples = (Integer)args[0];
+		// Check that number of triples has been provided
+		if(args != null && args.length > 0 && args[0] != null && !(args[0] instanceof Integer )) {
+			numTriples = (Integer)args[0];
+		}
 		
 		this.bloomFilterDuplicates = BloomFilter.create(
 				new Funnel<String>() {
@@ -121,7 +124,7 @@ public class ExtensionalConcisenessBloom implements ComplexQualityMetric {
 						public void funnel(String value, PrimitiveSink into) {
 						       into.putUnencodedChars(value);
 						}
-					}, 125000000);
+					}, numTriples);
 	}
 
 }
