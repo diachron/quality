@@ -21,7 +21,7 @@ import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 public class InterlinkDetectionMetricTest extends Assert{
 	
 	protected TestLoader loader = new TestLoader();
-	protected InterlinkDetectionMetricNeo4J metric = new InterlinkDetectionMetricNeo4J();
+	protected InterlinkDetectionMetric act_metric = new InterlinkDetectionMetric();
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,10 +38,10 @@ public class InterlinkDetectionMetricTest extends Assert{
 		
 		for(Quad quad : streamingQuads){
 			// here we start streaming triples to the quality metric
-			metric.compute(quad);
+			act_metric.compute(quad);
 		}
-		System.out.println(metric.metricValue());
+		act_metric.metricValue();
 		
-		//assertEquals(1.0,metric.metricValue(), 0.0);
+//		assertEquals(1.0,metric.metricValue(), 0.0);
 	}
 }

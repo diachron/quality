@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import edu.uci.ics.jung.graph.DirectedGraph;
+import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.PolynomialFitter.Polynomial;
 
 /**
@@ -22,9 +22,9 @@ import eu.diachron.qualitymetrics.accessibility.interlinking.helper.PolynomialFi
 
 public class DegreeMeasure {
 	
-	private DirectedGraph<String,RDFEdge> _graph;
+	private MapDBGraph _graph;
 	
-	public DegreeMeasure(DirectedGraph<String,RDFEdge> _graph){
+	public DegreeMeasure(MapDBGraph _graph){
 		this._graph = _graph;
 	}
 
@@ -34,11 +34,11 @@ public class DegreeMeasure {
 		
 		double min = Double.MAX_VALUE;
 		double max = 0.0;
-		
+
 		//Create set of possible degrees
 		Map<Integer,Integer> kdegree = new HashMap<Integer,Integer>();
 		for(String vertex : _graph.getVertices()){
-			int degree = this.getMeasure(vertex);
+			int degree = _graph.degree(vertex);
 			if (degree == 0) continue;
 			if (kdegree.containsKey(degree)) {
 				int times = kdegree.get(degree);
@@ -78,19 +78,4 @@ public class DegreeMeasure {
 		
 		return Math.abs(ideal);
 	}
-	
-	
-	/**
-	 * The degree of a node is given by its number of 
-	 * incoming and outgoing edges.
-	 * 
-	 * @param g
-	 * @param vertex
-	 * @return
-	 */
-	public int getMeasure(String vertex){
-		return _graph.degree(vertex);
-	}
-	
-
 }

@@ -9,9 +9,8 @@ import java.util.Set;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
-import com.hp.hpl.jena.vocabulary.OWL;
 
-import edu.uci.ics.jung.graph.DirectedGraph;
+import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
 
 /**
  * @author Jeremy Debattista
@@ -22,28 +21,26 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 
 public class DescriptiveRichnessMeasure {
 	
-	private DirectedGraph<String,RDFEdge> _graph;
+	private MapDBGraph _graph;
 	
-	public DescriptiveRichnessMeasure(DirectedGraph<String,RDFEdge> _graph){
+	public DescriptiveRichnessMeasure(MapDBGraph _graph){
 		this._graph = _graph;
 	}
 	
 
-	//the richer the resulting description, the lower the distance to our ideal.
+	//the richer the resulting description, the lower the distance to our ideal - where the ideal (according to gueret) is 1.
 	// for quality metrics since we need a value between 0.0 and 1.0, where 0 is worst and 1 is the best,
 	// we normalised the value.
 	public double getIdealMeasure(){
-		double max = 0.0;
-		double min = _graph.getVertexCount();
-		
 		double ideal = 0.0;
 		
-		for(String v : _graph.getVertices()){
-			double d = this.getMeasure(v);
+		for(String vertex : _graph.getSameAs().keySet()){
+			double d = this.getMeasure(vertex);
 			ideal += (1 / (1 + d));
 		}
 		
-		return Math.abs((ideal - min)/(max-min));
+		return ideal; //TODO: to fix eventually when we decide what the real value of this metric is. ATM 1.0 represent a high value
+		//according to gueret et al. the ideal is 1. the richer the description the lower value, therefore we do not need to normalise for our metrics.
 	}
 	
 	
@@ -54,28 +51,29 @@ public class DescriptiveRichnessMeasure {
 	//mdescription = Bi \ Ai
 
 	public double getMeasure(String vertex){
-		Set<String> descriptionNode = new HashSet<String>();
-		Set<String> sameAsNode = new HashSet<String>();
+		//get all nodes for vertex
+		Set<String> s_vertex = new HashSet<String>(_graph.getOutEdgeNodes(vertex));
+		Set<String> s_v_sameAs = new HashSet<String>(_graph.getSameAsNodes(vertex));
 		
-		for(RDFEdge e : _graph.getOutEdges(vertex)){
-			if (!(e.getRDFEdge().equals(OWL.sameAs.getURI()))) descriptionNode.add(_graph.getDest(e));
-			else sameAsNode.add(_graph.getDest(e));
+		s_vertex.removeAll(s_v_sameAs); //remove all sameAs links
+		
+		Set<String> enrich = new HashSet<String>();
+		for(String sameAs_v : s_v_sameAs){
+			//for all sameAs nodes attached to vertex
+			enrich.addAll(_graph.getOutEdgeNodes(sameAs_v));
+			
+			//enable http retreiver?
 		}
+		enrich.remove(vertex);
 		
-		Set<String> enrichedDescriptionNodes = new HashSet<String>();
-		for(String node : sameAsNode){
-			for (RDFEdge e : _graph.getOutEdges(node)){
-				enrichedDescriptionNodes.add(_graph.getDest(e));
-			}
-			enrichedDescriptionNodes.addAll(this.getOnlineDataset(node));
-		}
-		enrichedDescriptionNodes.remove(vertex);
+		//Compute set difference
+		enrich.removeAll(s_vertex);
 		
-		enrichedDescriptionNodes.removeAll(descriptionNode);
-		//if we have x sameAs y . y hasProp z. this will return z
-		
-		return enrichedDescriptionNodes.size();
+		return (double)enrich.size();
 	}
+	
+	
+	
 	
 	//TODO: fix to make it more efficient, using http retreiver?
 	private Set<String> getOnlineDataset(String sameAsURI){

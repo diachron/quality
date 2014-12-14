@@ -3,17 +3,16 @@
  */
 package eu.diachron.qualitymetrics.accessibility.interlinking.helper;
 
-import edu.uci.ics.jung.graph.DirectedGraph;
+import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
 
 /**
  * @author Jeremy Debattista
  * 
  */
 public class CentralityMeasure {
+	private MapDBGraph _graph;
 	
-	private DirectedGraph<String,RDFEdge> _graph;
-	
-	public CentralityMeasure(DirectedGraph<String,RDFEdge> _graph){
+	public CentralityMeasure(MapDBGraph _graph){
 		this._graph = _graph;
 	}
 	
@@ -21,7 +20,8 @@ public class CentralityMeasure {
 	public double getIdealMeasure(){
 		double min = Double.MAX_VALUE;
 		double max = 0.0;
-		
+	
+		// get the highest centrality measure found	
 		for(String v : _graph.getVertices()){
 			double d = this.getMeasure(v);
 			max = (max >= d) ? max : d ;
@@ -35,11 +35,14 @@ public class CentralityMeasure {
 			dCentrality += ((max - d)/totalVer);
 		}
 		
-		//normalise
+		//normalise our value between the minimum centrality and the maximum centrality found
 		if (min-max != 0) 
 			dCentrality = (dCentrality - min)/(max-min);
 		else
 			dCentrality = 0.5;
+		
+		//TODO: for problem report -> if dCentrality is closer to max, then it is a problem, maybe in the quality metadata we should show low/mid/high... 
+		//...and show which of those nodes are very close to the max, therefore causing the data to have high centrality measure
 		
 		return dCentrality;
 	}
@@ -48,14 +51,12 @@ public class CentralityMeasure {
 		double in = 0;
 		double out = 0;
 		
-		for(RDFEdge edge : _graph.getInEdges(vertex)){
-			String v = _graph.getSource(edge);
-			in += Math.max(1, _graph.getInEdges(v).size());
+		for(String edge : _graph.getInEdgeNodes(vertex)){
+			in += Math.max(1, _graph.getInEdgeNodes(edge).size());
 		}
 		
-		for(RDFEdge edge : _graph.getOutEdges(vertex)){
-			String v = _graph.getDest(edge);
-			out += Math.max(1, _graph.getOutEdges(v).size());
+		for(String edge : _graph.getOutEdgeNodes(vertex)){
+			out += Math.max(1, _graph.getOutEdgeNodes(edge).size());
 		}
 		
 		return (in > 0 ? out / in : 0);

@@ -59,7 +59,7 @@ public class DuplicateInstance implements QualityMetric {
 	public void compute(Quad quad) {
 		
 		// Check whether current triple corresponds to an instance declaration
-		logger.trace("Computing triple with predicate: " + quad.getPredicate().getURI());
+//		logger.trace("Computing triple with predicate: " + quad.getPredicate().getURI());
 		Node predicateEdge = quad.getPredicate();
 		
 		// Determines whether the specified predicate corresponds to an instance declaration 
@@ -67,7 +67,7 @@ public class DuplicateInstance implements QualityMetric {
 		if(predicateEdge != null && predicateEdge.isURI() && predicateEdge.hasURI(RDF.type.getURI())) {
 			// Build the Id of the instance, concatenating the instance's (subject) URI and the URI of its class
 			String newInstanceId = quad.getSubject().toString() + "||" + quad.getObject().toString();
-			logger.trace("Instance declared: " + newInstanceId);
+//			logger.trace("Instance declared: " + newInstanceId);
 
 			// Check if the instance already exists in the instances map
 			Integer countPrevInstDecls = pMapInstances.get(newInstanceId);
@@ -76,12 +76,12 @@ public class DuplicateInstance implements QualityMetric {
 				// Put the new instance declaration in the map, with a value of 1 indicating that such an 
 				// instance has been declared for the first time
 				pMapInstances.put(newInstanceId, 1);
-				logger.trace("New instance declaration found");
+//				logger.trace("New instance declaration found");
 			} else {
 				// Instance was already declared, increase the number of appearances and the non-unique counter
 				countPrevInstDecls++;
 				countNonUniqueInst++;
-				logger.trace("Non-unique instance found. Occurrences: " + countPrevInstDecls);
+//				logger.trace("Non-unique instance found. Occurrences: " + countPrevInstDecls);
 			}
 
 			countTotalInst++;

@@ -20,7 +20,7 @@ import eu.diachron.semantics.vocabulary.DQM;
  */
 public class HumanReadableLabelling implements QualityMetric {
 	
-	private static Logger logger = Logger.getLogger(HumanReadableLabelling.class);
+//	private static Logger logger = Logger.getLogger(HumanReadableLabelling.class);
 
 	private final Resource METRIC_URI = DQM.HumanReadableLabellingMetric;
 	
@@ -87,7 +87,7 @@ public class HumanReadableLabelling implements QualityMetric {
 				this.mapDB.close();
 			}
 		} catch(Throwable ex) {
-			logger.warn("Persistent HashMap or backing database could not be closed", ex);
+//			logger.warn("Persistent HashMap or backing database could not be closed", ex);
 		} finally {
 			super.finalize();
 		}

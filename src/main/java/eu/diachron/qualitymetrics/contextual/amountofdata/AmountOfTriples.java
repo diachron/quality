@@ -24,7 +24,7 @@ public class AmountOfTriples implements QualityMetric {
 	//TODO: logging
 	private final Resource METRIC_URI = DQM.AmountOfTriplesMetric; 
 	
-	private static Logger logger = Logger.getLogger(AmountOfTriples.class);
+//	private static Logger logger = Logger.getLogger(AmountOfTriples.class);
 	protected double metricValue;
 	protected int numTriples;
 

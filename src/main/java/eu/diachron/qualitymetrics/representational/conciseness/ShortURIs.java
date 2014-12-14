@@ -17,7 +17,7 @@ import eu.diachron.semantics.vocabulary.DQM;
  */
 public class ShortURIs implements QualityMetric {
 	
-	private static Logger logger = Logger.getLogger(ShortURIs.class);
+//	private static Logger logger = Logger.getLoggesr(ShortURIs.class);
 	
 	private final Resource METRIC_URI = DQM.ShortURIsMetric;
 	
@@ -34,7 +34,7 @@ public class ShortURIs implements QualityMetric {
 	
 	public void compute(Quad quad) {
 		// Check whether current triple corresponds to an instance declaration (defining a local URI).
-		logger.trace("Computing triple with predicate: " + quad.getPredicate().getURI());
+//		logger.trace("Computing triple with predicate: " + quad.getPredicate().getURI());
 		Node predicateEdge = quad.getPredicate();
 		
 		// Determines whether the specified predicate corresponds to an instance declaration 
@@ -45,7 +45,7 @@ public class ShortURIs implements QualityMetric {
 			
 			if(subject.isURI()) {
 				String subjectIdURI = (subject.getURI() != null)?(subject.getURI()):("");
-				logger.trace("Current subject's URI: " + subjectIdURI);
+//				logger.trace("Current subject's URI: " + subjectIdURI);
 				
 				// Having the subject's URI, add it's length to the accumulator and count it as a defined URI
 				acumLocalURIsLen += subjectIdURI.length();

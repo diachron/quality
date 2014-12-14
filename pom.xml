@@ -163,26 +163,7 @@
 		    <artifactId>mapdb</artifactId>
 		    <version>${mapdb.version}</version>
 		</dependency>
-		
-		
-		<dependency>
-        	<groupId>org.apache.spark</groupId>
-        	<artifactId>spark-core_2.10</artifactId>
-        	<version>1.1.0</version>
-        </dependency>
-        <!-- 
-        <dependency>
-        	<groupId>org.apache.spark</groupId>
-        	<artifactId>spark-streaming_2.10</artifactId>
-        	<version>1.1.0</version>
-        </dependency>
-         -->
-         
-        <dependency>
-		   <groupId>org.neo4j</groupId>
-		   <artifactId>neo4j</artifactId>
-		   <version>2.1.5</version>
-		  </dependency>
+				
 		
 		<!-- Guava libraries (Bloom Filter, etc.) -->
 		<dependency>
@@ -196,8 +177,6 @@
 	<artifactId>commons-io</artifactId>
 	<version>2.4</version>
 </dependency>
-
-		          
 	</dependencies>
 
 

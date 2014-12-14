@@ -4,12 +4,11 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking.helper;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
-import com.hp.hpl.jena.vocabulary.OWL;
-
-import edu.uci.ics.jung.graph.DirectedGraph;
+import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
 
 /**
  * @author Jeremy Debattista
@@ -27,77 +26,91 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 
 public class SameAsMeasure {
 	
-	private DirectedGraph<String,RDFEdge> _graph;
+	//private DirectedGraph<String,RDFEdge> _graph;
 	
-	public SameAsMeasure(DirectedGraph<String,RDFEdge> _graph){
+	private MapDBGraph _graph;
+	
+	public SameAsMeasure(MapDBGraph _graph){
 		this._graph = _graph;
 	}
 	
 
-//	the closer to 0 the better
+	//the closer to 0 the better
 	public double getIdealMeasure(){
-		double min = Double.MAX_VALUE;
-		double max = 0.0;
+		double openChains = 0.0;
+		double totalChains = 0.0;
 		
-		double ideal = 0.0;
-		
-		for(String v : _graph.getVertices()){
-			double d = this.getMeasure(v);
-			max = (max >= d) ? max : d ;
-			min = (d < min) ? d : min;
+		Set<String> sameAsKeySet = _graph.getSameAs().keySet();
+		for(String v : sameAsKeySet){
+			//get all chains for vertex V
+			List<LinkedList<String>> chains = this.getAllPossibleChainsForNode(v);
+			totalChains += chains.size();
 			
-			ideal += d;
+			for(LinkedList<String> chain : chains){
+				if (this.isOpenChain(chain)) {
+					openChains++;
+					//TODO: do some problem reporting
+					//return chain of resources that do not "close" or maybe the last item in the chain not having sameAs the first item in chain
+					//e.g a->b->c then report that c does not have the property/object "sameAs a" therefore it is not a closed chain 
+				}
+			}
 		}
 		
-		if ((max-min) != 0) ideal = (ideal - min)/(max-min);
+		//TODO: better return of value.. for the time, a value closer to 1 means that we are near the ideal as described by gueret et al. to 0 
 		
-		return ideal;
+		double ratio = openChains / totalChains;
+		return (1.0 - ratio);
+	}
+	
+	private boolean isOpenChain(LinkedList<String> chain){
+		if ((chain.size() > 1) && (!(chain.getFirst().equals(chain.getLast())))){
+			return true;
+		}
+		return false;
 	}
 	
 	public double getMeasure(String vertex){
-		double measure = 0.0;
-		
-		List<String> path = this.getPath(vertex, Direction.BOTH); 
-
-		if ((path.size() > 1) && (!path.get(path.size() - 1).equals(vertex))){
-			measure++;
+		double totalPath = 0.0d;
+		List<LinkedList<String>> chains = this.getAllPossibleChainsForNode(vertex); 
+		for(LinkedList<String> chain : chains){
+			totalPath += (double)chain.size();
 		}
-		
-		return measure;
+		return totalPath;
 	}
 	
 	
-	private List<String> getPath(String vertex, Direction d){
-		List<String> path = new ArrayList<String>();
-		path.add(vertex);
+	// TODO: idea, we have one chain representing all nodes in a closed chain instead of multiple
+	// Each node can have one or more sameAsChains
+	private List<LinkedList<String>> getAllPossibleChainsForNode(String vertex){
+		List<LinkedList<String>> llist = new ArrayList<LinkedList<String>>(); 
 		
-		//check if there are any inEdges with owl:SameAs
-		if ((d == Direction.IN) || (d == Direction.BOTH)){
-			Collection<RDFEdge> inEdges = _graph.getInEdges(vertex);
+		Set<String> sameAsPathsForNode = _graph.getSameAsNodes(vertex);
 		
-			for(RDFEdge e : inEdges){
-				if (e.getRDFEdge().equals(OWL.sameAs.getURI())){
-					path.addAll(0, this.getPath(_graph.getSource(e), Direction.IN));
-				}
+		if (sameAsPathsForNode.size() > 0) {
+			for(String n : sameAsPathsForNode) {
+				LinkedList<String> _chain = new LinkedList<String>();
+				_chain.add(vertex);
+				_chain.addAll(getChainForNode(vertex, n));
+				llist.add(_chain);
 			}
 		}
-		
-		if ((d == Direction.OUT) || (d == Direction.BOTH)){
-			Collection<RDFEdge> outEdges = _graph.getOutEdges(vertex);
-		
-			for(RDFEdge e : outEdges){
-				if (e.getRDFEdge().equals(OWL.sameAs.getURI())){
-					path.addAll((path.size() - 1), this.getPath(_graph.getDest(e), Direction.OUT));
-				}
-			}
-		}
-		
-		return path;
+		return llist;
 	}
 	
-	
-	private enum Direction{
-		IN, OUT, BOTH
-	}
+	private LinkedList<String> getChainForNode(String startVertex, String nextVertex){
+		LinkedList<String> _list = new LinkedList<String>();
+		
+		Set<String> sameAsPathsForNode = _graph.getSameAsNodes(nextVertex);
 
+		if (sameAsPathsForNode.size() > 0) {
+			_list.add(nextVertex);
+			for(String n : sameAsPathsForNode) {
+				if (n.equals(startVertex)) _list.add(n);
+				else _list.addAll(getChainForNode(startVertex, n));
+			}
+		} else _list.add(nextVertex);
+		return _list;
+	}
+	
+	
 }

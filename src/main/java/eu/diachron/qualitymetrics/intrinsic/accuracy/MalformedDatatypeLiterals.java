@@ -49,7 +49,7 @@ public class MalformedDatatypeLiterals implements QualityMetric {
     if (rdfdataType != null && !rdfdataType.isValidLiteral(object.getLiteral())) {
       malformedLiterals++;
       problems.add(quad);
-      LOG.info(String.format("Malformed literal is found in quad: %s", quad.toString()));
+//      LOG.info(String.format("Malformed literal is found in quad: %s", quad.toString()));
     }
   }
 
