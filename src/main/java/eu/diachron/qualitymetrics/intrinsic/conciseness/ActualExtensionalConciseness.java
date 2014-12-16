@@ -25,9 +25,9 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
  * Extensional Conciseness metric, which is part of the Conciseness dimension.
  */
-public class ExtensionalConciseness implements QualityMetric {
+public class ActualExtensionalConciseness implements QualityMetric {
 	
-	private static Logger logger = Logger.getLogger(ExtensionalConciseness.class);
+	private static Logger logger = Logger.getLogger(ActualExtensionalConciseness.class);
 	
 	private final Resource METRIC_URI = DQM.ExtensionalConcisenessMetric;
 	

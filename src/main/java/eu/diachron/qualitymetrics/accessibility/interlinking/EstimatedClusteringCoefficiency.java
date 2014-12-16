@@ -8,9 +8,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
-import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ActualClusteringCoefficientMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.EstimateClusteringCoefficientMeasure;
 import eu.diachron.semantics.vocabulary.DQM;
 
@@ -18,17 +17,12 @@ import eu.diachron.semantics.vocabulary.DQM;
  * @author Jeremy Debattista
  * 
  */
-public class InterlinkDetectionMetric implements ComplexQualityMetric {
+public class EstimatedClusteringCoefficiency implements QualityMetric {
 
 	private MapDBGraph graph = new MapDBGraph();
 	
-	private boolean afterExecuted = false;
-	
-	private double metricValue = 0.0; //In order to calculate the metric value, we get the IDEAL value of all other sub-metrics and multiply it by a 0.2 weight
-	
 	private final Resource METRIC_URI = DQM.InterlinkDetectionMetric;
 	
-	private boolean estimation = false;
 	
 	public void compute(Quad quad) {
 		String subject = "";
@@ -65,28 +59,9 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	}
 
 	public double metricValue() {
-		if (!this.afterExecuted) 
-			this.after();
+		EstimateClusteringCoefficientMeasure ccm = new EstimateClusteringCoefficientMeasure(graph);
 
-		return this.metricValue;
+		return ccm.getIdealMeasure();
 	}
 
-	public void before(Object... arg0) {
-		this.estimation = Boolean.parseBoolean(arg0.toString());
-	}
-	
-	// Post-Processing
-	public void after(Object... arg0) {
-		this.afterExecuted = true;
-		
-		if (this.estimation){
-			EstimateClusteringCoefficientMeasure ccm = new EstimateClusteringCoefficientMeasure(graph);
-			metricValue += ccm.getIdealMeasure();
-		} else {
-			ActualClusteringCoefficientMeasure ccm = new ActualClusteringCoefficientMeasure(graph);
-			metricValue += ccm.getIdealMeasure();
-		}
-		
-	}
-	
 }

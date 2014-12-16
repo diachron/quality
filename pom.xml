@@ -79,6 +79,12 @@
 			<artifactId>luzzu-operations</artifactId>
 			<version>${luzzu.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>de.unibonn.iai.eis</groupId>
+			<artifactId>luzzu-io</artifactId>
+			<version>${luzzu.version}</version>
+		</dependency>
 
 		<!-- Logging -->
 		<dependency>
