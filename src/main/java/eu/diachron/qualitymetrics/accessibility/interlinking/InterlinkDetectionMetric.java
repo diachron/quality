@@ -28,7 +28,7 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.InterlinkDetectionMetric;
 	
-	private final boolean estimation = false;
+	private boolean estimation = false;
 	
 	public void compute(Quad quad) {
 		String subject = "";
