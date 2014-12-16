@@ -10,11 +10,8 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.qualitymetrics.accessibility.interlinking.helper.CentralityMeasure;
-import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ClusteringCoefficientMeasure;
-import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DegreeMeasure;
-import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DescriptiveRichnessMeasure;
-import eu.diachron.qualitymetrics.accessibility.interlinking.helper.SameAsMeasure;
+import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ActualClusteringCoefficientMeasure;
+import eu.diachron.qualitymetrics.accessibility.interlinking.helper.EstimateClusteringCoefficientMeasure;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
@@ -30,6 +27,8 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	private double metricValue = 0.0; //In order to calculate the metric value, we get the IDEAL value of all other sub-metrics and multiply it by a 0.2 weight
 	
 	private final Resource METRIC_URI = DQM.InterlinkDetectionMetric;
+	
+	private final boolean estimation = false;
 	
 	public void compute(Quad quad) {
 		String subject = "";
@@ -73,32 +72,21 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	}
 
 	public void before(Object... arg0) {
+		this.estimation = Boolean.parseBoolean(arg0.toString());
 	}
 	
 	// Post-Processing
 	public void after(Object... arg0) {
 		this.afterExecuted = true;
 		
-		//1. DegreeMeasure
-		DegreeMeasure dm = new DegreeMeasure(graph);
-		metricValue += dm.getIdealMeasure() * 0.2;
+		if (this.estimation){
+			EstimateClusteringCoefficientMeasure ccm = new EstimateClusteringCoefficientMeasure(graph);
+			metricValue += ccm.getIdealMeasure();
+		} else {
+			ActualClusteringCoefficientMeasure ccm = new ActualClusteringCoefficientMeasure(graph);
+			metricValue += ccm.getIdealMeasure();
+		}
 		
-		//2. Clustering Coefficient
-		ClusteringCoefficientMeasure ccm = new ClusteringCoefficientMeasure(graph);
-		metricValue += ccm.getIdealMeasure() * 0.2;
-		
-		//3. Centrality
-		CentralityMeasure cm = new CentralityMeasure(graph);
-		metricValue += cm.getIdealMeasure() * 0.2;
-		
-		//4. OpenSameAs
-		//	for this we do a ratio of the number of same as triples against the number of open sameas - ideally we have 0..
-		SameAsMeasure sam = new SameAsMeasure(graph);
-		metricValue += (1.0 - sam.getIdealMeasure()) * 0.2;
-		
-		//5. Description Richness
-		DescriptiveRichnessMeasure drm = new DescriptiveRichnessMeasure(graph);
-		metricValue += drm.getIdealMeasure() * 0.2;
 	}
 	
 }

@@ -20,12 +20,12 @@ import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
  * @author Jeremy Debattista
  * 
  */
-public class ClusteringCoefficientMeasure {
+public class EstimateClusteringCoefficientMeasure {
 	
 	private MapDBGraph _graph;
 	private double estimateMeasure = Double.MIN_VALUE;
 	
-	public ClusteringCoefficientMeasure(MapDBGraph _graph){
+	public EstimateClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
 	}
 	
