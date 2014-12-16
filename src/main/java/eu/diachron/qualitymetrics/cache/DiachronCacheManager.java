@@ -4,6 +4,7 @@
 package eu.diachron.qualitymetrics.cache;
 
 import de.unibonn.iai.eis.luzzu.cache.CacheManager;
+import de.unibonn.iai.eis.luzzu.cache.CacheObject;
 
 /**
  * @author Jeremy Debattista
@@ -30,7 +31,7 @@ public class DiachronCacheManager {
 		return instance;
 	}
 	
-	public void addToCache(String cacheName, String key, Object value){
+	public void addToCache(String cacheName, String key, CacheObject value){
 		luzzuCM.addToCache(cacheName, key, value);
 	}
 	
