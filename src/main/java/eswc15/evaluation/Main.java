@@ -53,12 +53,17 @@ public class Main {
 	public static void main (String [] args) throws ProcessorNotInitialised, IOException, ClassNotFoundException{
 		//create csv file
 		File csv = new File("benchmark.csv");
+		File values = new File("values.txt");
 		
 		if (!(csv.isFile())) {
 			csv.createNewFile();
 			String header = "triples,metrics,average time(s),min time(s),max time(s)";
 			FileUtils.write(csv, header, true);
 			FileUtils.write(csv, System.getProperty("line.separator"), true);
+		}
+		
+		if (!(values.isFile())) {
+			values.createNewFile();
 		}
 		
 		eCases = new ArrayList<EvaluationCase>();
@@ -92,6 +97,11 @@ public class Main {
 			
 			FileUtils.write(csv, eCase.toString(), true);
 			FileUtils.write(csv, System.getProperty("line.separator"), true);
+			
+			String v_header = eCase.getCaseName();
+			FileUtils.write(values, v_header, true);
+			FileUtils.write(values, System.getProperty("line.separator"), true);
+			FileUtils.write(values, eCase.valuesToString(), true);
 		}
 	}
 	

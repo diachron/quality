@@ -104,6 +104,15 @@ public class EvaluationCase implements Serializable {
 		return sb.toString();
 	}
 	
+	public String valuesToString(){
+		StringBuilder sb = new StringBuilder();
+		for(Double d : this.metricValues){
+			sb.append(d);
+			sb.append(System.getProperty("line.separator"));
+		}
+		return sb.toString();
+	}
+	
 	public String getMetricDump() {
 		return metricDump;
 	}
