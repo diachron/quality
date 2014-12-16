@@ -10,12 +10,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
+import de.unibonn.iai.eis.luzzu.cache.CacheObject;
 
 /**
  * @author Jeremy Debattista
  * 
  */
-public class CachedHTTPResource {
+public class CachedHTTPResource implements CacheObject{
 
 	private String uri = "";
 	private List<HttpResponse> responses = null;

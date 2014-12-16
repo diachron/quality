@@ -16,6 +16,7 @@
 		<jena.version>2.11.0</jena.version>
 		<jung.version>2.0.1</jung.version>
 		<mapdb.version>1.0.6</mapdb.version>
+		<luzzu.version>1.0.0</luzzu.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -41,10 +42,6 @@
 				<updatePolicy>always</updatePolicy>
 				<checksumPolicy>fail</checksumPolicy>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>dropbox</id>
-			<url>http://dl.dropboxusercontent.com/u/5895290/mvn-repo</url>
 		</repository>
 	</repositories>
 
@@ -74,13 +71,13 @@
 		<dependency>
 			<groupId>de.unibonn.iai.eis</groupId>
 			<artifactId>luzzu-assessment</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${luzzu.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>de.unibonn.iai.eis</groupId>
 			<artifactId>luzzu-operations</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${luzzu.version}</version>
 		</dependency>
 
 		<!-- Logging -->
