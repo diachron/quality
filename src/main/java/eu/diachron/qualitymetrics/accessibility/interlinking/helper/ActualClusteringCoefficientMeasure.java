@@ -4,17 +4,11 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking.helper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
-import edu.uci.ics.jung.algorithms.metrics.Metrics;
 
 /**
  * @author Jeremy Debattista

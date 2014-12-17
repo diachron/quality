@@ -23,6 +23,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import de.unibonn.iai.eis.luzzu.exceptions.ProcessorNotInitialised;
 import eswc15.evaluation.settings.EvaluationCase;
+import eu.diachron.qualitymetrics.accessibility.availability.Dereferencibility;
 import eu.diachron.qualitymetrics.accessibility.interlinking.ActualClusteringCoefficiency;
 import eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedClusteringCoefficiency;
 import eu.diachron.qualitymetrics.intrinsic.conciseness.ActualExtensionalConciseness;
@@ -35,18 +36,22 @@ public class Main {
 	private static long tEnd;
 	
 	private static List<EvaluationCase> eCases = new ArrayList<EvaluationCase>();
-	private static String datasetURI = "";//to setup
+	private static String datasetURI = "/Users/jeremy/Downloads/lak-dataset-dump.nt";//to setup
 	
 	private static void setUp() throws ClassNotFoundException, IOException{
 		//setup 
 		
 		//Clustering Coefficency
-		eCases.add(new EvaluationCase("Estimation value for Clustering Coefficency", new EstimatedClusteringCoefficiency()));
-		eCases.add(new EvaluationCase("Actual value for Clustering Coefficency",new ActualClusteringCoefficiency()));
+//		eCases.add(new EvaluationCase("Estimation value for Clustering Coefficency", new EstimatedClusteringCoefficiency()));
+//		eCases.add(new EvaluationCase("Actual value for Clustering Coefficency",new ActualClusteringCoefficiency()));
+//		
+//		//Extensional Conciseness
+//		eCases.add(new EvaluationCase("Estimation value for Extensional Conciseness", new EstimatedExtensionalConciseness()));
+//		eCases.add(new EvaluationCase("Actual value for Extensional Conciseness", new ActualExtensionalConciseness()));
 		
-		//Extensional Conciseness
-		eCases.add(new EvaluationCase("Estimation value for Extensional Conciseness", new EstimatedExtensionalConciseness()));
-		eCases.add(new EvaluationCase("Actual value for Extensional Conciseness", new ActualExtensionalConciseness()));
+		//Dereferencability
+		eCases.add(new EvaluationCase("Actual value for Dereferencibility", new Dereferencibility()));
+
 
 	}
 	

@@ -11,7 +11,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.semantics.vocabulary.DQM;
@@ -164,9 +164,8 @@ public class Dereferencibility implements QualityMetric {
 	}
 	
 	private boolean is200AnRDF(CachedHTTPResource resource){
-		for (HttpResponse response : resource.getResponses()){
-			if (response.getEntity().getContentType().getValue().equals("application/rdf+xml"))
-				return true;
+		for (SerialisableHttpResponse response : resource.getResponses()){
+			if (response.getHeaders("Content-Type").equals("application/rdf+xml")) return true;
 		}
 		return false;
 	}

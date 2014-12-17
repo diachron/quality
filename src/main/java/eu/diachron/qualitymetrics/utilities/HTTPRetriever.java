@@ -30,14 +30,12 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 
 /**
@@ -114,7 +112,7 @@ public class HTTPRetriever {
 			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 																										  
 			final HttpGet request = new HttpGet(queuePeek);
-			Header accept = new BasicHeader("Accept", "application/rdf+xml; text/html");
+			Header accept = new BasicHeader("Accept", "application/rdf+xml, text/html, text/xml, text/plain");
 			request.addHeader(accept);
 			
 			httpclient.execute(request, localContext,
@@ -224,7 +222,8 @@ public class HTTPRetriever {
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
 		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-		String uri = "http://aksw.org/MichaelMartin";
+		//String uri = "http://aksw.org/MichaelMartin";
+		String uri = "http://data.linkededucation.org/resource/lak/reference/lak-dataset/5432";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start();
 		Thread.sleep(5000);
@@ -232,9 +231,12 @@ public class HTTPRetriever {
 		CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
 		//System.out.println(httpResource.getResponses().get(0).getEntity().getContentType().getValue());
 		//httpResource.getResponses().get(0).getHeaders("Content-Disposition");
-		String filename = httpResource.getResponses().get(0).getHeaders("Content-Disposition")[0].getValue().replace("filename=\"", "").replace("\"", "");
-		Lang language = RDFLanguages.filenameToLang(filename);
-		System.out.println(WebContent.mapLangToContentType(language));
+//		String filename = httpResource.getResponses().get(0).getHeaders("Content-Disposition").replace("filename=\"", "").replace("\"", "");
+//		Lang language = RDFLanguages.filenameToLang(filename);
+//		System.out.println(WebContent.mapLangToContentType(language));
+		for (SerialisableHttpResponse res : httpResource.getResponses())
+			System.out.println(res.getHeaders("Content-Type"));
+		httpRetreiver.stop();
 	}
 	
 	/*******************************************************************************************
