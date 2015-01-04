@@ -25,20 +25,20 @@ public class EvaluationCase implements Serializable {
 	private String caseDescription;
 	private String metricDump = "";
 	private QualityMetric metric;
-	private QualityMetric _metric;
 	private List<Double> metricValues = new ArrayList<Double>();
 	
 	public EvaluationCase(String caseName, QualityMetric metric){
 		this.caseName = caseName;
 		this.setMetric(metric);
-		this._metric = metric;
 	}
-	
-	
-	public void resetMetric(){
-		QualityMetric _ = _metric;
-		this.setMetric(_metric);
-		_metric = _;
+
+	public void resetMetric() {
+		try {
+			// a brand new instance of the metric is required, to assure that all counters and containers are reset
+			this.setMetric(metric.getClass().newInstance());
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public Model getMetricConfiguration() {
@@ -95,8 +95,9 @@ public class EvaluationCase implements Serializable {
 	
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.metric.getClass().getEnclosingClass().getName().toString() + ",");
+		Class<?> mClass = ((this.metric.getClass().getEnclosingClass() != null)?(this.metric.getClass().getEnclosingClass()):(this.metric.getClass()));
+		StringBuilder sb = new StringBuilder();	
+		sb.append(mClass.getName().toString() + ",");
 		sb.append(this.getTotalTriples() + ",");
 		sb.append((this.gettAvg()/ 1000.0) + ",");
 		sb.append((this.gettMin()/ 1000.0) + ",");
