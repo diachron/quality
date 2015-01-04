@@ -2,7 +2,6 @@ package eu.diachron.qualitymetrics.intrinsic.conciseness;
 
 import org.apache.log4j.Logger;
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 
 import com.hp.hpl.jena.graph.Node;
@@ -10,6 +9,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.commons.bigdata.MapDbFactory;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.semantics.vocabulary.DQM;
@@ -19,19 +19,16 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
  * Duplicate Instance metric, which is part of the Conciseness dimension.
  */
-public class DuplicateInstance implements QualityMetric {
+public class ActualDuplicateInstance implements QualityMetric {
 	
-	private static Logger logger = Logger.getLogger(DuplicateInstance.class);
+	private static Logger logger = Logger.getLogger(ActualDuplicateInstance.class);
 	
 	private final Resource METRIC_URI = DQM.DuplicateInstanceMetric;
 			
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	private DB mapDB = DBMaker.newTempFileDB()
-			.closeOnJvmShutdown()
-			.deleteFilesAfterClose()
-        	.make();
+	private DB mapDB = MapDbFactory.createFilesystemDB();
 	
 	/**
 	 * Map indexing the instances found to be declared in the dataset. Key of entries is a combination of the 
@@ -127,7 +124,11 @@ public class DuplicateInstance implements QualityMetric {
 		} catch(Throwable ex) {
 			logger.warn("Persistent HashMap or backing database could not be closed", ex);
 		} finally {
-			super.finalize();
+			try {
+				super.finalize();
+			} catch(Throwable ex) {
+				logger.warn("Persistent HashMap or backing database could not be closed", ex);
+			}
 		}
 	}
 
