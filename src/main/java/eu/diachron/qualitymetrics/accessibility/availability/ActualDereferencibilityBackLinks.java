@@ -1,7 +1,6 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.commons.bigdata.MapDbFactory;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.semantics.vocabulary.DQM;
@@ -24,11 +24,11 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Based on: Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance.
  * 
  */
-public class DereferencibilityBackLinks implements QualityMetric {
+public class ActualDereferencibilityBackLinks implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
-	final static Logger logger = LoggerFactory.getLogger(DereferencibilityBackLinks.class);
+	final static Logger logger = LoggerFactory.getLogger(ActualDereferencibilityBackLinks.class);
 		
 	/**
 	 * Counter of the number of objects found to be an URI in the resource. Note that differently to the original
@@ -46,7 +46,7 @@ public class DereferencibilityBackLinks implements QualityMetric {
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	private DB mapDB = DBMaker.newTempFileDB().closeOnJvmShutdown().deleteFilesAfterClose().make();
+	private DB mapDB = MapDbFactory.createFilesystemDB();
 	
 	/**
 	* A table holding the set of URIs recognized as parent URIs of the objects of all the processed triples.
@@ -139,7 +139,11 @@ public class DereferencibilityBackLinks implements QualityMetric {
 		} catch(Throwable ex) {
 			logger.warn("Persistent HashMap or backing database could not be closed", ex);
 		} finally {
-			super.finalize();
+			try {
+				super.finalize();
+			} catch(Throwable ex) {
+				logger.warn("Persistent HashMap or backing database could not be closed", ex);
+			}
 		}
 	}
 

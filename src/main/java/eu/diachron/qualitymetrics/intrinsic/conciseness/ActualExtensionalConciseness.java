@@ -8,12 +8,13 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+
+import de.unibonn.iai.eis.diachron.commons.bigdata.MapDbFactory;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.semantics.vocabulary.DQM;
@@ -32,10 +33,7 @@ public class ActualExtensionalConciseness implements QualityMetric {
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	private DB mapDB = DBMaker.newTempFileDB()
-			.closeOnJvmShutdown()
-			.deleteFilesAfterClose()
-        	.make();
+	private DB mapDB = MapDbFactory.createFilesystemDB();
 	
 	/**
 	 * Map indexing the subjects detected during the computation of the metric. Every subject is identified 
@@ -50,20 +48,24 @@ public class ActualExtensionalConciseness implements QualityMetric {
 	 */
 	
 	public void compute(Quad quad) {
-		// Every time a new quad is considered, check whether the subject has already been identified
-		ComparableSubject subject = pMapSubjects.get(quad.getSubject().getURI());
-
-		if(subject == null) {
-			// The subject does not exists in the map. Add it, indexed by its URI
-			subject = new ComparableSubject(quad.getSubject().getURI());
-			pMapSubjects.put(quad.getSubject().getURI(), subject);
-			logger.trace("Added new subject: " + quad.getSubject().getURI());
+		if(quad.getSubject() != null && quad.getSubject().isURI() && quad.getPredicate() != null && quad.getPredicate().isURI()) {
+			// Every time a new quad is considered, check whether the subject has already been identified
+			ComparableSubject subject = pMapSubjects.get(quad.getSubject().getURI());
+	
+			if(subject == null) {
+				// The subject does not exists in the map. Add it, indexed by its URI
+				subject = new ComparableSubject(quad.getSubject().getURI());
+				pMapSubjects.put(quad.getSubject().getURI(), subject);
+				logger.trace("Added new subject: " + quad.getSubject().getURI());
+			}
+	
+			// Add or update the property stated by the current quad into the subject, as a predicate with a value.
+			// The value of the property is extracted from the quad's object
+			subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
+			logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
+		} else {
+			logger.trace("Ignored triple with non-URI subject or predicate");
 		}
-
-		// Add or update the property stated by the current quad into the subject, as a predicate with a value.
-		// The value of the property is extracted from the quad's object
-		subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
-		logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
 	}
 
 	/**
