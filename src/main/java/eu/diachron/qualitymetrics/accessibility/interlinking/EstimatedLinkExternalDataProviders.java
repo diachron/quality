@@ -1,8 +1,5 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
-import java.util.Set;
-
-import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,38 +7,31 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.diachron.commons.bigdata.MapDbFactory;
+import de.unibonn.iai.eis.diachron.commons.bigdata.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.accessibility.availability.ResourceBaseURIOracle;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
- * @author Santiago Londoño
- * 
  * Measures the degree to which the resource is linked to external data providers, 
  * that is, refers to the detection of links that connect the resource to external data provided by another data sources.
  * 
  * Based on: [1] Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance. Section 5.2, 
  * Linking, Issue VI: Use External URIs (page 26).
- * 
+ * @author Santiago Londoño 
  */
-public class ActualLinkExternalDataProviders implements QualityMetric {
+public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.LinksToExternalDataProvidersMetric;
 	
-	final static Logger logger = LoggerFactory.getLogger(ActualLinkExternalDataProviders.class);
-	
+	final static Logger logger = LoggerFactory.getLogger(EstimatedLinkExternalDataProviders.class);
+		
 	/**
-	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
-	 */
-	private DB mapDB = MapDbFactory.createFilesystemDB();
-	
-	/**
-	* A set containing the of pay-level domains (or base URIs) found among all the data-level constants of the 
+	* A reservoir containing the top-level domains (or base URIs) found among all the data-level constants of the 
 	* dataset (data level constants are: subjects of triples and objects of triples not subject to an rdf:type predicate)
 	*/
-	private Set<String> pSetPayLevelDomainURIs = mapDB.createHashSet("set-link-external-data-providers").make();
+	private ReservoirSampler<String> reservoirTldRIs = new ReservoirSampler<String>(5000, true);
 	
 	/**
      * Object used to determine the base URI of the resource based on its contents
@@ -55,7 +45,7 @@ public class ActualLinkExternalDataProviders implements QualityMetric {
 
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
-	 * are data-level URIs, if so, extracts their pay-level domain and adds them to the set of PLD URIs.
+	 * are data-level URIs, if so, extracts their pay-level domain and adds them to the set of TLD URIs.
 	 * @param quad Quad to be processed as part of the computation of the metric
 	 */
 	public void compute(Quad quad) {
@@ -69,8 +59,8 @@ public class ActualLinkExternalDataProviders implements QualityMetric {
 		
 		// Process subject URI
 		if(!subjectURI.equals("")) {
-			// Extract the PLD of the subject's URI and process it
-			this.processPayLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI));
+			// Extract the TLD of the subject's URI and process it
+			this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI));
 			this.totalDataLevelConstURIs++;
 		}
 		
@@ -80,42 +70,42 @@ public class ActualLinkExternalDataProviders implements QualityMetric {
 			
 			// Process object URI
 			if(!objectURI.equals("")) {
-				// Extract the PLD of the object's URI and process it, a new data-level PLD has been found
+				// Extract the TLD of the object's URI and process it, a new data-level TLD has been found
 				logger.trace("Data-level URI found in object: {} with predicate: {}", objectURI, quad.getPredicate().getURI());
-				this.processPayLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI));
+				this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI));
 				this.totalDataLevelConstURIs++;
 			}
 		}
 	}
 
 	/**
-	 * Compute the value of the metric as the ratio between the number of different PLDs found among the data-level 
-	 * constants of the resource that are different of the resource's PLD and the total number of 
+	 * Compute the value of the metric as the ratio between the number of different TLDs found among the data-level 
+	 * constants of the resource that are different of the resource's TLD and the total number of 
 	 * data-level constant URIs found in the resource.
 	 * @return value of the existence of links to external data providers metric computed on the current resource
 	 */	
 	public double metricValue() {
 		
-		// Determine the current resource's PLD
+		// Determine the current resource's TLD
 		String resBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
-		String resPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(resBaseURI);
+		String resTLD = ResourceBaseURIOracle.extractPayLevelDomainURI(resBaseURI);
 		
-		// Count the number of external PLDs found in the resource
-		int totalExtPLDs = 0;
+		// Count the number of external TLDs found in the resource
+		int totalExtTLDs = 0;
 		
-		for(String curPLD : this.pSetPayLevelDomainURIs) {
+		for(String curTLD : this.reservoirTldRIs.getItems()) {
 			
-			// If currently examined PLD does not belong to the resource's PLD (or vice-versa), the current PLD is external
-			logger.debug("Comparing PLD in triples: {} with resource's PLD: {}", curPLD, resPLD);
+			// If currently examined TDL does not belong to the resource's TLD (or vice-versa), the current TLD is external
+			logger.debug("Comparing TLD in triples: {} with resource's TLD: {}", curTLD, resTLD);
 			
-			if(!(curPLD.contains(resPLD) || resPLD.contains(curPLD))) {
-				logger.debug("OK, PLD {} is external", curPLD);
-				totalExtPLDs++;
+			if(!(curTLD.contains(resTLD) || resTLD.contains(curTLD))) {
+				logger.debug("OK, Top-level domain {} is external", curTLD);
+				totalExtTLDs++;
 			}
 		}
 		
 		if(totalDataLevelConstURIs > 0) {
-			return (double)totalExtPLDs / (double)totalDataLevelConstURIs;
+			return (double)totalExtTLDs / (double)totalDataLevelConstURIs;
 		} else {
 			return 0.0;
 		}
@@ -131,32 +121,18 @@ public class ActualLinkExternalDataProviders implements QualityMetric {
 	}
 
 	/**
-	 * Verifies a PLD found in a subject or object and decides if must be added to the set of pay-level domain URIs
+	 * Verifies a TLD found in a subject or object and decides if must be added to the set of pay-level domain URIs
 	 */
-	private void processPayLevelDomain(String pld) {
+	private void processTopLevelDomain(String tld) {
 		
-		if(pld != null && pld.length() > 0) {
-			// Add the PLD to the set, if it doesn't exist already
-			this.pSetPayLevelDomainURIs.add(pld);
-			logger.debug("PLD OK and added to set: {}", pld);
-		}
-	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		
-		// Destroy persistent HashMap and the corresponding database
-		try {
-			if(this.mapDB != null && !this.mapDB.isClosed()) {
-				this.mapDB.close();
-			}
-		} catch(Throwable ex) {
-			logger.warn("Persistent HashMap or backing database could not be closed", ex);
-		} finally {
-			try {
-				super.finalize();
-			} catch(Throwable ex) {
-				logger.warn("Persistent HashMap or backing database could not be closed", ex);
+		if(tld != null && tld.length() > 0) {
+			// Determine whether the top-level domain already exists in the reservoir...
+			if(this.reservoirTldRIs.findItem(tld) == null) {
+				// and add it, if not found
+				this.reservoirTldRIs.add(tld);
+				logger.debug("New TLD added to reservoir: {}", tld);
+			} else {
+				logger.debug("TLD already in the reservoir: {}", tld);
 			}
 		}
 	}
