@@ -8,12 +8,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.vocabulary.OWL;
+
+import de.unibonn.iai.eis.diachron.commons.bigdata.MapDbFactory;
 
 /**
  * @author Jeremy Debattista
@@ -24,13 +25,7 @@ public class MapDBGraph {
 	
 	final static Logger logger = LoggerFactory.getLogger(MapDBGraph.class);
 
-	private DB mapDB = DBMaker.newTempFileDB().
-			asyncWriteEnable().
-			asyncWriteFlushDelay(500).
-			transactionDisable().
-			closeOnJvmShutdown().
-			deleteFilesAfterClose().
-			make();
+	private DB mapDB = MapDbFactory.createAsyncFilesystemDB();
 	  
 	private HTreeMap<String, Set<String>> adjListInEdges = this.mapDB.createHashMap("graph-inedges-map").make();
 	private HTreeMap<String, Set<String>> adjListOutEdges = this.mapDB.createHashMap("graph-outedges-map").make();
@@ -162,7 +157,11 @@ public class MapDBGraph {
 		} catch(Throwable ex) {
 			logger.warn("Persistent HashMap or backing database could not be closed", ex);
 		} finally {
-			super.finalize();
+			try {
+				super.finalize();
+			} catch(Throwable ex) {
+				logger.warn("Persistent HashMap or backing database could not be closed", ex);
+			}
 		}
 	}
 }
