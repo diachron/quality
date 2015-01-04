@@ -1,6 +1,3 @@
-/**
- * 
- */
 package eu.diachron.qualitymetrics.utilities;
 
 import java.io.IOException;
@@ -19,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpHost;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
@@ -54,11 +52,14 @@ public class HTTPRetriever {
 	 * of the performance utilitarian methods for measurement of performance (namely measurement of parallel reqs.)
 	 */
 	private static final int MAX_PARALLEL_REQS = 20;
+	
+	/**
+	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
+	 */
+	private static String webProxy = null;
 
-	//private ConcurrentLinkedQueue<String> httpQueue = new ConcurrentLinkedQueue<String>();
-	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	private CountDownLatch mainHTTPRetreiverLatch;
+	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());	
+	private ExecutorService executor = null;
 				
 	public void addResourceToQueue(String resourceURI) {
 		this.httpQueue.add(resourceURI);
@@ -69,22 +70,26 @@ public class HTTPRetriever {
 	}
 	
 
-	public void start() throws InterruptedException{
-		//TODO: check if httpQUEUE is not empty yet 
-		mainHTTPRetreiverLatch = new CountDownLatch(httpQueue.size());
-		
-		Runnable retreiver = new Runnable() {
-			public void run() {
-				try {
-					runHTTPAsyncRetreiver();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+	public void start() {
+		// Dereference all the URIs stored in the queue, asynchronously. Wait until all have been resolved
+		if(!httpQueue.isEmpty()) {
+			executor = Executors.newSingleThreadExecutor();
+			
+			Runnable retreiver = new Runnable() {
+				public void run() {
+					try {
+						runHTTPAsyncRetreiver();
+					} catch (InterruptedException e) {
+						// The thread being interrupted for whatever reason, is severe enough to report a runtime exception
+						logger.error("HTTP async request thread interrupted", e);
+						throw new RuntimeException(e);
+					}
 				}
-			}
-		};
-		executor.submit(retreiver);
-		mainHTTPRetreiverLatch.await();
+			};
+			
+			executor.submit(retreiver);
+			executor.shutdown();
+		}
 	}
 	
 	/**
@@ -93,67 +98,105 @@ public class HTTPRetriever {
 	public void stop() {
 		executor.shutdown();
 	}
-
+	
 	private void runHTTPAsyncRetreiver() throws InterruptedException {
-		RequestConfig requestConfig = this.getRequestConfig(true);
-		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom()
-				.setDefaultRequestConfig(requestConfig).build();
-		final HttpClientContext localContext = HttpClientContext.create();
 		
-		httpclient.start();
-		for(final String queuePeek : this.httpQueue){
-			Thread.sleep(3000);
-			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
-				continue;
-			}
-
-			final CachedHTTPResource newResource = new CachedHTTPResource();
-			newResource.setUri(queuePeek);
-			DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
-																										  
-			final HttpGet request = new HttpGet(queuePeek);
-			Header accept = new BasicHeader("Accept", "application/rdf+xml, text/html, text/xml, text/plain");
-			request.addHeader(accept);
+		RequestConfig requestConfig = this.getRequestConfig(true);
+		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().
+				setDefaultRequestConfig(requestConfig).
+				setMaxConnTotal(MAX_PARALLEL_REQS).
+				setMaxConnPerRoute(MAX_PARALLEL_REQS/5).
+				build();
+		
+		final CountDownLatch mainHTTPRetreiverLatch = new CountDownLatch(httpQueue.size());
+		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
+		
+		try {
+			httpclient.start();
 			
-			httpclient.execute(request, localContext,
-					new FutureCallback<HttpResponse>() {
-						public void completed(final HttpResponse response) {
-							newResource.addResponse(response);
-							try {
-								if (localContext.getRedirectLocations().size() >= 1) {
-									List<URI> uriRoute = new ArrayList<URI>();
-									uriRoute.add(request.getURI());
-									uriRoute.addAll(localContext.getRedirectLocations());
+			for(final String queuePeek : this.httpQueue) {
+				
+				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
+					// Request won't be sent, thus one pending request ought to be discounted from the latch
+					mainHTTPRetreiverLatch.countDown();
+					continue;
+				}
+				
+				final CachedHTTPResource newResource = new CachedHTTPResource();
+				final HttpClientContext localContext = HttpClientContext.create(); // Each request must have it's own context
+				newResource.setUri(queuePeek);
+				DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
+
+				try {							  
+					final HttpGet request = new HttpGet(queuePeek);					
+					Header accept = new BasicHeader("Accept", "application/rdf+xml, text/html, text/xml, text/plain");
+					request.addHeader(accept);
+					
+					httpclient.execute(request, localContext,
+							new FutureCallback<HttpResponse>() {
+						
+								public void completed(final HttpResponse response) {
+									newResource.addResponse(response);
 									try {
-										newResource.addAllResponses(followAsyncRedirection(uriRoute));
-									} catch (IOException e) {
-										e.printStackTrace();
+										if (localContext != null && localContext.getRedirectLocations() != null && localContext.getRedirectLocations().size() >= 1) {
+											List<URI> uriRoute = new ArrayList<URI>();
+											uriRoute.add(request.getURI());
+											uriRoute.addAll(localContext.getRedirectLocations());
+											try {
+												logger.trace("Initiating redirection set for URI: {}. Num. requests: {}", queuePeek, uriRoute.size());
+												newResource.addAllResponses(followAsyncRedirection(uriRoute));
+												logger.trace("Completed redirection set for URI: {}", queuePeek);
+											} catch (IOException e) {
+												logger.warn("Error following redirection: {}. Error: {}", uriRoute, e);
+											}
+										} else {
+											logger.trace("Request for URI: {} successful", queuePeek);
+											newResource.addStatusLines(response.getStatusLine());
+										}
+									} catch (Exception e) {
+										logger.debug("Exception during the request for redirect locations whith the following exception : {}", e.getLocalizedMessage());
+										newResource.addStatusLines(response.getStatusLine());
+									} finally {
+										logger.trace("Adding resource to cache URI: {}", queuePeek);
+										DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
+										mainHTTPRetreiverLatch.countDown();
 									}
-								} else {
-									newResource.addStatusLines(response.getStatusLine());
 								}
-							} catch (Exception e) {
-								logger.debug("Exception during the request for redirect locations whith the following exception : {}",e.getLocalizedMessage());
-								newResource.addStatusLines(response.getStatusLine());
-							}
-							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeek, newResource);
-							mainHTTPRetreiverLatch.countDown();
-						}
+		
+								public void failed(final Exception ex) {
+									newResource.setDereferencabilityStatusCode(StatusCode.BAD);
+									newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed"));
+									DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
+		
+									logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(),ex);
+									mainHTTPRetreiverLatch.countDown();
+								}
+		
+								public void cancelled() {
+									logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
+									mainHTTPRetreiverLatch.countDown();
+								}
+							});
+					logger.trace("Request launched: {}", queuePeek);
+				} catch(Throwable tex) {
+					// Some unexpected, nasty problems, such as bad URIs can occur when trying to build or process the request, all of which must be handled
+					newResource.setDereferencabilityStatusCode(StatusCode.BAD);
+					newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be built or processed"));
+					DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 
-						public void failed(final Exception ex) {
-							newResource.setDereferencabilityStatusCode(StatusCode.BAD);
-							newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0,"Request could not be processed"));
-							DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,queuePeek, newResource);
-
-							logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
-							mainHTTPRetreiverLatch.countDown();
-						}
-
-						public void cancelled() {
-							logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
-							mainHTTPRetreiverLatch.countDown();
-						}
-					});
+					logger.warn("Unexpected error building or processing request : " + queuePeek, tex);
+					mainHTTPRetreiverLatch.countDown();
+				} 
+			}
+			
+			mainHTTPRetreiverLatch.await();
+			logger.trace("Completed HTTP retriever task");
+		} finally {
+			try {
+				httpclient.close();
+			} catch (IOException e) {
+				logger.warn("I/O exception attempting to close HTTP client", e);
+			}
 		}
 	}
 	
@@ -166,7 +209,8 @@ public class HTTPRetriever {
 			httpclient.start();
 			final List<HttpGet> requests = this.toHttpGetList(uriRoute);
 
-			final CountDownLatch redirectionLatch = new CountDownLatch(requests.size());
+			final CountDownLatch redirectionLatch = new CountDownLatch(requests.size());			
+			
 			for (final HttpGet request : requests) {
 				httpclient.execute(request, localContext, new FutureCallback<HttpResponse>() {
 
@@ -186,7 +230,8 @@ public class HTTPRetriever {
 							}
 						});
 			}
-			redirectionLatch.await();
+			
+			redirectionLatch.await();			
 		} finally {
 			httpclient.close();
 		}
@@ -203,16 +248,80 @@ public class HTTPRetriever {
 	}
 
 	private RequestConfig getRequestConfig(boolean followRedirects) {
+		
+		HttpHost proxyHost = null;
+		
+		// If a proxy was set to be used, set it
+		if(getWebProxy() != null && !getWebProxy().trim().equals("")) {
+			proxyHost = new HttpHost(getWebProxy());
+		}
+		
 		return RequestConfig.custom().
-				setSocketTimeout(3000).
-				setConnectTimeout(3000).
+				setSocketTimeout(1200000).
+				setConnectTimeout(1200000).
+				setConnectionRequestTimeout(1200000).
 				setRedirectsEnabled(followRedirects).
+				setProxy(proxyHost).
+				setAuthenticationEnabled(false).
 				build();
 	}
 
 	public boolean isPossibleURL(String url) {
 		// TODO: add more protocols
 		return ((url.startsWith("http")) || (url.startsWith("https")));
+	}
+	
+	/**
+	 * Sets the URL of the web proxy to be used when performing HTTP requests
+	 * @param proxyUrlPort URL and port of the proxy (e.g. http://webcache.iai.uni-bonn.de:3128)
+	 */
+	public static void setWebProxy(String proxyUrlPort) {
+		webProxy = proxyUrlPort;
+	}
+	
+	/**
+	 * Gets the URL of the web proxy to be used when performing HTTP requests
+	 * @param proxyUrlPort URL and port of the proxy (e.g. http://webcache.iai.uni-bonn.de:3128)
+	 */
+	public static String getWebProxy() {
+		return webProxy;
+	}
+	
+	/**
+	 * Extract the Top Level Domain (for example http://bbc.co.uk) of the URI provided as parameter. 
+	 * About URIs: The hierarchical part of the URI is intended to hold identification information hierarchical in nature. 
+	 * If this part begins with a double forward slash ("//"), it is followed by an authority part and a path. 
+	 * If it doesn't it contains only a path and thus it doesn't have a PLD (e.g. urns).
+	 * @param resourceURI URI to extract the Top Level Domain from
+	 * @return Top Level Domain of the URI
+	 */
+	public String extractTopLevelDomainURI(String resourceURI) {
+		
+		// Argument validation. Fail fast
+		if(resourceURI == null) {
+			return null;
+		}
+		
+		String tldURI = null;
+		
+		int doubleSlashIx = resourceURI.indexOf("//");
+		int pathFirstSlashIx = -1;
+		
+		// Check that the URI contains a double-slash, as the TLD is the scheme plus the authority part
+		if(doubleSlashIx > 0 && (doubleSlashIx + 1) < resourceURI.length()) {
+			
+			pathFirstSlashIx = resourceURI.indexOf('/', doubleSlashIx + 2);
+			
+			// The TLD comprises the scheme and the path
+			if(pathFirstSlashIx > (doubleSlashIx + 1)) {
+				tldURI = resourceURI.substring(0, pathFirstSlashIx);
+			} else {
+				// There's no path part in the URI
+				tldURI = resourceURI;
+			}
+		}
+		
+		return tldURI;
 	}
 	
 	/**

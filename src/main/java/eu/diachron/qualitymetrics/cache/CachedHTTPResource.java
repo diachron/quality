@@ -3,8 +3,6 @@
  */
 package eu.diachron.qualitymetrics.cache;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 
@@ -24,7 +21,8 @@ import de.unibonn.iai.eis.luzzu.cache.CacheObject;
  * 
  */
 public class CachedHTTPResource implements CacheObject {
-
+	private static final long serialVersionUID = -5625345902018709236L;
+	
 	private String uri = "";
 	private List<SerialisableHttpResponse> responses = null;
 	private List<StatusLine> statusLines = null;
@@ -52,11 +50,15 @@ public class CachedHTTPResource implements CacheObject {
 	}
 	public void addStatusLines(StatusLine statusLine) {
 		if (this.statusLines == null) this.statusLines = new ArrayList<StatusLine>();
-		this.statusLines.add(statusLine);
+		synchronized(statusLines) {
+			this.statusLines.add(statusLine);
+		}
 	}
 	public void addAllStatusLines(List<StatusLine> statusLine) {
 		if (this.statusLines == null) this.statusLines = new ArrayList<StatusLine>();
-		this.statusLines.addAll(statusLine);
+		synchronized(statusLines) {
+			this.statusLines.addAll(statusLine);
+		}
 	}
 	public String getUri() {
 		return uri;

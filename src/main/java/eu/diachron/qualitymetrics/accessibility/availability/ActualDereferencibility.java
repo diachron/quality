@@ -40,11 +40,11 @@ import eu.diachron.semantics.vocabulary.DQM;
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
  */
-public class Dereferencibility implements QualityMetric {
+public class ActualDereferencibility implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityMetric;
 
-	final static Logger logger = LoggerFactory.getLogger(Dereferencibility.class);
+	final static Logger logger = LoggerFactory.getLogger(ActualDereferencibility.class);
 	
 	private double metricValue = 0.0;
 	private double totalURI = 0;
@@ -84,19 +84,15 @@ public class Dereferencibility implements QualityMetric {
 			ArrayList<String> uriList = new ArrayList<String>();
 			uriList.addAll(uriSet);
 			httpRetreiver.addListOfResourceToQueue(uriList);
-			
-			try {
-				httpRetreiver.start();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			httpRetreiver.start();
 
-			do{
+			do {
 				this.startDereferencingProcess();
 				uriSet.clear();
 				uriSet.addAll(this.notFetchedQueue);
 				this.notFetchedQueue.clear();
-			}while(!this.notFetchedQueue.isEmpty());
+			// Continue trying to dereference all URIs in uriSet, that is, those not fetched up to now
+			} while(!this.uriSet.isEmpty());
 			
 			this.metricCalculated = true;
 		}
@@ -109,7 +105,7 @@ public class Dereferencibility implements QualityMetric {
 	private void startDereferencingProcess() {
 		for(String uri : uriSet){
 			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
-			if (httpResource.getStatusLines() == null) {
+			if (httpResource == null || httpResource.getStatusLines() == null) {
 				this.notFetchedQueue.add(uri);
 			} else {
 				if (this.isDereferenceable(httpResource)) this.dereferencedURI++;
@@ -118,7 +114,7 @@ public class Dereferencibility implements QualityMetric {
 				if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200)
 					this.dereferencedURI = (this.is200AnRDF(httpResource)) ? this.dereferencedURI + 1 : this.dereferencedURI;
 								
-				logger.debug("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
+				logger.trace("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
 	}

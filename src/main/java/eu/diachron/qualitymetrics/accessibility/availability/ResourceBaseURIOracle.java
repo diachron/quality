@@ -47,7 +47,7 @@ public class ResourceBaseURIOracle {
 	 * Maximum number of subject URIs that can be held in the table, a limit is imposed to prevent memory 
 	 * exhaustion when processing very big resources
 	 */
-	private final int maxSubjectURIs = 10000;
+	private final int maxSubjectURIs = 20000;
 	
 	/**
 	 * Default constructor
@@ -215,7 +215,7 @@ public class ResourceBaseURIOracle {
 		// First level validation: all parts of the triple will be required
 		if(subject != null && predicate != null && object != null) {			
 			// Second level validation: all parts of the triple must be URIs
-			if(subject.isURI() && predicate.isURI() && object.isURI()) {				
+			if(subject.isURI() && predicate.isURI() && object.isURI()) {
 				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
 				if(predicate.getURI().equals(RDF.type.getURI()) && object.getURI().equals(VOID.Dataset.getURI())) {
 					// The URI of the subject of such quad, should be the dataset's URL. 
