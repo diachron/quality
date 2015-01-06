@@ -1,13 +1,20 @@
 package eswc15.evaluation;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
@@ -44,7 +51,7 @@ public class Main {
 	private static Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	private static List<EvaluationCase> eCases = new ArrayList<EvaluationCase>();
-	private static String datasetURI = "/Users/jeremy/Downloads/lak-dataset-dump.nt"; //to setup
+	private static String datasetURI = "/Users/jeremy/Downloads/lak-dataset-dump.rdf.tar.gz"; //to setup
 	
 	private static void setUp() throws ClassNotFoundException, IOException{
 		// Setup of metrics to be evaluated
@@ -54,11 +61,10 @@ public class Main {
 		eCases.add(new EvaluationCase("Actual value for Dereferenceability of Back-links", new ActualDereferencibilityBackLinks()));
 //		eCases.add(new EvaluationCase("Actual value for Dereferenceability of Forward-links", new DereferencibilityForwardLinks()));
 //		eCases.add(new EvaluationCase("Actual value for Clustering Coefficiency", new ActualClusteringCoefficiency()));
-		eCases.add(new EvaluationCase("Actual value for Link to External Data Providers", new ActualLinkExternalDataProviders()));
+//		eCases.add(new EvaluationCase("Actual value for Link to External Data Providers", new ActualLinkExternalDataProviders()));
 	}
 	
 	public static void main (String [] args) throws ProcessorNotInitialised, IOException, ClassNotFoundException {
-		
 		// Verify if the path of the dataset was specified as argument
 		if(args != null && args.length > 0) {
 			// The dataset path should be specified as first argument
@@ -161,6 +167,36 @@ public class Main {
 			for(File dsResource : datasetFile.listFiles()) {
 				totalTriples += processResource(metric, dsResource.getAbsolutePath());
 			}
+		} else if (datasetURI.endsWith(".tar.gz")){
+			logger.debug("Dataset is a compressed file...");
+
+
+			 try {
+				TarArchiveInputStream datasetTar = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(datasetURI)));
+
+				TarArchiveEntry entry = null;
+		        String individualFiles;
+		        int offset;
+		        FileOutputStream outputFile=null;
+		            
+				while((entry = datasetTar.getNextTarEntry()) != null) {
+				    individualFiles = entry.getName();
+				    if (individualFiles.startsWith("./")) continue;
+				    byte[] content = new byte[(int) entry.getSize()];
+				    offset=0;
+				    datasetTar.read(content, offset, content.length - offset);
+				    outputFile=new FileOutputStream(new File(individualFiles));
+				    IOUtils.write(content,outputFile);  
+				    outputFile.close();
+				    
+				    totalTriples += processResource(metric, individualFiles);
+				    FileUtils.deleteQuietly(new File(individualFiles));
+				 }
+				 datasetTar.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 		} else {
 			logger.debug("Dataset is a single resource...");
 			
