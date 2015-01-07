@@ -60,8 +60,9 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		// Process subject URI
 		if(!subjectURI.equals("")) {
 			// Extract the TLD of the subject's URI and process it
-			this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI));
-			this.totalDataLevelConstURIs++;
+			if(this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI))) {
+				this.totalDataLevelConstURIs++;
+			}
 		}
 		
 		// As this metric is defined to account for data-level URIs, check that the predicate is not rdf:type
@@ -72,8 +73,9 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			if(!objectURI.equals("")) {
 				// Extract the TLD of the object's URI and process it, a new data-level TLD has been found
 				logger.trace("Data-level URI found in object: {} with predicate: {}", objectURI, quad.getPredicate().getURI());
-				this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI));
-				this.totalDataLevelConstURIs++;
+				if(this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI))) {
+					this.totalDataLevelConstURIs++;
+				}
 			}
 		}
 	}
@@ -104,8 +106,8 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			}
 		}
 		
-		if(totalDataLevelConstURIs > 0) {
-			return (double)totalExtTLDs / (double)totalDataLevelConstURIs;
+		if(this.totalDataLevelConstURIs > 0) {
+			return (double)totalExtTLDs / ((double)this.totalDataLevelConstURIs);
 		} else {
 			return 0.0;
 		}
@@ -123,18 +125,23 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	/**
 	 * Verifies a TLD found in a subject or object and decides if must be added to the set of pay-level domain URIs
 	 */
-	private void processTopLevelDomain(String tld) {
+	private boolean processTopLevelDomain(String tld) {
+		
+		boolean wasAdded = false;
 		
 		if(tld != null && tld.length() > 0) {
 			// Determine whether the top-level domain already exists in the reservoir...
 			if(this.reservoirTldRIs.findItem(tld) == null) {
 				// and add it, if not found
-				this.reservoirTldRIs.add(tld);
+				wasAdded = this.reservoirTldRIs.add(tld);
 				logger.debug("New TLD added to reservoir: {}", tld);
 			} else {
 				logger.debug("TLD already in the reservoir: {}", tld);
+				wasAdded = true;
 			}
 		}
+		
+		return wasAdded;
 	}
 
 }

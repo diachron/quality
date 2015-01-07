@@ -51,12 +51,13 @@ public class HTTPRetriever {
 	 * Maximum number of simultaneous HTTP request that can be sent in separate threads, configuration parameter
 	 * of the performance utilitarian methods for measurement of performance (namely measurement of parallel reqs.)
 	 */
-	private static final int MAX_PARALLEL_REQS = 20;
+	private static final int MAX_PARALLEL_REQS = 10;
 	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
 	 */
 	private static String webProxy = null;
+	private static Integer webProxyPort = null;
 
 	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());	
 	private ExecutorService executor = null;
@@ -252,8 +253,8 @@ public class HTTPRetriever {
 		HttpHost proxyHost = null;
 		
 		// If a proxy was set to be used, set it
-		if(getWebProxy() != null && !getWebProxy().trim().equals("")) {
-			proxyHost = new HttpHost(getWebProxy());
+		if(getWebProxy() != null && !getWebProxy().trim().equals("") && getWebProxyPort() != null) {
+			proxyHost = new HttpHost(getWebProxy(), getWebProxyPort());
 		}
 		
 		return RequestConfig.custom().
@@ -273,18 +274,34 @@ public class HTTPRetriever {
 	
 	/**
 	 * Sets the URL of the web proxy to be used when performing HTTP requests
-	 * @param proxyUrlPort URL and port of the proxy (e.g. http://webcache.iai.uni-bonn.de:3128)
+	 * @param proxyUrlPort URL and port of the proxy (e.g. webcache.iai.uni-bonn.de)
 	 */
-	public static void setWebProxy(String proxyUrlPort) {
-		webProxy = proxyUrlPort;
+	public static void setWebProxy(String proxyServer) {
+		webProxy = proxyServer;
+	}
+	
+	/**
+	 * Sets the port of the web proxy to be used when performing HTTP requests
+	 * @param proxyUrlPort URL and port of the proxy (e.g. 3128)
+	 */
+	public static void setWebProxyPort(int proxyPort) {
+		webProxyPort = proxyPort;
+	}
+	
+	/**
+	 * Gets the web proxy server to be used when performing HTTP requests
+	 * @param proxyUrlPort URL and port of the proxy (e.g. webcache.iai.uni-bonn.de)
+	 */
+	public static String getWebProxy() {
+		return webProxy;
 	}
 	
 	/**
 	 * Gets the URL of the web proxy to be used when performing HTTP requests
-	 * @param proxyUrlPort URL and port of the proxy (e.g. http://webcache.iai.uni-bonn.de:3128)
+	 * @param proxyUrlPort URL and port of the proxy (e.g. 3128)
 	 */
-	public static String getWebProxy() {
-		return webProxy;
+	public static Integer getWebProxyPort() {
+		return webProxyPort;
 	}
 	
 	/**

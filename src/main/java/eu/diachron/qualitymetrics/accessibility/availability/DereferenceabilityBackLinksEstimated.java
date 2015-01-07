@@ -102,7 +102,7 @@ public class DereferenceabilityBackLinksEstimated implements QualityMetric {
 	 * @return value of the dereferencibility back links metric computed on the current resource
 	 */	
 	public double metricValue() {
-		
+
 		// Determine the base URI of the resource
 		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
 

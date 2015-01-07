@@ -111,7 +111,7 @@ public class DereferenceabilityEstimated implements QualityMetric {
 			for(DerefResult curTldDeRefRes : lstDeRefTlds) {
 				// Obtain the TLD corresponding to the URI whose result currently is being examined
 				Tld derefTld = this.tldsReservoir.findItem(new Tld(curTldDeRefRes.uri));
-				totalUris += ((derefTld.fqUris != null)?(derefTld.fqUris.getTotalAddedItems()):(0));
+				totalUris += ((derefTld.fqUris != null)?(derefTld.fqUris.size()):(0));
 				
 				// Only URIs comprised by dereferenceable TLDs are subject to be counted as successfully dereferenced
 				if(curTldDeRefRes.isDeref && derefTld.fqUris != null) {
