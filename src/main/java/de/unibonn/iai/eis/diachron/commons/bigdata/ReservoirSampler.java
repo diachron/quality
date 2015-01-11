@@ -130,6 +130,15 @@ public class ReservoirSampler<T> {
 	public int size() {
 		return this.lstItems.size();
 	}
+	
+	/**
+	 * Tells whether the reservoir is already full, that is, if the next added item will be randomly 
+	 * accepted or discarded and when accepted, it will replace an existing item
+	 * @return True if the reservoiris full, false otherwise
+	 */
+	public boolean isFull() {
+		return (this.size() >= this.k);
+	}
 
 	/**
 	 * Returns the size of the reservoir, that is, the maximum number of items it will hold

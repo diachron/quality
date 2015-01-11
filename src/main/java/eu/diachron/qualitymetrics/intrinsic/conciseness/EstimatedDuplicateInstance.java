@@ -20,11 +20,11 @@ import eu.diachron.semantics.vocabulary.DQM;
  * in the sense that, when determining if an instance declaration was previously observed in the dataset, 
  * false positives/negatives might occur.
  */
-public class UsageUnambiguousAnnotationsEstimated implements ComplexQualityMetric {
+public class EstimatedDuplicateInstance implements ComplexQualityMetric {
 	
-	private static Logger logger = LoggerFactory.getLogger(UsageUnambiguousAnnotationsEstimated.class);
+	private static Logger logger = LoggerFactory.getLogger(EstimatedDuplicateInstance.class);
 	
-	private final Resource METRIC_URI = DQM.UsageUnambiguousAnnotationsMetric;
+	private final Resource METRIC_URI = DQM.DuplicateInstanceMetric;
 	
 	/**
 	 * Randomized Load-balanced Biased Sampling Bloom Filter, used as repository to find duplicate instance declarations

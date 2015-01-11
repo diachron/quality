@@ -46,33 +46,36 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	 */
 	public void compute(Quad quad) {
 		// Every time a new quad is considered, get the URI of the subject
-		String subjectURI = quad.getSubject().getURI();
-		String predicateURI = ((quad.getPredicate() != null)?(quad.getPredicate().toString()):(""));
-		String objectValue = ((quad.getObject() != null)?(quad.getObject().toString()):(""));;
-		
-		// Serializate statement
-		String statement = predicateURI + " " + objectValue;
-		
-		// Check if the same object is being processed
-		if(!subjectURI.equals(this.currentSubjectURI)) {
+		if(quad.getSubject() != null && quad.getSubject().isURI()) {
 			
-			// Check if subject just finished being created is in the filter
-			if(this.currentStatements != null) {
+			String subjectURI = quad.getSubject().getURI();
+			String predicateURI = ((quad.getPredicate() != null)?(quad.getPredicate().toString()):(""));
+			String objectValue = ((quad.getObject() != null)?(quad.getObject().toString()):(""));;
+			
+			// Serializate statement
+			String statement = predicateURI + " " + objectValue;
+			
+			// Check if the same object is being processed
+			if(!subjectURI.equals(this.currentSubjectURI)) {
 				
-				if(!this.bloomFilterDuplicates.put(this.currentStatements.toString())) {
-					// Bits didn't changed, it might be first time that element was added, but most likely its duplicated
-					this.estimatedDuplInstances++;
+				// Check if subject just finished being created is in the filter
+				if(this.currentStatements != null) {
+					
+					if(!this.bloomFilterDuplicates.put(this.currentStatements.toString())) {
+						// Bits didn't changed, it might be first time that element was added, but most likely its duplicated
+						this.estimatedDuplInstances++;
+					}
 				}
+				
+				// A new instance is to be created
+				this.currentStatements = new TreeSet<String>();
+				this.currentSubjectURI = subjectURI;
+				this.totalCreatedInstances++;
+				logger.debug("Creating new instance with subject: " + this.currentSubjectURI);
 			}
 			
-			// A new instance is to be created
-			this.currentStatements = new TreeSet<String>();
-			this.currentSubjectURI = subjectURI;
-			this.totalCreatedInstances++;
-			logger.debug("Creating new instance with subject: " + this.currentSubjectURI);
+			this.currentStatements.add(statement);
 		}
-		
-		this.currentStatements.add(statement);
 	}
 
 	/**

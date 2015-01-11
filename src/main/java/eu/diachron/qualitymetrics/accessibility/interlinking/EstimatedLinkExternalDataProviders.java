@@ -31,7 +31,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	* A reservoir containing the top-level domains (or base URIs) found among all the data-level constants of the 
 	* dataset (data level constants are: subjects of triples and objects of triples not subject to an rdf:type predicate)
 	*/
-	private ReservoirSampler<String> reservoirTldRIs = new ReservoirSampler<String>(5000, true);
+	private ReservoirSampler<String> reservoirTldRIs = new ReservoirSampler<String>(100000, true);
 	
 	/**
      * Object used to determine the base URI of the resource based on its contents
@@ -60,9 +60,8 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		// Process subject URI
 		if(!subjectURI.equals("")) {
 			// Extract the TLD of the subject's URI and process it
-			if(this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI))) {
-				this.totalDataLevelConstURIs++;
-			}
+			this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI));
+			this.totalDataLevelConstURIs++;
 		}
 		
 		// As this metric is defined to account for data-level URIs, check that the predicate is not rdf:type
@@ -73,9 +72,8 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			if(!objectURI.equals("")) {
 				// Extract the TLD of the object's URI and process it, a new data-level TLD has been found
 				logger.trace("Data-level URI found in object: {} with predicate: {}", objectURI, quad.getPredicate().getURI());
-				if(this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI))) {
-					this.totalDataLevelConstURIs++;
-				}
+				this.processTopLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI));
+				this.totalDataLevelConstURIs++;
 			}
 		}
 	}
@@ -93,7 +91,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		String resTLD = ResourceBaseURIOracle.extractPayLevelDomainURI(resBaseURI);
 		
 		// Count the number of external TLDs found in the resource
-		int totalExtTLDs = 0;
+		int totalExtTLDs = 0;		
 		
 		for(String curTLD : this.reservoirTldRIs.getItems()) {
 			
@@ -106,8 +104,17 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			}
 		}
 		
+		// Reservoir sampling starts discarding URIs after the reservoir gets filled, in order to prevent it from
+		// growing beyond its maximum size. If that's the case, the size of the reservoir is to be used as base in the
+		// computation of the external TLDs ratio, instead of the actual total number of data-level constant URIs found
+		int baseCountDataLevelConstURIs = this.totalDataLevelConstURIs;
+		
+		if(this.reservoirTldRIs.isFull()) {
+			baseCountDataLevelConstURIs = this.reservoirTldRIs.size();
+		}
+		
 		if(this.totalDataLevelConstURIs > 0) {
-			return (double)totalExtTLDs / ((double)this.totalDataLevelConstURIs);
+			return (double)totalExtTLDs / ((double)baseCountDataLevelConstURIs);
 		} else {
 			return 0.0;
 		}
