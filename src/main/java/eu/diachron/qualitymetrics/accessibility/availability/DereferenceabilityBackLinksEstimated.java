@@ -46,7 +46,7 @@ public class DereferenceabilityBackLinksEstimated implements QualityMetric {
 	* The parent URI is obtained by taking the substring behind the last appearance of "/" in the object's URI. Items in the 
  	* reservoir also contain the number of times the parent URI has appeared as part of the objects of the processed triples
 	*/
-	private ReservoirSampler<ParentUri> reservoirObjectURIs = new ReservoirSampler<ParentUri>(5000, true);
+	private ReservoirSampler<ParentUri> reservoirObjectURIs = new ReservoirSampler<ParentUri>(100000, true);
 	
     /**
      * Object used to determine the base URI of the resource based on its contents and to count the number of 
@@ -111,10 +111,20 @@ public class DereferenceabilityBackLinksEstimated implements QualityMetric {
 			// Look for the base URI among the parent URIs in the reservoir
 			ParentUri baseParentUri = this.reservoirObjectURIs.findItem(new ParentUri(resourceBaseURI));
 			logger.debug("Resource base URI: {}, found in reservoir: {}", resourceBaseURI, ((baseParentUri != null)?(baseParentUri.numOccurrences):("-")));
-			
+						
 			if(baseParentUri != null) {
+				// Determine the appropriate base for the ratio computation, if the reservoir discarded any items
+				if(this.reservoirObjectURIs.isFull()) {
+					this.totalObjects = 0;
+					for(ParentUri pUri : this.reservoirObjectURIs.getItems()) {
+						this.totalObjects += pUri.numOccurrences;
+					}
+					logger.debug("Reservoir full, computed adjusted total number of objects: {}", this.totalObjects);
+				}
+				
 				// Get the total number of inlinks (objects part of the resource base URI)
 				this.totalInlinkObjects = baseParentUri.numOccurrences;
+				
 				return ((double)this.totalInlinkObjects / (double)this.totalObjects);
 			} else {
 				// Since the reservoir starts to randomly discard items when its full, it's possible that the base resource is

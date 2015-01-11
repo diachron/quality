@@ -51,13 +51,20 @@ public class HTTPRetriever {
 	 * Maximum number of simultaneous HTTP request that can be sent in separate threads, configuration parameter
 	 * of the performance utilitarian methods for measurement of performance (namely measurement of parallel reqs.)
 	 */
-	private static final int MAX_PARALLEL_REQS = 10;
+	private static final int MAX_PARALLEL_REQS = 15;
 	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
 	 */
 	private static String webProxy = null;
 	private static Integer webProxyPort = null;
+	
+	/**
+	 * Indicates whether redirections obtained after successfully completing an HTTP request shold be followed
+	 * Note that Apache HTTP Client automatically follows most redirect responses (3xx), hence following redirections
+	 * is not necessary and redundant in most cases
+	 */
+	private static boolean followRedirections = true;
 
 	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());	
 	private ExecutorService executor = null;
@@ -116,6 +123,8 @@ public class HTTPRetriever {
 			httpclient.start();
 			
 			for(final String queuePeek : this.httpQueue) {
+				// TODO: Remove artificial delay!!!! There must be a way to get rid of this
+				Thread.sleep(200);
 				
 				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
 					// Request won't be sent, thus one pending request ought to be discounted from the latch
@@ -139,19 +148,19 @@ public class HTTPRetriever {
 								public void completed(final HttpResponse response) {
 									newResource.addResponse(response);
 									try {
-										if (localContext != null && localContext.getRedirectLocations() != null && localContext.getRedirectLocations().size() >= 1) {
+										if (followRedirections && localContext != null && localContext.getRedirectLocations() != null && localContext.getRedirectLocations().size() >= 1) {
 											List<URI> uriRoute = new ArrayList<URI>();
 											uriRoute.add(request.getURI());
 											uriRoute.addAll(localContext.getRedirectLocations());
 											try {
 												logger.trace("Initiating redirection set for URI: {}. Num. requests: {}", queuePeek, uriRoute.size());
 												newResource.addAllResponses(followAsyncRedirection(uriRoute));
-												logger.trace("Completed redirection set for URI: {}", queuePeek);
+												logger.debug("Request completed with redirection set for URI: {}. {} pending requests", queuePeek, mainHTTPRetreiverLatch.getCount());
 											} catch (IOException e) {
 												logger.warn("Error following redirection: {}. Error: {}", uriRoute, e);
 											}
 										} else {
-											logger.trace("Request for URI: {} successful", queuePeek);
+											logger.debug("Request for URI: {} successful. {}. {} redirs. {} pending requests", queuePeek, response.getStatusLine(), ((localContext.getRedirectLocations() != null)?(localContext.getRedirectLocations().size()):(0)), mainHTTPRetreiverLatch.getCount());
 											newResource.addStatusLines(response.getStatusLine());
 										}
 									} catch (Exception e) {
@@ -169,12 +178,12 @@ public class HTTPRetriever {
 									newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed"));
 									DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 		
-									logger.debug("Failed in retreiving request : {}, with the following exception : {}",request.getURI().toString(),ex);
+									logger.debug("Failed in retreiving request : {}, with the following exception : {}. {} pending requests", request.getURI().toString(), ex, mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
 								}
 		
 								public void cancelled() {
-									logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
+									logger.debug("The retreival for {} was cancelled. {} pending requests",request.getURI().toString(), mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
 								}
 							});
@@ -216,23 +225,24 @@ public class HTTPRetriever {
 				httpclient.execute(request, localContext, new FutureCallback<HttpResponse>() {
 
 							public void completed(final HttpResponse response) {
+								logger.debug("---> Redirection completed: {}, {} pending requests", request.getURI().toString(), redirectionLatch.getCount());
 								redirectionLatch.countDown();
 								httpResponses.add(response);
 							}
 
 							public void failed(final Exception ex) {
-								logger.debug("Failed in retreiving follow redirection request : {}, with the following exception : {}",request.getURI().toString(),ex.getLocalizedMessage());
+								logger.debug("---> Failed in retreiving follow redirection request : {}, with the following exception : {}. {} pending requests", request.getURI().toString(), ex.getLocalizedMessage(), redirectionLatch.getCount());
 								redirectionLatch.countDown();
 							}
 
 							public void cancelled() {
-								logger.debug("The retreival for {} was cancelled.",request.getURI().toString());
+								logger.debug("---> The retreival for {} was cancelled. {} pending requests", request.getURI().toString(), redirectionLatch.getCount());
 								redirectionLatch.countDown();
 							}
 						});
 			}
 			
-			redirectionLatch.await();			
+			redirectionLatch.await();
 		} finally {
 			httpclient.close();
 		}
@@ -258,9 +268,9 @@ public class HTTPRetriever {
 		}
 		
 		return RequestConfig.custom().
-				setSocketTimeout(1200000).
-				setConnectTimeout(1200000).
-				setConnectionRequestTimeout(1200000).
+				setSocketTimeout(1000000).
+				setConnectTimeout(1000000).
+				setConnectionRequestTimeout(1000000).
 				setRedirectsEnabled(followRedirects).
 				setProxy(proxyHost).
 				setAuthenticationEnabled(false).
@@ -289,6 +299,14 @@ public class HTTPRetriever {
 	}
 	
 	/**
+	 * Indicates if redirections returned on successful HTTP responses shall be followed
+	 * @param follow True if redirections ought to be followed
+	 */
+	public static void setFollowRedirections(boolean follow) {
+		followRedirections = follow;
+	}
+	
+	/**
 	 * Gets the web proxy server to be used when performing HTTP requests
 	 * @param proxyUrlPort URL and port of the proxy (e.g. webcache.iai.uni-bonn.de)
 	 */
@@ -303,6 +321,14 @@ public class HTTPRetriever {
 	public static Integer getWebProxyPort() {
 		return webProxyPort;
 	}
+	
+	/**
+	 * Gets whether redirections returned on successful HTTP responses shall be followed
+	 * @return true if redirections will be followed, false otherwise
+	 */
+	public static boolean getFollowRedirections() {
+		return followRedirections;
+	}	
 	
 	/**
 	 * Extract the Top Level Domain (for example http://bbc.co.uk) of the URI provided as parameter. 

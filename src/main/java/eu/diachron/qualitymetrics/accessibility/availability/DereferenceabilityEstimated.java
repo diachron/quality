@@ -44,7 +44,7 @@ public class DereferenceabilityEstimated implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private final int MAX_TLDS = 10000;
+	private final int MAX_TLDS = 100;
 	private final int MAX_FQURIS_PER_TLD = 10000;
 	
 	/**
@@ -120,11 +120,11 @@ public class DereferenceabilityEstimated implements QualityMetric {
 					
 					// Count those successfully dereferenced
 					for(DerefResult curUriDeRefRes : lstDeRefUris) {						
-						if(curUriDeRefRes.isDeref) {
-							logger.debug("URI successfully dereferenced: {}", curUriDeRefRes.uri);
+						if(curUriDeRefRes.isDeref && curUriDeRefRes.isRdfXml) {
+							logger.debug("-- URI successfully dereferenced: {}", curUriDeRefRes.uri);
 							totalDerefUris += 1;
 						} else {
-							logger.debug("URI: {} failed to be dereferenced", curTldDeRefRes.uri);							
+							logger.debug("-- URI: {} failed to be dereferenced", curUriDeRefRes.uri);							
 						}
 					}
 					logger.debug("TLD: {} successfully dereferenced, sampling from: {} URIs", curTldDeRefRes.uri, derefTld.countFqUris());
@@ -205,6 +205,7 @@ public class DereferenceabilityEstimated implements QualityMetric {
 				
 				if (this.isDereferenceable(httpResource)) {
 					curUrlResult.isDeref = true;
+					curUrlResult.isRdfXml = true;
 				}
 				if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200) {
 					curUrlResult.isDeref = true;
@@ -259,9 +260,13 @@ public class DereferenceabilityEstimated implements QualityMetric {
 	}
 	
 	private boolean mapDerefStatusCode(StatusCode statusCode){
-		switch(statusCode){
-			case SC303 : case HASH : return true;
-			default : return false;
+		if(statusCode == null) {
+			return false;
+		} else {
+			switch(statusCode){
+				case SC303 : case HASH : return true;
+				default : return false;
+			}
 		}
 	}
 	
