@@ -108,7 +108,9 @@ public class ActualDereferencibility implements QualityMetric {
 			if (httpResource == null || httpResource.getStatusLines() == null) {
 				this.notFetchedQueue.add(uri);
 			} else {
-				if (this.isDereferenceable(httpResource)) this.dereferencedURI++;
+				if (this.isDereferenceable(httpResource)) { 
+					this.dereferencedURI++;
+				}
 				this.totalURI++;
 
 				if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200)
@@ -145,17 +147,26 @@ public class ActualDereferencibility implements QualityMetric {
 	
 	private List<Integer> getStatusCodes(List<StatusLine> statusLines){
 		ArrayList<Integer> codes = new ArrayList<Integer>();
-		for(StatusLine s : statusLines){
-			codes.add(s.getStatusCode());
+		
+		if(statusLines != null) {
+			synchronized(statusLines) {
+				for(StatusLine s : statusLines){
+					codes.add(s.getStatusCode());
+				}
+			}
 		}
 		
 		return codes;
 	}
 	
 	private boolean mapDerefStatusCode(StatusCode statusCode){
-		switch(statusCode){
-			case SC303 : case HASH : return true;
-			default : return false;
+		if(statusCode == null) {
+			return false;
+		} else {
+			switch(statusCode){
+				case SC303 : case HASH : return true;
+				default : return false;
+			}
 		}
 	}
 	
