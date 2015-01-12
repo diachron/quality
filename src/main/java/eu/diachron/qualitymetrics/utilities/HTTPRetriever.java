@@ -124,7 +124,7 @@ public class HTTPRetriever {
 			
 			for(final String queuePeek : this.httpQueue) {
 				// TODO: Remove artificial delay!!!! There must be a way to get rid of this
-				Thread.sleep(200);
+				Thread.sleep(100);
 				
 				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
 					// Request won't be sent, thus one pending request ought to be discounted from the latch

@@ -136,7 +136,11 @@ public class ActualExtensionalConciseness implements QualityMetric {
 		} catch(Throwable ex) {
 			logger.warn("Persistent HashMap or backing database could not be closed", ex);
 		} finally {
-			super.finalize();
+			try {
+				super.finalize();
+			} catch(Throwable ex) {
+				logger.warn("Persistent HashMap or backing database could not be closed", ex);
+			}
 		}
 	}
 	

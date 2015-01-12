@@ -170,9 +170,15 @@ public class ActualDereferencibility implements QualityMetric {
 		}
 	}
 	
-	private boolean is200AnRDF(CachedHTTPResource resource){
-		for (SerialisableHttpResponse response : resource.getResponses()){
-			if (response.getHeaders("Content-Type").equals("application/rdf+xml")) return true;
+	private boolean is200AnRDF(CachedHTTPResource resource) {
+		if(resource != null && resource.getResponses() != null) {
+			for (SerialisableHttpResponse response : resource.getResponses()) {
+				if(response != null && response.getHeaders("Content-Type") != null) {
+					if (response.getHeaders("Content-Type").equals("application/rdf+xml")) { 
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}
