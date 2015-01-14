@@ -28,7 +28,7 @@ public class EstimateClusteringCoefficientMeasure {
 	/**
 	 * Multiplying factor for the computation of the mixing time
 	 */
-	private static double mixigTimeFactor = 10.0; 
+	private static double mixingTimeFactor = 1.0; 
 	
 	public EstimateClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
@@ -55,7 +55,7 @@ public class EstimateClusteringCoefficientMeasure {
 
 	
 	private String getRandomStartNode(){
-		mixingTime = 10* (Math.log(_graph.getVertexCount()) * Math.log(_graph.getVertexCount())); //this is the most important factor.. the larger the mixing
+		mixingTime = mixingTimeFactor * (Math.log(_graph.getVertexCount()) * Math.log(_graph.getVertexCount())); //this is the most important factor.. the larger the mixing
 																									//time, the more nodes will be available in the random walk
 		//Get Start Node
 		Iterator<String> iterNodes = _graph.getVertices().iterator();
@@ -67,7 +67,7 @@ public class EstimateClusteringCoefficientMeasure {
 		return node;
 	}
 	
-	private int[][] A;
+	private Map<Integer, List<Integer>> A = new HashMap<Integer, List<Integer>>();
 	private Map<String, Integer> A_index = new HashMap<String, Integer>(); // holds the ith index of the node in the adjacency matrix
 	private Map<String, Integer> vertexDegree; //vertex degree for random walk nodes
 	
@@ -81,12 +81,6 @@ public class EstimateClusteringCoefficientMeasure {
 		double probabilityCounter = 0.0;
 		
 		vertexDegree = new HashMap<String, Integer>();
-		int adjMatSize = (int) Math.floor(mixingTime);
-		this.A = new int[adjMatSize][adjMatSize];
-		for (int i = 0; i < adjMatSize; i++){
-			for(int j = 0; i< adjMatSize; j++)
-				this.A[i][j] = 0;
-		}
 		
 		String currentNode = startNode;
 		int i = 0;
@@ -104,19 +98,64 @@ public class EstimateClusteringCoefficientMeasure {
 			
 			//walk to next node random
 			Random rand = new Random();
-			i++;
 			int randomNumber = rand.nextInt(totalDegree);
 			Object[] arrCurNodeNeighbors = _graph.getNeighbors(currentNode).toArray();
 			//use the module operation to prevent "index out of bounds" exceptions, in some cases totalDegree is getting to be > arrCurNodeNeighbors.length
 			String nextNode = (String)(arrCurNodeNeighbors[randomNumber % arrCurNodeNeighbors.length]);
+			
 			// fill adj matrix
-			this.A_index.put(nextNode, new Integer(i));
-			this.A[i-1][i] = 1;
-//			this.A[i][i-1] = 1; -> we don't need this because it is a directed graph
+			int curI = this.A_index.get(currentNode);
+			int nextI = (this.A_index.containsKey(nextNode)) ? this.A_index.get(nextNode) : ++i;
+			this.A_index.put(nextNode, new Integer(nextI));
+			this.addToMatrix(curI, nextI);
+			//this._A[curI][nextI] = 1;
+			//this._A[nextI][curI] = 1; // because we are assuming that nodes are not directed according to Hardiman and Katzir
 			currentNode = nextNode;
 						
 			randomWalkPath.add(currentNode);
 			resourcesInRandomPath.add(currentNode);
+		}
+		this.fillRestOfMatrix();
+	}
+	
+	int maxMatrix = Integer.MIN_VALUE;
+	private void addToMatrix(int i, int j){
+		List<Integer> lst = new ArrayList<Integer>();
+		if (this.A.containsKey(i)) lst = this.A.get(i);
+		if (lst.size() < j) lst.addAll(this.fillArrayList(lst, j));
+		else {
+			if (lst.size() > j) lst.remove(j);
+			lst.add(j, 1);
+		}
+		this.A.put(i, lst);
+		
+		lst = new ArrayList<Integer>();
+		if (this.A.containsKey(j)) lst = this.A.get(j);
+		if (lst.size() < i) lst.addAll(this.fillArrayList(lst, i));
+		else {
+			if (lst.size() > i) lst.remove(i);
+			lst.add(i, 1);
+		}
+		this.A.put(j, lst);
+	}
+	
+	private List<Integer> fillArrayList(List<Integer> lst, int upTo){
+		List<Integer> retList = new ArrayList<Integer>(lst);
+		for(int i = lst.size() ; i < upTo; i++)
+			retList.add(0);
+		retList.add(1);
+		
+		maxMatrix =  (maxMatrix < upTo) ? upTo : maxMatrix;
+		
+		return retList;
+	}
+	
+	private void fillRestOfMatrix(){
+		for(Integer i : this.A.keySet()){
+			List<Integer> lst = this.A.get(i);
+			for(int j = lst.size() ; j <= maxMatrix +1; j++)
+				lst.add(0);
+			this.A.put(i, lst);
 		}
 	}
 	
@@ -172,13 +211,14 @@ public class EstimateClusteringCoefficientMeasure {
 	
 	private double calculateWeightedSum(){
 		double val = 0.0;
-		for(int k = 1; k <= (randomWalkPath.size() - 1); k++){
-			double _adjM = (double) this.A[k-1][k+1];
-			val += (_adjM) * (1.0 / ((double) vertexDegree.get(randomWalkPath.get(k))));
+		for(int _k = 1; _k <= (randomWalkPath.size() - 1); _k++){
+			int k = this.A_index.get(this.randomWalkPath.get(_k));
+			if (k < 1) continue;
+			double _adjM = (double) (this.A.get(k-1).get(k+1));//(this._A[k-1][k+1]);
+			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(k))));
 		}
 		return val;
 	}
-	
 	
 	//estimate ideal - a more accurate mixing time would give us a better estimated result
 	public double getEstimatedMeasure(){
@@ -205,7 +245,7 @@ public class EstimateClusteringCoefficientMeasure {
 	 * @return current mixing time factor
 	 */
 	public static double getMixigTimeFactor() {
-		return mixigTimeFactor;
+		return mixingTimeFactor;
 	}
 
 	/**
@@ -213,8 +253,8 @@ public class EstimateClusteringCoefficientMeasure {
 	 * to this factor. Get the larger the mixing time, the more nodes will be available in the random walk
 	 * @param mixigTimeFactor current mixing time factor
 	 */
-	public static void setMixigTimeFactor(double mixigTimeFactor) {
-		EstimateClusteringCoefficientMeasure.mixigTimeFactor = mixigTimeFactor;
+	public static void setMixigTimeFactor(double mixingTimeFactor) {
+		EstimateClusteringCoefficientMeasure.mixingTimeFactor = mixingTimeFactor;
 	}
 
 }
