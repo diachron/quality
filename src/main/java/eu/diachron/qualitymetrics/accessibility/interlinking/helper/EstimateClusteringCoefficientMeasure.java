@@ -25,6 +25,11 @@ public class EstimateClusteringCoefficientMeasure {
 	private MapDBGraph _graph;
 	private double estimateMeasure = Double.MIN_VALUE;
 	
+	/**
+	 * Multiplying factor for the computation of the mixing time
+	 */
+	private static double mixigTimeFactor = 10.0; 
+	
 	public EstimateClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
 	}
@@ -87,7 +92,9 @@ public class EstimateClusteringCoefficientMeasure {
 			//walk to next node random
 			Random rand = new Random();
 			int randomNumber = rand.nextInt(totalDegree);
-			currentNode = (String) (_graph.getNeighbors(currentNode).toArray()[randomNumber]);
+			Object[] arrCurNodeNeighbors = _graph.getNeighbors(currentNode).toArray();
+			//use the module operation to prevent "index out of bounds" exceptions, in some cases totalDegree is getting to be > arrCurNodeNeighbors.length
+			currentNode = (String)(arrCurNodeNeighbors[randomNumber % arrCurNodeNeighbors.length]);
 			
 			randomWalkPath.add(currentNode);
 			resourcesInRandomPath.add(currentNode);
@@ -163,4 +170,23 @@ public class EstimateClusteringCoefficientMeasure {
 		
 		return this.estimateMeasure;
 	}
+
+	/**
+	 * Returns the current value set for the mixing time factor, the computed mixing time will be directly proportional
+	 * to this factor. Get the larger the mixing time, the more nodes will be available in the random walk
+	 * @return current mixing time factor
+	 */
+	public static double getMixigTimeFactor() {
+		return mixigTimeFactor;
+	}
+
+	/**
+	 * Sets the current value set for the mixing time factor, the computed mixing time will be directly proportional
+	 * to this factor. Get the larger the mixing time, the more nodes will be available in the random walk
+	 * @param mixigTimeFactor current mixing time factor
+	 */
+	public static void setMixigTimeFactor(double mixigTimeFactor) {
+		EstimateClusteringCoefficientMeasure.mixigTimeFactor = mixigTimeFactor;
+	}
+
 }

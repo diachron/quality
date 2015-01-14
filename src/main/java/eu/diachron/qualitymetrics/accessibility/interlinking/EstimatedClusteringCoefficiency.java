@@ -4,6 +4,9 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -18,6 +21,8 @@ import eu.diachron.semantics.vocabulary.DQM;
  * 
  */
 public class EstimatedClusteringCoefficiency implements QualityMetric {
+	
+	private final static Logger logger = LoggerFactory.getLogger(EstimatedClusteringCoefficiency.class);
 
 	private MapDBGraph graph = new MapDBGraph();
 	
@@ -47,9 +52,6 @@ public class EstimatedClusteringCoefficiency implements QualityMetric {
 		graph.addConnectedNodes(subject, object, predicate);
 	}
 	
-	
-	
-
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
@@ -60,6 +62,7 @@ public class EstimatedClusteringCoefficiency implements QualityMetric {
 
 	public double metricValue() {
 		EstimateClusteringCoefficientMeasure ccm = new EstimateClusteringCoefficientMeasure(graph);
+		logger.debug("Computing estimated clustering coefficiency measure. Mixing factor: {}", EstimateClusteringCoefficientMeasure.getMixigTimeFactor());
 
 		return ccm.getIdealMeasure();
 	}
