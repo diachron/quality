@@ -78,14 +78,16 @@ public class EstimateClusteringCoefficientMeasure {
 		randomWalkPath.add(startNode);
 		resourcesInRandomPath.add(startNode);
 		
-		double probabilityCounter = 0.0;
+//		double probabilityCounter = 0.0;
 		
 		vertexDegree = new HashMap<String, Integer>();
 		
 		String currentNode = startNode;
 		int i = 0;
 		this.A_index.put(startNode, new Integer(i));
-		while(probabilityCounter < mixingTime){
+		
+		int numSteps = 0;
+		while(numSteps < mixingTime){
 			int totalDegree = 0;
 			if (vertexDegree.containsKey(currentNode)) {
 				totalDegree = vertexDegree.get(currentNode);
@@ -94,7 +96,7 @@ public class EstimateClusteringCoefficientMeasure {
 				degreeRandomPath += totalDegree;
 				vertexDegree.put(currentNode, totalDegree);
 			}
-			probabilityCounter += (1.0/(double)totalDegree);
+			numSteps++;// probabilityCounter = (1.0/(double)totalDegree);
 			
 			//walk to next node random
 			Random rand = new Random();
@@ -115,14 +117,12 @@ public class EstimateClusteringCoefficientMeasure {
 			randomWalkPath.add(currentNode);
 			resourcesInRandomPath.add(currentNode);
 		}
-		this.fillRestOfMatrix();
 	}
 	
-	int maxMatrix = Integer.MIN_VALUE;
 	private void addToMatrix(int i, int j){
 		List<Integer> lst = new ArrayList<Integer>();
 		if (this.A.containsKey(i)) lst = this.A.get(i);
-		if (lst.size() < j) lst.addAll(this.fillArrayList(lst, j));
+		if (lst.size() < j) lst = this.fillArrayList(lst, j);
 		else {
 			if (lst.size() > j) lst.remove(j);
 			lst.add(j, 1);
@@ -131,7 +131,7 @@ public class EstimateClusteringCoefficientMeasure {
 		
 		lst = new ArrayList<Integer>();
 		if (this.A.containsKey(j)) lst = this.A.get(j);
-		if (lst.size() < i) lst.addAll(this.fillArrayList(lst, i));
+		if (lst.size() < i) lst = this.fillArrayList(lst, i);
 		else {
 			if (lst.size() > i) lst.remove(i);
 			lst.add(i, 1);
@@ -144,16 +144,14 @@ public class EstimateClusteringCoefficientMeasure {
 		for(int i = lst.size() ; i < upTo; i++)
 			retList.add(0);
 		retList.add(1);
-		
-		maxMatrix =  (maxMatrix < upTo) ? upTo : maxMatrix;
-		
+				
 		return retList;
 	}
 	
 	private void fillRestOfMatrix(){
 		for(Integer i : this.A.keySet()){
-			List<Integer> lst = this.A.get(i);
-			for(int j = lst.size() ; j <= maxMatrix +1; j++)
+			List<Integer> lst = this.A.get(i);	
+			for(int j = lst.size() ; j < this.A.keySet().size(); j++)
 				lst.add(0);
 			this.A.put(i, lst);
 		}
@@ -213,7 +211,7 @@ public class EstimateClusteringCoefficientMeasure {
 		double val = 0.0;
 		for(int _k = 1; _k <= (randomWalkPath.size() - 1); _k++){
 			int k = this.A_index.get(this.randomWalkPath.get(_k));
-			if (k < 1) continue;
+			if ((k < 1) || (k == this.A.keySet().size() - 1)) continue;
 			double _adjM = (double) (this.A.get(k-1).get(k+1));//(this._A[k-1][k+1]);
 			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(k))));
 		}
@@ -224,6 +222,7 @@ public class EstimateClusteringCoefficientMeasure {
 	public double getEstimatedMeasure(){
 		if (this.estimateMeasure != Double.MIN_VALUE) return this.estimateMeasure; 
 		this.randomWalk();
+		this.fillRestOfMatrix();
 		
 		double phi = 0.0; //the weighted sum
 		double psi = 0.0; // the sum of the sampled nodes
