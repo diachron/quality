@@ -4,6 +4,8 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 
+import java.io.FileNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +64,8 @@ public class EstimatedClusteringCoefficiency implements QualityMetric {
 	}
 
 	public double metricValue() {
+		graph.fillRestOfMatrix();
+
 		EstimateClusteringCoefficientMeasure ccm = new EstimateClusteringCoefficientMeasure(graph);
 		logger.debug("Computing estimated clustering coefficiency measure. Mixing factor: {}", EstimateClusteringCoefficientMeasure.getMixigTimeFactor());
 

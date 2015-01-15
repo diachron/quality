@@ -28,7 +28,7 @@ public class EstimateClusteringCoefficientMeasure {
 	/**
 	 * Multiplying factor for the computation of the mixing time
 	 */
-	private static double mixingTimeFactor = 0.3; 
+	private static double mixingTimeFactor = 0.5; 
 	
 	public EstimateClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
@@ -50,7 +50,6 @@ public class EstimateClusteringCoefficientMeasure {
 	
 	private List<String> randomWalkPath = new ArrayList<String>(); // This contains a list of nodes in a random walk path
 	private Set<String> resourcesInRandomPath = new HashSet<String>();
-	private int degreeRandomPath = 0;
 	private double mixingTime = 0.0; 
 
 	
@@ -67,8 +66,6 @@ public class EstimateClusteringCoefficientMeasure {
 		return node;
 	}
 	
-	private Map<Integer, List<Integer>> A = new HashMap<Integer, List<Integer>>();
-	private Map<String, Integer> A_index = new HashMap<String, Integer>(); // holds the ith index of the node in the adjacency matrix
 	private Map<String, Integer> vertexDegree; //vertex degree for random walk nodes
 	
 	
@@ -78,39 +75,30 @@ public class EstimateClusteringCoefficientMeasure {
 		randomWalkPath.add(startNode);
 		resourcesInRandomPath.add(startNode);
 		
-//		double probabilityCounter = 0.0;
 		
 		vertexDegree = new HashMap<String, Integer>();
 		
 		String currentNode = startNode;
-		int i = 0;
-		this.A_index.put(startNode, new Integer(i));
 		
 		int numSteps = 0;
 		while(numSteps < mixingTime){
 			int totalDegree = 0;
+			Object[] arrCurNodeNeighbors = _graph.getNeighbors(currentNode).toArray();
+
 			if (vertexDegree.containsKey(currentNode)) {
 				totalDegree = vertexDegree.get(currentNode);
 			} else {
-				totalDegree = _graph.degree(currentNode);
-				degreeRandomPath += totalDegree;
+				totalDegree = arrCurNodeNeighbors.length;
 				vertexDegree.put(currentNode, totalDegree);
 			}
-			numSteps++;// probabilityCounter = (1.0/(double)totalDegree);
+			numSteps++;
 			
 			//walk to next node random
 			Random rand = new Random();
 			int randomNumber = rand.nextInt(totalDegree);
-			Object[] arrCurNodeNeighbors = _graph.getNeighbors(currentNode).toArray();
 			String nextNode = (String)(arrCurNodeNeighbors[randomNumber]);
 			
-			// fill adj matrix
-			int curI = this.A_index.get(currentNode);
-			int nextI = (this.A_index.containsKey(nextNode)) ? this.A_index.get(nextNode) : ++i;
-			this.A_index.put(nextNode, new Integer(nextI));
-			this.addToMatrix(curI, nextI);
-			//this._A[curI][nextI] = 1;
-			//this._A[nextI][curI] = 1; // because we are assuming that nodes are not directed according to Hardiman and Katzir
+			
 			currentNode = nextNode;
 						
 			randomWalkPath.add(currentNode);
@@ -118,44 +106,6 @@ public class EstimateClusteringCoefficientMeasure {
 		}
 	}
 	
-	private void addToMatrix(int i, int j){
-		List<Integer> lst = new ArrayList<Integer>();
-		if (this.A.containsKey(i)) lst = this.A.get(i);
-		if (lst.size() < j) lst = this.fillArrayList(lst, j);
-		else {
-			if (lst.size() > j) lst.remove(j);
-			lst.add(j, 1);
-		}
-		this.A.put(i, lst);
-		
-		// Only if nodes are bi-directional
-//		lst = new ArrayList<Integer>();
-//		if (this.A.containsKey(j)) lst = this.A.get(j);
-//		if (lst.size() < i) lst = this.fillArrayList(lst, i);
-//		else {
-//			if (lst.size() > i) lst.remove(i);
-//			lst.add(i, 1);
-//		}
-//		this.A.put(j, lst);
-	}
-	
-	private List<Integer> fillArrayList(List<Integer> lst, int upTo){
-		List<Integer> retList = new ArrayList<Integer>(lst);
-		for(int i = lst.size() ; i < upTo; i++)
-			retList.add(0);
-		retList.add(1);
-				
-		return retList;
-	}
-	
-	private void fillRestOfMatrix(){
-		for(Integer i : this.A.keySet()){
-			List<Integer> lst = this.A.get(i);	
-			for(int j = lst.size() ; j <= this.A.keySet().size(); j++)
-				lst.add(0);
-			this.A.put(i, lst);
-		}
-	}
 	
 	private double calculateClusteringCoefficient() {
 		Map<String, Double> vertexCC = new HashMap<String, Double>();
@@ -210,10 +160,11 @@ public class EstimateClusteringCoefficientMeasure {
 	private double calculateWeightedSum(){
 		double val = 0.0;
 		for(int _k = 1; _k <= (randomWalkPath.size() - 1); _k++){
-			int k = this.A_index.get(this.randomWalkPath.get(_k));
-			if ((k < 1) || (k >= this.A.keySet().size() - 1)) continue;
-			double _adjM = (double) (this.A.get(k-1).get(k+1));//(this._A[k-1][k+1]);
-			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(k))));
+			int k = _graph.getIthIndex(this.randomWalkPath.get(_k));
+					
+			if ((k < 1) || (k >= _graph.getVertexCount())) continue;
+			double _adjM = (double) (this._graph.getAMapping((k-1), (k+1)));
+			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(_k))));
 		}
 		return val;
 	}
@@ -222,7 +173,6 @@ public class EstimateClusteringCoefficientMeasure {
 	public double getEstimatedMeasure(){
 		if (this.estimateMeasure != Double.MIN_VALUE) return this.estimateMeasure; 
 		this.randomWalk();
-		this.fillRestOfMatrix();
 		
 		Double phi = null; //the weighted sum
 		Double psi = null; // the sum of the sampled nodes
