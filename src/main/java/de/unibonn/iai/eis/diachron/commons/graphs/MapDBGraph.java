@@ -55,7 +55,9 @@ public class MapDBGraph {
 			adjOut = new ConcurrentSkipListSet<String>();
 			adjOut.add(outNode);
 		}
-		this.adjListOutEdges.put(inNode, adjOut);
+		synchronized(this.adjListOutEdges) {
+			this.adjListOutEdges.put(inNode, adjOut);
+		}
 		
 		
 		Set<String> adjIn = null;
@@ -66,7 +68,9 @@ public class MapDBGraph {
 			adjIn = new ConcurrentSkipListSet<String>();
 			adjIn.add(inNode);
 		}
-		this.adjListInEdges.put(outNode, adjIn);
+		synchronized(this.adjListInEdges) {
+			this.adjListInEdges.put(outNode, adjIn);
+		}
 		
 		Set<String> set = null;
 		if (edge.equals(OWL.sameAs.getURI())){
@@ -96,12 +100,16 @@ public class MapDBGraph {
 			if (lst.size() > j) lst.remove(j);
 			lst.add(j, (byte) 1);
 		}
-		this.A.put(i, lst);
+		synchronized(this.A) {
+			this.A.put(i, lst);
+		}
 		
 		lst = new ArrayList<Byte>();
 		if (this.A.containsKey(j)) lst = this.A.get(j);
 		if (lst.size() < j) lst = this.fillArrayList(lst, j, false);
-		this.A.put(j, lst);
+		synchronized(this.A) {
+			this.A.put(j, lst);
+		}
 	}
 	
 	private List<Byte> fillArrayList(List<Byte> lst, int upTo, boolean setLastBit){
@@ -116,10 +124,14 @@ public class MapDBGraph {
 	
 	public void fillRestOfMatrix(){
 		for(Integer i : this.A.keySet()){
-			List<Byte> lst = this.A.get(i);	
+			List<Byte> lst = new ArrayList<Byte>(this.A.get(i));	
 			for(int j = lst.size() ; j <= vertexCount; j++)
+			{
 				lst.add((byte) 0);
-			this.A.put(i, lst);
+			}
+			synchronized(this.A) {
+				this.A.put(i, lst);
+			}
 		}
 	}
 	
