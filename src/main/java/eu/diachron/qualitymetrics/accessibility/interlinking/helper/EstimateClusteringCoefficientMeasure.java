@@ -28,7 +28,7 @@ public class EstimateClusteringCoefficientMeasure {
 	/**
 	 * Multiplying factor for the computation of the mixing time
 	 */
-	private static double mixingTimeFactor = 1.0; 
+	private static double mixingTimeFactor = 0.3; 
 	
 	public EstimateClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
@@ -102,8 +102,7 @@ public class EstimateClusteringCoefficientMeasure {
 			Random rand = new Random();
 			int randomNumber = rand.nextInt(totalDegree);
 			Object[] arrCurNodeNeighbors = _graph.getNeighbors(currentNode).toArray();
-			//use the module operation to prevent "index out of bounds" exceptions, in some cases totalDegree is getting to be > arrCurNodeNeighbors.length
-			String nextNode = (String)(arrCurNodeNeighbors[randomNumber % arrCurNodeNeighbors.length]);
+			String nextNode = (String)(arrCurNodeNeighbors[randomNumber]);
 			
 			// fill adj matrix
 			int curI = this.A_index.get(currentNode);
@@ -129,14 +128,15 @@ public class EstimateClusteringCoefficientMeasure {
 		}
 		this.A.put(i, lst);
 		
-		lst = new ArrayList<Integer>();
-		if (this.A.containsKey(j)) lst = this.A.get(j);
-		if (lst.size() < i) lst = this.fillArrayList(lst, i);
-		else {
-			if (lst.size() > i) lst.remove(i);
-			lst.add(i, 1);
-		}
-		this.A.put(j, lst);
+		// Only if nodes are bi-directional
+//		lst = new ArrayList<Integer>();
+//		if (this.A.containsKey(j)) lst = this.A.get(j);
+//		if (lst.size() < i) lst = this.fillArrayList(lst, i);
+//		else {
+//			if (lst.size() > i) lst.remove(i);
+//			lst.add(i, 1);
+//		}
+//		this.A.put(j, lst);
 	}
 	
 	private List<Integer> fillArrayList(List<Integer> lst, int upTo){
@@ -151,7 +151,7 @@ public class EstimateClusteringCoefficientMeasure {
 	private void fillRestOfMatrix(){
 		for(Integer i : this.A.keySet()){
 			List<Integer> lst = this.A.get(i);	
-			for(int j = lst.size() ; j < this.A.keySet().size(); j++)
+			for(int j = lst.size() ; j <= this.A.keySet().size(); j++)
 				lst.add(0);
 			this.A.put(i, lst);
 		}
@@ -211,7 +211,7 @@ public class EstimateClusteringCoefficientMeasure {
 		double val = 0.0;
 		for(int _k = 1; _k <= (randomWalkPath.size() - 1); _k++){
 			int k = this.A_index.get(this.randomWalkPath.get(_k));
-			if ((k < 1) || (k == this.A.keySet().size() - 1)) continue;
+			if ((k < 1) || (k >= this.A.keySet().size() - 1)) continue;
 			double _adjM = (double) (this.A.get(k-1).get(k+1));//(this._A[k-1][k+1]);
 			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(k))));
 		}
@@ -224,8 +224,8 @@ public class EstimateClusteringCoefficientMeasure {
 		this.randomWalk();
 		this.fillRestOfMatrix();
 		
-		double phi = 0.0; //the weighted sum
-		double psi = 0.0; // the sum of the sampled nodes
+		Double phi = null; //the weighted sum
+		Double psi = null; // the sum of the sampled nodes
 		
 		//double cc = calculateClusteringCoefficient();
 		
@@ -233,7 +233,8 @@ public class EstimateClusteringCoefficientMeasure {
 		phi = (1.0/((double)randomWalkPath.size() - 2.0)) * this.calculateWeightedSum();
 		psi = (1.0/((double)randomWalkPath.size())) * this.summationReciprocalValue();
 		
-		this.estimateMeasure = phi / psi;
+
+		this.estimateMeasure = (phi.isNaN()) ? 0.0 : (phi / psi);
 		
 		return this.estimateMeasure;
 	}

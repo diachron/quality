@@ -41,15 +41,16 @@ public class EstimatedClusteringCoefficiency implements QualityMetric {
 		if (!quad.getObject().isBlank()){
 			if (quad.getObject().isURI()){
 				object = quad.getObject().getURI();
-			} else {
-				object = quad.getObject().getLiteralValue().toString();
-			}
+			} 
+//			else {
+//				object = quad.getObject().getLiteralValue().toString();
+//			}
 		} else {
 			object = quad.getObject().getBlankNodeLabel();
 		}
 		
 		String predicate = quad.getPredicate().getURI();
-		graph.addConnectedNodes(subject, object, predicate);
+		if (!(object.equals(""))) graph.addConnectedNodes(subject, object, predicate);
 	}
 	
 	public Resource getMetricURI() {
