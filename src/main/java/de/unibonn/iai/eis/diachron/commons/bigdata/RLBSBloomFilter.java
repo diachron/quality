@@ -62,7 +62,7 @@ public class RLBSBloomFilter {
 		// Compute suggessted k, according to Bera et al. (pg. 24)
 		double computedK = (Math.log(this.thresFPR) / Math.log(1 - (1/Math.E)));
 		
-		logger.debug("RLBSBF initialized. Memory size (m): {}, Hash-functions: {}, Suggested Hash-functions: {}", this.m, this.k, computedK);
+		logger.info("RLBSBF initialized. Memory size (m): {}, Hash-functions: {}, Suggested Hash-functions: {}", this.m, this.k, computedK);
 	}
 	
 	/***

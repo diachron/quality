@@ -27,6 +27,16 @@ public class EstimatedDuplicateInstance implements ComplexQualityMetric {
 	private final Resource METRIC_URI = DQM.DuplicateInstanceMetric;
 	
 	/**
+	 * Parameter: default size of the Bloom filters, determines the precision of the estimations
+	 */
+	private static int defaultFilterSize = 512000;
+	
+	/**
+	 * Parameter: number of Bloom filters to be created, determines the precision of the estimations
+	 */
+	private static int numFilters = 10;
+	
+	/**
 	 * Randomized Load-balanced Biased Sampling Bloom Filter, used as repository to find duplicate instance declarations
 	 */
 	private RLBSBloomFilter rlbsBloomFilterDupls = null;
@@ -47,8 +57,8 @@ public class EstimatedDuplicateInstance implements ComplexQualityMetric {
 		// Bloom Filters are based on an array of bits, whose size must be defined at creation. Ideally this size should 
 		// match the max. number of items to be put into the filter. If the caller doesn't provide that number, initialize
 		// the filter to default size
-		Integer approxNumTriples = 512000;
-		int k = 11;
+		Integer approxNumTriples = defaultFilterSize;
+		int k = numFilters;
 		
 		// Check whether the approximated number of triples has been provided
 		if(args != null && args.length > 0 && args[0] != null && !(args[0] instanceof Integer )) {
@@ -56,7 +66,7 @@ public class EstimatedDuplicateInstance implements ComplexQualityMetric {
 		}
 		
 		this.rlbsBloomFilterDupls = new RLBSBloomFilter(k, approxNumTriples, 0.01);
-		logger.debug("RLBS Bloom Filter initialized. Num. of hash functions: {}, Total filter memory (bits): {}", k, approxNumTriples);
+		logger.info("RLBS Bloom Filter initialized. Num. of hash functions: {}, Total filter memory (bits): {}", k, approxNumTriples);
 	}
 
 	/**
@@ -115,4 +125,21 @@ public class EstimatedDuplicateInstance implements ComplexQualityMetric {
 	public void after(Object... arg0) {
 		// TODO Auto-generated method stub
 	}
+
+	public static int getDefaultFilterSize() {
+		return defaultFilterSize;
+	}
+
+	public static void setDefaultFilterSize(int defaultFilterSize) {
+		EstimatedDuplicateInstance.defaultFilterSize = defaultFilterSize;
+	}
+
+	public static int getNumFilters() {
+		return numFilters;
+	}
+
+	public static void setNumFilters(int numFilters) {
+		EstimatedDuplicateInstance.numFilters = numFilters;
+	}
+
 }

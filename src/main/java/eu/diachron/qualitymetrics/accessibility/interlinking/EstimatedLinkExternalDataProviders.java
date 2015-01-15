@@ -26,12 +26,17 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	private final Resource METRIC_URI = DQM.LinksToExternalDataProvidersMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(EstimatedLinkExternalDataProviders.class);
+	
+	/**
+	 * Parameter: default size of the Bloom filters, determines the precision of the estimations
+	 */
+	private static int reservoirSize = 100000;
 		
 	/**
 	* A reservoir containing the top-level domains (or base URIs) found among all the data-level constants of the 
 	* dataset (data level constants are: subjects of triples and objects of triples not subject to an rdf:type predicate)
 	*/
-	private ReservoirSampler<String> reservoirTldRIs = new ReservoirSampler<String>(100000, true);
+	private ReservoirSampler<String> reservoirTldRIs = new ReservoirSampler<String>(reservoirSize, true);
 	
 	/**
      * Object used to determine the base URI of the resource based on its contents
@@ -127,6 +132,14 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+		
+	public static int getReservoirSize() {
+		return reservoirSize;
+	}
+
+	public static void setReservoirSize(int reservoirSize) {
+		EstimatedLinkExternalDataProviders.reservoirSize = reservoirSize;
 	}
 
 	/**

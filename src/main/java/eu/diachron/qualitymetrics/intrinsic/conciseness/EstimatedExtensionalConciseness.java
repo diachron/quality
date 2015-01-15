@@ -3,7 +3,8 @@ package eu.diachron.qualitymetrics.intrinsic.conciseness;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
@@ -23,9 +24,14 @@ import eu.diachron.semantics.vocabulary.DQM;
  */
 public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	
-	private static Logger logger = Logger.getLogger(EstimatedExtensionalConciseness.class);
+	private static Logger logger = LoggerFactory.getLogger(EstimatedExtensionalConciseness.class);
 	
 	private final Resource METRIC_URI = DQM.ExtensionalConcisenessMetric;
+	
+	/**
+	 * Parameter: default size of the Bloom filter, determines the precision of the estimations
+	 */
+	private static int defaultFilterSize = 145000000;
 	
 	// Initialized in before method
 	private BloomFilter<String> bloomFilterDuplicates = null;
@@ -112,9 +118,8 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	public void before(Object... args) {
 	
 		// Bloom Filters are based on an array of bits, whose size must be defined at creation. Ideally this size should 
-		// match the max. number of items to be put into the filter. If the caller doesn't provide that number, initialize
-		// the filter to 145000000 (more than that might cause an out-of-memory error)
-		Integer numTriples = 145000000;
+		// match the max. number of items to be put into the filter. If the caller doesn't provide that number
+		Integer numTriples = defaultFilterSize;
 		
 		// Check that number of triples has been provided
 		if(args != null && args.length > 0 && args[0] != null && !(args[0] instanceof Integer )) {
@@ -128,6 +133,15 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 						       into.putUnencodedChars(value);
 						}
 					}, numTriples);
+		logger.info("Bloom filter initialized with size: {}", numTriples);
+	}
+
+	public static int getDefaultFilterSize() {
+		return defaultFilterSize;
+	}
+
+	public static void setDefaultFilterSize(int defaultFilterSize) {
+		EstimatedExtensionalConciseness.defaultFilterSize = defaultFilterSize;
 	}
 
 }

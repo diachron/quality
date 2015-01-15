@@ -27,6 +27,11 @@ public class DereferenceabilityBackLinksEstimated implements QualityMetric {
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(DereferenceabilityBackLinksEstimated.class);
+	
+	/**
+	 * Parameter: default size of the Bloom filters, determines the precision of the estimations
+	 */
+	private static int reservoirSize = 100000;
 		
 	/**
 	 * Counter of the number of objects found to be an URI in the resource. Note that differently to the original
@@ -46,7 +51,7 @@ public class DereferenceabilityBackLinksEstimated implements QualityMetric {
 	* The parent URI is obtained by taking the substring behind the last appearance of "/" in the object's URI. Items in the 
  	* reservoir also contain the number of times the parent URI has appeared as part of the objects of the processed triples
 	*/
-	private ReservoirSampler<ParentUri> reservoirObjectURIs = new ReservoirSampler<ParentUri>(100000, true);
+	private ReservoirSampler<ParentUri> reservoirObjectURIs = new ReservoirSampler<ParentUri>(reservoirSize, true);
 	
     /**
      * Object used to determine the base URI of the resource based on its contents and to count the number of 
@@ -145,7 +150,15 @@ public class DereferenceabilityBackLinksEstimated implements QualityMetric {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	public static int getReservoirSize() {
+		return reservoirSize;
+	}
+
+	public static void setReservoirSize(int reservoirSize) {
+		DereferenceabilityBackLinksEstimated.reservoirSize = reservoirSize;
+	}
+
 	/**
 	 * Represents an URI, that was recognized as parent of the URI of an object found within the processed triples. 
 	 * Instances of this class are intended to be stored in the reservoir sampler used by the metric

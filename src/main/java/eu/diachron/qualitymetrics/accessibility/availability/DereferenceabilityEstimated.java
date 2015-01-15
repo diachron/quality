@@ -44,8 +44,8 @@ public class DereferenceabilityEstimated implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private final int MAX_TLDS = 100;
-	private final int MAX_FQURIS_PER_TLD = 10000;
+	private static int MAX_TLDS = 100;
+	private static int MAX_FQURIS_PER_TLD = 10000;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -314,7 +314,23 @@ public class DereferenceabilityEstimated implements QualityMetric {
 			this.isRdfXml = isRdfXml;
 		}
 	}
-	
+			
+	public static int getMAX_TLDS() {
+		return MAX_TLDS;
+	}
+
+	public static void setMAX_TLDS(int mAX_TLDS) {
+		MAX_TLDS = mAX_TLDS;
+	}
+
+	public static int getMAX_FQURIS_PER_TLD() {
+		return MAX_FQURIS_PER_TLD;
+	}
+
+	public static void setMAX_FQURIS_PER_TLD(int mAX_FQURIS_PER_TLD) {
+		MAX_FQURIS_PER_TLD = mAX_FQURIS_PER_TLD;
+	}
+
 	/**
 	 * Structure representing a TLD, which includes its corresponding set of Fully Qualified URIs.
 	 * Encapsulates the items that will be stored in the reservoir of TLDs
