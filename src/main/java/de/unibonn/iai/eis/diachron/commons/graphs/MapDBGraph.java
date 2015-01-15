@@ -38,7 +38,7 @@ public class MapDBGraph {
 	private HTreeMap<String, Set<String>> sameAsNodes = this.mapDB.createHashMap("sameAsNodes").make();
 	
 	//Adjacency Matrix
-	private HTreeMap<Integer, List<Byte>> A = this.mapDB.createHashMap("graph-adjacency-matrix").make();
+	private HTreeMap<Integer, HTreeMap<Integer,Byte>> A = this.mapDB.createHashMap("graph-adjacency-matrix").make();
 	private HTreeMap<String, Integer> A_index = this.mapDB.createHashMap("graph-adjacency-matrix-index").make(); // holds the ith index of the node in the adjacency matrix
 	
 	//we need something to store the edge name (i.e property name)
@@ -93,41 +93,45 @@ public class MapDBGraph {
 	
 	
 	private void addToMatrix(int i, int j){
-		List<Byte> lst = new ArrayList<Byte>();
+		//List<Byte> lst = new ArrayList<Byte>();
+		HTreeMap<Integer, Byte> lst;
 		if (this.A.containsKey(i)) lst = this.A.get(i);
+		else lst = mapDB.createHashMap("tmp_lst"+i).make();
 		if (lst.size() < j) lst = this.fillArrayList(lst, j, true);
 		else {
 			if (lst.size() > j) lst.remove(j);
-			lst.add(j, (byte) 1);
+			lst.put(j, (byte) 1);
 		}
 		synchronized(this.A) {
 			this.A.put(i, lst);
 		}
 		
-		lst = new ArrayList<Byte>();
+		//lst = new ArrayList<Byte>();
 		if (this.A.containsKey(j)) lst = this.A.get(j);
+		else lst = mapDB.createHashMap("tmp_lst"+j).make();
+
 		if (lst.size() < j) lst = this.fillArrayList(lst, j, false);
 		synchronized(this.A) {
 			this.A.put(j, lst);
 		}
 	}
 	
-	private List<Byte> fillArrayList(List<Byte> lst, int upTo, boolean setLastBit){
-		List<Byte> retList = new ArrayList<Byte>(lst);
+	private HTreeMap<Integer, Byte> fillArrayList(HTreeMap<Integer, Byte> lst, int upTo, boolean setLastBit){
+		HTreeMap<Integer, Byte> retList = lst;
 		for(int i = lst.size() ; i < upTo; i++)
-			retList.add((byte) 0);
-		if (setLastBit) retList.add((byte) 1);
-		else retList.add((byte) 0);
+			retList.put(i,(byte) 0);
+		if (setLastBit) retList.put(upTo, (byte) 1);
+		else retList.put(upTo, (byte) 0);
 				
 		return retList;
 	}
 	
 	public void fillRestOfMatrix(){
 		for(Integer i : this.A.keySet()){
-			List<Byte> lst = new ArrayList<Byte>(this.A.get(i));	
+			HTreeMap<Integer, Byte> lst = this.A.get(i);	
 			for(int j = lst.size() ; j <= vertexCount; j++)
 			{
-				lst.add((byte) 0);
+				lst.put(j,(byte) 0);
 			}
 			synchronized(this.A) {
 				this.A.put(i, lst);
@@ -142,8 +146,8 @@ public class MapDBGraph {
 		System.setOut(out);  
 		
 		for(int i = 0; i < this.A.keySet().size(); i++){
-			List<Byte> lst = this.A.get(i);	
-			for(Byte b : lst) System.out.print(b + ";");
+			HTreeMap<Integer, Byte> lst = this.A.get(i);	
+			for(int j = 0; j < this.A.keySet().size(); j++)System.out.print(lst.get(j) + ";");
 			System.out.println();
 		}
 	}

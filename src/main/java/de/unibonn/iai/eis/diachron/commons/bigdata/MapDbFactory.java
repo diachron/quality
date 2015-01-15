@@ -40,6 +40,8 @@ public class MapDbFactory {
 			.transactionDisable()
 			.compressionEnable()
 			.mmapFileEnable()
+			.asyncWriteEnable()
+			.asyncWriteFlushDelay(500)
 	    	.make();
 		
 		return mapDB;
