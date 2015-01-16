@@ -60,7 +60,7 @@ public class ActualClusteringCoefficiency implements QualityMetric {
 	}
 
 	public double metricValue() {
-		graph.fillRestOfMatrix();
+//		graph.fillRestOfMatrix();
 		ActualClusteringCoefficientMeasure ccm = new ActualClusteringCoefficientMeasure(graph);
 
 		return ccm.getIdealMeasure();

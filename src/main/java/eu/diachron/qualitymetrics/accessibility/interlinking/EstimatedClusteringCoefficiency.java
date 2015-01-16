@@ -64,7 +64,7 @@ public class EstimatedClusteringCoefficiency implements QualityMetric {
 	}
 
 	public double metricValue() {
-		graph.fillRestOfMatrix();
+//		graph.fillRestOfMatrix();
 
 		EstimateClusteringCoefficientMeasure ccm = new EstimateClusteringCoefficientMeasure(graph);
 		logger.debug("Computing estimated clustering coefficiency measure. Mixing factor: {}", EstimateClusteringCoefficientMeasure.getMixigTimeFactor());

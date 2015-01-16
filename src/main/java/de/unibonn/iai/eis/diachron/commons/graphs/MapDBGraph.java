@@ -38,8 +38,10 @@ public class MapDBGraph {
 	private HTreeMap<String, Set<String>> sameAsNodes = this.mapDB.createHashMap("sameAsNodes").make();
 	
 	//Adjacency Matrix
-	private HTreeMap<Integer, HTreeMap<Integer,Byte>> A = this.mapDB.createHashMap("graph-adjacency-matrix").make();
+//	private HTreeMap<Integer, HTreeMap<Integer,Byte>> A = this.mapDB.createHashMap("graph-adjacency-matrix").make();
 	private HTreeMap<String, Integer> A_index = this.mapDB.createHashMap("graph-adjacency-matrix-index").make(); // holds the ith index of the node in the adjacency matrix
+	private HTreeMap<Integer, String> A_reverse_index = this.mapDB.createHashMap("graph-adjacency-matrix-reverse-index").make(); // holds the ith index of the node in the adjacency matrix
+
 	
 	//we need something to store the edge name (i.e property name)
 
@@ -80,77 +82,83 @@ public class MapDBGraph {
 			this.sameAsNodes.put(inNode, set);
 		}
 		
-		if (!A_index.containsKey(inNode)) A_index.put(inNode, vertexCount);
-		int ith =  A_index.get(inNode);
+		if (!A_index.containsKey(inNode)) {
+			A_index.put(inNode, vertexCount);
+			A_reverse_index.put(vertexCount, inNode);
+		}
+//		int ith =  A_index.get(inNode);
 		vertexCount = (this.hashSet.add(inNode)) ? vertexCount + 1 : vertexCount;
 		
-		if (!A_index.containsKey(outNode)) A_index.put(outNode, vertexCount);
-		int jth =  A_index.get(outNode);
+		if (!A_index.containsKey(outNode)) {
+			A_index.put(outNode, vertexCount);
+			A_reverse_index.put(vertexCount, outNode);
+		}
+//		int jth =  A_index.get(outNode);
 		vertexCount = (this.hashSet.add(outNode)) ? vertexCount + 1 : vertexCount;
 
-		this.addToMatrix(ith, jth);
+//		this.addToMatrix(ith, jth);
 	}
 	
 	
-	private void addToMatrix(int i, int j){
-		//List<Byte> lst = new ArrayList<Byte>();
-		HTreeMap<Integer, Byte> lst;
-		if (this.A.containsKey(i)) lst = this.A.get(i);
-		else lst = mapDB.createHashMap("tmp_lst"+i).make();
-		if (lst.size() < j) lst = this.fillArrayList(lst, j, true);
-		else {
-			if (lst.size() > j) lst.remove(j);
-			lst.put(j, (byte) 1);
-		}
-		synchronized(this.A) {
-			this.A.put(i, lst);
-		}
-		
-		//lst = new ArrayList<Byte>();
-		if (this.A.containsKey(j)) lst = this.A.get(j);
-		else lst = mapDB.createHashMap("tmp_lst"+j).make();
-
-		if (lst.size() < j) lst = this.fillArrayList(lst, j, false);
-		synchronized(this.A) {
-			this.A.put(j, lst);
-		}
-	}
-	
-	private HTreeMap<Integer, Byte> fillArrayList(HTreeMap<Integer, Byte> lst, int upTo, boolean setLastBit){
-		HTreeMap<Integer, Byte> retList = lst;
-		for(int i = lst.size() ; i < upTo; i++)
-			retList.put(i,(byte) 0);
-		if (setLastBit) retList.put(upTo, (byte) 1);
-		else retList.put(upTo, (byte) 0);
-				
-		return retList;
-	}
-	
-	public void fillRestOfMatrix(){
-		for(Integer i : this.A.keySet()){
-			HTreeMap<Integer, Byte> lst = this.A.get(i);	
-			for(int j = lst.size() ; j <= vertexCount; j++)
-			{
-				lst.put(j,(byte) 0);
-			}
-			synchronized(this.A) {
-				this.A.put(i, lst);
-			}
-		}
-	}
-	
-	public void printAM() throws FileNotFoundException{
-		File file = new File("test.csv");  
-		FileOutputStream fis = new FileOutputStream(file);  
-		PrintStream out = new PrintStream(fis);  
-		System.setOut(out);  
-		
-		for(int i = 0; i < this.A.keySet().size(); i++){
-			HTreeMap<Integer, Byte> lst = this.A.get(i);	
-			for(int j = 0; j < this.A.keySet().size(); j++)System.out.print(lst.get(j) + ";");
-			System.out.println();
-		}
-	}
+//	private void addToMatrix(int i, int j){
+//		//List<Byte> lst = new ArrayList<Byte>();
+//		HTreeMap<Integer, Byte> lst;
+//		if (this.A.containsKey(i)) lst = this.A.get(i);
+//		else lst = mapDB.createHashMap("tmp_lst"+i).make();
+//		if (lst.size() < j) lst = this.fillArrayList(lst, j, true);
+//		else {
+//			if (lst.size() > j) lst.remove(j);
+//			lst.put(j, (byte) 1);
+//		}
+//		synchronized(this.A) {
+//			this.A.put(i, lst);
+//		}
+//		
+//		//lst = new ArrayList<Byte>();
+//		if (this.A.containsKey(j)) lst = this.A.get(j);
+//		else lst = mapDB.createHashMap("tmp_lst"+j).make();
+//
+//		if (lst.size() < j) lst = this.fillArrayList(lst, j, false);
+//		synchronized(this.A) {
+//			this.A.put(j, lst);
+//		}
+//	}
+//	
+//	private HTreeMap<Integer, Byte> fillArrayList(HTreeMap<Integer, Byte> lst, int upTo, boolean setLastBit){
+//		HTreeMap<Integer, Byte> retList = lst;
+//		for(int i = lst.size() ; i < upTo; i++)
+//			retList.put(i,(byte) 0);
+//		if (setLastBit) retList.put(upTo, (byte) 1);
+//		else retList.put(upTo, (byte) 0);
+//				
+//		return retList;
+//	}
+//	
+//	public void fillRestOfMatrix(){
+//		for(Integer i : this.A.keySet()){
+//			HTreeMap<Integer, Byte> lst = this.A.get(i);	
+//			for(int j = lst.size() ; j <= vertexCount; j++)
+//			{
+//				lst.put(j,(byte) 0);
+//			}
+//			synchronized(this.A) {
+//				this.A.put(i, lst);
+//			}
+//		}
+//	}
+//	
+//	public void printAM() throws FileNotFoundException{
+//		File file = new File("test.csv");  
+//		FileOutputStream fis = new FileOutputStream(file);  
+//		PrintStream out = new PrintStream(fis);  
+//		System.setOut(out);  
+//		
+//		for(int i = 0; i < this.A.keySet().size(); i++){
+//			HTreeMap<Integer, Byte> lst = this.A.get(i);	
+//			for(int j = 0; j < this.A.keySet().size(); j++)System.out.print(lst.get(j) + ";");
+//			System.out.println();
+//		}
+//	}
 	
 	
 	public HTreeMap<String, Set<String>> getGraphInEdges(){
@@ -180,6 +188,10 @@ public class MapDBGraph {
 		if (this.adjListInEdges.containsKey(node)) hashSet.addAll(this.adjListInEdges.get(node));
 		
 		return hashSet;
+	}
+	
+	public boolean isNeighborOf(String node1, String node2){
+		return getNeighbors(node1).contains(node2);
 	}
 	
 	/**
@@ -226,12 +238,16 @@ public class MapDBGraph {
 		return (this.adjListInEdges.containsKey(node)) ? this.adjListInEdges.get(node).size() : 0;
 	}
 	
-	public byte getAMapping(int i, int j){
-		return this.A.get(i).get(j);
-	}
+//	public byte getAMapping(int i, int j){
+//		return this.A.get(i).get(j);
+//	}
 	
 	public Integer getIthIndex(String node){
 		return this.A_index.get(node);
+	}
+	
+	public String getNodeFromIndex(Integer i){
+		return this.A_reverse_index.get(i);
 	}
 	
 	

@@ -25,10 +25,12 @@ public class EstimateClusteringCoefficientMeasure {
 	private MapDBGraph _graph;
 	private double estimateMeasure = Double.MIN_VALUE;
 	
+	private Map<String, Byte> k_param = new HashMap<String, Byte>();
+	
 	/**
 	 * Multiplying factor for the computation of the mixing time
 	 */
-	private static double mixingTimeFactor = 0.5; 
+	private static double mixingTimeFactor = 1.0; 
 	
 	public EstimateClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
@@ -93,6 +95,8 @@ public class EstimateClusteringCoefficientMeasure {
 			}
 			numSteps++;
 			
+			this.addKParam(currentNode, arrCurNodeNeighbors);
+			
 			//walk to next node random
 			Random rand = new Random();
 			int randomNumber = rand.nextInt(totalDegree);
@@ -104,6 +108,15 @@ public class EstimateClusteringCoefficientMeasure {
 			randomWalkPath.add(currentNode);
 			resourcesInRandomPath.add(currentNode);
 		}
+	}
+	
+	private void addKParam(String node, Object[] neighbours){
+		Integer kN = this._graph.getIthIndex(node);
+		
+		String n1 = this._graph.getNodeFromIndex(kN + 1);
+		String n2 = this._graph.getNodeFromIndex(kN - 1);
+		
+		this.k_param.put(node, (byte) ((this._graph.isNeighborOf(n1, n2)) ? 1 : 0));
 	}
 	
 	
@@ -159,12 +172,13 @@ public class EstimateClusteringCoefficientMeasure {
 	
 	private double calculateWeightedSum(){
 		double val = 0.0;
-		for(int _k = 1; _k <= (randomWalkPath.size() - 1); _k++){
-			int k = _graph.getIthIndex(this.randomWalkPath.get(_k));
+		for(int k = 1; k < (randomWalkPath.size() - 1); k++){
+//			int k = _graph.getIthIndex(this.randomWalkPath.get(_k));
 					
-			if ((k < 1) || (k >= _graph.getVertexCount())) continue;
-			double _adjM = (double) (this._graph.getAMapping((k-1), (k+1)));
-			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(_k))));
+//			if ((k < 1) || (k >= _graph.getVertexCount())) continue;
+			//double _adjM = (double) (this._graph.getAMapping((k-1), (k+1)));
+			double _adjM = (double) this.k_param.get(this.randomWalkPath.get(k));
+			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(k))));
 		}
 		return val;
 	}
