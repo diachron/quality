@@ -29,7 +29,7 @@ public class EstimatedDuplicateInstance implements ComplexQualityMetric {
 	/**
 	 * Parameter: default size of the Bloom filters, determines the precision of the estimations
 	 */
-	private static int defaultFilterSize = 512000;
+	private static int defaultFilterSize = 100000;
 	
 	/**
 	 * Parameter: number of Bloom filters to be created, determines the precision of the estimations

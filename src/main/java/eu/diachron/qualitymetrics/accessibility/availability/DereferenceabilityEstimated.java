@@ -44,7 +44,7 @@ public class DereferenceabilityEstimated implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 100;
+	private static int MAX_TLDS = 50;
 	private static int MAX_FQURIS_PER_TLD = 10000;
 	
 	/**
