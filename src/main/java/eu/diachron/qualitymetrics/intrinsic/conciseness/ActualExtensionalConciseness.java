@@ -62,6 +62,7 @@ public class ActualExtensionalConciseness implements QualityMetric {
 			// Add or update the property stated by the current quad into the subject, as a predicate with a value.
 			// The value of the property is extracted from the quad's object
 			subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
+			pMapSubjects.put(quad.getSubject().getURI(), subject);
 			logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
 		} else {
 			logger.trace("Ignored triple with non-URI subject or predicate");
@@ -84,10 +85,13 @@ public class ActualExtensionalConciseness implements QualityMetric {
 		List<ComparableSubject> lstUniqueSubjects = new ArrayList<ComparableSubject>();
 		boolean isCurSubjectUnique;
 		
+		
+//		int i = 0;
 		// Compare each of the subjects with the ones already recognized as unique...
 		for(ComparableSubject curSubject : pMapSubjects.values()) {
 			isCurSubjectUnique = true;
-
+//			i++;
+//			int z = 0;
 			for(ComparableSubject curUniqueSubject : lstUniqueSubjects) {
 				// and if the subject currently examined is equivalent to one of the existing 
 				// unique subjects, do not regard it as unique, continue with the next one
@@ -95,7 +99,11 @@ public class ActualExtensionalConciseness implements QualityMetric {
 					isCurSubjectUnique = false;
 					break;
 				}
+//				z++;
+//				if ((z % 10000) == 0) System.out.println("compared "+i + "/" + z);
 			}
+			
+//			if ((i % 1000 == 0)) System.out.println("compared "+i);
 			
 			// Finally, if the current subject is not equivalent to any of 
 			// the existing unique subjects, add it as unique

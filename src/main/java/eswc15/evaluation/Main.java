@@ -39,6 +39,7 @@ import eu.diachron.qualitymetrics.accessibility.availability.ActualDereferencibi
 import eu.diachron.qualitymetrics.accessibility.availability.DereferencibilityForwardLinks;
 import eu.diachron.qualitymetrics.accessibility.interlinking.ActualClusteringCoefficiency;
 import eu.diachron.qualitymetrics.accessibility.interlinking.ActualLinkExternalDataProviders;
+import eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedLinkExternalDataProviders;
 import eu.diachron.qualitymetrics.intrinsic.conciseness.ActualExtensionalConciseness;
 import eu.diachron.qualitymetrics.intrinsic.conciseness.ActualDuplicateInstance;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
@@ -51,17 +52,19 @@ public class Main {
 	private static Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	private static List<EvaluationCase> eCases = new ArrayList<EvaluationCase>();
-	private static String datasetURI = "/Users/jeremy/Downloads/lak-dataset-dump.rdf.tar.gz"; //to setup
+	private static String datasetURI = "/Users/jeremy/Downloads/lsoa.ttl"; //to setup
 	
 	private static void setUp() throws ClassNotFoundException, IOException{
 		// Setup of metrics to be evaluated
 //		eCases.add(new EvaluationCase("Actual value for Extensional Conciseness", new ActualExtensionalConciseness()));
 //		eCases.add(new EvaluationCase("Actual value for Duplicate Instance", new ActualDuplicateInstance()));
 //		eCases.add(new EvaluationCase("Actual value for Dereferenceability", new ActualDereferencibility()));
-		eCases.add(new EvaluationCase("Actual value for Dereferenceability of Back-links", new ActualDereferencibilityBackLinks()));
+//		eCases.add(new EvaluationCase("Actual value for Dereferenceability of Back-links", new ActualDereferencibilityBackLinks()));
 //		eCases.add(new EvaluationCase("Actual value for Dereferenceability of Forward-links", new DereferencibilityForwardLinks()));
 //		eCases.add(new EvaluationCase("Actual value for Clustering Coefficiency", new ActualClusteringCoefficiency()));
 //		eCases.add(new EvaluationCase("Actual value for Link to External Data Providers", new ActualLinkExternalDataProviders()));
+		eCases.add(new EvaluationCase("Estimate value for Link to External Data Providers", new EstimatedLinkExternalDataProviders()));
+
 	}
 	
 	public static void main (String [] args) throws ProcessorNotInitialised, IOException, ClassNotFoundException {
@@ -108,11 +111,14 @@ public class Main {
 				System.out.println("Evaluating " + eCase.getCaseName());
 				System.out.println("=================================");
 
+				EstimatedLinkExternalDataProviders.setReservoirSize(10);
+				
 				//Run benchmark for 10 iterations + 3 cold starts
-				for(int i = 0; i <= iterations; i++){
+				for(int i = 1; i <= iterations; i++){
 					if (i >= 1){
 						logger.debug("Starting iteration #: {}...", i);
-						
+		
+
 						//process
 						tStart = System.currentTimeMillis();
 						long totalTriples = processDataSet(eCase.getMetric());
@@ -233,13 +239,14 @@ public class Main {
 		executor.submit(parser);
 		executor.shutdown();
 		logger.debug("Starting computation on statements...");
-		
+	
 		while (iterator.hasNext()){
 			try {
 				Object2Quad stmt = new Object2Quad(iterator.next());
 				metric.compute(stmt.getStatement());
 				logger.trace("Computed metric on statement: {}", stmt.getStatement());
 				totalTriples++;
+				if ((totalTriples % 10000) == 0)  System.out.println(totalTriples);
 			} catch(JenaException jex) {
 				logger.warn("Jena error processing triple # {}, triple omitted. Reason: ", totalTriples, jex);
 			}
