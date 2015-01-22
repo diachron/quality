@@ -30,7 +30,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	/**
 	 * Parameter: default size of the Bloom filters, determines the precision of the estimations
 	 */
-	private static int reservoirSize = 100000;
+	private static int reservoirSize = 5000;
 		
 	/**
 	* A reservoir containing the top-level domains (or base URIs) found among all the data-level constants of the 
