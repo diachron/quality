@@ -2,9 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.unibonn.iai.eis</groupId>
-	<artifactId>diachron</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Diachron Quality Metrics</name>
+	<version>1.0.0</version>
+	<name>Linked Data Quality Metrics</name>
 
 	<properties>
 		<jdk.version>1.7</jdk.version>
@@ -17,6 +16,7 @@
 		<jung.version>2.0.1</jung.version>
 		<mapdb.version>1.0.6</mapdb.version>
 		<luzzu.version>1.0.0</luzzu.version>
+		<diachron.version>1.0.0</diachron.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -181,28 +181,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<configuration>
-							<tasks>
-								<property name="runtime_classpath" refid="maven.runtime.classpath" />
-								<echo message="Compiling Vocabularies into Classes" />
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg
-										line="-i src/main/resources/vocabularies/dqm/dqm.trig -e N3 --inference --package eu.diachron.semantics.vocabulary -o src/main/java -n DQM" />
-								</java>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<plugin>
 			  <artifactId>maven-assembly-plugin</artifactId>
 			  <configuration>
 			    <!-- <archive>
@@ -274,4 +252,14 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<packaging>pom</packaging>
+	<artifactId>diachron</artifactId>
+	<modules>
+		<module>ebi</module>
+		<module>luzzu-integration</module>
+		<module>metric-utilities</module>
+		<module>quality-vocabulary</module>
+		<module>lod-qualitymetics</module>
+		<module>lod-qualitymetrics</module>
+	</modules>
 </project>

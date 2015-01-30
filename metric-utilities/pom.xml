@@ -1,0 +1,11 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>de.unibonn.iai.eis</groupId>
+    <artifactId>diachron</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <artifactId>metric-utilities</artifactId>
+  <name>Quality Metric Utility Module</name>
+  <description>This module contains utility methods and data structures required for the computation of quality metrics, such as big data techniques (Bloom Filters, Reservoir Samplers etc...)</description>
+</project>

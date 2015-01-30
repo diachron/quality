@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.unibonn.iai.eis</groupId>
+		<artifactId>diachron</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>quality-semantics</artifactId>
+	<name>Quality Vocabularies</name>
+	<description>Contains vocabularies (such as DQM) that are required to run these metrics</description>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<echo message="Compiling Vocabularies into Classes" />
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i src/main/resources/vocabularies/dqm/dqm.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.semantics -o src/main/java -n DQM" />
+								</java>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
