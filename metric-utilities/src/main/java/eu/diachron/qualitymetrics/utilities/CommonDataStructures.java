@@ -1,43 +1,14 @@
 package eu.diachron.qualitymetrics.utilities;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.jena.riot.WebContent;
 
-import de.unibonn.iai.eis.diachron.datatypes.URIProfile;
 
 public final class CommonDataStructures {
 	
 	private CommonDataStructures(){}
-	
-	@Deprecated
-	private static Map<String,URIProfile> uriMap = new ConcurrentHashMap<String, URIProfile>();
-
-	@Deprecated
-
-	public static boolean uriExists(String uri) {
-		return uriMap.containsKey(uri) ? true : false;
-	}
-
-	@Deprecated
-	public static void addToUriMap(String uri, URIProfile profile)
-	{
-		uriMap.put(uri, profile);
-	}
-	
-	@Deprecated
-	public static boolean isUriBroken(String uri){
-		return uriMap.get(uri).isBroken();
-	}
-	
-	@Deprecated
-	public static URIProfile getURIProfile(String uri){
-		return uriMap.containsKey(uri) ? uriMap.get(uri) : null;
-	}
-	
 	
 	// LD Content Types
 	public static Set<String> ldContentTypes = new HashSet<String>() ;
@@ -51,7 +22,7 @@ public final class CommonDataStructures {
     	ldContentTypes.add(WebContent.contentTypeTurtleAlt2);
     	ldContentTypes.add(WebContent.contentTypeRDFXML);
     	ldContentTypes.add(WebContent.contentTypeRDFJSON);
-    	//ldContentTypes.add(WebContent.contentTypeTextPlain);  // MIME type for N-triple is text/plain (!!!)
+    	ldContentTypes.add(WebContent.contentTypeTextPlain);  // MIME type for N-triple is text/plain (!!!)
     	ldContentTypes.add(WebContent.contentTypeNTriples);
     	ldContentTypes.add(WebContent.contentTypeNTriplesAlt);
     	ldContentTypes.add(WebContent.contentTypeTriG);

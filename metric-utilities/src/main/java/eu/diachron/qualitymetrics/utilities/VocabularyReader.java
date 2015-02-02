@@ -23,6 +23,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
  * quality-extension/resources/models. To disable file cache delete
  * directory with name 'models' from quality-extension/resources/models.
  */
+@Deprecated
 public class VocabularyReader {
   private static final Logger LOG = Logger.getLogger(VocabularyReader.class);
   private static Hashtable<String, Model> vocabularies = new Hashtable<String, Model>();

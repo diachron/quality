@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -33,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 
 /**
@@ -139,7 +139,7 @@ public class HTTPRetriever {
 
 				try {							  
 					final HttpGet request = new HttpGet(queuePeek);					
-					Header accept = new BasicHeader("Accept", "application/rdf+xml, text/html, text/xml, text/plain");
+					Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/rdf+xml, text/html, text/xml, text/plain, application/n-triples");
 					request.addHeader(accept);
 					
 					httpclient.execute(request, localContext,
@@ -375,9 +375,9 @@ public class HTTPRetriever {
 	
 		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
 		//String uri = "http://aksw.org/MichaelMartin";
-//		String uri = "http://data.linkededucation.org/resource/lak/reference/lak-dataset/5432";
+		String uri = "http://data.linkededucation.org/resource/lak/reference/lak-dataset/5432";
 //		String uri = "http://dbpedia.org/resource/1974_FIFA_World_Cup_qualification_(UEFA)";
-		String uri = "http://www.jeremydebattista.info";
+//		String uri = "http://www.jeremydebattista.info";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start();
 		Thread.sleep(5000);
@@ -392,8 +392,20 @@ public class HTTPRetriever {
 //		String filename = httpResource.getResponses().get(0).getHeaders("Content-Disposition").replace("filename=\"", "").replace("\"", "");
 //		Lang language = RDFLanguages.filenameToLang(filename);
 //		System.out.println(WebContent.mapLangToContentType(language));
-		for (SerialisableHttpResponse res : httpResource.getResponses())
-			System.out.println(res.getHeaders("Content-Type"));
+		
+//		for (SerialisableHttpResponse res : httpResource.getResponses()){
+//			System.out.println(res.getHeaders("Content-Type"));
+//			System.out.println(res.getHeaders("Content-Disposition"));
+//			try {
+//				Model m = RDFDataMgr.loadModel(uri, Lang.TURTLE);
+//				m.write(System.out);
+//			} catch (RiotException e){
+//				System.out.println("could not be identified");
+//			}
+//		}
+		
+		
+		
 		
 		httpRetreiver.stop();
 	}

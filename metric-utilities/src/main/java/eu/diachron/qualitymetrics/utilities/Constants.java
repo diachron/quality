@@ -1,5 +1,6 @@
 package eu.diachron.qualitymetrics.utilities;
 
+@Deprecated
 public class Constants {
 
   public static final String ANNOTATION_PROPERTIES_FILE = "src/main/resources/"

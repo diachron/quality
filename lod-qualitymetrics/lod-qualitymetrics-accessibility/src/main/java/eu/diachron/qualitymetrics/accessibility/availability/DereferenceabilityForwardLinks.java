@@ -31,6 +31,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -168,7 +169,7 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 		if(resource != null && resource.getResponses() != null) {
 			for (SerialisableHttpResponse response : resource.getResponses()) {
 				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (response.getHeaders("Content-Type").equals("application/rdf+xml")) { 
+					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
 						m = this.tryRead(resource.getUri());
 					}
 				}
@@ -179,7 +180,6 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 	
 	private Model tryRead(String uri) {
 		Model m = ModelFactory.createDefaultModel();
-		
 		try{
 			m = RDFDataMgr.loadModel(uri);
 		} catch (RiotException r) {
