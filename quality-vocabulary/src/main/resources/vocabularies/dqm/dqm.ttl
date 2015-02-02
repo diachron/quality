@@ -1125,3 +1125,35 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subPropertyOf qpro:extraExceptionProperty ;
 		rdfs:domain	rdfs:Resource ;
 		rdfs:range	rdfs:Resource .
+
+
+### Machine Readable Licence
+	
+	dqm:NoValidLicenceInDataset
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The described RDF Document/Dataset has no valid licence in the voID description or in its metadata" ;
+		rdfs:label "No valid machine-readable licence" .
+	
+
+	dqm:NotRecommendedLicenceInDataset
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The described RDF Document/Dataset has a valid licence that is not recommended according to the voID W3C Standards" ;
+		rdfs:label "Not Recommended machine-readable licence" .
+
+### Machine Readable Licence
+	
+	dqm:NoValidLicenceInDatasetForHumans
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The described RDF Document/Dataset has no valid licence in the in its descriptive metadata" ;
+		rdfs:label "No valid human-readable licence" .
+	
+
+	dqm:NotRecommendedLicenceInDatasetForHumans
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The described RDF Document/Dataset has a valid licence that is not recommended according to the voID W3C Standards" ;
+		rdfs:label "Not Recommended human-readable licence" .
+

@@ -1,4 +1,4 @@
-package eu.diachron.qualitymetrics.accessibility.licensing;
+package old_classes;
 
 import java.util.ArrayList;
 
@@ -9,10 +9,11 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.semantics.vocabulary.DQM;
+import eu.diachron.qualitymetrics.accessibility.licensing.LicensingModelClassifier;
 
 /**
  * @author Santiago Londono

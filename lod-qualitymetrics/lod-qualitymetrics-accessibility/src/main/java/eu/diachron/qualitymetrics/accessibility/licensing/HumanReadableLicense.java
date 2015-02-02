@@ -1,22 +1,27 @@
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.semantics.vocabulary.DQM;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
  * @author Santiago Londono
@@ -34,8 +39,9 @@ public class HumanReadableLicense implements QualityMetric {
 	/**
 	* A set containing the URIs of the subjects for which a human-readable license statement was found in the resource 
 	*/
-	private Set<String> setLicensedURIs = Collections.synchronizedSet(new HashSet<String>());
-
+//	private Set<String> setLicensedURIs = Collections.synchronizedSet(new HashSet<String>());
+	private Map<String,Node> possibleHumanReadableLicense = new ConcurrentHashMap<String,Node>();
+	
 	/**
      * Object used to determine the base URI of the resource based on its contents and to count the number of 
      * subjects being part of it
@@ -52,6 +58,9 @@ public class HumanReadableLicense implements QualityMetric {
 	 * licensing model of the resource. Objects of these properties will also be evaluated
 	 */
 	private static HashSet<String> setLicensingDocumProps;
+	
+	private List<Quad> _problemList = new ArrayList<Quad>();
+
 	
 	static {
 		// Documentation properties considered to be potential containers of human-readable license information
@@ -78,15 +87,18 @@ public class HumanReadableLicense implements QualityMetric {
 		// Feed the base URI oracle, which will be used to determine the resource's base URI
 		this.baseURIOracle.addHint(quad);
 		
-		// Check whether the predicate corresponds to a licensing property or a documentation property...  
-		if(this.licenseModClassifier.isLicensingPredicate(predicate) || 
-				(predicate.isURI() && setLicensingDocumProps.contains(predicate.getURI()))) {
+		// Check whether the predicate corresponds to a documentation property...  
+		if(setLicensingDocumProps.contains(predicate.getURI())) {
 			logger.debug("Evaluating human-readable license candidate: {} with object: {}", predicate, object);
 			
 			// ... and check if the object contains text recognized to be of a human-readable license
 			if(this.licenseModClassifier.isLicenseStatement(object) && subject.isURI()) {
-				// add the subject's URI, described by this quad, to the set of resources with a provided human-readable license
-				this.setLicensedURIs.add(subject.getURI());
+				this.possibleHumanReadableLicense.put(subject.getURI(),object);
+				logger.debug("Human-readable license detected for subject: {}", subject);
+			} 
+			else if (this.licenseModClassifier.isNotRecommendedLicenseStatement(object) && subject.isURI()) {
+				// we should also check if the licence used is a non-recommended one
+				this.possibleHumanReadableLicense.put(subject.getURI(),object);
 				logger.debug("Human-readable license detected for subject: {}", subject);
 			}
 		}
@@ -101,27 +113,37 @@ public class HumanReadableLicense implements QualityMetric {
 	public double metricValue() {
 		// Determine the base URI of the resource
 		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
+		Node dataset = ModelFactory.createDefaultModel().createResource(resourceBaseURI).asNode();
 
 		if(resourceBaseURI != null) {
-			
-			logger.debug("Searching human-readable license for base URI: {}", resourceBaseURI);
-		
-			// As pointed out in the Java documentation (Collections.synchronizedSet method), although the setPayLevelDomainURIs  
-			// set is thread-safe with respect to read/write access, iteration over the set should be manually synchronized. 
-			// The computational cost of the synchronized keyword is no issue here, as invocation of the metricValue method is not massive
-			synchronized(this.setLicensedURIs) {
-				
-				// Check if the resource base URI is is part of the set of subject URIs attributed with a human-readable license
-				for(String curLicensedResURI : this.setLicensedURIs) {
-					
-					if(resourceBaseURI.contains(curLicensedResURI)) {
-						logger.debug("Human-readable license found for: {}", curLicensedResURI);
-						return 1.0;
-					}
-				}
+			if (this.possibleHumanReadableLicense.containsKey(resourceBaseURI)){
+				Node n = this.possibleHumanReadableLicense.get(resourceBaseURI);
+				return hasValidLicence(dataset,n);
+			} else {
+				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+				this._problemList.add(q);
+				return 0.0;
 			}
 		}
+		
+		//this should not happen, but at worse!
+		Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+		this._problemList.add(q);
 		return 0.0;
+	}
+	
+	private double hasValidLicence(Node dataset, Node literalObject){
+		if (licenseModClassifier.isLicenseStatement(literalObject)) return 1.0;
+		else if (licenseModClassifier.isNotRecommendedLicenseStatement(literalObject)){
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NotRecommendedLicenceInDatasetForHumans.asNode());
+			this._problemList.add(q);
+			return 1.0;
+		} 
+		else {
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+			this._problemList.add(q);
+			return 0.0;
+		}
 	}
 
 	public Resource getMetricURI() {
@@ -129,8 +151,14 @@ public class HumanReadableLicense implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			pl = new ProblemList<Quad>(this._problemList);
+		} catch (ProblemListInitialisationException e) {
+//			logger.debug(e.getStackTrace());
+			logger.error(e.getMessage());
+		}
+		return pl;	
 	}
 
 }

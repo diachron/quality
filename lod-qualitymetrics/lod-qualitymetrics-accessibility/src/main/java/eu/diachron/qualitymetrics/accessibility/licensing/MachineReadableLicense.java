@@ -1,19 +1,24 @@
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import eu.diachron.semantics.vocabulary.DQM;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
  * @author Santiago Londono
@@ -43,7 +48,16 @@ public class MachineReadableLicense implements QualityMetric {
 	 * Allows to determine if a predicate states what is the licensing schema of a resource
 	 */
 	private LicensingModelClassifier licenseClassifier = new LicensingModelClassifier();
+	
+	
+	/**
+	 * We might need to figure out the base URI ourselves if we do not have any voID description
+	 */
+	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
 
+	
+	private List<Quad> _problemList = new ArrayList<Quad>();
+	
 	/**
 	 * Processes a single quad being part of the dataset. Firstly, tries to figure out the URI of the dataset whence the quads come. 
 	 * If so, the URI is extracted from the corresponding subject and stored to be used in the calculation of the metric. Otherwise, verifies 
@@ -69,6 +83,9 @@ public class MachineReadableLicense implements QualityMetric {
 			logger.trace("Trying to get dataset URI, loaded: {}", dataSetURI); 
 		}
 
+		//It might be the case that there is no voID description in the dataset or RDF Document, therefore we will try to extract the base URI
+		oracle.addHint(quad);
+		
 		// Check if the property of the quad is known to provide licensing information
 		if(predicate != null && predicate.isURI() && subject != null) {
 			
@@ -90,14 +107,43 @@ public class MachineReadableLicense implements QualityMetric {
 	 * @return Current value of the Machine-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */
 	public double metricValue() {
-		// Verify that the URI of the dataset could be determined
 		if(dataSetURI != null) {
-			// Check if the set of subjects for which a license was detected corresponds to the dataset
-			if(mapLicensedResources.containsKey(dataSetURI)) {
-				return 1;
+			Node dataset = ModelFactory.createDefaultModel().createResource(dataSetURI).asNode();
+			if(mapLicensedResources.containsKey(dataSetURI)){
+				Node n = mapLicensedResources.get(dataSetURI);
+				return hasValidLicence(dataset,n);
+			} else {
+				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
+				this._problemList.add(q);
+				return 0.0;
+			}
+		} else {
+			String ds = oracle.getEstimatedResourceBaseURI();
+			Node dataset = ModelFactory.createDefaultModel().createResource(ds).asNode();
+
+			if (mapLicensedResources.containsKey(ds)){
+				Node n = mapLicensedResources.get(ds);
+				return hasValidLicence(dataset,n);
+			} else {
+				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
+				this._problemList.add(q);
+				return 0.0;
 			}
 		}
-		return 0;
+	}
+	
+	private double hasValidLicence(Node dataset, Node licence){
+		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return 1.0;
+		else if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(licence)){
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NotRecommendedLicenceInDataset.asNode());
+			this._problemList.add(q);
+			return 1.0;
+		} 
+		else {
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
+			this._problemList.add(q);
+			return 0.0;
+		}
 	}
 
 	public Resource getMetricURI() {
@@ -105,7 +151,14 @@ public class MachineReadableLicense implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			pl = new ProblemList<Quad>(this._problemList);
+		} catch (ProblemListInitialisationException e) {
+//			logger.debug(e.getStackTrace());
+			logger.error(e.getMessage());
+		}
+		return pl;	
 	}
-
+	
 }

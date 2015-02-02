@@ -28,28 +28,41 @@ public class LicensingModelClassifier {
 	private static Pattern[] arrCopyLeftURIPatterns;
 	
 	/**
+	 * Set of all the URIs of properties known to provide licensing information but not recommended to use
+	 * according to the voID vocabulary
+	 */
+	private static Pattern[] arrNotRecommendedCopyLeftURIPatterns;
+	
+	/**
 	 * Regular expressions represeting the patterns of the text deemed to be a licensing statement
 	 */
 	private static Pattern[] arrLicenseTextPatterns;
 	
 	static {
 		// Initialize set of properties known to provide licensing information
+		// For licencing properties we use the 10 top properties identified by Hogan et al. in An Empirical Survey of Linked Data conformance
 		setLicenseProperties = new HashSet<String>();
-		setLicenseProperties.add(DCTerms.license.getURI());
-		setLicenseProperties.add(DCTerms.accessRights.getURI());
-		setLicenseProperties.add(DCTerms.rights.getURI());
-		setLicenseProperties.add(DC.rights.getURI());
-		setLicenseProperties.add("http://www.w3.org/1999/xhtml/vocab#license");
-		setLicenseProperties.add("http://creativecommons.org/ns#license");
+		setLicenseProperties.add(DCTerms.license.getURI()); //dct:license
+		setLicenseProperties.add(DCTerms.rights.getURI()); //dct:rights
+		setLicenseProperties.add(DC.rights.getURI()); //dc:rights
+		setLicenseProperties.add("http://www.w3.org/1999/xhtml/vocab#license"); //xhtml:license
+		setLicenseProperties.add("http://creativecommons.org/ns#license"); //cc:license
+		setLicenseProperties.add("http://purl.org/dc/elements/1.1/licence"); //dc:licence
+		setLicenseProperties.add("http://dbpedia.org/ontology/licence"); //dbo:licence
+		setLicenseProperties.add("http://dbpedia.org/property/licence"); //dbp:licence
+		setLicenseProperties.add("http://usefulinc.com/ns/doap#license"); //doap:license
 		
 		// Initialize set of regex patterns corresponding to CopyLeft license URIs
-		arrCopyLeftURIPatterns = new Pattern[6];
-		arrCopyLeftURIPatterns[0] = Pattern.compile("^http://creativecommons\\.org/licenses/by-sa/.*", Pattern.CASE_INSENSITIVE);
-		arrCopyLeftURIPatterns[1] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/odbl.*", Pattern.CASE_INSENSITIVE);
-		arrCopyLeftURIPatterns[2] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/pddl/.*", Pattern.CASE_INSENSITIVE);
-		arrCopyLeftURIPatterns[3] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
-		arrCopyLeftURIPatterns[4] = Pattern.compile("^http://creativecommons\\.org/publicdomain/zero/.*", Pattern.CASE_INSENSITIVE);
-		arrCopyLeftURIPatterns[5] = Pattern.compile("^http://www\\.gnu\\.org/licenses/licenses.html.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns = new Pattern[4];
+		arrCopyLeftURIPatterns[0] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/odbl.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[1] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/pddl/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[2] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[3] = Pattern.compile("^http://creativecommons\\.org/publicdomain/zero/.*", Pattern.CASE_INSENSITIVE);
+		
+		arrNotRecommendedCopyLeftURIPatterns = new Pattern[2];
+		arrNotRecommendedCopyLeftURIPatterns[0] = Pattern.compile("^http://creativecommons\\.org/licenses/by-sa/.*", Pattern.CASE_INSENSITIVE);
+		arrNotRecommendedCopyLeftURIPatterns[1] = Pattern.compile("^http://www\\.gnu\\.org/copyleft/.*", Pattern.CASE_INSENSITIVE);
+
 		
 		// Initialize the licensing text pattern
 		arrLicenseTextPatterns = new Pattern[1];
@@ -89,6 +102,21 @@ public class LicensingModelClassifier {
 	}
 	
 	/**
+	 * Tells whether the object provided as parameter contains an URI, recognized as a CopyLeft license that is not recommended
+	 * @param licenseObj Object of a triple expected to provide information about the license of the described resource
+	 * @return true if the license is deemed as CopyLeft, false otherwise
+	 */
+	public boolean isNotRecommendedCopyLeftLicenseURI(Node licenseObj) {
+		
+		if(licenseObj != null && licenseObj.isURI()) {
+			// Compare the license URI with all the licenses known to be CopyLeft
+			return matchesAnyPattern(licenseObj.getURI(), arrNotRecommendedCopyLeftURIPatterns);
+		}
+		return false;
+	}
+	
+	
+	/**
 	 * Evaluates the text contained into the literal to determine whether it contains a licensing statement.
 	 * @param licenseLiteralObj Text literal corresponding to the object of a triple
 	 * @return true if the literal contains text considered to be of a license statement, false otherwise
@@ -98,6 +126,21 @@ public class LicensingModelClassifier {
 		if(licenseLiteralObj != null && licenseLiteralObj.isLiteral()) {
 			// Check whether the contents of the object match any of the license patterns
 			return matchesAnyPattern(licenseLiteralObj.toString(), arrLicenseTextPatterns);
+		}
+		return false;
+	}
+	
+	/**
+	 * Evaluates the text contained into the literal to determine whether it contains a licensing statement
+	 * that is not recommended.
+	 * @param licenseLiteralObj Text literal corresponding to the object of a triple
+	 * @return true if the literal contains text considered to be of a license statement, false otherwise
+	 */
+	public boolean isNotRecommendedLicenseStatement(Node licenseLiteralObj) {
+		
+		if(licenseLiteralObj != null && licenseLiteralObj.isLiteral()) {
+			// Check whether the contents of the object match any of the license patterns
+			return matchesAnyPattern(licenseLiteralObj.toString(), arrNotRecommendedCopyLeftURIPatterns);
 		}
 		return false;
 	}
