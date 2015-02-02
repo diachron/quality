@@ -79,14 +79,25 @@ public class CachedHTTPResource implements CacheObject {
 
 		private static final long serialVersionUID = 5007740429193218086L;
 		private Map<String,String> headers = new HashMap<String,String>();
+//		private InputStream content = null;
 		
 		public SerialisableHttpResponse(HttpResponse _response){
 			for(Header h : _response.getAllHeaders()) headers.put(h.getName(), h.getValue());
+//			try {
+//				this.content = _response.getEntity().getContent();
+//			} catch (IllegalStateException | IOException e) {
+//				e.printStackTrace();
+//			}
+//			if (headers.get("Content") != null) headers.remove("Content");
 		}
 
 		public String getHeaders(String name){
 			return headers.get(name);
 		}
+		
+//		public InputStream getContent(){
+//			return this.content;
+//		}
 	}
 	
 }
