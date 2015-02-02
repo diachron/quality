@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.StatusLine;
+import org.apache.jena.atlas.logging.Log;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -23,6 +29,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -307,7 +314,14 @@ public class EstimatedDereferenceability implements QualityMetric {
 		if(resource != null && resource.getResponses() != null) {
 			for (SerialisableHttpResponse response : resource.getResponses()) {
 				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (response.getHeaders("Content-Type").equals("application/rdf+xml")) { 
+					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
+						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
+							Model m = this.tryRead(resource.getUri());
+							if (m.size() == 0){
+								this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
+								return false;
+							}
+						}
 						this.createProblemQuad(resource.getUri(), DQM.SC200WithRDF);
 						return true;
 					}
@@ -380,4 +394,21 @@ public class EstimatedDereferenceability implements QualityMetric {
 		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), problem.asNode());
 		this._problemList.add(q);
 	}
+	
+
+	/**
+	 * Try Read content returned by text/plain 
+	 * @param uri
+	 * @return
+	 */
+	private Model tryRead(String uri) {
+		Model m = ModelFactory.createDefaultModel();
+		try{
+			m = RDFDataMgr.loadModel(uri, Lang.NTRIPLES);
+		} catch (RiotException r) {
+			Log.debug("Resource could not be parsed:", r.getMessage());
+		}
+		return m;
+	}
+	
 }
