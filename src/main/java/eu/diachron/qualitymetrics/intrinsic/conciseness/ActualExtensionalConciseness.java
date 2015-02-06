@@ -62,6 +62,8 @@ public class ActualExtensionalConciseness implements QualityMetric {
 			// Add or update the property stated by the current quad into the subject, as a predicate with a value.
 			// The value of the property is extracted from the quad's object
 			subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
+
+			// Make sure the map is updated...
 			pMapSubjects.put(quad.getSubject().getURI(), subject);
 			logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
 		} else {
@@ -84,6 +86,10 @@ public class ActualExtensionalConciseness implements QualityMetric {
 		// Keep a list free from redundant subjects, that is with all its unique elements
 		List<ComparableSubject> lstUniqueSubjects = new ArrayList<ComparableSubject>();
 		boolean isCurSubjectUnique;
+		long countCompared = 0;
+		int mapSize = pMapSubjects.size();
+		logger.debug("Starting metric value computation, with " + mapSize + "instances...");
+		
 		
 		
 //		int i = 0;
@@ -109,6 +115,11 @@ public class ActualExtensionalConciseness implements QualityMetric {
 			// the existing unique subjects, add it as unique
 			if(isCurSubjectUnique) {
 				lstUniqueSubjects.add(curSubject);
+			}
+			
+			countCompared++;
+			if((countCompared % 50000) == 0) {
+				logger.debug("Estimated value with " + countCompared + " compared instances: " +  (((double)lstUniqueSubjects.size()) / ((double)mapSize)));
 			}
 		}
 		
