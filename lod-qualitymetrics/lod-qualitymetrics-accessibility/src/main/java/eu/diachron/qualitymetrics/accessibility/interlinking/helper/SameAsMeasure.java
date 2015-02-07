@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
+import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 
 /**
  * @author Jeremy Debattista

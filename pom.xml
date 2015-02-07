@@ -79,7 +79,7 @@
 			<artifactId>luzzu-operations</artifactId>
 			<version>${luzzu.version}</version>
 		</dependency>
-
+				
 		<!-- Logging -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -259,7 +259,6 @@
 		<module>luzzu-integration</module>
 		<module>metric-utilities</module>
 		<module>quality-vocabulary</module>
-		<module>lod-qualitymetics</module>
 		<module>lod-qualitymetrics</module>
 	</modules>
 </project>

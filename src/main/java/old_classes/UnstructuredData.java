@@ -19,8 +19,6 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.diachron.datatypes.URIProfile;
 import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
-import eu.diachron.qualitymetrics.utilities.HTTPConnector;
-import eu.diachron.qualitymetrics.utilities.HTTPConnectorReport;
 import eu.diachron.semantics.vocabulary.DQM;
 
 /**
@@ -46,6 +44,8 @@ public class UnstructuredData implements QualityMetric {
 
 		logger.trace("[Unstructured Data Metric - " + t.toString()
 				+ "] Computing metric on : " + quad.asTriple());
+		
+		/* TODO: Fix dependencies and check implementation
 		Node subject = quad.getSubject();
 
 		if (HTTPConnector.isPossibleURL(subject) && (!CommonDataStructures.uriExists(subject.getURI()))) {
@@ -86,9 +86,11 @@ public class UnstructuredData implements QualityMetric {
 				else
 					this.unStructuredDataChecker(profile);
 			}
-		}
+		}*/
 	}
 
+	/* TODO: Fix dependencies and check implementation
+	
 	private void unStructuredDataChecker(URIProfile profile) {
 		if (profile.isBroken())
 			this.deadURI++;
@@ -120,7 +122,7 @@ public class UnstructuredData implements QualityMetric {
 
 		CommonDataStructures.addToUriMap(node.getURI(), profile);
 		return profile;
-	}
+	} */
 
 	public double metricValue() {
 		this.metricValue = (this.deadURI + this.unStructuredURI) / this.totalURI;

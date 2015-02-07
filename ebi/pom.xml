@@ -16,5 +16,4 @@
         	<version>${diachron.version}</version>
         </dependency>
   </dependencies>
-  <packaging>maven-plugin</packaging>
 </project>

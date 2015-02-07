@@ -9,7 +9,8 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.vocabulary.OWL;
 
-import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
+import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
+
 
 /**
  * @author Jeremy Debattista
