@@ -126,9 +126,16 @@ public class Dereferenceability implements QualityMetric {
 			if (httpResource == null || httpResource.getStatusLines() == null) {
 				this.notFetchedQueue.add(uri);
 			} else {
-				if (this.isDereferenceable(httpResource)){
-					if (this.is200AnRDF(httpResource)) this.dereferencedURI++;
-					else this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
+				if (this.isDereferenceable(httpResource)) {
+					if (this.is200AnRDF(httpResource)) { 
+						this.dereferencedURI++;
+						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());
+					} else {
+						this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
+						logger.trace("URI was dereferenced but response was not valid: {}", httpResource.getUri());
+					}
+				} else {
+					logger.trace("URI failed to be dereferenced: {}", httpResource.getUri());
 				}
 				this.totalURI++;
 

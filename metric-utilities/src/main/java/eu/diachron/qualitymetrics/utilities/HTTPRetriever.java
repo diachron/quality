@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
@@ -109,7 +110,9 @@ public class HTTPRetriever {
 	
 	private void runHTTPAsyncRetreiver() throws InterruptedException {
 		
-		RequestConfig requestConfig = this.getRequestConfig(true);
+		RequestConfig requestConfig = this.getRequestConfig(false);
+		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
+		
 		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().
 				setDefaultRequestConfig(requestConfig).
 				setMaxConnTotal(MAX_PARALLEL_REQS).
@@ -117,8 +120,7 @@ public class HTTPRetriever {
 				build();
 		
 		final CountDownLatch mainHTTPRetreiverLatch = new CountDownLatch(httpQueue.size());
-		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
-		
+				
 		try {
 			httpclient.start();
 			

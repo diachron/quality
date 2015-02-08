@@ -30,5 +30,6 @@ public class DataSetMappingForTestCase {
 	public static String EmptyAnnotationValue = "testdumps/SampleInput_EmptyAnnotationValue.ttl";
 	public static String WhitespaceInAnnotation = "testdumps/SampleInput_WhitespaceInAnnotation.ttl";
 	public static String LabelsUsingCapitals = "testdumps/SampleInput_LabelsUsingCapitals.ttl";
+	public static String Dereferenceability = "testdumps/SampleInput_PleiadesShort.ttl";
 	
 }
