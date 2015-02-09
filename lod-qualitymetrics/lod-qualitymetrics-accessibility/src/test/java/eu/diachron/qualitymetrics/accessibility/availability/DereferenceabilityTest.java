@@ -45,9 +45,10 @@ public class DereferenceabilityTest extends Assert {
 		}
 		logger.trace("Quads loaded, {} quads", countLoadedQuads);
 		
-		// The dataset corresponding to the test case has: 19 URIs, of which 15 are dereferenceable and the rest 
-		// non-dereferenceable (yield HTTP 404). Thus the expected value is: 15/19 = 0.7894736 
-		double expectedValue = 0.789474;
+		// The dataset corresponding to the test case has: 19 URIs, of which 6 are dereferenceable and abide by the rules,
+		// 6 are dereferenceable but do not abide with the rules and 4 are non-dereferenceable (yield HTTP 404). 
+		// Thus the expected value is: 6/23 = 0.26087
+		double expectedValue = 0.26087;
 		double delta = 0.001;
 		
 		// Obtain the measurement of Dereferenceability for the source of the dataset
