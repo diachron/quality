@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
+import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 
 
 /**

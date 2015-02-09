@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
+import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.PolynomialFitter.Polynomial;
 
 /**

@@ -17,7 +17,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import eu.diachron.semantics.vocabulary.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 
 /**
  * @author Santiago Londono

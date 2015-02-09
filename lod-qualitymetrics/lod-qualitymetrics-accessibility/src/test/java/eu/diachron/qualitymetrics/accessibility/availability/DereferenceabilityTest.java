@@ -1,15 +1,12 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
+package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.net.URL;
 import java.util.List;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
+import eu.diachron.qualitymetrics.utilities.TestLoader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +35,6 @@ public class DereferenceabilityTest extends Assert {
 
 	@Test
 	public void testDereferenceability() {
-		
 		ClassLoader classLoader = HTTPRetriever.class.getClassLoader();		
 		URL resource = classLoader.getResource("org/apache/http/message/BasicLineFormatter.class");
 		System.out.println(resource);

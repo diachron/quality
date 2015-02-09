@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import eu.diachron.qualitymetrics.accessibility.availability.MisreportedContentType;
+import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class MisreportedContentTypeTest extends Assert{
 	protected TestLoader loader = new TestLoader();
