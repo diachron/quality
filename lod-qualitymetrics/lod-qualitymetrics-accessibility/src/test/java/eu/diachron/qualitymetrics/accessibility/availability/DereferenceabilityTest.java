@@ -48,6 +48,8 @@ public class DereferenceabilityTest extends Assert {
 		// The dataset corresponding to the test case has: 19 URIs, of which 6 are dereferenceable and abide by the rules,
 		// 6 are dereferenceable but do not abide with the rules and 4 are non-dereferenceable (yield HTTP 404). 
 		// Thus the expected value is: 6/23 = 0.26087
+		// Only URIs that return HTTP 200 OK, are deemed as hash URIs and return a valid content-type are classified as dereferenceable.
+		// Refer to the test resource for additional details.
 		double expectedValue = 0.26087;
 		double delta = 0.001;
 		
