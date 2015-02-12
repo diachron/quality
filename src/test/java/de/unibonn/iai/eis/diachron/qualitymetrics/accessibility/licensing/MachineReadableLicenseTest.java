@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
+import eu.diachron.qualitymetrics.utilities.TestLoader;
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
 import eu.diachron.qualitymetrics.accessibility.licensing.MachineReadableLicense;
 

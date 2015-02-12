@@ -28,34 +28,34 @@
     rdfs:label "Balāwāt";
     rdfs:comment "A place from the TAVO Index";
     dcterms:contributor <http://pleiades.stoa.org/author/Jweiland>;
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/90032637/rdf> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/90032637/rdf#> .
 
 <http://pleiades.stoa.org/places/903080> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Media/Mad(aya)";
     rdfs:comment "Media/Mad(aya) was a region of northwestern Iran.";
     dcterms:contributor <http://pleiades.stoa.org/author/ShannonMT>;
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903080/rdf> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903080/rdf#> .
 
 <http://pleiades.stoa.org/places/903083> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Mihragan Kadag";
     rdfs:comment "An ancient place, cited: BAtlas 92 C4 Mihragan Kadag";
     dcterms:contributor <http://pleiades.stoa.org/author/abenaissa>;
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903083/rdf> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903083/rdf#> .
 
 <http://pleiades.stoa.org/places/903085> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Naisar";
     rdfs:comment "An ancient place, cited: BAtlas 92 G3 Naisar";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903085/rdf> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903085/rdf#> .
 
 <http://pleiades.stoa.org/places/903086> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Natanz";
     rdfs:comment "An ancient place, cited: BAtlas 92 G3 Natanz";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903086/rdf> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903086/rdf#> .
 
 <http://pleiades.stoa.org/places/903087> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Navish";
     rdfs:comment "An ancient place, cited: BAtlas 92 F2 Navish";
-    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903087/rdf> .
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903087/rdf#> .
 
 <http://pleiades.stoa.org/places/903088> a <http://geovocab.org/spatial#Feature>;
     rdfs:label "Nemavand/Laodicea/Niphaunda";

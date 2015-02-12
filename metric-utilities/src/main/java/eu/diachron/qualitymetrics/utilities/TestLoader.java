@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.utilities;
+package eu.diachron.qualitymetrics.utilities;
 
 import java.util.ArrayList;
 import java.util.List;

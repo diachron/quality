@@ -1,6 +1,8 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.security;
+package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -13,32 +15,26 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
-import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
-import eu.diachron.qualitymetrics.accessibility.security.HTTPSDataAccess;
 
-public class HTTPSDataAccessTest extends Assert {
+public class MisreportedContentTypeTest extends Assert {
 	
-	private static Logger logger = LoggerFactory.getLogger(HTTPSDataAccessTest.class);
+	private static Logger logger = LoggerFactory.getLogger(MisreportedContentTypeTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected HTTPSDataAccess metric = new HTTPSDataAccess();
-	
+	protected MisreportedContentType metric = new MisreportedContentType();
+
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.SecureDataAccess);
+		loader.loadDataSet(DataSetMappingForTestCase.MisreportedContentType);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		// No clean-up required
 	}
-
+	
 	@Test
-	public void testHTTPSDataAccess() {
-		
-		// Set the dataset URI into the datasetURI property for the positive case, so that it's retrieved by EnvironmentProperties
-		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl#drugbank-rdf");
-		
+	public void testMisreportedContentType() {
 		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -50,12 +46,14 @@ public class HTTPSDataAccessTest extends Assert {
 		}
 		logger.trace("Quads loaded, {} quads", countLoadedQuads);
 		
-		double expectedValue = 1.0;
+		// The dataset corresponding to the test case has 46 URIs (including rdf:type predicates) declared
+		// in subjects/objects, of which 9 have misreported content types.
+		double expectedValue = 0.80435;
 		double delta = 0.001;
 		
-		// Obtain the measurement of HTTPS data access for the source of the dataset
+		// Obtain the measurement of Dereferenceability for the source of the dataset
 		double metricValue = metric.metricValue();
-		logger.trace("Computed HTTPS-data-access metric: " + metricValue);
+		logger.trace("Computed misreported content-type metric: " + metricValue);
 
 		assertEquals(expectedValue, metricValue, delta);
 	}

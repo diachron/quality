@@ -1,15 +1,11 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.accessibility.availability;
+package eu.diachron.qualitymetrics.accessibility.availability;
 
-import java.net.URL;
 import java.util.List;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import de.unibonn.iai.eis.diachron.qualitymetrics.utilities.TestLoader;
 import eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability;
-import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.TestLoader;
 
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,11 +34,6 @@ public class DereferenceabilityTest extends Assert {
 
 	@Test
 	public void testDereferenceability() {
-		
-		ClassLoader classLoader = HTTPRetriever.class.getClassLoader();		
-		URL resource = classLoader.getResource("org/apache/http/message/BasicLineFormatter.class");
-		System.out.println(resource);
-
 		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;
@@ -54,9 +45,12 @@ public class DereferenceabilityTest extends Assert {
 		}
 		logger.trace("Quads loaded, {} quads", countLoadedQuads);
 		
-		// The dataset corresponding to the test case has: 19 URIs, of which 15 are dereferenceable and the rest 
-		// non-dereferenceable (yield HTTP 404). Thus the expected value is: 15/19 = 0.7894736 
-		double expectedValue = 0.789474;
+		// The dataset corresponding to the test case has: 19 URIs, of which 6 are dereferenceable and abide by the rules,
+		// 6 are dereferenceable but do not abide with the rules and 4 are non-dereferenceable (yield HTTP 404). 
+		// Thus the expected value is: 6/23 = 0.26087
+		// Only URIs that return HTTP 200 OK, are deemed as hash URIs and return a valid content-type are classified as dereferenceable.
+		// Refer to the test resource for additional details.
+		double expectedValue = 0.26087;
 		double delta = 0.001;
 		
 		// Obtain the measurement of Dereferenceability for the source of the dataset

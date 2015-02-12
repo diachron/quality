@@ -7,7 +7,8 @@ package eu.diachron.qualitymetrics.accessibility.interlinking;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.commons.graphs.MapDBGraph;
+import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.CentralityMeasure;
@@ -15,7 +16,6 @@ import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ClusteringCo
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DegreeMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DescriptiveRichnessMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.SameAsMeasure;
-import eu.diachron.semantics.vocabulary.DQM;
 
 /**
  * @author Jeremy Debattista

@@ -31,5 +31,6 @@ public class DataSetMappingForTestCase {
 	public static String WhitespaceInAnnotation = "testdumps/SampleInput_WhitespaceInAnnotation.ttl";
 	public static String LabelsUsingCapitals = "testdumps/SampleInput_LabelsUsingCapitals.ttl";
 	public static String Dereferenceability = "testdumps/SampleInput_PleiadesShort.ttl";
+	public static String MisreportedContentType = "testdumps/SampleInput_PleiadesShort.ttl";
 	
 }

@@ -34,6 +34,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>de.unibonn.iai.eis</groupId>
+				<artifactId>luzzu-plugins</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>daQValidator</goal>
+						</goals>
+						<configuration>
+							<vocabLocation>/Users/jeremy/Documents/Workspaces/eis/quality/quality-vocabulary/src/main/resources/vocabularies/dqm/dqm.ttl</vocabLocation></configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	
+	
 </project>

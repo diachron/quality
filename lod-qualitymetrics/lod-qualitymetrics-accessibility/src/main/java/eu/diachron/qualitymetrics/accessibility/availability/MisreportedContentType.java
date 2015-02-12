@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
@@ -52,7 +56,12 @@ public class MisreportedContentType implements QualityMetric {
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	private boolean metricCalculated = false;
 	private List<String> uriSet = Collections.synchronizedList(new ArrayList<String>());
-
+	
+	/**
+	 * Regular expression matching filenames as provided in the Content-Disposition header of HTTP responses.
+	 * Note that Pattern instances are thread-safe and are intended to create a new Matcher instance upon each usage
+	 */
+	private static final Pattern ptnFileName = Pattern.compile(".*filename=([^;\\s]+).*");
 
 	static Logger logger = Logger.getLogger(MisreportedContentType.class);
 	boolean followRedirects = true;
@@ -96,21 +105,29 @@ public class MisreportedContentType implements QualityMetric {
 		while(uriSet.size() > 0){
 			String uri = uriSet.remove(0);
 			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-			if (httpResource.getResponses() == null) {
+			if (httpResource == null || httpResource.getResponses() == null) {
 				uriSet.add(uri);
 				continue;
 			}
-			for (SerialisableHttpResponse response : httpResource.getResponses()){
-				if (response.getHeaders("Status").contains("200")){
+			if(hasResponseOK(httpResource)) {
+				for (SerialisableHttpResponse response : httpResource.getResponses()){
+					// if (response.getHeaders("Status") != null && response.getHeaders("Status").contains("200")){
 					String contentDisposition = response.getHeaders("Content-Disposition");
 					
 					if ((contentDisposition != null) && (contentDisposition.length() > 0)){
 						//we can check the file it returns avoiding the loading of file
-						String filename = response.getHeaders("Content-Disposition").split(";")[1].replace("filename=\"", "").replace("\"", "");
+						Matcher fileNameMatcher = ptnFileName.matcher(response.getHeaders("Content-Disposition"));
+						// If the filename is not found in the Content-Disposition header, give up on this response (continue)
+						if(!fileNameMatcher.matches()) continue;
+						
+						String filename = fileNameMatcher.group(1);	// After matching the regular expression, the first capture group will fetch the filename value
 						Lang language = RDFLanguages.filenameToLang(filename); // if any other type of file but not a LOD compatible, it will return null and we skip
+						
+						// If the language could not be determined from the filename, give up on this response (continue)
 						if (language == null) continue;
-						if (response.getHeaders("Content-Type").equals(WebContent.mapLangToContentType(language))) correctReportedType++;
-						else {
+						if (response.getHeaders("Content-Type").equals(WebContent.mapLangToContentType(language))) { 
+							correctReportedType++;
+						} else {
 							misReportedType++;
 							this.createProblemModel(uri, response.getHeaders("Content-Type"), WebContent.mapLangToContentType(language));
 						}
@@ -128,8 +145,18 @@ public class MisreportedContentType implements QualityMetric {
 					}
 				}
 			}
-			
 		}
+	}
+	
+	private boolean hasResponseOK(CachedHTTPResource resource) {
+		List<StatusLine> lstStatusLines = resource.getStatusLines();
+		
+		if(lstStatusLines != null) {
+			synchronized(lstStatusLines) {
+				return lstStatusLines.toString().contains("200 OK");
+			}
+		}
+		return false;
 	}
 	
 	public ProblemList<?> getQualityProblems() {
@@ -156,18 +183,23 @@ public class MisreportedContentType implements QualityMetric {
 	
 	private Pair<Boolean, Lang> tryParse(CachedHTTPResource httpResource, SerialisableHttpResponse response){
 		for (SerialisableHttpResponse res : httpResource.getResponses()){
+			Lang lang = null;
 			try {
-				Lang lang = RDFLanguages.contentTypeToLang(res.getHeaders("Content-Type"));
+				lang = RDFLanguages.contentTypeToLang(res.getHeaders("Content-Type"));
 				RDFDataMgr.loadModel(httpResource.getUri(), lang);
 				return new Pair<Boolean, Lang>(true, lang);
 			} catch (RiotException e){
-				Collection<Lang> langs = this.createLangSet(RDFLanguages.contentTypeToLang(res.getHeaders("Content-Type")));
+				// Collection<Lang> langs = this.createLangSet(RDFLanguages.contentTypeToLang(res.getHeaders("Content-Type")));
+				Collection<Lang> langs = RDFLanguages.getRegisteredLanguages(); 
 				for(Lang l : langs){
 					try{
-						RDFDataMgr.loadModel(httpResource.getUri(), l);
-						return new Pair<Boolean, Lang>(false, l);
+						if(!l.equals(lang)) {
+							RDFDataMgr.loadModel(httpResource.getUri(), l);
+							return new Pair<Boolean, Lang>(false, l);
+						}
 					}catch (RiotException e1){
-						logger.debug("Could not load the model as " + l);
+						logger.debug("Could not load the model of " + ((httpResource != null)?(httpResource.getUri()):("NULL")) + " as " + l + 
+								" for lang: " + ((lang != null)?(lang):("NULL")));
 					}
 				}
 			}
