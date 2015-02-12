@@ -1,8 +1,6 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Assert;
