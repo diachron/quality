@@ -41,43 +41,36 @@ public class HighThroughput implements QualityMetric {
 	private long totalDelay = -1;
 	
 	/**
-	 * Flag stating whether the metric has been computed. This metric should be computed once, for the dataset's URI,
-	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
+	 * An oracle which tries to extract the PLD of a dataset
 	 */
-	private boolean hasBeenComputed = false;
+	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
+	
+	/**
+	 * Dataset PLD
+	 */
+	private String datasetURI = null;
 
 	/**
-	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
+	 * Holds the metric value
+	 */
+	private Double metricValue = null;
+	
+
+	/**
+	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI/PLD of the dataset where from the quads were obtained. 
 	 * A burst HTTP requests is sent to the dataset's URI and the number of requests sent is divided by the total time required to serve them,  
 	 * thus obtaining the estimated number of requests server per second
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		
-		// Check if the metric has already been computed
-		if(this.hasBeenComputed) {
-			return;
-		}
-		
-		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = null; 
-		
-		try {
-			datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-		} catch(Exception ex) {
-			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
-			// Try to get the dataset URI from the VOID property, as last resource
-			datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
-		}
-
-		// The URI of the subject of such quad, should be the dataset's URL. 
-		// Try to calculate the total delay associated to the current dataset
-		if(datasetURI != null) {
-			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
-			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
-			
-			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
-			this.hasBeenComputed = true;
+		if (datasetURI != null){
+			try {
+				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+			} catch(Exception ex) {
+				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
+				if (datasetURI == null) oracle.addHint(quad);
+			}
 		}
 	}
 
@@ -89,9 +82,15 @@ public class HighThroughput implements QualityMetric {
 	 * @return Current value of the High Throughput metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
+		if (this.metricValue == null){
+			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceBaseURI();
+			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
+			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 
-		double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
-		return Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
+			double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
+			this.metricValue = Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
+		}
+		return this.metricValue();
 	}
 
 	public Resource getMetricURI() {
@@ -99,6 +98,7 @@ public class HighThroughput implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
+		// nothing to report
 		return null;
 	}
 

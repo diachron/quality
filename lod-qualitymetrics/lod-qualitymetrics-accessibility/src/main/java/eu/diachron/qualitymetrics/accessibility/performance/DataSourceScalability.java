@@ -49,12 +49,22 @@ public class DataSourceScalability implements QualityMetric {
 	 */
 	private long scalabilityDiff = -1;
 	
+	
 	/**
-	 * Flag stating whether the metric has been computed. This metric should be computed once, for the dataset's URI,
-	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
+	 * An oracle which tries to extract the PLD of a dataset
 	 */
-	private boolean hasBeenComputed = false;
+	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
+	
+	/**
+	 * Dataset PLD
+	 */
+	private String datasetURI = null;
 
+	/**
+	 * Holds the metric value
+	 */
+	private Double metricValue = null;
+	
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
 	 * If so, the URI is extracted from the corresponding subject. A number NUM_HTTP_REQUESTS of HTTP GET requests are sent simultaneously to 
@@ -63,29 +73,33 @@ public class DataSourceScalability implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		
-		// Check if the metric has already been computed
-		if(this.hasBeenComputed) {
-			return;
+		if (datasetURI != null){
+			try {
+				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+			} catch(Exception ex) {
+				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
+				if (datasetURI == null) oracle.addHint(quad);
+			}
 		}
-		
-		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = null; 
-		
-		try {
-			datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-		} catch(Exception ex) {
-			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
-			// Try to get the dataset URI from the VOID property, as last resource
-			datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
-		}
+	}
 
-		// The URI of the subject of such quad, should be the dataset's URL. 
-		// Try to calculate the scalability differential associated to the data source
-		if(datasetURI != null) {
+	/**
+	 * The “scalability differential factor” or Sdf, is calculated as the difference between the average response time of a request, 
+	 * estimated by sending N simultaneous requests and the response time of an independent, single request. Thus, its range is [0, +inf).
+	 * This method computes the normalized value of the metric, which is in the range [0, 1], with 1 the top ranking. when the Sdf gets 
+	 * a value bigger than or equals to Thres, the value of the metric will be 0. Therefore, for Sdf values above Thres, 
+	 * the metric losses its comparative power.
+	 * @return Current value of the Scalability of a Data Source metric, measured with respect to the dataset's URI
+	 */
+	public double metricValue() {
+		if (this.metricValue == null){
+			
+			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceBaseURI();
+			
 			// Send parallel requests and accumulate their response times as the total delay
 			logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);
-			long requestsSwarmDelay = HTTPRetriever.measureParallelReqsDelay(datasetURI, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
+			long requestsSwarmDelay = HTTPRetriever.measureParallelReqsDelay(this.datasetURI, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
 			
 			// Verify if the total delay was properly calculated (a delay of -1 indicates that one or more requests failed, which would spoil the avg. op.)
 			if(requestsSwarmDelay >= 0) {
@@ -103,22 +117,9 @@ public class DataSourceScalability implements QualityMetric {
 				scalabilityDiff = 0; //return 0 when test fails
 			}
 			
-			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
-			this.hasBeenComputed = true;
+			this.metricValue = Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, (double)scalabilityDiff));
 		}
-	}
-
-	/**
-	 * The “scalability differential factor” or Sdf, is calculated as the difference between the average response time of a request, 
-	 * estimated by sending N simultaneous requests and the response time of an independent, single request. Thus, its range is [0, +inf).
-	 * This method computes the normalized value of the metric, which is in the range [0, 1], with 1 the top ranking. when the Sdf gets 
-	 * a value bigger than or equals to Thres, the value of the metric will be 0. Therefore, for Sdf values above Thres, 
-	 * the metric losses its comparative power.
-	 * @return Current value of the Scalability of a Data Source metric, measured with respect to the dataset's URI
-	 */
-	public double metricValue() {
-		
-		return Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, (double)scalabilityDiff));
+		return this.metricValue;
 	}
 
 	public Resource getMetricURI() {
@@ -126,6 +127,7 @@ public class DataSourceScalability implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
+		// nothing to report
 		return null;
 	}
 

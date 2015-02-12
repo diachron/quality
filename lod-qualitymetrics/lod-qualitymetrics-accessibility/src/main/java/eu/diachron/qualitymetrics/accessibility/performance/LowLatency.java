@@ -36,10 +36,19 @@ public class LowLatency implements QualityMetric {
 	private long totalDelay = -1;
 	
 	/**
-	 * Flag stating whether the metric has been computed. This metric should be computed once, for the dataset's URI,
-	 * but the compute method is run for every quad in the dataset. This flag prevents the metric from being computed per quad
+	 * An oracle which tries to extract the PLD of a dataset
 	 */
-	private boolean hasBeenComputed = false;
+	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
+	
+	/**
+	 * Dataset PLD
+	 */
+	private String datasetURI = null;
+
+	/**
+	 * Holds the metric value
+	 */
+	private Double metricValue = null;
 	
 	/**
 	 * Response time that is considered to be the ideal for a resource. In other words, its the amount of time in milliseconds below 
@@ -56,30 +65,22 @@ public class LowLatency implements QualityMetric {
 	 */
 	public void compute(Quad quad) {
 		
-		// Check if the metric has already been computed
-		if(this.hasBeenComputed) {
-			return;
+		if (datasetURI != null){
+			try {
+				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+			} catch(Exception ex) {
+				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
+				if (datasetURI == null) oracle.addHint(quad);
+			}
 		}
 		
-		// Get all parts of the quad required for the computation of this metric
-		String datasetURI = null; 
-		
-		try {
-			datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-		} catch(Exception ex) {
-			logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
-			// Try to get the dataset URI from the VOID property, as last resource
-			datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
-		}
-
 		// The URI of the subject of such quad, should be the dataset's URL. 
 		// Try to calculate the total delay associated to the current dataset
 		if(datasetURI != null) {
-			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 			
 			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
-			this.hasBeenComputed = true;
 		}
 	}
 
@@ -91,9 +92,15 @@ public class LowLatency implements QualityMetric {
 	 * @return Current value of the Low Latency metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
+		if (this.metricValue == null){
+			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceBaseURI();
+			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
+			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 
-		double avgRespTime = ((double)totalDelay) / ((double)NUM_HTTP_SAMPLES);
-		return Math.min(1.0, NORM_TOTAL_RESPONSE_TIME / avgRespTime);
+			double avgRespTime = ((double)totalDelay) / ((double)NUM_HTTP_SAMPLES);
+			this.metricValue = Math.min(1.0, NORM_TOTAL_RESPONSE_TIME / avgRespTime);
+		}
+		return this.metricValue();
 	}
 
 	public Resource getMetricURI() {
@@ -101,7 +108,7 @@ public class LowLatency implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
+		// nothing to report
 		return null;
 	}
 
