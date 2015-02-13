@@ -57,7 +57,7 @@ public class NoUsageSlashURIs implements QualityMetric {
 		// Extract the URIs of current subject and object of the quad, if they are URIs
 		String[] arrURIsUsed = new String[2];
 		arrURIsUsed[0] = (quad.getSubject().isURI())?(quad.getSubject().getURI()):("");
-		arrURIsUsed[1] = (quad.getSubject().isURI())?(quad.getSubject().getURI()):("");
+		arrURIsUsed[1] = (quad.getObject().isURI())?(quad.getObject().getURI()):("");
 		logger.debug("Processing triple with subject URI: {}. Object URI: {}", arrURIsUsed[0], arrURIsUsed[1]);
 		
 		// Process all URIs used at either subjects or objects
