@@ -236,6 +236,14 @@
 		rdfs:comment	"Determines whether the extent to which hash URIs are used instead of slash URIs, as the latter usually imply that 303 redirects must be performed to gather all the elements described in the dataset" ;
 		rdfs:label	"No usage of slash URIs metric" .
 
+	dqm:CorrectURIUsage
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Determines whether URIs in a dataset are represented as Slash URIs if dataset is large, or Hash URIs otherwise" ;
+		rdfs:label	"Correct Usage of Cool URIs" .
+
+
 	dqm:MalformedDatatypeLiteralsMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
@@ -567,7 +575,15 @@
 		rdfs:label	"Performance has no usage of slash URIs metric" ;
 		rdfs:domain	dqm:Performance ;
 		rdfs:range	dqm:NoUsageOfSlashURIsMetric .
-		
+	
+	dqm:hasCorrectURIUsage
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Performance Dimension with the Correct URI Usage Metric (Correct URI Usage Metric belongs to the Performance Dimension)" ;
+		rdfs:label	"has Correct URI Usage" ;
+		rdfs:domain	dqm:Performance ;
+		rdfs:range	dqm:CorrectURIUsage .
+	
 		#Interlink Dimensions Properties
 		dqm:hasInterlinkDimension
 			a	rdfs:Property ;	
@@ -1156,4 +1172,12 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "The described RDF Document/Dataset has a valid licence that is not recommended according to the voID W3C Standards" ;
 		rdfs:label "Not Recommended human-readable licence" .
+
+## Correct URI Usage
+
+	dqm:IncorrectCoolURIUsage
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "An Incorrect URI style used for dataset. For datasets with more than 500K triples Slash URIs are suggested, whilst for less than 500K triples Hash URIs should be used" ;
+		rdfs:label "Incorrect Usage of URIs" .
 

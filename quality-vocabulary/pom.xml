@@ -34,7 +34,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+		<!-- 	<plugin>
 				<groupId>de.unibonn.iai.eis</groupId>
 				<artifactId>luzzu-plugins</artifactId>
 				<version>1.0.0</version>
@@ -48,7 +48,7 @@
 							<vocabLocation>/Users/jeremy/Documents/Workspaces/eis/quality/quality-vocabulary/src/main/resources/vocabularies/dqm/dqm.ttl</vocabLocation></configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 	

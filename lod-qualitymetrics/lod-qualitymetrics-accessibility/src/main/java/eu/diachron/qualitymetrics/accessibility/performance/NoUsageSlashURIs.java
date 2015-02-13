@@ -23,6 +23,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * and with more request, performance degrades.
  *
  */
+@Deprecated
 public class NoUsageSlashURIs implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.NoUsageOfSlashURIsMetric;
