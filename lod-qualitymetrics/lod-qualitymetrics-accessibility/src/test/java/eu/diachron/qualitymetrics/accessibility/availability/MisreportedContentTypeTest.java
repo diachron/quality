@@ -44,9 +44,9 @@ public class MisreportedContentTypeTest extends Assert {
 		}
 		logger.trace("Quads loaded, {} quads", countLoadedQuads);
 		
-		// The dataset corresponding to the test case has 46 URIs (including rdf:type predicates) declared
+		// The dataset corresponding to the test case has 27 URIs (including rdf:type predicates) declared
 		// in subjects/objects, of which 9 have misreported content types.
-		double expectedValue = 0.80435;
+		double expectedValue = 0.33333;
 		double delta = 0.001;
 		
 		// Obtain the measurement of Dereferenceability for the source of the dataset

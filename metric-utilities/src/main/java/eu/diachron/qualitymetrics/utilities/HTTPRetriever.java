@@ -26,7 +26,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
@@ -110,7 +109,7 @@ public class HTTPRetriever {
 	
 	private void runHTTPAsyncRetreiver() throws InterruptedException {
 		
-		RequestConfig requestConfig = this.getRequestConfig(false);
+		RequestConfig requestConfig = this.getRequestConfig(true);
 		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
 		
 		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().
@@ -137,7 +136,6 @@ public class HTTPRetriever {
 				final CachedHTTPResource newResource = new CachedHTTPResource();
 				final HttpClientContext localContext = HttpClientContext.create(); // Each request must have it's own context
 				newResource.setUri(queuePeek);
-				DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 
 				try {							  
 					final HttpGet request = new HttpGet(queuePeek);					
@@ -185,6 +183,7 @@ public class HTTPRetriever {
 								}
 		
 								public void cancelled() {
+									DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 									logger.debug("The retreival for {} was cancelled. {} pending requests",request.getURI().toString(), mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
 								}

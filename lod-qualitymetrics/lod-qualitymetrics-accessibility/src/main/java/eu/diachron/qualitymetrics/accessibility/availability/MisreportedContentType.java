@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -52,6 +51,7 @@ public class MisreportedContentType implements QualityMetric {
 	// TODO handle unknown host exception (people.comiles.eu,fb.comiles.eu)
 	private double misReportedType=0;
 	private double correctReportedType=0;
+	private double notOkResponses=0;
 	
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	private boolean metricCalculated = false;
@@ -73,13 +73,19 @@ public class MisreportedContentType implements QualityMetric {
 		String subject = quad.getSubject().toString();
 		if (httpRetreiver.isPossibleURL(subject)){
 			httpRetreiver.addResourceToQueue(subject);
-			uriSet.add(subject);
+			
+			if(!uriSet.contains(subject)) {
+				uriSet.add(subject);
+			}
 		}
 		
 		String object = quad.getObject().toString();
 		if (httpRetreiver.isPossibleURL(object)){
 			httpRetreiver.addResourceToQueue(object);
-			uriSet.add(object);
+			
+			if(!uriSet.contains(object)) {
+				uriSet.add(object);
+			}
 		}
 	}
 
@@ -96,22 +102,34 @@ public class MisreportedContentType implements QualityMetric {
 			httpRetreiver.stop();
 		}
 		
-		double metricValue = correctReportedType / (misReportedType + correctReportedType);
+		double metricValue = 0.0;
+		logger.debug(String.format("Computing metric. Correct: %.0f. Misreported: %.0f. Not OK: %.0f", correctReportedType, misReportedType, notOkResponses));
+		if((misReportedType + correctReportedType) != 0.0) {
+			metricValue = correctReportedType / (misReportedType + correctReportedType);
+		}
 
 		return metricValue;
 	}
 	
-	private void checkForMisreportedContentType(){
+	private void checkForMisreportedContentType(){		
 		while(uriSet.size() > 0){
-			String uri = uriSet.remove(0);
+			// Get the next URI to be processed and remove it from the set (i.e. the uriSet is used as a queue, the next element is poped)
+			String uri = uriSet.remove(0);	
+			
+			// Check if the URI has already been dereferenced, in which case, it would be part of the Cache
 			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
+			
 			if (httpResource == null || httpResource.getResponses() == null) {
-				uriSet.add(uri);
+				// If the URI is not part of the cache, add it back in to the uriSet, so that it's tried to be dereferenced by the HTTP Retriever
+				if(!uriSet.contains(uri)) {
+					uriSet.add(uri);
+				}
 				continue;
 			}
+			
 			if(hasResponseOK(httpResource)) {
+				// URI found in the cache, validate its content-type 
 				for (SerialisableHttpResponse response : httpResource.getResponses()){
-					// if (response.getHeaders("Status") != null && response.getHeaders("Status").contains("200")){
 					String contentDisposition = response.getHeaders("Content-Disposition");
 					
 					if ((contentDisposition != null) && (contentDisposition.length() > 0)){
@@ -134,8 +152,9 @@ public class MisreportedContentType implements QualityMetric {
 						break;
 					} else {
 						Pair<Boolean, Lang> tryP = this.tryParse(httpResource, response);
-						if (tryP.getFirstElement() == true) correctReportedType++;
-						else if (tryP.getSecondElement() == null){
+						if (tryP.getFirstElement() == true) {
+							correctReportedType++;
+						} else if (tryP.getSecondElement() == null){
 							misReportedType++;
 							this.createProblemModel(uri, response.getHeaders("Content-Type"), "null");
 						} else {
@@ -144,6 +163,9 @@ public class MisreportedContentType implements QualityMetric {
 						}
 					}
 				}
+			} else {
+				logger.debug("URI " + ((httpResource != null)?(httpResource.getUri()):("-")) + " deferenced but response was not 200 OK");
+				notOkResponses++;
 			}
 		}
 	}
@@ -206,12 +228,5 @@ public class MisreportedContentType implements QualityMetric {
 		}
 		return new Pair<Boolean, Lang>(false, null);
 	}
-	
-	private Collection<Lang> createLangSet(Lang skipLang){
-		Collection<Lang> retSet = RDFLanguages.getRegisteredLanguages();
-		retSet.remove(skipLang);
-		return retSet;
-	}
-	
 
 }
