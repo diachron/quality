@@ -41,7 +41,7 @@ public class DataSourceScalability implements QualityMetric {
 	 * number of milliseconds above which the value of the metric will start getting a value of 0 (worst ranking). 
 	 * For differences below this threshold, the value of the metric increases inverse linearly (view metricValue())
 	 */
-	private static final double DIFFERENCE_THRESHOLD = 1000.0;
+	private static final double DIFFERENCE_THRESHOLD = 10000.0;
 	
 	/**
 	 * Holds the difference between the averaged response time calculated for N requests and the 

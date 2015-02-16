@@ -34,8 +34,8 @@ public class DataSetMappingForTestCase {
 	public static String Dereferenceability = "testdumps/SampleInput_PleiadesShort.ttl";
 	public static String MisreportedContentType = "testdumps/SampleInput_PleiadesShort.ttl";
 	// For ..qualitymetrics.accessibility.performance
-	public static String DataSourceScalability = "testdumps/SampleInput_PleiadesShort.ttl";
-	public static String HighThroughputTest = "testdumps/SampleInput_PleiadesShort.ttl";
-	public static String LowLatencyTest = "testdumps/SampleInput_PleiadesShort.ttl";
-	public static String CorrectURIUsage = "testdumps/SampleInput_PleiadesShort.ttl";
+	public static String DataSourceScalability = "testdumps/SampleInput_DrugBank.ttl";
+	public static String HighThroughput = "testdumps/SampleInput_DrugBank.ttl";
+	public static String LowLatencyTest = "testdumps/SampleInput_DrugBank.ttl";
+	public static String CorrectURIUsage = "testdumps/SampleInput_DrugBank.ttl";
 }

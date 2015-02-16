@@ -33,7 +33,7 @@ public class HighThroughput implements QualityMetric {
 	 * Number of requests per second that ideally, should be served by a data source. In other words, its the amount of served requests 
 	 * per second above of which a resource will get a perfect score of 1.0. 
 	 */
-	private static final double NORM_SERVED_REQS_PER_MILLISEC = 1.0;
+	private static final double NORM_SERVED_REQS_PER_MILLISEC = 0.0025;
 	
 	/**
 	 * Holds the total delay as currently calculated by the compute method
@@ -63,11 +63,11 @@ public class HighThroughput implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		if (datasetURI != null){
+		if (datasetURI == null){
 			try {
 				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
 			} catch(Exception ex) {
-				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+				logger.error("Error retrieving dataset URI, processor not initialised yet", ex);
 				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
 				if (datasetURI == null) oracle.addHint(quad);
 			}
@@ -90,7 +90,7 @@ public class HighThroughput implements QualityMetric {
 			double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
 			this.metricValue = Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
 		}
-		return this.metricValue();
+		return this.metricValue;
 	}
 
 	public Resource getMetricURI() {
