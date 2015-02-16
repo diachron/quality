@@ -41,7 +41,7 @@ public class DataSourceScalability implements QualityMetric {
 	 * number of milliseconds above which the value of the metric will start getting a value of 0 (worst ranking). 
 	 * For differences below this threshold, the value of the metric increases inverse linearly (view metricValue())
 	 */
-	private static final double DIFFERENCE_THRESHOLD = 10000.0;
+	private static final double DIFFERENCE_THRESHOLD = 1000.0;
 	
 	/**
 	 * Holds the difference between the averaged response time calculated for N requests and the 
@@ -73,11 +73,11 @@ public class DataSourceScalability implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		if (datasetURI != null){
+		if (datasetURI == null){
 			try {
 				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
 			} catch(Exception ex) {
-				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
+				logger.error("Error retrieving dataset URI, processor not initialised yet", ex);
 				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
 				if (datasetURI == null) oracle.addHint(quad);
 			}
@@ -114,7 +114,7 @@ public class DataSourceScalability implements QualityMetric {
 				logger.trace("Total scalability differential factor for dataset {} was {}", datasetURI, scalabilityDiff);
 			} else {
 				logger.trace("Calculation of scalability differential factor failed for dataset {}", datasetURI);
-				scalabilityDiff = 0; //return 0 when test fails
+				scalabilityDiff = ((long)DIFFERENCE_THRESHOLD); //return 0 when test fails
 			}
 			
 			this.metricValue = Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, (double)scalabilityDiff));

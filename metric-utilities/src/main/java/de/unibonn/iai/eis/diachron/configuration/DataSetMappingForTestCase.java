@@ -30,7 +30,12 @@ public class DataSetMappingForTestCase {
 	public static String EmptyAnnotationValue = "testdumps/SampleInput_EmptyAnnotationValue.ttl";
 	public static String WhitespaceInAnnotation = "testdumps/SampleInput_WhitespaceInAnnotation.ttl";
 	public static String LabelsUsingCapitals = "testdumps/SampleInput_LabelsUsingCapitals.ttl";
+	// For ..qualitymetrics.accessibility.availability
 	public static String Dereferenceability = "testdumps/SampleInput_PleiadesShort.ttl";
 	public static String MisreportedContentType = "testdumps/SampleInput_PleiadesShort.ttl";
-	
+	// For ..qualitymetrics.accessibility.performance
+	public static String DataSourceScalability = "testdumps/SampleInput_PleiadesShort.ttl";
+	public static String HighThroughputTest = "testdumps/SampleInput_PleiadesShort.ttl";
+	public static String LowLatencyTest = "testdumps/SampleInput_PleiadesShort.ttl";
+	public static String CorrectURIUsage = "testdumps/SampleInput_PleiadesShort.ttl";
 }
