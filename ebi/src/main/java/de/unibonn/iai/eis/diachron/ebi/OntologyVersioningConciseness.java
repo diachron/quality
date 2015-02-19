@@ -7,6 +7,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 
@@ -75,6 +76,16 @@ public class OntologyVersioningConciseness implements QualityMetric {
 	
 	public ProblemList<?> getQualityProblems() {
 		return null;
+	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
 	}
 
 }

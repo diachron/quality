@@ -72,5 +72,15 @@ public class SynonymUsage implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		return null;
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 
 }

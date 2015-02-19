@@ -67,4 +67,14 @@ public class ObsoleteConceptsInOntology implements QualityMetric {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 }
