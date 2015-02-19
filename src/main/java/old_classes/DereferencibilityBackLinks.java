@@ -1,4 +1,4 @@
-package eu.diachron.qualitymetrics.accessibility.interlinking;
+package old_classes;
 
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;

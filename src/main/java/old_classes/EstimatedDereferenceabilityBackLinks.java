@@ -1,4 +1,4 @@
-package eu.diachron.qualitymetrics.accessibility.interlinking;
+package old_classes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
