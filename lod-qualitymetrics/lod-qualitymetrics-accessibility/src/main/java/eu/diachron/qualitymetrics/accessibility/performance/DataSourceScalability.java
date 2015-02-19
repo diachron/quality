@@ -42,7 +42,7 @@ public class DataSourceScalability implements QualityMetric {
 	 * For differences below this threshold, the value of the metric increases inverse linearly (view metricValue())
 	 */
 	private static final double DIFFERENCE_THRESHOLD = 10000.0;
-	
+		
 	/**
 	 * Holds the difference between the averaged response time calculated for N requests and the 
 	 * response time calculated for a single request, as currently calculated by the compute method
@@ -127,7 +127,8 @@ public class DataSourceScalability implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// nothing to report
+		// Not implemented for this metric
+		logger.debug("Quality problems not implemented for Data Source Scalability metric");
 		return null;
 	}
 

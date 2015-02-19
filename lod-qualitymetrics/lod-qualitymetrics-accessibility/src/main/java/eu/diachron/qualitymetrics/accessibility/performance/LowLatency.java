@@ -54,7 +54,7 @@ public class LowLatency implements QualityMetric {
 	 * Response time that is considered to be the ideal for a resource. In other words, its the amount of time in milliseconds below 
 	 * which response times for resources will get a perfect score of 1.0. 
 	 */
-	private static final double NORM_TOTAL_RESPONSE_TIME = 1.0;
+	private static final double NORM_TOTAL_RESPONSE_TIME = 750.0;
 
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
@@ -64,8 +64,7 @@ public class LowLatency implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		
-		if (datasetURI != null){
+		if (datasetURI == null){
 			try {
 				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
 			} catch(Exception ex) {
@@ -73,14 +72,6 @@ public class LowLatency implements QualityMetric {
 				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
 				if (datasetURI == null) oracle.addHint(quad);
 			}
-		}
-		
-		// The URI of the subject of such quad, should be the dataset's URL. 
-		// Try to calculate the total delay associated to the current dataset
-		if(datasetURI != null) {
-			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
-			
-			// Metric has been computed, prevent it from being re-computed for every quad in the dataset
 		}
 	}
 
@@ -100,7 +91,7 @@ public class LowLatency implements QualityMetric {
 			double avgRespTime = ((double)totalDelay) / ((double)NUM_HTTP_SAMPLES);
 			this.metricValue = Math.min(1.0, NORM_TOTAL_RESPONSE_TIME / avgRespTime);
 		}
-		return this.metricValue();
+		return this.metricValue;
 	}
 
 	public Resource getMetricURI() {
@@ -108,7 +99,8 @@ public class LowLatency implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// nothing to report
+		// Not implemented for this metric
+		logger.debug("Quality problems not implemented for Low Latency metric");
 		return null;
 	}
 

@@ -37,5 +37,5 @@ public class DataSetMappingForTestCase {
 	public static String DataSourceScalability = "testdumps/SampleInput_DrugBank.ttl";
 	public static String HighThroughput = "testdumps/SampleInput_DrugBank.ttl";
 	public static String LowLatencyTest = "testdumps/SampleInput_DrugBank.ttl";
-	public static String CorrectURIUsage = "testdumps/SampleInput_DrugBank.ttl";
+	public static String CorrectURIUsage = "testdumps/SampleInput_PleiadesShort.ttl";
 }

@@ -98,7 +98,8 @@ public class HighThroughput implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// nothing to report
+		// Not implemented for this metric
+		logger.debug("Quality problems not implemented for High Throughput metric");
 		return null;
 	}
 
