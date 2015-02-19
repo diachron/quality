@@ -1,4 +1,4 @@
-package eu.diachron.qualitymetrics.accessibility.security;
+package old_classes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +26,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
  * 
  * This is only required for the EBI use case
  */
+@Deprecated
 public class HTTPSDataAccess implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.HTTPSDataAccessMetric;
