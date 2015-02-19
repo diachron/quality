@@ -6,8 +6,17 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix qpro:     <http://purl.org/eis/vocab/qpro#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 
+##########################
+# Provenance Information #
+##########################
 
+dqm:LuzzuProvenanceAgent
+	a		prov:SoftwareAgent ;
+	rdfs:label	"Luzzu Quality Assessment Framework"^^xsd:string .
+
+####
 
 	#Category Classes
 	dqm:Accessibility
