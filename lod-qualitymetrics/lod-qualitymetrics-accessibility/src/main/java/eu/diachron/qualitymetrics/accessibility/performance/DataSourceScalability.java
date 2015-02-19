@@ -131,5 +131,15 @@ public class DataSourceScalability implements QualityMetric {
 		logger.debug("Quality problems not implemented for Data Source Scalability metric");
 		return null;
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 
 }

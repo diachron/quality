@@ -160,5 +160,15 @@ public class HumanReadableLicense implements QualityMetric {
 		}
 		return pl;	
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 
 }

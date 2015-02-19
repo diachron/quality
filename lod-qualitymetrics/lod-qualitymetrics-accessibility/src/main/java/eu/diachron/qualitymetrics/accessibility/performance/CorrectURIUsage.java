@@ -170,5 +170,15 @@ public class CorrectURIUsage implements QualityMetric {
 		}
 		return pl;
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 
 }
