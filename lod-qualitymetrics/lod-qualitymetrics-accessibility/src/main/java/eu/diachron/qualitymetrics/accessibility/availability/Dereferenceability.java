@@ -278,4 +278,14 @@ public class Dereferenceability implements QualityMetric {
 		return m;
 	}
 	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
+	
 }

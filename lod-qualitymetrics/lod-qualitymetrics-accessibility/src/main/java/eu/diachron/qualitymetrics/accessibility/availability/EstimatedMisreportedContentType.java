@@ -214,4 +214,14 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 		retSet.remove(skipLang);
 		return retSet;
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return true;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 }

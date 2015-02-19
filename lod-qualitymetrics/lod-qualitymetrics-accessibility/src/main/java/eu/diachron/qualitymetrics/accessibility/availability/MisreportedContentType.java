@@ -228,5 +228,15 @@ public class MisreportedContentType implements QualityMetric {
 		}
 		return new Pair<Boolean, Lang>(false, null);
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 
 }

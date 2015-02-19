@@ -287,5 +287,15 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean isEstimate() {
+		return true;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
 
 }
