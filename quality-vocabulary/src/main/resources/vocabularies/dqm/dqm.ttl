@@ -1219,3 +1219,9 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:comment "The External Link provided does not give valid RDF" ;
 		rdfs:label "No valid RDF for External Link" .
 
+	dqm:LowPercentageOfValidPLDResources
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The External Link provide a low number of resources that provide RDF" ;
+		rdfs:label "Low Percentage of valid RDF resources in PLD" .
+		
