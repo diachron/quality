@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.net.InternetDomainName;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
@@ -239,11 +240,11 @@ public class ResourceBaseURIOracle {
 	 * @return
 	 */
 	public static String extractPayLevelDomainURI(String resourceURI) {
-		
 		// Argument validation. Fail fast
 		if(resourceURI == null) {
 			return null;
 		}
+		
 		
 		Pattern pattern = Pattern.compile("[^(http(s?)://)]([\\w]+\\.){1}([\\w]+\\.?)+");
 		Matcher matcher = pattern.matcher(resourceURI);
@@ -253,18 +254,7 @@ public class ResourceBaseURIOracle {
 			matched = matcher.group(0);
 		}
 		
-		String[] split = matched.split("\\.");
-		if (split.length > 2) split[0] = "";
 		
-		StringBuilder sb = new StringBuilder();
-		for(String s: split){
-			sb.append(s); 
-			sb.append(".");
-		}
-		if (sb.indexOf(".") == 0) sb.deleteCharAt(0);
-		sb.deleteCharAt(sb.lastIndexOf("."));
-		
-		
-		return sb.toString();
+		return InternetDomainName.from(matched).topPrivateDomain().toString();
 	}
 }
