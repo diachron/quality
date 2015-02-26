@@ -45,6 +45,7 @@ import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
  * In this metric rdf:type triples are skipped since these are not normally considered as part of the
  * Data Level Constant (or Data Level Position).
  * 
+ * 
  * Based on: [1] Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance. Section 5.2, 
  * Linking, Issue VI: Use External URIs (page 20).
  */

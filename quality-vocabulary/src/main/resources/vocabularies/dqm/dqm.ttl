@@ -1190,3 +1190,32 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:comment "An Incorrect URI style used for dataset. For datasets with more than 500K triples Slash URIs are suggested, whilst for less than 500K triples Hash URIs should be used" ;
 		rdfs:label "Incorrect Usage of URIs" .
 
+
+### Dereferenced Back Links
+	dqm:NotValidDereferenceableBackLink
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The described resource do not resolve in a valid Dereferenced Link" ;
+		rdfs:label "Not Valid Deferenceable Backlink" .
+
+	dqm:NoBackLink
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The described resource does not provide a valid back link" ;
+		rdfs:label "No Backlink" .
+
+	dqm:hasNoBackLink
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	rdfs:Resource ;
+		rdfs:range	rdfs:Resource .
+
+
+### Links To External Data Providers
+
+	dqm:NoValidRDFDataForExternalLink
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The External Link provided does not give valid RDF" ;
+		rdfs:label "No valid RDF for External Link" .
+
