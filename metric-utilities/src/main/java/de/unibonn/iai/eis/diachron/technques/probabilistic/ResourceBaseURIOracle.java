@@ -2,6 +2,8 @@ package de.unibonn.iai.eis.diachron.technques.probabilistic;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -243,40 +245,26 @@ public class ResourceBaseURIOracle {
 			return null;
 		}
 		
-		String pldURI = null;
-		
-		int doubleSlashIx = resourceURI.indexOf("//");
-		int pathFirstSlashIx = -1;
-		int portStart = -1;
-		int userInfoEnd = -1;
-		
-		// Check that the URI contains a double-slash, as the PLD is in the authority part (refer to the method comments)
-		if(doubleSlashIx > 0 && (doubleSlashIx + 1) < resourceURI.length()) {
-			
-			pathFirstSlashIx = resourceURI.indexOf('/', doubleSlashIx + 2);
-			
-			// The PLD is in the authority part, situated between the scheme and the path, plus the scheme
-			if(pathFirstSlashIx > (doubleSlashIx + 1)) {
-				pldURI = resourceURI.substring(0, pathFirstSlashIx);
-			} else {
-				// There's no path part in the URI
-				pldURI = resourceURI;
-			}
-						
-			// Remove user-info, if found
-			userInfoEnd = pldURI.indexOf('@', doubleSlashIx + 2);
-			if(userInfoEnd > 0 && userInfoEnd < pldURI.length()) {
-				pldURI = (pldURI.substring(0, doubleSlashIx + 2) + pldURI.substring(userInfoEnd + 1)); 
-			}
-			
-			// Remove the port, if found
-			portStart = pldURI.indexOf(':', doubleSlashIx + 2);
-			if(portStart > 0) {
-				pldURI = pldURI.substring(0, portStart);
-			}
+		Pattern pattern = Pattern.compile("[^(http(s?)://)]([\\w]+\\.){1}([\\w]+\\.?)+");
+		Matcher matcher = pattern.matcher(resourceURI);
+		String matched = "";
+		if (matcher.find())
+		{
+			matched = matcher.group(0);
 		}
 		
-		return pldURI;
+		String[] split = matched.split("\\.");
+		if (split.length > 2) split[0] = "";
+		
+		StringBuilder sb = new StringBuilder();
+		for(String s: split){
+			sb.append(s); 
+			sb.append(".");
+		}
+		if (sb.indexOf(".") == 0) sb.deleteCharAt(0);
+		sb.deleteCharAt(sb.lastIndexOf("."));
+		
+		
+		return sb.toString();
 	}
-
 }
