@@ -214,6 +214,7 @@ public class Dereferenceability implements QualityMetric {
 	}
 	
 	private boolean is200AnRDF(CachedHTTPResource resource) {
+		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
 		if(resource != null && resource.getResponses() != null) {
 			for (SerialisableHttpResponse response : resource.getResponses()) {
 				if(response != null && response.getHeaders("Content-Type") != null) {
@@ -222,16 +223,19 @@ public class Dereferenceability implements QualityMetric {
 							Model m = this.tryRead(resource.getUri());
 							if (m.size() == 0){
 								this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
+								resource.setContainsRDF(false);
 								return false;
 							}
 						}
 						this.createProblemQuad(resource.getUri(), DQM.SC200WithRDF);
+						resource.setContainsRDF(true);
 						return true;
 					}
 				}
 			}
 		}
 		this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
+		resource.setContainsRDF(false);
 		return false;
 	}
 	

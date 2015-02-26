@@ -27,6 +27,7 @@ public class CachedHTTPResource implements CacheObject {
 	private List<SerialisableHttpResponse> responses = null;
 	private List<StatusLine> statusLines = null;
 	private StatusCode dereferencabilityStatusCode = null;
+	private Boolean containsRDF = null;
 	
 	public List<SerialisableHttpResponse> getResponses() {
 		return responses;
@@ -73,31 +74,27 @@ public class CachedHTTPResource implements CacheObject {
 		this.dereferencabilityStatusCode = dereferencabilityStatusCode;
 	}
 	
+	public Boolean isContainsRDF() {
+		return containsRDF;
+	}
+	public void setContainsRDF(boolean containsRDF) {
+		this.containsRDF = containsRDF;
+	}
+
 	public class SerialisableHttpResponse implements Serializable{
 		
 		//http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 
 		private static final long serialVersionUID = 5007740429193218086L;
 		private Map<String,String> headers = new HashMap<String,String>();
-//		private InputStream content = null;
 		
 		public SerialisableHttpResponse(HttpResponse _response){
 			for(Header h : _response.getAllHeaders()) headers.put(h.getName(), h.getValue());
-//			try {
-//				this.content = _response.getEntity().getContent();
-//			} catch (IllegalStateException | IOException e) {
-//				e.printStackTrace();
-//			}
-//			if (headers.get("Content") != null) headers.remove("Content");
 		}
 
 		public String getHeaders(String name){
 			return headers.get(name);
 		}
-		
-//		public InputStream getContent(){
-//			return this.content;
-//		}
 	}
 	
 }

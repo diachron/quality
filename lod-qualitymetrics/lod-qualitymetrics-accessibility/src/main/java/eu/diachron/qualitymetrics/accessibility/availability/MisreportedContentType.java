@@ -144,8 +144,10 @@ public class MisreportedContentType implements QualityMetric {
 						// If the language could not be determined from the filename, give up on this response (continue)
 						if (language == null) continue;
 						if (response.getHeaders("Content-Type").equals(WebContent.mapLangToContentType(language))) { 
+							httpResource.setContainsRDF(true);
 							correctReportedType++;
 						} else {
+							httpResource.setContainsRDF(false);
 							misReportedType++;
 							this.createProblemModel(uri, response.getHeaders("Content-Type"), WebContent.mapLangToContentType(language));
 						}
@@ -153,11 +155,14 @@ public class MisreportedContentType implements QualityMetric {
 					} else {
 						Pair<Boolean, Lang> tryP = this.tryParse(httpResource, response);
 						if (tryP.getFirstElement() == true) {
+							httpResource.setContainsRDF(true);
 							correctReportedType++;
 						} else if (tryP.getSecondElement() == null){
+							httpResource.setContainsRDF(false);
 							misReportedType++;
 							this.createProblemModel(uri, response.getHeaders("Content-Type"), "null");
 						} else {
+							httpResource.setContainsRDF(false);
 							misReportedType++;
 							this.createProblemModel(uri, response.getHeaders("Content-Type"), tryP.getSecondElement().getName());
 						}

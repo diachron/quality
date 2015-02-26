@@ -141,19 +141,28 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 							String filename = response.getHeaders("Content-Disposition").split(";")[1].replace("filename=\"", "").replace("\"", "");
 							Lang language = RDFLanguages.filenameToLang(filename); // if any other type of file but not a LOD compatible, it will return null and we skip
 							if (language == null) continue;
-							if (response.getHeaders("Content-Type").equals(WebContent.mapLangToContentType(language))) correctReportedType++;
+							if (response.getHeaders("Content-Type").equals(WebContent.mapLangToContentType(language))) {
+								httpResource.setContainsRDF(true);
+								correctReportedType++;
+							}
 							else {
+								httpResource.setContainsRDF(false);
 								misReportedType++;
 								this.createProblemModel(uri, response.getHeaders("Content-Type"), WebContent.mapLangToContentType(language));
 							}
 							break;
 						} else {
 							Pair<Boolean, Lang> tryP = this.tryParse(httpResource, response);
-							if (tryP.getFirstElement() == true) correctReportedType++;
+							if (tryP.getFirstElement() == true) {
+								httpResource.setContainsRDF(true);
+								correctReportedType++;
+							}
 							else if (tryP.getSecondElement() == null){
+								httpResource.setContainsRDF(false);
 								misReportedType++;
 								this.createProblemModel(uri, response.getHeaders("Content-Type"), "null");
 							} else {
+								httpResource.setContainsRDF(false);
 								misReportedType++;
 								this.createProblemModel(uri, response.getHeaders("Content-Type"), tryP.getSecondElement().getName());
 							}
