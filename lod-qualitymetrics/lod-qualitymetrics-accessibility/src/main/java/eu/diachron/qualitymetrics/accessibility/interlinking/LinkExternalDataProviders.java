@@ -1,160 +1,199 @@
+/**
+ * 
+ */
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.jena.atlas.logging.Log;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.WebContent;
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 
 /**
- * @author Santiago Londoño
+ * @author Jeremy Debattista
  * 
- * Measures the degree to which the resource is linked to external data providers, 
- * that is, refers to the detection of links that connect the resource to external data provided by another data sources.
+ * In this metric we identify the total number of external linked used in the dataset. An external link
+ * is identified if the subject URI is from one data source and an object URI from ￼another data source.
+ * In this metric rdf:type triples are skipped since these are not normally considered as part of the
+ * Data Level Constant (or Data Level Position).
  * 
  * Based on: [1] Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance. Section 5.2, 
- * Linking, Issue VI: Use External URIs (page 26).
- * 
+ * Linking, Issue VI: Use External URIs (page 20).
  */
 public class LinkExternalDataProviders implements QualityMetric {
-	
-	private final Resource METRIC_URI = DQM.LinksToExternalDataProvidersMetric;
-	
-	final static Logger logger = LoggerFactory.getLogger(LinkExternalDataProviders.class);
 	
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	private DB mapDB = DBMaker.newTempFileDB().closeOnJvmShutdown().deleteFilesAfterClose().make();
+	private DB mapDB = MapDbFactory.createAsyncFilesystemDB();
 	
 	/**
-	* A set containing the of pay-level domains (or base URIs) found among all the data-level constants of the 
-	* dataset (data level constants are: subjects of triples and objects of triples not subject to an rdf:type predicate)
-	*/
-	private Set<String> pSetPayLevelDomainURIs = mapDB.createHashSet("set-link-external-data-providers").make();
+	 * A set that holds all unique PLDs
+	 */
+	private Set<String> setResources = mapDB.createHashSet("link-external-data-providers").make();
+
 	
 	/**
-     * Object used to determine the base URI of the resource based on its contents
-     */
+	 * A set that holds all unique PLDs that return RDF data
+	 */
+	private Set<String> setPLDsRDF = mapDB.createHashSet("link-external-data-providers-rdf").make();
+	
+	final static Logger logger = LoggerFactory.getLogger(LinkExternalDataProviders.class);
+
 	private ResourceBaseURIOracle baseURIOracle = new ResourceBaseURIOracle();
+	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
+	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
+
+	private final Resource METRIC_URI = DQM.LinksToExternalDataProvidersMetric;
 	
-	/**
-	 * Counts the total number of data-level constant URIs found among the triples of the resource
-	 */
-	private int totalDataLevelConstURIs = 0;
+	private List<Quad> _problemList = new ArrayList<Quad>();
 
-	/**
-	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
-	 * are data-level URIs, if so, extracts their pay-level domain and adds them to the set of PLD URIs.
-	 * @param quad Quad to be processed as part of the computation of the metric
-	 */
-	public void compute(Quad quad) {
 
-		// Feed the base URI oracle, which will be used to determine the resource's base URI
-		this.baseURIOracle.addHint(quad);
-
-		// Extract the URIs of the subject and object of the quad
-		String subjectURI = (quad.getSubject().isURI())?(quad.getSubject().getURI()):("");
-		String objectURI = (quad.getObject().isURI())?(quad.getObject().getURI()):("");
-		
-		// Process subject URI
-		if(!subjectURI.equals("")) {
-			// Extract the PLD of the subject's URI and process it
-			this.processPayLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(subjectURI));
-			this.totalDataLevelConstURIs++;
-		}
-		
-		// As this metric is defined to account for data-level URIs, check that the predicate is not rdf:type
-		// (as per the definition of data-level constant provided by Hogan et al. [1], section 3.1.3, pg. 6)
-		if(quad.getPredicate().isURI() && !quad.getPredicate().getURI().equals(RDF.type.getURI())) {
-			
-			// Process object URI
-			if(!objectURI.equals("")) {
-				// Extract the PLD of the object's URI and process it, a new data-level PLD has been found
-				logger.trace("Data-level URI found in object: {} with predicate: {}", objectURI, quad.getPredicate().getURI());
-				this.processPayLevelDomain(ResourceBaseURIOracle.extractPayLevelDomainURI(objectURI));
-				this.totalDataLevelConstURIs++;
-			}
-		}
-	}
-
-	/**
-	 * Compute the value of the metric as the ratio between the number of different PLDs found among the data-level 
-	 * constants of the resource that are different of the resource's PLD and the total number of 
-	 * data-level constant URIs found in the resource.
-	 * @return value of the existence of links to external data providers metric computed on the current resource
-	 */	
-	public double metricValue() {
-		
-		// Determine the current resource's PLD
-		String resBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
-		String resPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(resBaseURI);
-		
-		// Count the number of external PLDs found in the resource
-		int totalExtPLDs = 0;
-		
-		for(String curPLD : this.pSetPayLevelDomainURIs) {
-			
-			// If currently examined PLD does not belong to the resource's PLD (or vice-versa), the current PLD is external
-			logger.debug("Comparing PLD in triples: {} with resource's PLD: {}", curPLD, resPLD);
-			
-			if(!(curPLD.contains(resPLD) || resPLD.contains(curPLD))) {
-				logger.debug("OK, PLD {} is external", curPLD);
-				totalExtPLDs++;
-			}
-		}
-		
-		if(totalDataLevelConstURIs > 0) {
-			return (double)totalExtPLDs / (double)totalDataLevelConstURIs;
-		} else {
-			return 0.0;
-		}
-	}
-
-	public Resource getMetricURI() {
-		return this.METRIC_URI;
-	}
-
-	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Verifies a PLD found in a subject or object and decides if must be added to the set of pay-level domain URIs
-	 */
-	private void processPayLevelDomain(String pld) {
-		
-		if(pld != null && pld.length() > 0) {
-			// Add the PLD to the set, if it doesn't exist already
-			this.pSetPayLevelDomainURIs.add(pld);
-			logger.debug("PLD OK and added to set: {}", pld);
-		}
-	}
+	private boolean computed = false;
 	
 	@Override
-	protected void finalize() throws Throwable {
+	public void compute(Quad quad) {
 		
-		// Destroy persistent HashMap and the corresponding database
-		try {
-			if(this.mapDB != null && !this.mapDB.isClosed()) {
-				this.mapDB.close();
+		baseURIOracle.addHint(quad);
+		
+		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
+			String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
+			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+
+			
+			if (!(subject.equals(object))){
+				if (quad.getSubject().isURI()) setResources.add(quad.getSubject().toString());
+				if (quad.getObject().isURI()) setResources.add(quad.getSubject().toString());
 			}
-		} catch(Throwable ex) {
-			logger.warn("Persistent HashMap or backing database could not be closed", ex);
-		} finally {
-			super.finalize();
 		}
 	}
+
+	@Override
+	public double metricValue() {
+		if (!computed){
+			//remove the base uri from the set because that will not be an "external link"
+			String baseURI = baseURIOracle.getEstimatedResourceBaseURI();
+			
+			Iterator<String> iterator = setResources.iterator();
+			while (iterator.hasNext()) {
+			    String element = iterator.next();
+			    if (element.contains(baseURI)) iterator.remove();
+			}
+			
+			this.checkForRDFLinks();
+			computed = true;
+		}
+		
+		
+		return setPLDsRDF.size();
+	}
+
+	@Override
+	public Resource getMetricURI() {
+		return METRIC_URI;
+	}
+
+	@Override
+	public ProblemList<?> getQualityProblems() {
+		ProblemList<Quad> pl = null;
+		try {
+			pl = new ProblemList<Quad>(this._problemList);
+		} catch (ProblemListInitialisationException e) {
+			logger.error(e.getMessage());
+		}
+		return pl;
+	}
+
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return DQM.LuzzuProvenanceAgent;
+	}
+	
+	private void checkForRDFLinks() {
+		for(String uri : setResources){
+			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
+			if (httpResource == null || httpResource.getStatusLines() == null) {
+				this.notFetchedQueue.add(uri);
+			} else {
+				if (httpResource.isContainsRDF() != null){
+					if (httpResource.isContainsRDF()) setPLDsRDF.add(httpResource.getUri());
+				} else {
+					if (this.is200AnRDF(httpResource)) setPLDsRDF.add(httpResource.getUri());
+				}
+			}
+		}
+	}
+	
+	
+	private boolean is200AnRDF(CachedHTTPResource resource) {
+		if(resource != null && resource.getResponses() != null) {
+			for (SerialisableHttpResponse response : resource.getResponses()) {
+				if(response != null && response.getHeaders("Content-Type") != null) {
+					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
+						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
+							Model m = this.tryRead(resource.getUri());
+							if (m.size() == 0){
+								Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoValidRDFDataForExternalLink.asNode());
+								this._problemList.add(q);
+								resource.setContainsRDF(false);
+								return false;
+							}
+						}
+						resource.setContainsRDF(true);
+						return true;
+					}
+				}
+			}
+		}
+		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoValidRDFDataForExternalLink.asNode());
+		this._problemList.add(q);
+		resource.setContainsRDF(false);
+		return false;
+	}
+	
+	private Model tryRead(String uri) {
+		Model m = ModelFactory.createDefaultModel();
+		try{
+			m = RDFDataMgr.loadModel(uri, Lang.NTRIPLES);
+		} catch (RiotException r) {
+			Log.debug("Resource could not be parsed:", r.getMessage());
+		}
+		return m;
+	}
+	
+
 
 }
