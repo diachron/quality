@@ -16,6 +16,7 @@ import java.util.Set;
 import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 
 
+
 /**
  * @author Jeremy Debattista
  * 
@@ -24,6 +25,13 @@ public class ClusteringCoefficientMeasure {
 	
 	private MapDBGraph _graph;
 	private double estimateMeasure = Double.MIN_VALUE;
+	
+	private Map<String, Byte> k_param = new HashMap<String, Byte>();
+	
+	/**
+	 * Multiplying factor for the computation of the mixing time
+	 */
+	private static double mixingTimeFactor = 1.0; 
 	
 	public ClusteringCoefficientMeasure(MapDBGraph _graph){
 		this._graph = _graph;
@@ -45,12 +53,11 @@ public class ClusteringCoefficientMeasure {
 	
 	private List<String> randomWalkPath = new ArrayList<String>(); // This contains a list of nodes in a random walk path
 	private Set<String> resourcesInRandomPath = new HashSet<String>();
-	private int degreeRandomPath = 0;
 	private double mixingTime = 0.0; 
 
 	
 	private String getRandomStartNode(){
-		mixingTime = 10* (Math.log(_graph.getVertexCount()) * Math.log(_graph.getVertexCount())); //this is the most important factor.. the larger the mixing
+		mixingTime = mixingTimeFactor * (Math.log(_graph.getVertexCount()) * Math.log(_graph.getVertexCount())); //this is the most important factor.. the larger the mixing
 																									//time, the more nodes will be available in the random walk
 		//Get Start Node
 		Iterator<String> iterNodes = _graph.getVertices().iterator();
@@ -62,38 +69,56 @@ public class ClusteringCoefficientMeasure {
 		return node;
 	}
 	
+	private Map<String, Integer> vertexDegree; //vertex degree for random walk nodes
+	
+	
 	private void randomWalk(){
 		// Get Start Node
 		String startNode = this.getRandomStartNode();
 		randomWalkPath.add(startNode);
 		resourcesInRandomPath.add(startNode);
 		
-		double probabilityCounter = 0.0;
 		
-		Map<String, Integer> vertexDegree = new HashMap<String, Integer>();
+		vertexDegree = new HashMap<String, Integer>();
 		
 		String currentNode = startNode;
-		while(probabilityCounter < mixingTime){
+		
+		int numSteps = 0;
+		while(numSteps < mixingTime){
 			int totalDegree = 0;
+			Object[] arrCurNodeNeighbors = _graph.getNeighbors(currentNode).toArray();
+
 			if (vertexDegree.containsKey(currentNode)) {
 				totalDegree = vertexDegree.get(currentNode);
 			} else {
-				totalDegree = _graph.degree(currentNode);
-				degreeRandomPath += totalDegree;
+				totalDegree = arrCurNodeNeighbors.length;
 				vertexDegree.put(currentNode, totalDegree);
 			}
-			probabilityCounter += (1.0/(double)totalDegree);
+			numSteps++;
+			
+			this.addKParam(currentNode, arrCurNodeNeighbors);
 			
 			//walk to next node random
 			Random rand = new Random();
 			int randomNumber = rand.nextInt(totalDegree);
-			currentNode = (String) (_graph.getNeighbors(currentNode).toArray()[randomNumber]);
+			String nextNode = (String)(arrCurNodeNeighbors[randomNumber]);
 			
+			
+			currentNode = nextNode;
+						
 			randomWalkPath.add(currentNode);
 			resourcesInRandomPath.add(currentNode);
 		}
 	}
 	
+	private void addKParam(String node, Object[] neighbours){
+		Integer kN = this._graph.getIthIndex(node);
+		
+		String n1 = this._graph.getNodeFromIndex(kN + 1);
+		String n2 = this._graph.getNodeFromIndex(kN - 1);
+		
+		this.k_param.put(node, (byte) ((this._graph.isNeighborOf(n1, n2)) ? 1 : 0));
+	}
 	
 	
 	private double calculateClusteringCoefficient() {
@@ -146,21 +171,37 @@ public class ClusteringCoefficientMeasure {
 		return val;
 	}
 	
+	private double calculateWeightedSum(){
+		double val = 0.0;
+		for(int k = 1; k < (randomWalkPath.size() - 1); k++){
+//			int k = _graph.getIthIndex(this.randomWalkPath.get(_k));
+					
+//			if ((k < 1) || (k >= _graph.getVertexCount())) continue;
+			//double _adjM = (double) (this._graph.getAMapping((k-1), (k+1)));
+			double _adjM = (double) this.k_param.get(this.randomWalkPath.get(k));
+			val += (_adjM) * (1.0 / ((double) _graph.degree(randomWalkPath.get(k))));
+		}
+		return val;
+	}
+	
 	//estimate ideal - a more accurate mixing time would give us a better estimated result
 	public double getEstimatedMeasure(){
 		if (this.estimateMeasure != Double.MIN_VALUE) return this.estimateMeasure; 
 		this.randomWalk();
 		
-		double phi = 0.0; //the weighted sum
-		double psi = 0.0; // the sum of the sampled nodes
+		Double phi = null; //the weighted sum
+		Double psi = null; // the sum of the sampled nodes
 		
-		double cc = calculateClusteringCoefficient();
+		//double cc = calculateClusteringCoefficient();
 		
-		phi = (1.0/((double)degreeRandomPath)) * cc;
+		//phi = (1.0/((double)degreeRandomPath)) * cc;
+		phi = (1.0/((double)randomWalkPath.size() - 2.0)) * this.calculateWeightedSum();
 		psi = (1.0/((double)randomWalkPath.size())) * this.summationReciprocalValue();
 		
-		this.estimateMeasure = phi / psi;
+
+		this.estimateMeasure = (phi.isNaN()) ? 0.0 : (phi / psi);
 		
 		return this.estimateMeasure;
 	}
+
 }

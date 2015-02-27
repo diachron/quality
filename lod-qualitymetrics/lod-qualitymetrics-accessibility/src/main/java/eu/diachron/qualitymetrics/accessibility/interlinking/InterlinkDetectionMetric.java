@@ -62,6 +62,7 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
+		// nothing to report
 		return null;
 	}
 
@@ -99,6 +100,17 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 		//5. Description Richness
 		DescriptiveRichnessMeasure drm = new DescriptiveRichnessMeasure(graph);
 		metricValue += drm.getIdealMeasure() * 0.2;
+	}
+
+
+	@Override
+	public boolean isEstimate() {
+		return true;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return DQM.LuzzuProvenanceAgent;
 	}
 	
 }
