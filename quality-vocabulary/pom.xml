@@ -35,6 +35,11 @@
 								<java classname="jena.schemagen" classpath="${runtime_classpath}">
 									<arg line="-i http://rdfs.org/sioc/services.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SIOCSERVICES" />
 								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://www.w3.org/ns/sparql-service-description.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SD" />
+								</java>
+								
+								
 							</tasks>
 						</configuration>
 						<goals>
