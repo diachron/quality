@@ -1,5 +1,7 @@
 package de.unibonn.iai.eis.diachron.technques.probabilistic;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -10,10 +12,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.net.InternetDomainName;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.DCTypes;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.semantics.knownvocabs.DCAT;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.CUBE;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 
 /**
@@ -51,6 +57,15 @@ public class ResourceBaseURIOracle {
 	 * exhaustion when processing very big resources
 	 */
 	private final int maxSubjectURIs = 20000;
+	
+	
+	final static List<Resource> _datasetClass = new ArrayList<Resource>();
+	static{
+		_datasetClass.add(VOID.Dataset);
+		_datasetClass.add(DCTypes.Dataset);
+		_datasetClass.add(DCAT.Dataset);
+		_datasetClass.add(CUBE.DataSet);
+	}
 	
 	/**
 	 * Default constructor
@@ -164,7 +179,7 @@ public class ResourceBaseURIOracle {
 				
 				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
 				if(predicate.getURI().equals(RDF.type.getURI()) && 
-						(object.getURI().equals(VOID.Dataset.getURI()) || object.getURI().equals(OWL.Ontology.getURI()))) {
+						_datasetClass.contains(object) || object.getURI().equals(OWL.Ontology.getURI())) {
 					
 					// The URI of the subject of such quad, should be the resource's base URI. 
 					this.declaredResBaseURI = subject.getURI();					
@@ -220,7 +235,7 @@ public class ResourceBaseURIOracle {
 			// Second level validation: all parts of the triple must be URIs
 			if(subject.isURI() && predicate.isURI() && object.isURI()) {
 				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
-				if(predicate.getURI().equals(RDF.type.getURI()) && object.getURI().equals(VOID.Dataset.getURI())) {
+				if(predicate.getURI().equals(RDF.type.getURI()) && _datasetClass.contains(object)) {
 					// The URI of the subject of such quad, should be the dataset's URL. 
 					// Try to calculate the latency associated to the current dataset
 					return subject.getURI();

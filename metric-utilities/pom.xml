@@ -8,4 +8,11 @@
   <artifactId>metric-utilities</artifactId>
   <name>Quality Metric Utility Module</name>
   <description>This module contains utility methods and data structures required for the computation of quality metrics, such as big data techniques (Bloom Filters, Reservoir Samplers etc...)</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>de.unibonn.iai.eis</groupId>
+  		<artifactId>quality-semantics</artifactId>
+  		<version>1.0.0</version>
+  	</dependency>
+  </dependencies>
 </project>
