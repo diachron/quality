@@ -29,6 +29,12 @@
 								<java classname="jena.schemagen" classpath="${runtime_classpath}">
 									<arg line="-i http://www.w3.org/ns/dcat.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n DCAT" />
 								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://rdfs.org/sioc/ns.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SIOC" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://rdfs.org/sioc/services.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SIOCSERVICES" />
+								</java>
 							</tasks>
 						</configuration>
 						<goals>
