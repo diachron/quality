@@ -26,6 +26,9 @@
 								<java classname="jena.schemagen" classpath="${runtime_classpath}">
 									<arg line="-i src/main/resources/vocabularies/dqm/dqm.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.semantics -o src/main/java -n DQM" />
 								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://www.w3.org/ns/dcat.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n DCAT" />
+								</java>
 							</tasks>
 						</configuration>
 						<goals>
