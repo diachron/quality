@@ -10,6 +10,7 @@
   <name>Linked Open Data Quality Metrics</name>
   <modules>
   	<module>lod-qualitymetrics-accessibility</module>
+  	<module>lod-qualitymetrics-representation</module>
   </modules>
   
   <dependencies>
@@ -18,5 +19,11 @@
         	<artifactId>quality-semantics</artifactId>
         	<version>${diachron.version}</version>
         </dependency>
+        <dependency>
+        	<groupId>de.unibonn.iai.eis</groupId>
+        	<artifactId>metric-utilities</artifactId>
+        	<version>${diachron.version}</version>
+        </dependency>
   </dependencies>
+  
 </project>

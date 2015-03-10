@@ -350,6 +350,14 @@ dqm:LuzzuProvenanceAgent
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Detects the use of short URIs (and the avoidance of query parameters), which suggests that information is compactly represented and favors readability" ;
 		rdfs:label	"Short URIs metric" .
+
+	dqm:NoProlixRDFMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Detects the use of prolix RDF features, i.e reification statements, containers and collections" ;
+		rdfs:label	"No Use of Prolix RDF features metric" .
+
 	
 	dqm:CurrencyOfDocumentStatementsMetric
 		a	rdfs:Class ;
@@ -770,7 +778,17 @@ dqm:LuzzuProvenanceAgent
 		rdfs:label	"Representational conciseness has short URIs metric" ;
 		rdfs:domain	dqm:RepresentationalConciseness ;
 		rdfs:range	dqm:ShortURIsMetric .
+	
 		
+	dqm:hasNoProlixRDFMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Representational-Conciseness Dimension with No Usage of Prolix RDF features metric";
+		rdfs:label	"Representational conciseness has short URIs metric" ;
+		rdfs:domain	dqm:RepresentationalConciseness ;
+		rdfs:range	dqm:NoProlixRDFMetric .
+
+	
 	#Understandability Dimension Properties
 	dqm:hasRepresentationalConcisenessDimension
 		a rdfs:Property ;
@@ -1224,4 +1242,43 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "The External Link provide a low number of resources that provide RDF" ;
 		rdfs:label "Low Percentage of valid RDF resources in PLD" .
-		
+
+
+### Short URIs
+	
+	dqm:ParametarisedURI
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The resource URI includes a parameterised string." ;
+		rdfs:label "Parametarised URI" .
+
+	dqm:LongURI
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "According to W3C URI standards, a URI should not be longer than 80 characters including the schema. Long URIs are not recommended. Refer to CoolURIs (http://www.linkeddata.org/how-to-publish)" ;
+		rdfs:label "Long URI Exception" .
+
+
+### No Prolix RDF
+
+	dqm:UsageOfReification
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The resource is using RDF reification feature (type - rdf:Statement). The use of rdf:Statement or any other prolix feature is strongly discouraged." ;
+		rdfs:label "Usage of Reification in Dataset" .
+
+	dqm:UsageOfContainers
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The resource is using RDF containers feature (type - rdf:Container). The use of rdf:Container or any other prolix feature is strongly discouraged." ;
+		rdfs:label "Usage of Containers in Dataset" .
+
+
+	dqm:UsageOfCollections
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The resource is using RDF collections feature. The use of rdf:Alt, rdf:Bag, rdf:List, or any other prolix feature is strongly discouraged." ;
+		rdfs:label "Usage of Collections" .
+
+
+
