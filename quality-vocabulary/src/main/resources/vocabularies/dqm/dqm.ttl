@@ -121,7 +121,14 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Measures the extent to which the representation of data is compact, clear and well formatted" ;
 		rdfs:label	"Representational conciseness" .
-		
+	
+	dqm:Versatility
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Measures the availability of the data in different representations and in an internationalised way" ;
+		rdfs:label	"Versatility" .
+
+	
 	dqm:Currency
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -357,6 +364,13 @@ dqm:LuzzuProvenanceAgent
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Detects the use of prolix RDF features, i.e reification statements, containers and collections" ;
 		rdfs:label	"No Use of Prolix RDF features metric" .
+
+	dqm:DifferentSerialisationsMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Detects if a dataset has more than one serialisation format" ;
+		rdfs:label	"Different Serialisation Metric" .
 
 	
 	dqm:CurrencyOfDocumentStatementsMetric
@@ -784,9 +798,26 @@ dqm:LuzzuProvenanceAgent
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Representational-Conciseness Dimension with No Usage of Prolix RDF features metric";
-		rdfs:label	"Representational conciseness has short URIs metric" ;
+		rdfs:label	"Representational conciseness has no usage of prolix RDF features metric" ;
 		rdfs:domain	dqm:RepresentationalConciseness ;
 		rdfs:range	dqm:NoProlixRDFMetric .
+
+	#Versatility Dimension Properties
+	dqm:hasVersatilityDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links Representational Category with Versatility Dimension" ;
+		rdfs:label "Representational has representational conciseness dimension" ;
+		rdfs:domain dqm:Representational ;
+		rdfs:range dqm:Versatility .
+
+	dqm:hasDifferentSerialisationsMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Versatility Dimension with Different Serialisations metric";
+		rdfs:label	"Versatility has different serialisation metric " ;
+		rdfs:domain	dqm:Versatility ;
+		rdfs:range	dqm:DifferentSerialisationsMetric .
 
 	
 	#Understandability Dimension Properties
@@ -907,9 +938,9 @@ dqm:LuzzuProvenanceAgent
 		rdfs:range	dqm:ReputationOfDatasetMetric .
 			
 ##################################
-#								 #
-#	EBI SPECIFIC METRICS		 #
-#								 #
+#				 #
+#	EBI SPECIFIC METRICS	 #
+#				 #
 ##################################
 
 #Ontology Versioning Conciseness
@@ -1040,8 +1071,11 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:range	dqm:OBOFoundryMetric .
 
 
-## Quality Problems - generic classes and properties
-
+####################
+#                  #
+# Quality Problems #
+#		   #
+####################
 
 ## Specific classes and properties
 
@@ -1280,5 +1314,18 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:comment "The resource is using RDF collections feature. The use of rdf:Alt, rdf:Bag, rdf:List, or any other prolix feature is strongly discouraged." ;
 		rdfs:label "Usage of Collections" .
 
+
+### DifferentSerialisationsMetric
+	dqm:NoMultipleFormatDefined
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The dataset must have more than one serialisation format defined using the void:feature predicate." ;
+		rdfs:label "No format defined for a dataset" .
+
+	dqm:IncorrectFormatDefined
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The defined format using the void:feature predicate is unknown. Check http://www.w3.org/ns/formats/." ;
+		rdfs:label "Incorrect defined format/feature" .
 
 
