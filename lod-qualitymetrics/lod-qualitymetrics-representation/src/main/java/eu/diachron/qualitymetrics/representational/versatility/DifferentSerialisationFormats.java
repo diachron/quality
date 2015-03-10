@@ -1,0 +1,136 @@
+/**
+ * 
+ */
+package eu.diachron.qualitymetrics.representational.versatility;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.core.Quad;
+
+import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+
+/**
+ * @author Jeremy Debattista
+ * 
+ * Datasets can be represented in different formats, such as RDF/XML, N3,
+ * N-Triples etc... The voID vocabulary allows data publishers to define
+ * the possible formats in the dataset's metadata using the void:feature 
+ * predicate.
+ * 
+ * In this metric we check if in a dataset has 1 or more triples descibing
+ * the different serialisation formats that a dataset is available in, 
+ * using the void:feature. A list of possible serialisation formats 
+ * can be found: http://www.w3.org/ns/formats/ 
+ * 
+ * The metric returns 1 if the data published is represented in 2 or more
+ * formats.
+ */
+public class DifferentSerialisationFormats implements QualityMetric{
+	
+	private int features = 0;
+	
+	private List<Quad> _problemList = new ArrayList<Quad>();
+	
+	private static Logger logger = LoggerFactory.getLogger(DifferentSerialisationFormats.class);
+	
+	private String datasetURI = null;
+	
+	ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
+	
+	private static List<String> formats = new ArrayList<String>();
+	static{
+		formats.add("http://www.w3.org/ns/formats/JSON-LD");
+		formats.add("http://www.w3.org/ns/formats/N3");
+		formats.add("http://www.w3.org/ns/formats/N-Triples");
+		formats.add("http://www.w3.org/ns/formats/N-Quads");
+		formats.add("http://www.w3.org/ns/formats/LD_Patch");
+		formats.add("http://www.w3.org/ns/formats/microdata");
+		formats.add("http://www.w3.org/ns/formats/OWL_XML");
+		formats.add("http://www.w3.org/ns/formats/OWL_Functional");
+		formats.add("http://www.w3.org/ns/formats/OWL_Manchester");
+		formats.add("http://www.w3.org/ns/formats/POWDER");
+		formats.add("http://www.w3.org/ns/formats/POWDER-S");
+		formats.add("http://www.w3.org/ns/formats/PROV-N");
+		formats.add("http://www.w3.org/ns/formats/PROV-XML");
+		formats.add("http://www.w3.org/ns/formats/RDFa");
+		formats.add("http://www.w3.org/ns/formats/RDF_JSON");
+		formats.add("http://www.w3.org/ns/formats/RDF_XML");
+		formats.add("http://www.w3.org/ns/formats/RIF_XML");
+		formats.add("http://www.w3.org/ns/formats/SPARQL_Results_XML");
+		formats.add("http://www.w3.org/ns/formats/SPARQL_Results_JSON");
+		formats.add("http://www.w3.org/ns/formats/SPARQL_Results_CSV");
+		formats.add("http://www.w3.org/ns/formats/SPARQL_Results_TSV");
+		formats.add("http://www.w3.org/ns/formats/Turtle");
+		formats.add("http://www.w3.org/ns/formats/TriG");
+	}
+
+	@Override
+	public void compute(Quad quad) {
+		oracle.addHint(quad);
+		
+		Node predicate = quad.getPredicate();
+		Node object = quad.getObject();
+		
+		if (predicate.hasURI(VOID.feature.getURI())){
+			datasetURI = quad.getSubject().getURI();
+			
+			if (formats.contains(object.getURI())) features++;
+			else {
+				Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.IncorrectFormatDefined.asNode());
+				this._problemList.add(q);
+			}
+		}
+		
+	}
+
+	@Override
+	public double metricValue() {
+		return (features > 1) ? 1 : 0;
+	}
+
+	@Override
+	public Resource getMetricURI() {
+		return DQM.DifferentSerialisationsMetric;
+	}
+
+	public ProblemList<?> getQualityProblems() {
+		if (features > 1){
+			if (datasetURI == null) datasetURI = oracle.getEstimatedResourceBaseURI();
+			
+			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(datasetURI).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoMultipleFormatDefined.asNode());
+			this._problemList.add(q);
+		}
+		
+		ProblemList<Quad> pl = null;
+			try {
+				pl = new ProblemList<Quad>(this._problemList);
+			} catch (ProblemListInitialisationException e) {
+				logger.error(e.getMessage());
+			}
+		return pl;
+	}
+
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return 	DQM.LuzzuProvenanceAgent;
+	}
+
+}
