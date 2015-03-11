@@ -128,6 +128,12 @@ dqm:LuzzuProvenanceAgent
 		rdfs:comment	"Measures the availability of the data in different representations and in an internationalised way" ;
 		rdfs:label	"Versatility" .
 
+	dqm:Interpretability
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"Refers to technical aspects of the data, that is, whether information is represented using an appropriate notation" ;
+		rdfs:label	"Interpretability" .
+
 	
 	dqm:Currency
 		a	rdfs:Class ;
@@ -371,6 +377,14 @@ dqm:LuzzuProvenanceAgent
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Detects if a dataset has more than one serialisation format" ;
 		rdfs:label	"Different Serialisation Metric" .
+
+	dqm:NoBlankNodeMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Provides a measure for the usage of blank nodes in a dataset" ;
+		rdfs:label	"No blank node metric" .
+
 
 	
 	dqm:CurrencyOfDocumentStatementsMetric
@@ -807,7 +821,7 @@ dqm:LuzzuProvenanceAgent
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
 		rdfs:comment "Links Representational Category with Versatility Dimension" ;
-		rdfs:label "Representational has representational conciseness dimension" ;
+		rdfs:label "Representational has versatility dimension" ;
 		rdfs:domain dqm:Representational ;
 		rdfs:range dqm:Versatility .
 
@@ -818,6 +832,24 @@ dqm:LuzzuProvenanceAgent
 		rdfs:label	"Versatility has different serialisation metric " ;
 		rdfs:domain	dqm:Versatility ;
 		rdfs:range	dqm:DifferentSerialisationsMetric .
+
+	#Interpretability Dimension Properties
+	dqm:hasInterpretabilityDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:comment "Links Representational Category with Interpretability Dimension" ;
+		rdfs:label "Representational has interpretability dimension" ;
+		rdfs:domain dqm:Representational ;
+		rdfs:range dqm:Versatility .
+
+	dqm:hasNoBlankNodeMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Versatility Dimension with No Blank Node metric";
+		rdfs:label	"Versatility has no blank node metric " ;
+		rdfs:domain	dqm:Versatility ;
+		rdfs:range	dqm:NoBlankNodeMetric .
+
 
 	
 	#Understandability Dimension Properties
@@ -959,22 +991,7 @@ dqm:OntologyVersionConcisenessMetric
 		rdfs:comment	"Provides a measure for checking singleton instances of the use-case specific defined owl:ontologyVersion property" ;
 		rdfs:label	"Ontology version conciseness metric" .
 		
-#Low Blank Node Usage
-dqm:hasLowBlankNodesUsageMetric
-	a	rdfs:Property ;
-	rdfs:subPropertyOf	daq:hasMetric ;
-	rdfs:comment	"Links Understandability Dimension with Low Blank Nodes Usage Metric" ;
-	rdfs:label	"Understandability has low blank nodes usage metric" ;
-	rdfs:domain	dqm:Understandability ;
-	rdfs:range	dqm:LowBlankNodesUsageMetric .	
-	
-dqm:LowBlankNodesUsageMetric
-	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
-		daq:expectedDataType xsd:double ;
-	rdfs:comment	"Provides a measure for the usage of blank nodes in a dataset" ;
-	rdfs:label	"Low blank nodes usage metric" .
-	
+		
 #Obsolete Concepts in Ontology
 dqm:hasObsoleteConceptsInOntologyMetric
 	a	rdfs:Property ;
