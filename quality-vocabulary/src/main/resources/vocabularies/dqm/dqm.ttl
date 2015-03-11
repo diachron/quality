@@ -378,6 +378,14 @@ dqm:LuzzuProvenanceAgent
 		rdfs:comment	"Detects if a dataset has more than one serialisation format" ;
 		rdfs:label	"Different Serialisation Metric" .
 
+	dqm:MultipleLanguageUsageMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Detects if a dataset has more than one language" ;
+		rdfs:label	"Multiple Language Usage Metric" .
+
+
 	dqm:NoBlankNodeMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
@@ -832,6 +840,16 @@ dqm:LuzzuProvenanceAgent
 		rdfs:label	"Versatility has different serialisation metric " ;
 		rdfs:domain	dqm:Versatility ;
 		rdfs:range	dqm:DifferentSerialisationsMetric .
+
+
+	dqm:hasMultipleLanguageUsageMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Versatility Dimension with Multiple Language Usage Metric";
+		rdfs:label	"Versatility has multiple language usage " ;
+		rdfs:domain	dqm:Versatility ;
+		rdfs:range	dqm:MultipleLanguageUsageMetric .
+
 
 	#Interpretability Dimension Properties
 	dqm:hasInterpretabilityDimension
