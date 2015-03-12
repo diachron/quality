@@ -16,12 +16,14 @@ import de.unibonn.iai.eis.luzzu.cache.CacheObject;
 public class DiachronCacheManager {
 
 	public static final String HTTP_RESOURCE_CACHE = "http_resource_cache";
+	public static final String VOCABULARY_CACHE = "vocabulary_cache";
 	
 	private static DiachronCacheManager instance = null;
 	private CacheManager luzzuCM = CacheManager.getInstance();
 	
 	protected DiachronCacheManager(){
 		luzzuCM.createNewCache(HTTP_RESOURCE_CACHE, 5000);
+		luzzuCM.createNewCache(VOCABULARY_CACHE, 5000);
 	};
 	
 	public static DiachronCacheManager getInstance(){
