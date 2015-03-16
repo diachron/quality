@@ -301,19 +301,13 @@ dqm:LuzzuProvenanceAgent
 		rdfs:comment	"Detect properties that are defined as a owl:datatype property but is used as object property and properties defined as a owl:object property and used as datatype property The metric is computed as a ratio of misused properties" ;
 		rdfs:label	"Misuse Owl datatype or object properties metric" .
 		
-	dqm:UndefinedClassesMetric
+	dqm:UndefinedClassesAndPropertiesMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
 		daq:expectedDataType xsd:double ;
-		rdfs:comment	"Detects undefined classes" ;
-		rdfs:label	"Undefined classes metric" .
+		rdfs:comment	"Detects undefined classes and properties" ;
+		rdfs:label	"Undefined classes and properties metric" .
 		
-	dqm:UndefinedPropertiesMetric
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Metric ; 
-		daq:expectedDataType xsd:double ;
-		rdfs:comment	"Detects undefined properties" ;
-		rdfs:label	"Undefined properties metric" .
 		
 	dqm:OntologyHijackingMetric
 		a	rdfs:Class ;
@@ -698,21 +692,14 @@ dqm:LuzzuProvenanceAgent
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:HomogeneousDatatypesMetric .
 		
-	dqm:hasUndefinedClassesMetric
+	dqm:hasUndefinedClassesAndPropertiesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with Undefined classes metric" ;
+		rdfs:comment	"Links Consistency Dimension with Undefined classes and properties metric" ;
 		rdfs:label	"hasUndefinedClassesMetric" ;
-		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:UndefinedClassesMetric .
+		rdfs:domain	dqm:Interpretability ;
+		rdfs:range	dqm:UndefinedClassesAndPropertiesMetric .
 		
-	dqm:hasUndefinedPropertiesMetric
-		a	rdfs:Property ;
-		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with Undefined  properties metric" ;
-		rdfs:label	"hasUndefinedPropertiesMetric" ;
-		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:UndefinedPropertiesMetric .
 		
 	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Property ;
@@ -1362,5 +1349,19 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "The defined format using the void:feature predicate is unknown. Check http://www.w3.org/ns/formats/." ;
 		rdfs:label "Incorrect defined format/feature" .
+
+### Undefined Classes and Properties
+	
+	dqm:UndefinedClass
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The class used is undefined in the respective schema" ;
+		rdfs:label "Undefined Class" .
+
+	dqm:UndefinedProperty
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The property used is undefined in its respective schema." ;
+		rdfs:label "Undefined Property" .
 
 
