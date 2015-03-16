@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.diachron.qualitymetrics.representational.Interpretability;
+package eu.diachron.qualitymetrics.representational.interpretability;
 
 import java.util.ArrayList;
 import java.util.List;
