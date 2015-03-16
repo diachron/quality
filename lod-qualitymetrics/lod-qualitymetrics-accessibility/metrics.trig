@@ -2,77 +2,81 @@
 @prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix lmi: <http://github.com/EIS-Bonn/Luzzu#> .
+@prefix lmi: <http://purl.org/eis/vocab/lmi#> .
 
 #--- Availability Dimension ------------------------------------------------------------------------------------------------- 
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:Dereferenceability a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:DereferenceabilityForwardLinks a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability of Forward-links" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.DereferenceabilityForwardLinks" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:EstimatedDereferenceability a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability (Estimated)" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceability" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:EstimatedDereferenceabilityForwardLinks a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability of Forward-links (Estimated)" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceabilityForwardLinks" .
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:MisreportedContentType a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Misreported Content Types" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.MisreportedContentType" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:EstimatedMisreportedContentType a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Misreported Content Types (Estimated)" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedMisreportedContentType" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:RDFAccessibility a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "RDF Accessibility" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.RDFAccessibility" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:SPARQLAccessibility a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "SPARQL Accessibility" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.SPARQLAccessibility" .
 
 #--- Interlinking Dimension -------------------------------------------------------------------------------------------------
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:DereferenceBackLinks a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability of Back-links" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.interlinking.DereferenceBackLinks" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:EstimatedDereferenceBackLinks a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability of Back-links (Estimated)" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedDereferenceBackLinks" .
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:LinkExternalDataProviders a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Links to External Data Providers" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.interlinking.LinkExternalDataProviders" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:EstimatedLinkExternalDataProviders a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Links to External Data Providers (Estimated)" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedLinkExternalDataProviders" .
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
-	rdfs:label "Licensing Model Classifier" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.interlinking.LicensingModelClassifier" .
+_:InterlinkDetectionMetric a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Interlink Detection" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.interlinking.InterlinkDetectionMetric" .
 
 #--- Licensing Dimension ----------------------------------------------------------------------------------------------------
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:HumanReadableLicense a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Human-readable License" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.licensing.HumanReadableLicense" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:MachineReadableLicense a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Machine-readable License" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.licensing.MachineReadableLicense" .
 
+_:LicensingModelClassifier a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Licensing Model Classifier" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.licensing.LicensingModelClassifier" .
+
 #--- Performance Dimension ----------------------------------------------------------------------------------------------------
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:CorrectURIUsage a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Correct Usage of URIs" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.performance.CorrectURIUsage" .
 	
@@ -80,10 +84,10 @@ _:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Data Source Scalability" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.performance.DataSourceScalability" .
 
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:HighThroughput a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "High Throughput" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.performance.HighThroughput" .
 	
-_:DataSourceScalability a lmi:LuzzuMetricJavaImplementation ;
+_:LowLatency a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Low Latency" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.performance.LowLatency" .
