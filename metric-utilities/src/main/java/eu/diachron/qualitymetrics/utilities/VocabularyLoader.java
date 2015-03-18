@@ -106,6 +106,10 @@ public class VocabularyLoader {
 		return termExists(ns, term);
 	}
 	
+	public static void loadVocabulary(String vocabURI){
+		if(!(dataset.containsNamedModel(vocabURI))) 
+			loadNStoDataset(vocabURI);
+	}
 	
 	private static void loadNStoDataset(String ns){
 		if (knownDatasets.containsKey(ns)){

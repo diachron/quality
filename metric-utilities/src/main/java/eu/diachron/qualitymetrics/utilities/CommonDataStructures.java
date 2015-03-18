@@ -42,6 +42,11 @@ public final class CommonDataStructures {
     	ldContentTypes.add(WebContent.contentTypeXML);
     	ldContentTypes.add(WebContent.contentTypeXMLAlt);
     	ldContentTypes.add("application/xhtml+xml");
+    	
+    	//the following are required since the datadump might be zipped in tar files
+    	ldContentTypes.add("application/x-compressed"); //.tgz
+    	ldContentTypes.add("application/x-tar"); //.tar
+    	ldContentTypes.add("application/x-gzip"); //.gz
 //    	ldContentTypes.add("text/html");
     }
 }
