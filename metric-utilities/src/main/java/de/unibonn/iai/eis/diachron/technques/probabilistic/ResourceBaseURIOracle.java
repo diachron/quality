@@ -1,24 +1,30 @@
 package de.unibonn.iai.eis.diachron.technques.probabilistic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
 import com.google.common.net.InternetDomainName;
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTypes;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.datatypes.Pair;
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.DCAT;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.CUBE;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 
@@ -38,7 +44,7 @@ public class ResourceBaseURIOracle {
 	 * it will be stored in this variable. Thus, it being not null indicates that one of the heuristics has already found 
 	 * a solution.
 	 */
-	private String declaredResBaseURI = null;
+	private String declaredResDatasetURI = null;
 	
 	/**
 	 * If the resource's base URI has previously been guessed, it will be stored in this variable. 
@@ -59,19 +65,22 @@ public class ResourceBaseURIOracle {
 	private final int maxSubjectURIs = 20000;
 	
 	
-	final static List<Resource> _datasetClass = new ArrayList<Resource>();
+	final static List<String> _datasetClass = new ArrayList<String>();
 	static{
-		_datasetClass.add(VOID.Dataset);
-		_datasetClass.add(DCTypes.Dataset);
-		_datasetClass.add(DCAT.Dataset);
-		_datasetClass.add(CUBE.DataSet);
+		_datasetClass.add(VOID.Dataset.getURI());
+		_datasetClass.add(DCTypes.Dataset.getURI());
+		_datasetClass.add(DCAT.Dataset.getURI());
+		_datasetClass.add(CUBE.DataSet.getURI());
 	}
+	
+	
+//	private Map<String, HTreeMap<String, Pair<Integer, Integer>>> graphDatasetURIs = new ConcurrentHashMap<String, HTreeMap<String, Pair<Integer, Integer>>>();
+	private HTreeMap<String, Pair<Integer, Integer>> builder = MapDbFactory.createFilesystemDB().createHashMap("resource-base-uri-map").make();
 	
 	/**
 	 * Default constructor
 	 */
 	public ResourceBaseURIOracle() {
-
 		this.tblSubjectURIs = new ConcurrentHashMap<String, Integer>();
 	}
 	
@@ -87,38 +96,33 @@ public class ResourceBaseURIOracle {
 		Node predicate = statement.getPredicate();
 		Node object = statement.getObject();
 				
-		// If the base URI of the resource has not been declared in a previously processed statement...
-		if(this.declaredResBaseURI == null) {
+		// ...try to apply the first heuristic, which extracts the base URI from <> a void:Dataset/owl:Ontology statements
+		if (!(this.tryExtractDatasetDecl(subject, predicate, object))){
+			// Get the parent URI of the subject described by the statement
+			String parentURI = this.extractParentURI(subject);
 			
-			// ...try to apply the first heuristic, which extracts the base URI from <> a void:Dataset/owl:Ontology statements
-			this.tryExtractDatasetDecl(subject, predicate, object);
-		}
-		
-		// Get the parent URI of the subject described by the statement
-		String parentURI = this.extractParentURI(subject);
-		
-		// Add the parent URI to the table of subjects or update the corresponding entry if it's already there, do not 
-		// add new rows if the maximum table size has been reached, but make sure that the declaredBaseURI is added if found
-		if(parentURI != null && ((this.tblSubjectURIs.size() < this.maxSubjectURIs) || parentURI.equals(this.declaredResBaseURI) )) {
-			
-			// Check if the current parent URI has already an entry in the table, if no, add it
-			Integer curParentURICount = this.tblSubjectURIs.get(parentURI);
-			this.tblSubjectURIs.put(parentURI, ((curParentURICount != null)?(curParentURICount + 1):(1)));
+			// Add the parent URI to the table of subjects or update the corresponding entry if it's already there, do not 
+			// add new rows if the maximum table size has been reached, but make sure that the declaredBaseURI is added if found
+			if(parentURI != null && ((this.tblSubjectURIs.size() < this.maxSubjectURIs) || parentURI.equals(this.declaredResDatasetURI) )) {
+				
+				// Check if the current parent URI has already an entry in the table, if no, add it
+				Integer curParentURICount = this.tblSubjectURIs.get(parentURI);
+				this.tblSubjectURIs.put(parentURI, ((curParentURICount != null)?(curParentURICount + 1):(1)));
+			}
 		}
 	}
 	
 	/**
-	 * Provides the best guessing of the base URI that can be obtained, given the information provided up to now 
+	 * Provides the best guessing of the dataset URI that can be obtained, given the information provided up to now 
 	 * (information provided through invocations to the addHint method.
-	 * @return guess of the resource's base URI, null if no guess can be computed yet
+	 * @return guess of the resource's dataset URI, null if no guess can be computed yet
 	 */
-	public String getEstimatedResourceBaseURI() {
+	public String getEstimatedResourceDatasetURI() {
 		
 		// If a the base URI had been precisely determined, return it...
-		if(this.declaredResBaseURI != null) {
-			
-			logger.debug("Resource base URI defined in declaration: {}", this.declaredResBaseURI);
-			return this.declaredResBaseURI;
+		if(this.declaredResDatasetURI != null) {
+			logger.debug("Resource base URI defined in declaration: {}", this.declaredResDatasetURI);
+			return this.declaredResDatasetURI;
 		} else {
 			
 			// otherwise estimate the base URI according to the contents of the table of subject URIs
@@ -137,6 +141,41 @@ public class ResourceBaseURIOracle {
 					logger.debug("Most frequent parent URI updated: {} count: {}", curBestGuessURI, curMaxCount);
 				}
 			}
+			
+			if (curBestGuessURI.equals("$builder")){
+				String baseURI = EnvironmentProperties.getInstance().getBaseURI();
+				int maxOcc = -1;
+				Set<String> biggestTerms = new HashSet<String>();
+				Iterator<String> set = this.builder.keySet().iterator();
+				
+				while(set.hasNext()){
+					String s = set.next();
+					if (maxOcc < this.builder.get(s).getSecondElement()){
+						maxOcc = this.builder.get(s).getSecondElement();
+						for(String st : biggestTerms){
+							this.builder.remove(st);
+						}
+						biggestTerms = new HashSet<String>();
+						biggestTerms.add(s);
+					} else if (maxOcc == this.builder.get(s).getSecondElement()){
+						biggestTerms.add(s);
+					} else {
+						this.builder.remove(s);
+					}
+				}
+				
+				String[] guessedURI = new String[this.builder.keySet().size()];
+				for(String s : this.builder.keySet()){
+					String term = s;
+					if (s.endsWith("%")){
+						int indexof = s.indexOf("%");
+						term = s.substring(1,indexof - 1);
+					}
+					guessedURI[(this.builder.get(s).getFirstElement() - 1)] = term; 
+				}
+				
+				curBestGuessURI = baseURI + "/" +Joiner.on("/").join(guessedURI);
+			}
 
 			this.lastGuessedBaseURI = curBestGuessURI;
 			return curBestGuessURI;
@@ -150,10 +189,10 @@ public class ResourceBaseURIOracle {
 	 */
 	public int getBaseURICount() {
 		
-		String parentURI = ((this.declaredResBaseURI != null)?(this.declaredResBaseURI):(this.lastGuessedBaseURI));
+		String parentURI = ((this.declaredResDatasetURI != null)?(this.declaredResDatasetURI):(this.lastGuessedBaseURI));
 		
 		if(parentURI == null || parentURI.isEmpty()) {
-			parentURI = this.getEstimatedResourceBaseURI();
+			parentURI = this.getEstimatedResourceDatasetURI();
 		}
 		
 		Integer subjectsCount = this.tblSubjectURIs.get(parentURI);
@@ -170,26 +209,24 @@ public class ResourceBaseURIOracle {
 	 * @return true if the heuristic succeeded in determining the base URI upon this invocation. False otherwise
 	 */
 	private boolean tryExtractDatasetDecl(Node subject, Node predicate, Node object) {
-		
 		// First level validation: all parts of the triple will be required
 		if(subject != null && predicate != null && object != null) {
 			
 			// Second level validation: all parts of the triple must be URIs
 			if(subject.isURI() && predicate.isURI() && object.isURI()) {
-				
 				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
-				if(predicate.getURI().equals(RDF.type.getURI()) && 
-						_datasetClass.contains(object) || object.getURI().equals(OWL.Ontology.getURI())) {
-					
+				if(predicate.getURI().equals(RDF.type.getURI()) &&  _datasetClass.contains(object.getURI()) || object.getURI().equals(OWL.Ontology.getURI())) {
 					// The URI of the subject of such quad, should be the resource's base URI. 
-					this.declaredResBaseURI = subject.getURI();					
+					this.declaredResDatasetURI = subject.getURI();					
+//					if (!(this.dcmgr.existsInCache(DiachronCacheManager.DATASET_CACHE, subject.getURI()))){
+//						CachedDatasetStatistics cds = new CachedDatasetStatistics(subject.getURI());
+//						dcmgr.addToCache(DiachronCacheManager.DATASET_CACHE, subject.getURI(), cds);
+//					}
 					logger.debug("Resource base URI declared in triple: {} {} {}", subject, predicate, object);
-					
 					return true;
 				}
 			}
 		}
-		
 		return false;
 	}
 	
@@ -200,20 +237,42 @@ public class ResourceBaseURIOracle {
 	 * @return substring of the URI of the provided subject, corresponding to its parent URI
 	 */
 	public String extractParentURI(Node subject) {
+		String ns = "";
+		if (subject.isBlank()) return null;
+		if (subject.isURI()){
+			subject.getNameSpace();
 		
-		String fullURI = null;
-
-		if(subject.isURI() && ((fullURI = subject.getURI()) != null)) {
-
-			// URIs consist of a path, made up by segments separated by "/"
-			int lastSlashIx = fullURI.lastIndexOf('/');
-
-			if(lastSlashIx > 0) {
-				return fullURI.substring(0, lastSlashIx);
+			if ((ns.equals("")) || (subject.equals(ns))){
+				//build ns
+				String baseURI = EnvironmentProperties.getInstance().getBaseURI();
+				String extractedURI = subject.getURI().replace(baseURI, "");
+				String split[] = extractedURI.split("/");
+				int counter = 1;
+				for (String s : split){
+					if (s.equals("")) continue;
+					if (builder.containsKey(s)){
+						Pair<Integer, Integer> p = builder.get(s);
+						if (p.getFirstElement() == counter) {
+							p.setSecondElement(p.getSecondElement() + 1);
+							builder.put(s, p);
+						} else {
+							Pair<Integer, Integer> p2 = new Pair<Integer,Integer>(counter , 1);
+							String marker = s+"%"+UUID.randomUUID()+"%";
+							builder.putIfAbsent(marker,p2);
+						}
+					} else {
+						Pair<Integer, Integer> p = new Pair<Integer,Integer>(counter , 1);
+						builder.putIfAbsent(s,p);
+					}
+					counter++;
+				}
+				return "$builder";
+			} else {
+				return ns;
 			}
 		}
-
 		return null;
+		
 	}
 	
 	/**
@@ -235,14 +294,17 @@ public class ResourceBaseURIOracle {
 			// Second level validation: all parts of the triple must be URIs
 			if(subject.isURI() && predicate.isURI() && object.isURI()) {
 				// Check that the current quad corresponds to the dataset declaration, from which the dataset URI will be extracted...
-				if(predicate.getURI().equals(RDF.type.getURI()) && _datasetClass.contains(object)) {
+				if(predicate.getURI().equals(RDF.type.getURI()) && _datasetClass.contains(object.getURI())) {
 					// The URI of the subject of such quad, should be the dataset's URL. 
 					// Try to calculate the latency associated to the current dataset
+//					if (!(DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.DATASET_CACHE, subject.getURI()))){
+//						CachedDatasetStatistics cds = new CachedDatasetStatistics(subject.getURI());
+//						DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.DATASET_CACHE, subject.getURI(), cds);
+//					}
 					return subject.getURI();
 				}
 			}
 		}
-		
 		return null;
 	}
 	
@@ -260,16 +322,15 @@ public class ResourceBaseURIOracle {
 			return null;
 		}
 		
+		int extract = 0;
+		if (resourceURI.startsWith("http://")) extract = resourceURI.indexOf("/", 7);
+		else if (resourceURI.startsWith("https://")) extract = resourceURI.indexOf("/", 8);
 		
-		Pattern pattern = Pattern.compile("[^(http(s?)://)]([\\w]+\\.){1}([\\w]+\\.?)+");
-		Matcher matcher = pattern.matcher(resourceURI);
-		String matched = "";
-		if (matcher.find())
-		{
-			matched = matcher.group(0);
-		}
+		if(extract == -1) extract = resourceURI.length();
 		
+		String matched = (resourceURI.startsWith("http://")) ? resourceURI.substring(7, extract) : resourceURI.substring(8, extract);
 		
 		return InternetDomainName.from(matched).topPrivateDomain().toString();
 	}
+
 }

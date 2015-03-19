@@ -112,7 +112,7 @@ public class HumanReadableLicense implements QualityMetric {
 	 */
 	public double metricValue() {
 		// Determine the base URI of the resource
-		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
+		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceDatasetURI();
 		Node dataset = ModelFactory.createDefaultModel().createResource(resourceBaseURI).asNode();
 
 		if(resourceBaseURI != null) {

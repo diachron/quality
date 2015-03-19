@@ -108,7 +108,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 
 	public ProblemList<?> getQualityProblems() {
 		if (features > 1){
-			if (datasetURI == null) datasetURI = oracle.getEstimatedResourceBaseURI();
+			if (datasetURI == null) datasetURI = oracle.getEstimatedResourceDatasetURI();
 			
 			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(datasetURI).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoMultipleFormatDefined.asNode());
 			this._problemList.add(q);

@@ -95,7 +95,7 @@ public class DataSourceScalability implements QualityMetric {
 	public double metricValue() {
 		if (this.metricValue == null){
 			
-			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceBaseURI();
+			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceDatasetURI();
 			
 			// Send parallel requests and accumulate their response times as the total delay
 			logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);

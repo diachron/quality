@@ -114,7 +114,7 @@ public class NoUsageSlashURIs implements QualityMetric {
 	public double metricValue() {
 		
 		// Determine the base URI of the resource
-		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceBaseURI();
+		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceDatasetURI();
 		logger.debug("Estimated resource base URI: {}", resourceBaseURI);
 		
 		int totalUsedURIs = 0;

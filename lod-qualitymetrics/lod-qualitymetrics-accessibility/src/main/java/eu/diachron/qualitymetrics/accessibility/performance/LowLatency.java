@@ -84,7 +84,7 @@ public class LowLatency implements QualityMetric {
 	 */
 	public double metricValue() {
 		if (this.metricValue == null){
-			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceBaseURI();
+			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceDatasetURI();
 			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 

@@ -17,6 +17,7 @@ public class DiachronCacheManager {
 
 	public static final String HTTP_RESOURCE_CACHE = "http_resource_cache";
 	public static final String VOCABULARY_CACHE = "vocabulary_cache";
+//	public static final String DATASET_CACHE = "dataset_cache";
 	
 	private static DiachronCacheManager instance = null;
 	private CacheManager luzzuCM = CacheManager.getInstance();
@@ -24,6 +25,7 @@ public class DiachronCacheManager {
 	protected DiachronCacheManager(){
 		luzzuCM.createNewCache(HTTP_RESOURCE_CACHE, 5000);
 		luzzuCM.createNewCache(VOCABULARY_CACHE, 5000);
+//		luzzuCM.createNewCache(DATASET_CACHE, 5000);
 	};
 	
 	public static DiachronCacheManager getInstance(){

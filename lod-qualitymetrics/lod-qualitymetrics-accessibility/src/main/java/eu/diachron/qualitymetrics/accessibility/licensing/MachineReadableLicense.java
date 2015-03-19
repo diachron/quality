@@ -118,7 +118,7 @@ public class MachineReadableLicense implements QualityMetric {
 				return 0.0;
 			}
 		} else {
-			String ds = oracle.getEstimatedResourceBaseURI();
+			String ds = oracle.getEstimatedResourceDatasetURI();
 			Node dataset = ModelFactory.createDefaultModel().createResource(ds).asNode();
 
 			if (mapLicensedResources.containsKey(ds)){

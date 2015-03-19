@@ -6,4 +6,6 @@
     <version>1.0.0</version>
   </parent>
   <artifactId>lod-qualitymetrics-representation</artifactId>
+  
+
 </project>

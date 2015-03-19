@@ -99,7 +99,7 @@ public class SPARQLAccessibility implements QualityMetric {
 		ProblemList<Quad> tmpProblemList = null;
 		
 		if (this.metricValue() == 0){
-			String resource = this.oracle.getEstimatedResourceBaseURI();
+			String resource = this.oracle.getEstimatedResourceDatasetURI();
 			Resource subject = ModelFactory.createDefaultModel().createResource(resource);
 			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQM.NoEndPointAccessibility.asNode());
 			this.problemList.add(q);

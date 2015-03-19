@@ -136,7 +136,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	public double metricValue() {
 		if (!computed){
 			//remove the base uri from the set because that will not be an "external link"
-			String baseURI = baseURIOracle.getEstimatedResourceBaseURI();
+			String baseURI = baseURIOracle.getEstimatedResourceDatasetURI();
 			
 			Iterator<String> iterator = mapPLDs.keySet().iterator();
 			while (iterator.hasNext()) {

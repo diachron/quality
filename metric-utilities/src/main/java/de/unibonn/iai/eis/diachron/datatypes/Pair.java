@@ -3,12 +3,16 @@
  */
 package de.unibonn.iai.eis.diachron.datatypes;
 
+import java.io.Serializable;
+
 /**
  * @author Jeremy Debattista
  * 
  */
-public class Pair<U,V> {
+public class Pair<U,V> implements Serializable{
 	
+	private static final long serialVersionUID = -6713166656254601033L;
+			
 	private U firstElement;
 	private V secondElement;
 	
