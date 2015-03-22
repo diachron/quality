@@ -3,6 +3,7 @@
  */
 package de.unibonn.iai.eis.diachron.technques.probabilistic;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.junit.Assert;
@@ -54,9 +55,19 @@ public class ResourceBaseURIOracleTest extends Assert {
 		for (Quad q : quads){
 			oracle.addHint(q);
 		}
-		
+		// Test with declared dataset URI
 		assertTrue("http://oecd.270a.info/dataset/WSECTOR".equals(oracle.getEstimatedResourceDatasetURI()));
+		
+		try {
+			// Manually unset the declared dataset URI, in order to test the dataset URI guessing mechanism 
+			Field declDatasetField = oracle.getClass().getDeclaredField("declaredResDatasetURI");
+			declDatasetField.setAccessible(true);
+			declDatasetField.set(oracle, null);
+			// Test the result of estimating the dataset URI when it has not been explicitly declared in the resource
+			assertTrue("http://oecd.270a.info/dataset/WSECTOR".equals(oracle.getEstimatedResourceDatasetURI()));
+		} catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
-
 	
 }

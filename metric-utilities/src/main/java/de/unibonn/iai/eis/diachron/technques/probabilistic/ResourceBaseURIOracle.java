@@ -239,10 +239,10 @@ public class ResourceBaseURIOracle {
 	public String extractParentURI(Node subject) {
 		String ns = "";
 		if (subject.isBlank()) return null;
-		if (subject.isURI()){
-			subject.getNameSpace();
+		if (subject.isURI()) {
+			ns = subject.getNameSpace();
 		
-			if ((ns.equals("")) || (subject.equals(ns))){
+			if ((ns.equals("")) || (ns.equals(subject.getURI()))) {
 				//build ns
 				String baseURI = EnvironmentProperties.getInstance().getBaseURI();
 				String extractedURI = subject.getURI().replace(baseURI, "");
@@ -272,9 +272,8 @@ public class ResourceBaseURIOracle {
 			}
 		}
 		return null;
-		
 	}
-	
+		
 	/**
 	 * Note: utilitarian method, useful for several metrics
 	 * Tries to figure out the URI of the dataset wherefrom the quads were obtained. This is done by checking whether the 
