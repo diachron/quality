@@ -47,7 +47,7 @@ public class NoBlankNodeUsage implements QualityMetric {
 			if (subject.isBlank()) uniqueBN.add(subject.getBlankNodeLabel());
 			else uniqueDLC.add(subject.getURI());
 			
-			if (!(object.isLiteral())){
+			if ((object.isURI())){
 				if (object.isBlank()) uniqueBN.add(object.getBlankNodeLabel());
 				else uniqueDLC.add(object.getURI());
 			}
