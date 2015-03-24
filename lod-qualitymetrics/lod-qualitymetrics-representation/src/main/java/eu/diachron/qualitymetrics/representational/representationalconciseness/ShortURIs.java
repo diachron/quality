@@ -3,6 +3,7 @@ package eu.diachron.qualitymetrics.representational.representationalconciseness;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -37,6 +39,9 @@ public class ShortURIs implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.ShortURIsMetric;
 	
+	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
+
+	
 	/**
 	 * Sum short uri's
 	 */
@@ -53,46 +58,52 @@ public class ShortURIs implements QualityMetric {
 	public void compute(Quad quad) {
 		if (!(quad.getPredicate().hasURI(RDF.type.getURI()))){
 			Node subject = quad.getSubject();
-			if (subject.isURI()){
-				if (possibleDereferenceableURI(subject.getURI())){
-					countLocalDefURIs++;
-					
-					String uri = subject.getURI();
-					if (uri.contains("?")){
-						Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
-						this._problemList.add(q);
-					} else if (uri.length() > 80){
-						Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
-						this._problemList.add(q);
-					} else {
-						shortURICount++;
+			if ((!(subject.isBlank())) && (!(this.seenSet.contains(subject.getURI())))){
+				if (subject.isURI()){
+					if (possibleDereferenceableURI(subject.getURI())){
+						countLocalDefURIs++;
+						
+						String uri = subject.getURI();
+						if (uri.contains("?")){
+							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
+							this._problemList.add(q);
+						} else if (uri.length() > 80){
+							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
+							this._problemList.add(q);
+						} else {
+							shortURICount++;
+						}
 					}
 				}
+				this.seenSet.add(subject.getURI());
 			}
 			
 			Node object = quad.getObject();
 			if (object.isURI()){
-				if (possibleDereferenceableURI(object.getURI())){
-					countLocalDefURIs++;
-					
-					String uri = object.getURI();
-					if (uri.contains("?")){
-						Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
-						this._problemList.add(q);
-					} else if (uri.length() > 80){
-						Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
-						this._problemList.add(q);
-					} else {
-						shortURICount++;
+				if ((!(object.isBlank())) &&  (!(this.seenSet.contains(object.getURI())))){
+					if (possibleDereferenceableURI(object.getURI())){
+						countLocalDefURIs++;
+						
+						String uri = object.getURI();
+						if (uri.contains("?")){
+							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
+							this._problemList.add(q);
+						} else if (uri.length() > 80){
+							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
+							this._problemList.add(q);
+						} else {
+							shortURICount++;
+						}
 					}
 				}
+				this.seenSet.add(object.getURI());
 			}
 		}
 	}
 
 	
 	public double metricValue() {
-		return (double)shortURICount / (double)countLocalDefURIs;
+		return (this.shortURICount == 0) ? 1.0 : ((double)shortURICount / (double)countLocalDefURIs);
 	}
 
 	
