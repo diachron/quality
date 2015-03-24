@@ -20,6 +20,7 @@ import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -163,6 +164,10 @@ public class VocabularyLoader {
 	
 	private static Boolean termExists(String ns, Node term){
 		Model m = dataset.getNamedModel(ns);
+		
+		if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
+			return true;
+		}
 		
 		if (term.isURI()) {
 			Resource r = m.createResource(term.getURI());

@@ -84,7 +84,7 @@ public class NoProlixRDF implements QualityMetric {
 			totalRCC++;
 		}
 		// for rdf:_n where n is a number
-		if (subject.getURI().matches("_[0-9]+")){
+		if (subject.getURI().matches(RDF.getURI()+"_[0-9]+")){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
 			this._problemList.add(q);
 			totalRCC++;

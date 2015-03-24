@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.DAQ;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -37,6 +38,8 @@ public class VocabularyLoaderTest extends Assert {
 	public void knownVocabularyPropertiesTest() throws IOException, URISyntaxException {
 		assertTrue(VocabularyLoader.checkTerm(FOAF.page.asNode()));
 		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"false").asNode()));
+		assertTrue(VocabularyLoader.checkTerm(RDF.li(1).asNode()));
+		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"_1").asNode()));
 	}
 
 	@Test
