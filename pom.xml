@@ -15,7 +15,7 @@
 		<jena.version>2.11.0</jena.version>
 		<jung.version>2.0.1</jung.version>
 		<mapdb.version>1.0.6</mapdb.version>
-		<luzzu.version>1.0.1</luzzu.version>
+		<luzzu.version>1.0.2</luzzu.version>
 		<diachron.version>1.0.0</diachron.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -260,5 +260,6 @@
 		<module>metric-utilities</module>
 		<module>quality-vocabulary</module>
 		<module>lod-qualitymetrics</module>
+		<module>lod-utilities</module>
 	</modules>
 </project>
