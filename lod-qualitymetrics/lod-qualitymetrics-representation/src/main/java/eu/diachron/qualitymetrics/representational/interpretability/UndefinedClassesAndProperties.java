@@ -5,6 +5,7 @@ package eu.diachron.qualitymetrics.representational.interpretability;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -44,54 +46,61 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 	private SharedResources shared = SharedResources.getInstance();
 	private List<Quad> _problemList = new ArrayList<Quad>();
 
+	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
 	
 	@Override
 	public void compute(Quad quad) {
 		Node predicate = quad.getPredicate();
 		
-		
 		if (predicate.hasURI(RDF.type.getURI())){
+		
 			// Checking for classes
 			Node object = quad.getObject();
-			logger.info("checking class: " + object.getURI());
-
-			if (!(object.isBlank())){
-				this.totalClasses++;
-				
-				Boolean seen = shared.classOrPropertyDefined(object.getURI());
+			if (!(this.seenSet.contains(object.getURI()))){
+				logger.info("checking class: " + object.getURI());
+	
+				if (!(object.isBlank())){
+					this.totalClasses++;
+					
+					Boolean seen = shared.classOrPropertyDefined(object.getURI());
+					Boolean defined = null;
+					if (seen == null) {
+						defined = VocabularyLoader.checkTerm(object);
+						shared.addClassOrProperty(object.getURI(), defined);
+					}
+					else defined = seen;
+					
+					if (!defined){
+						this.undefinedClasses++;
+						Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.UndefinedClass.asNode());
+						this._problemList.add(q);
+					}
+				}
+				this.seenSet.add(object.getURI());
+			}
+			
+		} 
+		if (!(this.seenSet.contains(predicate.getURI()))){
+				// Checking for properties
+				this.totalProperties++;
+				logger.info("checking predicate: " + predicate.getURI());
+	
+				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
 				Boolean defined = null;
 				if (seen == null) {
-					defined = VocabularyLoader.checkTerm(object);
-					shared.addClassOrProperty(object.getURI(), defined);
+					defined = VocabularyLoader.checkTerm(predicate);
+					shared.addClassOrProperty(predicate.getURI(), defined);
 				}
 				else defined = seen;
 				
 				if (!defined){
-					this.undefinedClasses++;
-					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.UndefinedClass.asNode());
+					this.undefinedProperties++;
+					Quad q = new Quad(null, predicate, QPRO.exceptionDescription.asNode(), DQM.UndefinedProperty.asNode());
 					this._problemList.add(q);
 				}
-			}
-			
-		} else {
-			// Checking for properties
-			this.totalProperties++;
-			logger.info("checking predicate: " + predicate.getURI());
-
-			Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
-			Boolean defined = null;
-			if (seen == null) {
-				defined = VocabularyLoader.checkTerm(predicate);
-				shared.addClassOrProperty(predicate.getURI(), defined);
-			}
-			else defined = seen;
-			
-			if (!defined){
-				this.undefinedProperties++;
-				Quad q = new Quad(null, predicate, QPRO.exceptionDescription.asNode(), DQM.UndefinedProperty.asNode());
-				this._problemList.add(q);
-			}
-		}
+				
+				this.seenSet.add(predicate.getURI());
+		}	
 	}
 
 	@Override
