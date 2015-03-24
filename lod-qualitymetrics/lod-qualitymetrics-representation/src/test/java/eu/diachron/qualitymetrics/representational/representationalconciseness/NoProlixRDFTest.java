@@ -14,7 +14,7 @@ import eu.diachron.qualitymetrics.utilities.TestLoader;
 /**
  * @author Jeremy Debattista
  * 
- * Test for the No Blank Node Usage Metric.
+ * Test for the No Prolix RDF Test Metric.
  * In the used dataset, there are 29 RCC
  * and a total of 1475 triples 
  */
