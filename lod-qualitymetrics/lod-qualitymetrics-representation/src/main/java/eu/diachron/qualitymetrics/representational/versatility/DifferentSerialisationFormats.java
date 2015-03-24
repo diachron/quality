@@ -6,6 +6,7 @@ package eu.diachron.qualitymetrics.representational.versatility;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +15,13 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 
@@ -40,8 +43,6 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  */
 public class DifferentSerialisationFormats implements QualityMetric{
 	
-	private int features = 0;
-	
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	
 	private static Logger logger = LoggerFactory.getLogger(DifferentSerialisationFormats.class);
@@ -49,6 +50,10 @@ public class DifferentSerialisationFormats implements QualityMetric{
 	private String datasetURI = null;
 	
 	ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
+	
+	private HTreeMap<String, List<String>> datasetFeatures = MapDbFactory.createFilesystemDB().createHashMap("dataset-features").make();
+	
+	boolean flag = false;
 	
 	private static List<String> formats = new ArrayList<String>();
 	static{
@@ -79,7 +84,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 
 	@Override
 	public void compute(Quad quad) {
-		oracle.addHint(quad);
+		this.datasetFeatures.putIfAbsent(EnvironmentProperties.getInstance().getDatasetURI(), new ArrayList<String>());
 		
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
@@ -87,7 +92,11 @@ public class DifferentSerialisationFormats implements QualityMetric{
 		if (predicate.hasURI(VOID.feature.getURI())){
 			datasetURI = quad.getSubject().getURI();
 			
-			if (formats.contains(object.getURI())) features++;
+			if (formats.contains(object.getURI())) {
+				List<String> features = this.datasetFeatures.get(datasetURI);
+				features.add(object.getURI());
+				this.datasetFeatures.put(datasetURI, features);
+			}
 			else {
 				Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.IncorrectFormatDefined.asNode());
 				this._problemList.add(q);
@@ -98,7 +107,31 @@ public class DifferentSerialisationFormats implements QualityMetric{
 
 	@Override
 	public double metricValue() {
-		return (features > 1) ? 1 : 0;
+		if (!flag){
+			this.setQualityProblems();
+			flag = true;
+		}
+		
+		int totalNumberDatasets = this.datasetFeatures.size();
+		int datasetsWithMoreThanOneFeature = 0;
+		for(String dataset : this.datasetFeatures.keySet()){
+			List<String> features = this.datasetFeatures.get(dataset);
+			if (features.size() > 1){
+				datasetsWithMoreThanOneFeature++;
+			}
+		}
+		
+		return (double)datasetsWithMoreThanOneFeature / (double) totalNumberDatasets;
+	}
+	
+	private void setQualityProblems(){
+		for(String dataset : this.datasetFeatures.keySet()){
+			List<String> features = this.datasetFeatures.get(dataset);
+			if (features.size() <= 1){
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(dataset).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoMultipleFormatDefined.asNode());
+				this._problemList.add(q);
+			}
+		}
 	}
 
 	@Override
@@ -107,13 +140,6 @@ public class DifferentSerialisationFormats implements QualityMetric{
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		if (features > 1){
-			if (datasetURI == null) datasetURI = oracle.getEstimatedResourceDatasetURI();
-			
-			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(datasetURI).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoMultipleFormatDefined.asNode());
-			this._problemList.add(q);
-		}
-		
 		ProblemList<Quad> pl = null;
 			try {
 				pl = new ProblemList<Quad>(this._problemList);
