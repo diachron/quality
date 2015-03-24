@@ -31,11 +31,13 @@ public class SharedResources {
 	}
 	
 	public Boolean classOrPropertyDefined(String uri){
-		if (this.clsPropUndefined.containsKey(uri)) return this.classOrPropertyDefined(uri);
-		else return null;
+		if (this.clsPropUndefined.containsKey(uri)) 
+			return this.clsPropUndefined.get(uri);
+		else 
+			return null;
 	}
 	
 	public void addClassOrProperty(String uri, Boolean defined){
-		this.clsPropUndefined.put(uri, defined);
+		this.clsPropUndefined.putIfAbsent(uri, defined);
 	}
 }
