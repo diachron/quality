@@ -56,7 +56,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 		
 			// Checking for classes
 			Node object = quad.getObject();
-			if (!(this.seenSet.contains(object.getURI()))){
+			if ((!(object.isBlank())) &&  (!(this.seenSet.contains(object.getURI())))){
 				logger.info("checking class: " + object.getURI());
 	
 				if (!(object.isBlank())){
