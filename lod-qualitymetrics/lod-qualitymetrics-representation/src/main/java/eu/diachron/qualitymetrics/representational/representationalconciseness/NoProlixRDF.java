@@ -25,7 +25,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
  * @author Jeremy Debattista
  * 
  * This metric detects the use of standard RDF Prolix Features.
- * These features are Collections (rdf:Alt, rdf:Bag, rdf:List), Containers and Reification (rdf:Statement).
+ * These features are Collections (rdf:Alt, rdf:Bag, rdf:List, rdf:Seq), Containers and Reification (rdf:Statement).
  * 
  * The value returns a ratio of the total number of prolix (RCC) triples against the total number of triples
  */
@@ -56,7 +56,7 @@ public class NoProlixRDF implements QualityMetric {
 				Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
 				this._problemList.add(q);
 				totalRCC++;
-			} else if ( (object.hasURI(RDF.Alt.getURI())) || (object.hasURI(RDF.Bag.getURI())) || (object.hasURI(RDF.List.getURI()))){
+			} else if ( (object.hasURI(RDF.Alt.getURI())) || (object.hasURI(RDF.Bag.getURI())) || (object.hasURI(RDF.List.getURI())) || (object.hasURI(RDF.Seq.getURI()))){
 				Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfCollections.asNode());
 				this._problemList.add(q);
 				totalRCC++;
@@ -72,19 +72,20 @@ public class NoProlixRDF implements QualityMetric {
 		if ((predicate.hasURI(RDF.subject.getURI())) || (predicate.hasURI(RDF.predicate.getURI())) || (predicate.hasURI(RDF.object.getURI()))){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfReification.asNode());
 			this._problemList.add(q);
+			totalRCC++;
 		}
 		if (predicate.hasURI(RDFS.member.getURI())){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
 			this._problemList.add(q);
 			totalRCC++;
 		}
-		if ((predicate.hasURI(RDF.first.getURI())) || (predicate.hasURI(RDF.rest.getURI()))){
+		if ((predicate.hasURI(RDF.first.getURI())) || (predicate.hasURI(RDF.rest.getURI())) || (predicate.hasURI(RDF.nil.getURI()))){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfCollections.asNode());
 			this._problemList.add(q);
 			totalRCC++;
 		}
 		// for rdf:_n where n is a number
-		if (subject.getURI().matches(RDF.getURI()+"_[0-9]+")){
+		if (predicate.getURI().matches(RDF.getURI()+"_[0-9]+")){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
 			this._problemList.add(q);
 			totalRCC++;
@@ -93,7 +94,7 @@ public class NoProlixRDF implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		return this.totalRCC / this.totalTriples;
+		return (this.totalRCC == 0) ? 1.0 : 1.0 - (this.totalRCC / this.totalTriples);
 	}
 
 	@Override
