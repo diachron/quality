@@ -34,6 +34,8 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * R4 : [en]
  * R5 : [en]
  * the value would be 1 (7/5 = 1.4 ~ 1)
+ * 
+ * The value returns the number of multiple languages used
  */
 public class MultipleLanguageUsage implements QualityMetric {
 	
