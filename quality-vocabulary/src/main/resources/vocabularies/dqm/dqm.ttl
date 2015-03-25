@@ -1395,3 +1395,12 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:label "Undefined Property" .
 
 
+### Reuse of Terms and Vocabularies
+
+	dqm:UnusedSuggestedVocabulary
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The dataset did not use terms from the suggested vocabulary." ;
+		rdfs:label "Unused suggested vocabulary" .
+
+
