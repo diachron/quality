@@ -6,7 +6,9 @@ package eu.diachron.qualitymetrics.utilities;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -38,7 +40,8 @@ public class LOVInterface {
 
 
 	
-	public static void getKnownVocabsPerDomain(String domain) throws ClientProtocolException, IOException{
+	public static List<String> getKnownVocabsPerDomain(String domain) throws ClientProtocolException, IOException{
+		List<String> vocabs = new ArrayList<String>();
 		logger.info("Searching LOV for vocabularies in the domain of {}.",domain);
 		String uriPath = LOV_API_PATH + LOV_API_VERSION2_PATH + VOCABULARY_API_PATH + "search?q="+domain;
 		
@@ -54,8 +57,10 @@ public class LOVInterface {
 		while(results.hasNext()){
 			JsonNode res = results.next();
 			JsonNode source = res.findValue("_source");
+			vocabs.add(source.get("uri").getTextValue());
 			VocabularyLoader.loadVocabulary(source.get("uri").getTextValue());
 		}
+		return vocabs;
 	}
 	
 }
