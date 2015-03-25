@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.jena.atlas.web.HttpException;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
 import org.slf4j.Logger;
@@ -145,7 +146,7 @@ public class VocabularyLoader {
 	
 	private static void downloadAndLoadVocab(String ns) throws VocabularyUnreachableException{
 		try{
-			Model m = RDFDataMgr.loadModel(ns);
+			Model m = RDFDataMgr.loadModel(ns,Lang.RDFXML);
 			dataset.addNamedModel(ns, m);
 	
 			StringBuilderWriter writer = new StringBuilderWriter();
@@ -158,7 +159,8 @@ public class VocabularyLoader {
 			
 			dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
 		} catch (RiotException | HttpException e){
-			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed");
+			logger.error("Vocabulary {} could not be accessed.",ns);
+			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
 		}
 	}
 	
