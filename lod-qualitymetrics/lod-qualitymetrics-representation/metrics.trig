@@ -1,0 +1,45 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lmi: <http://purl.org/eis/vocab/lmi#> .
+
+#--- Interoperability Dimension ------------------------------------------------------------------------------------------------- 
+
+_:ReuseExistingTerms a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Reuse of Existing Terms" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.interoperability.ReuseExistingTerms" .
+	
+_:ReuseExistingVocabularies a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Reuse of Existing Vocabularies" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.interoperability.ReuseExistingVocabularies" .
+
+#--- Interpretability Dimension ------------------------------------------------------------------------------------------------- 
+
+_:NoBlankNodeUsage a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "No Usage of Blank Nodes" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.interpretability.NoBlankNodeUsage" .
+	
+_:UndefinedClassesAndProperties a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Undefined Classes and Properties" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.interpretability.UndefinedClassesAndProperties" .
+
+#--- Representational Conciseness ----------------------------------------------------------------------------------------------- 
+	
+_:NoProlixRDF a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "No Prolix RDF" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.representationalconciseness.NoProlixRDF" .
+	
+_:ShortURIs a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Short URIs" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.representationalconciseness.ShortURIs" .
+
+#--- Versatility --------------------------------------------------------------------------------------------------------------- 
+
+_:DifferentSerialisationFormats a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Different Serialisation Formats" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.versatility.DifferentSerialisationFormats" .
+
+_:MultipleLanguageUsage a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Usage of Multiple Languages" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.versatility.MultipleLanguageUsage" .
