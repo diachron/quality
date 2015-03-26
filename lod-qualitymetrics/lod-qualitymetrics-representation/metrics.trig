@@ -9,11 +9,17 @@
 _:ReuseExistingTerms a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Reuse of Existing Terms" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.interoperability.ReuseExistingTerms" .
+	lmi:before _:arg1 .
 	
 _:ReuseExistingVocabularies a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Reuse of Existing Vocabularies" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.interoperability.ReuseExistingVocabularies" .
-
+	lmi:before _:arg1 .
+	
+_:arg1 a lmi:LuzzuBeforeArg ;
+	lmi:type "java.lang.String" ;
+	lmi:parameter "/users/jeremy/blabla" .
+	
 #--- Interpretability Dimension ------------------------------------------------------------------------------------------------- 
 
 _:NoBlankNodeUsage a lmi:LuzzuMetricJavaImplementation ;

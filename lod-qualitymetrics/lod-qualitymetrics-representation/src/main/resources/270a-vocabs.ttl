@@ -1,0 +1,105 @@
+<http://bfs.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> .
+			
+<http://uis.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Culture"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> .
+			
+<http://imf.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Financial"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> .
+        			
+<http://worldbank.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Financial"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
+			
+
+<http://transparency.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
+			
+<http://oecd.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Economy"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Education"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://purl.org/essglobal/vocab/v1.0/> .
+			
+<http://frb.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Financial"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Economics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
+			
+<http://fao.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Food"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Agriculture"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
+			
+<http://ecb.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Financial"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
+			
+<http://abs.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+			  "Economics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Financial"^^<http://www.w3.org/2001/XMLSchema#string> ,
+               "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
+			
+<http://bis.270a.info>
+        <:hasDomain>  "Statistical"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Statistics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Financial"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Economics"^^<http://www.w3.org/2001/XMLSchema#string> ,
+              "Government"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        <:getFromLOV> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <:hasVocabularies> <http://www.w3.org/ns/dcat#> , 
+			<http://www.w3.org/2003/01/geo/wgs84_pos#> , 
+			<http://www.geonames.org/ontology#> .
