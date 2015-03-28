@@ -47,7 +47,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityForwardLinksMetric;
 	
-	final static Logger logger = LoggerFactory.getLogger(DereferenceabilityForwardLinks.class);
+	final static Logger logger = LoggerFactory.getLogger(EstimatedDereferenceabilityForwardLinks.class);
 		
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 
@@ -139,7 +139,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 			while(uriSet.size() > 0){
 				String uri = uriSet.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource.getResponses() == null) {
+				if (httpResource == null || httpResource.getResponses() == null) {
 					uriSet.add(uri);
 					continue;
 				}

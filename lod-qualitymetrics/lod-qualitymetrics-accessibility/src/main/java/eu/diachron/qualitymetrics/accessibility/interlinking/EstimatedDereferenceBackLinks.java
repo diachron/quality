@@ -34,7 +34,6 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
-import eu.diachron.qualitymetrics.accessibility.availability.DereferenceabilityForwardLinks;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
@@ -57,7 +56,7 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
-	final static Logger logger = LoggerFactory.getLogger(DereferenceabilityForwardLinks.class);
+	final static Logger logger = LoggerFactory.getLogger(EstimatedDereferenceBackLinks.class);
 		
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 
@@ -187,7 +186,7 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 			while(uriSet.size() > 0){
 				String uri = uriSet.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource.getResponses() == null) {
+				if (httpResource == null || httpResource.getResponses() == null) {
 					uriSet.add(uri);
 					continue;
 				}

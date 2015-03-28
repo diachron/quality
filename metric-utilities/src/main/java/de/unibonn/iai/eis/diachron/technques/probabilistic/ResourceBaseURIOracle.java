@@ -321,7 +321,7 @@ public class ResourceBaseURIOracle {
 			return null;
 		}
 		
-		int extract = 0;
+		int extract = -1;
 		if (resourceURI.startsWith("http://")) extract = resourceURI.indexOf("/", 7);
 		else if (resourceURI.startsWith("https://")) extract = resourceURI.indexOf("/", 8);
 		

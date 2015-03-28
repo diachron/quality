@@ -1,5 +1,6 @@
 package de.unibonn.iai.eis.diachron.technques.probabilistic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +12,9 @@ import java.util.Random;
  * Instances of this class are Thread Safe
  * @author slondono
  */
-public class ReservoirSampler<T> {
-	
+public class ReservoirSampler<T> implements Serializable {
+	private static final long serialVersionUID = 171565809692064783L;
+
 	// Size of the reservoir, maximum number of items that can be stored
 	private int k;
 	

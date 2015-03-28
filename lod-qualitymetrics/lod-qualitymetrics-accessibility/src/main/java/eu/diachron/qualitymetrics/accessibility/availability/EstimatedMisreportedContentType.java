@@ -57,7 +57,7 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	private boolean metricCalculated = false;
 
 
-	final static Logger logger = LoggerFactory.getLogger(MisreportedContentType.class);
+	final static Logger logger = LoggerFactory.getLogger(EstimatedMisreportedContentType.class);
 	boolean followRedirects = true;
 	
 	private List<Model> _problemList = new ArrayList<Model>();
@@ -128,12 +128,12 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 			while(uris.size() > 0){
 				String uri = uris.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource.getResponses() == null) {
+				if (httpResource == null || httpResource.getResponses() == null) {
 					uris.add(uri);
 					continue;
 				}
 				for (SerialisableHttpResponse response : httpResource.getResponses()){
-					if (response.getHeaders("Status").contains("200")){
+					if (response.getHeaders("Status") != null && response.getHeaders("Status").contains("200")){
 						String contentDisposition = response.getHeaders("Content-Disposition");
 						
 						if ((contentDisposition != null) && (contentDisposition.length() > 0)){

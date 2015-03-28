@@ -102,10 +102,13 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		this.baseURIOracle.addHint(quad);
 		
 		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
-			String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+			String subjectPLD = "";
+			String objectPLD = "";
 			
-			if (!(subject.equals(object))){
+			if (quad.getSubject().isURI()) subjectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
+			if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+			
+			if (!(subjectPLD.equals(objectPLD))){
 				if (quad.getSubject().isURI()) this.addUriToSampler(quad.getSubject().toString());
 				if (quad.getObject().isURI()) this.addUriToSampler(quad.getSubject().toString());
 			}
