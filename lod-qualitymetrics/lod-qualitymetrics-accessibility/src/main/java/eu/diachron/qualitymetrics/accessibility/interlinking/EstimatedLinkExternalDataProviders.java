@@ -193,15 +193,21 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		// if more than 50% of the resources in the sampler return RDF, then 
 		// we assume that PLD domain return RDF data thus adding it to setPLDsRDF
 		for(String plds : mapPLDtotres.keySet()){
-			double ori = mapPLDtotres.get(plds);
-			double res = mapPLDtotresRDF.get(plds);
+			Integer iOri = mapPLDtotres.get(plds);
+			Integer iRes = mapPLDtotresRDF.get(plds);
 			
-			double perc = ((res * 100) / ori);
-
-			if (perc > 50.0) setPLDsRDF.add(plds);
-			else {
-				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(plds).asNode(), QPRO.exceptionDescription.asNode(), DQM.LowPercentageOfValidPLDResources.asNode());
-				this._problemList.add(q);
+			if(iOri != null && iRes != null) {
+				double ori = iOri.doubleValue();
+				double res = iRes.doubleValue();
+				double perc = ((res * 100) / ori);
+	
+				if (perc > 50.0) setPLDsRDF.add(plds);
+				else {
+					Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(plds).asNode(), QPRO.exceptionDescription.asNode(), DQM.LowPercentageOfValidPLDResources.asNode());
+					this._problemList.add(q);
+				}
+			} else {
+				logger.warn("Computation of percentage for PLD: {} aborted. ORI and/or RES could not be retrieved: ORI: {}, RES: {}", plds, iOri, iRes);
 			}
 		}
 	}
