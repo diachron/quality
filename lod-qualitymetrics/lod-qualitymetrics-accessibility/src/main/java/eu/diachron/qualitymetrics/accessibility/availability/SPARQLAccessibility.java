@@ -17,10 +17,10 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.SD;
-import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 
@@ -46,7 +46,6 @@ public class SPARQLAccessibility implements QualityMetric {
 	double sparqlEndPoints = 0.0;
 	double totalDefinedSparqlEndPoints = 0.0;
 	
-	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
 	
 	final static List<Resource> endpointProperty = new ArrayList<Resource>();
 	static{
@@ -58,8 +57,6 @@ public class SPARQLAccessibility implements QualityMetric {
 	
 	
 	public void compute(Quad quad) {
-		oracle.addHint(quad);
-		
 		if (endpointProperty.contains(quad.getPredicate())) {
 			String sparqlQuerystring = "SELECT ?s where {?s ?p ?o} LIMIT 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
@@ -99,7 +96,7 @@ public class SPARQLAccessibility implements QualityMetric {
 		ProblemList<Quad> tmpProblemList = null;
 		
 		if (this.metricValue() == 0){
-			String resource = this.oracle.getEstimatedResourceDatasetURI();
+			String resource = EnvironmentProperties.getInstance().getBaseURI();
 			Resource subject = ModelFactory.createDefaultModel().createResource(resource);
 			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQM.NoEndPointAccessibility.asNode());
 			this.problemList.add(q);

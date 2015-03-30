@@ -1,0 +1,75 @@
+@prefix :      <http://oecd.270a.info/void.ttl#> .
+@prefix transparency-dataset: <http://transparency.270a.info/dataset/> .
+@prefix bfs-dataset: <http://bfs.270a.info/dataset/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix oecd-dataset: <http://oecd.270a.info/dataset/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix fao-dataset: <http://fao.270a.info/dataset/> .
+@prefix oecd-graph: <http://oecd.270a.info/graph/> .
+@prefix sd:    <http://www.w3.org/ns/sparql-service-description#> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix sdmx-concept: <http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix qb:    <http://purl.org/linked-data/cube#> .
+@prefix imf-dataset: <http://imf.270a.info/dataset/> .
+@prefix worldbank-dataset: <http://worldbank.270a.info/dataset/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix ecb-dataset: <http://ecb.270a.info/dataset/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix uis-dataset: <http://uis.270a.info/dataset/> .
+@prefix frb-dataset: <http://frb.270a.info/dataset/> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+
+oecd-dataset:WSECTOR  a         sd:Graph , void:Dataset ;
+        dcterms:license         <http://creativecommons.org/publicdomain/zero/1.0/> ;
+        void:triples            2162 ;
+        void:vocabulary         <http://oecd.270a.info/attribute/1.0/> , <http://www.w3.org/2000/01/rdf-schema> , <http://www.w3.org/ns/prov> , <http://oecd.270a.info/measure/1.0/> , <http://purl.org/linked-data/cube> , <http://www.w3.org/1999/02/22-rdf-syntax-ns> , <http://oecd.270a.info/dimension/1.0/> , dcterms: ;
+        sd:graph                oecd-dataset:WSECTOR ;
+        sd:name                 oecd-graph:WSECTOR .
+
+:linkset-oecd-dbpedia
+        a                    void:Linkset ;
+        void:linkPredicate   skos:exactMatch ;
+        void:objectsTarget   <http://dbpedia.org/void/Dataset> ;
+        void:subjectsTarget  oecd-dataset:oecd ;
+        void:triples         3613 .
+
+
+<http://oecd.270a.info/void.ttl>
+        a                  void:DatasetDescription ;
+        dcterms:creator    <http://csarven.ca/#i> ;
+        dcterms:title      "A VoiD Description of the oecd.270a.info Dataset"@en ;
+        foaf:primaryTopic  oecd-dataset:oecd .
+
+
+:linkset-oecd-hr  a          void:Linkset ;
+        void:linkPredicate   skos:exactMatch ;
+        void:objectsTarget   <http://hxl.humanitarianresponse.info/> ;
+        void:subjectsTarget  oecd-dataset:oecd ;
+        void:triples         3285 .
+
+oecd-dataset:void  a   void:Dataset , sd:Graph ;
+        dcterms:title  "SD+VoID triples"@en ;
+        void:dataDump  <http://oecd.270a.info/void.ttl> .
+
+<http://sws.geonames.org/>
+        a              void:Dataset ;
+        dcterms:title  "Geonames"@en ;
+        foaf:homepage  <http://sws.geonames.org/> .
+        
+oecd-dataset:oecd  a         void:Dataset ;
+        dcterms:license      <http://creativecommons.org/publicdomain/zero/1.0/> ;
+        dcterms:modified     "2013-05-06"^^xsd:date ;
+        dcterms:publisher    <http://csarven.ca/#i> ;
+        dcterms:source       <http://oecd.org/> ;
+        dcterms:subject      <http://dbpedia.org/resource/Regional_science> , <http://dbpedia.org/resource/Finance> , <http://dbpedia.org/resource/Statistical_survey> , <http://dbpedia.org/resource/Economics> ;
+        dcterms:title        "Organisation for Economic Co-operation and Development datasets"@en ;
+        void:dataDump        <http://oecd.270a.info/data/meta.tar.gz> , <http://oecd.270a.info/data/data.tar.gz> ;
+        void:feature         <http://www.w3.org/ns/formats/RDF_XML> , <http://www.w3.org/ns/formats/Turtle> ;
+        void:sparqlEndpoint  <http://oecd.270a.info/sparql> ;
+        void:subset          oecd-dataset:TALIS , oecd-dataset:REG_INNO_TL3 , oecd-dataset:G20_PRICES , oecd-dataset:PT4 , oecd-dataset:EDUGPS_EAG2013_D , oecd-dataset:TABLE5 , oecd-dataset:AFA_IN3 , oecd-dataset:PT8 , oecd-dataset:HEALTH_REAC , oecd-dataset:AFA_OUT3 , oecd-dataset:WILD_LIFE , oecd-dataset:RFIN1 , oecd-dataset:TABLE1 , oecd-dataset:FSS , oecd-dataset:FDI_POSITION_INDUSTRY , oecd-dataset:KEI , oecd-dataset:MFP , oecd-dataset:SNA_TABLE620 , oecd-dataset:WATER_ABSTRACT , oecd-dataset:MUNW , oecd-dataset:ICTGRP , oecd-dataset:AV_AN_WAGE , oecd-dataset:HEALTH_LVNG , oecd-dataset:MW_CURP , oecd-dataset:DACDEFL , oecd-dataset:SNA_TABLE710 , oecd-dataset:MSTI_PUB , oecd-dataset:STANI4 , oecd-dataset:TIVA_OECD_WTO , oecd-dataset:RIOMARKERS , oecd-dataset:meta , oecd-dataset:DEC_I , oecd-dataset:SURVEYDATA , oecd-dataset:MULTISYSTEM , oecd-dataset:CRS1 , oecd-dataset:TABLE7B , oecd-dataset:HEALTH_ECOR , oecd-dataset:PPP2005 , oecd-dataset:TIMELY_BDS_ISIC4 , oecd-dataset:UN_DEN , oecd-dataset:FDI_FLOW_INDUSTRY , oecd-dataset:REG_DEMO_TL2 , oecd-dataset:PT9 , oecd-dataset:7HA , oecd-dataset:POP_FIVE_HIST , oecd-dataset:CPA , oecd-dataset:RFIN2 , oecd-dataset:GVC_INDICATORS , oecd-dataset:AMNE_OUT_PARTNER , oecd-dataset:DACGEO , oecd-dataset:DACSECTOR , oecd-dataset:RPERS , oecd-dataset:RNENTAGE , oecd-dataset:AMNE_OUT , oecd-dataset:ULC_EEQ , oecd-dataset:QASA_TABLE7PSD , oecd-dataset:ANBERD_REV4 , oecd-dataset:ITCS_EXCH , oecd-dataset:HS1988 , oecd-dataset:CPL , oecd-dataset:STAN08BIS , oecd-dataset:WATER_TREAT , oecd-dataset:EPL_CD , oecd-dataset:BPF1 , oecd-dataset:RENRLAGE , oecd-dataset:PDYGTH , oecd-dataset:AMNE_IN , oecd-dataset:FDI_FLOW_PARTNER , oecd-dataset:AFA_CALC_OUT3 , oecd-dataset:PPPGDP , oecd-dataset:EPL_OV , oecd-dataset:RPOP , oecd-dataset:PT2 , oecd-dataset:LEVEL , oecd-dataset:TABLE3A , oecd-dataset:HEALTH_HCQI , oecd-dataset:G_FUNCTION_RATIO , oecd-dataset:U_D_D , oecd-dataset:7IA , oecd-dataset:WATER_RESOURCES , oecd-dataset:AFA_IN3_MANUF , oecd-dataset:DACIND , oecd-dataset:MEI_CPI_WEIGHTS , oecd-dataset:CS , oecd-dataset:MIN2AVE , oecd-dataset:SNA_TABLE4 , oecd-dataset:AIR_EMISSIONS , oecd-dataset:EPL_T , oecd-dataset:RENRL , oecd-dataset:SNA_TABLE610 , oecd-dataset:HEALTH_PROC , oecd-dataset:EDUGPS_EAG2013_A , oecd-dataset:AFA_OUT3_PARTNER , oecd-dataset:CSPCUBE , oecd-dataset:REF_TOTALOFFICIAL , oecd-dataset:SOCX_REF , oecd-dataset:EPL_R , oecd-dataset:REF_TOTAL_ODF , oecd-dataset:RGRADSTY , oecd-dataset:WSECTOR , oecd-dataset:PT3 , oecd-dataset:RGRADAGE , oecd-dataset:FDI_POSITION_PARTNER , oecd-dataset:TABLE2B , oecd-dataset:REG_ENV_TL3 , oecd-dataset:PT7 , oecd-dataset:EDUGPS_EAG2013_C , oecd-dataset:SNA_TABLE720 , oecd-dataset:HEALTH_DEMR , oecd-dataset:TABLE4 , oecd-dataset:ITF_PASSENGER_TRANSPORT , oecd-dataset:FOREST , oecd-dataset:REG_DEMO_TL3 , oecd-dataset:FATS_OUT3_SERV , oecd-dataset:AIR_GHG , oecd-dataset:void , oecd-dataset:REF_TOTALRECPTS , oecd-dataset:AFA_CALC_IN3 , oecd-dataset:GENDER , oecd-dataset:GREEN_GROWTH , oecd-dataset:ROVERAGE , oecd-dataset:FDI_BOP_IIP , oecd-dataset:RMW , oecd-dataset:G_TYPE_RATIO , oecd-dataset:7II_INDIC , oecd-dataset:DECOMP , oecd-dataset:CWB , oecd-dataset:CITIES , oecd-dataset:TABLE2A , oecd-dataset:EDUGPS_EAG2013_B , oecd-dataset:CSP2012 , oecd-dataset:FATS_IN3_SERV , oecd-dataset:EAR_MEI , oecd-dataset:AMNE_IN_PARTNER , oecd-dataset:HEALTH_STAT , oecd-dataset:MIG , oecd-dataset:TIGS_IO , oecd-dataset:REG_LAB_TL3 , oecd-dataset:FIN_IND_FA ;
+        void:triples         304995160 ;
+        foaf:homepage        <http://oecd.270a.info/> .

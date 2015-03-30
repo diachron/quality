@@ -31,6 +31,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -72,7 +73,6 @@ public class LinkExternalDataProviders implements QualityMetric {
 	
 	final static Logger logger = LoggerFactory.getLogger(LinkExternalDataProviders.class);
 
-	private ResourceBaseURIOracle baseURIOracle = new ResourceBaseURIOracle();
 	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
 	private HTTPRetriever httpRetriever = new HTTPRetriever();
@@ -85,7 +85,6 @@ public class LinkExternalDataProviders implements QualityMetric {
 	
 	@Override
 	public void compute(Quad quad) {
-		baseURIOracle.addHint(quad);
 		
 		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
 			String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
@@ -102,7 +101,7 @@ public class LinkExternalDataProviders implements QualityMetric {
 	public double metricValue() {
 		if (!computed){
 			//remove the base uri from the set because that will not be an "external link"
-			String baseURI = baseURIOracle.getEstimatedResourceDatasetURI();
+			String baseURI = EnvironmentProperties.getInstance().getDatasetURI();
 			
 			Iterator<String> iterator = setResources.iterator();
 			while (iterator.hasNext()) {

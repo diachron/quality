@@ -13,10 +13,10 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
@@ -51,10 +51,8 @@ public class RDFAccessibility implements QualityMetric {
 	
 	private boolean metricCalculated = false;
 	
-	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
 
 	public void compute(Quad quad) {
-		oracle.addHint(quad);
 		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
 			httpRetreiver.addResourceToQueue(quad.getObject().getURI());
 			dataDumpsURIs.add(quad.getObject().getURI());
@@ -101,7 +99,7 @@ public class RDFAccessibility implements QualityMetric {
 		ProblemList<Quad> tmpProblemList = null;
 		
 		if (this.metricValue() == 0){
-			String resource = this.oracle.getEstimatedResourceDatasetURI();
+			String resource = EnvironmentProperties.getInstance().getBaseURI();
 			Resource subject = ModelFactory.createDefaultModel().createResource(resource);
 			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQM.NoRDFAccessibility.asNode());
 			this.problemList.add(q);

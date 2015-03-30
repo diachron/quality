@@ -7,7 +7,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
@@ -35,15 +34,11 @@ public class LowLatency implements QualityMetric {
 	 */
 	private long totalDelay = -1;
 	
-	/**
-	 * An oracle which tries to extract the PLD of a dataset
-	 */
-	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
 	
 	/**
 	 * Dataset PLD
 	 */
-	private String datasetURI = null;
+	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();;
 
 	/**
 	 * Holds the metric value
@@ -64,15 +59,7 @@ public class LowLatency implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		if (datasetURI == null){
-			try {
-				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-			} catch(Exception ex) {
-				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
-				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
-				if (datasetURI == null) oracle.addHint(quad);
-			}
-		}
+		//nothing to compute
 	}
 
 	/**
@@ -84,7 +71,6 @@ public class LowLatency implements QualityMetric {
 	 */
 	public double metricValue() {
 		if (this.metricValue == null){
-			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceDatasetURI();
 			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
 

@@ -1,9 +1,11 @@
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -16,12 +18,14 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 
 /**
  * @author Santiago Londono
@@ -43,12 +47,6 @@ public class HumanReadableLicense implements QualityMetric {
 	private Map<String,Node> possibleHumanReadableLicense = new ConcurrentHashMap<String,Node>();
 	
 	/**
-     * Object used to determine the base URI of the resource based on its contents and to count the number of 
-     * subjects being part of it
-     */
-	private ResourceBaseURIOracle baseURIOracle = new ResourceBaseURIOracle();
-	
-	/**
 	 * Determines if an object contains a human-readable license
 	 */
 	private LicensingModelClassifier licenseModClassifier = new LicensingModelClassifier();
@@ -61,7 +59,6 @@ public class HumanReadableLicense implements QualityMetric {
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
 
-	
 	static {
 		// Documentation properties considered to be potential containers of human-readable license information
 		setLicensingDocumProps = new HashSet<String>();
@@ -70,6 +67,21 @@ public class HumanReadableLicense implements QualityMetric {
 		setLicensingDocumProps.add(RDFS.comment.getURI());
 	}
 
+	/**
+	 * Mapping all licenses that are attached to a void:Dataset
+	 */
+	private Map<String, Node> humanLicencePerDataset = new HashMap<String, Node>();
+	
+	/**
+	 * Holds the URI corresponding to the base uri of the assessed dataset. 
+	 */
+	private String baseURI = EnvironmentProperties.getInstance().getBaseURI();
+
+	/**
+	 * Holds the local resource URIs seen
+	 */
+	private Set<String> localURIs =  MapDbFactory.createFilesystemDB().createHashSet("local-uris").make();
+	
 	/**
 	 * Processes a single quad being part of the dataset. Detect triples containing as subject, the URI of the resource and as 
 	 * predicate one of the license properties listed on the previous metric, or one of the documentation properties (rdfs:label, 
@@ -84,22 +96,39 @@ public class HumanReadableLicense implements QualityMetric {
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		
-		// Feed the base URI oracle, which will be used to determine the resource's base URI
-		this.baseURIOracle.addHint(quad);
+		if (object.matches(VOID.Dataset.asNode())){
+			if (subject.getURI().startsWith(this.baseURI)){
+				Node licence = ModelFactory.createDefaultModel().createResource().asNode();
+				if(this.possibleHumanReadableLicense.containsKey(subject.getURI())){
+					licence = this.possibleHumanReadableLicense.get(subject.getURI());
+					this.possibleHumanReadableLicense.remove(subject.getURI());
+				}
+				if (!(this.humanLicencePerDataset.containsKey(subject.getURI()))) 
+					humanLicencePerDataset.put(subject.getURI(), licence);
+			}
+		}
 		
 		// Check whether the predicate corresponds to a documentation property...  
-		if(setLicensingDocumProps.contains(predicate.getURI())) {
-			logger.debug("Evaluating human-readable license candidate: {} with object: {}", predicate, object);
-			
-			// ... and check if the object contains text recognized to be of a human-readable license
-			if(this.licenseModClassifier.isLicenseStatement(object) && subject.isURI()) {
-				this.possibleHumanReadableLicense.put(subject.getURI(),object);
-				logger.debug("Human-readable license detected for subject: {}", subject);
-			} 
-			else if (this.licenseModClassifier.isNotRecommendedLicenseStatement(object) && subject.isURI()) {
-				// we should also check if the licence used is a non-recommended one
-				this.possibleHumanReadableLicense.put(subject.getURI(),object);
-				logger.debug("Human-readable license detected for subject: {}", subject);
+		
+		
+		
+		if (subject.isURI()){
+			if (subject.getURI().startsWith(this.baseURI)){
+				if(setLicensingDocumProps.contains(predicate.getURI())) {
+					logger.debug("Evaluating human-readable license candidate: {} with object: {}", predicate, object);
+					
+					// ... and check if the object contains text recognized to be of a human-readable license
+					if(this.licenseModClassifier.isLicenseStatement(object) && subject.isURI()) {
+						this.possibleHumanReadableLicense.put(subject.getURI(),object);
+						logger.debug("Human-readable license detected for subject: {}", subject);
+					} 
+					else if (this.licenseModClassifier.isNotRecommendedLicenseStatement(object) && subject.isURI()) {
+						// we should also check if the licence used is a non-recommended one
+						this.possibleHumanReadableLicense.put(subject.getURI(),object);
+						logger.debug("Human-readable license detected for subject: {}", subject);
+					}
+				}
+				localURIs.add(subject.getURI());
 			}
 		}
 	}
@@ -111,38 +140,57 @@ public class HumanReadableLicense implements QualityMetric {
 	 * @return Current value of the Human-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */
 	public double metricValue() {
-		// Determine the base URI of the resource
-		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceDatasetURI();
-		Node dataset = ModelFactory.createDefaultModel().createResource(resourceBaseURI).asNode();
-
-		if(resourceBaseURI != null) {
-			if (this.possibleHumanReadableLicense.containsKey(resourceBaseURI)){
-				Node n = this.possibleHumanReadableLicense.get(resourceBaseURI);
-				return hasValidLicence(dataset,n);
+		
+		double voidValidLicences = 0.0;
+		
+		//check the licences per void dataset
+		for(String voidDS : this.humanLicencePerDataset.keySet()){
+			Node dataset = ModelFactory.createDefaultModel().createResource(voidDS).asNode();
+			Node licence = this.humanLicencePerDataset.get(voidDS);
+			if (licence != null){
+				if (hasValidLicence(dataset,licence)) voidValidLicences++;
 			} else {
 				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
 				this._problemList.add(q);
-				return 0.0;
 			}
 		}
 		
-		//this should not happen, but at worse!
-		Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
-		this._problemList.add(q);
-		return 0.0;
+		double metValue = (voidValidLicences) / ((double)this.humanLicencePerDataset.size());
+		
+		return metValue;
+		
+		// Determine the base URI of the resource
+//		String resourceBaseURI = this.baseURIOracle.getEstimatedResourceDatasetURI();
+//		Node dataset = ModelFactory.createDefaultModel().createResource(resourceBaseURI).asNode();
+//
+//		if(resourceBaseURI != null) {
+//			if (this.possibleHumanReadableLicense.containsKey(resourceBaseURI)){
+//				Node n = this.possibleHumanReadableLicense.get(resourceBaseURI);
+//				return hasValidLicence(dataset,n);
+//			} else {
+//				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+//				this._problemList.add(q);
+//				return 0.0;
+//			}
+//		}
+//		
+//		//this should not happen, but at worse!
+//		Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+//		this._problemList.add(q);
+//		return 0.0;
 	}
 	
-	private double hasValidLicence(Node dataset, Node literalObject){
-		if (licenseModClassifier.isLicenseStatement(literalObject)) return 1.0;
+	private boolean hasValidLicence(Node dataset, Node literalObject){
+		if (licenseModClassifier.isLicenseStatement(literalObject)) return true;
 		else if (licenseModClassifier.isNotRecommendedLicenseStatement(literalObject)){
 			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NotRecommendedLicenceInDatasetForHumans.asNode());
 			this._problemList.add(q);
-			return 1.0;
+			return true;
 		} 
 		else {
 			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
 			this._problemList.add(q);
-			return 0.0;
+			return false;
 		}
 	}
 

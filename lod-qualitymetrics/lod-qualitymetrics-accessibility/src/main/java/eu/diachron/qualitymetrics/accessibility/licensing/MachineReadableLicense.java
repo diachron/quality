@@ -1,9 +1,12 @@
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+import java.util.Set;
 
+import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,18 +15,27 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.Pair;
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 
 /**
  * @author Santiago Londono
  * Verifies whether consumers of the dataset are explicitly granted permission to re-use it, under defined 
  * conditions, by annotating the resource with a machine-readable indication (e.g. a VoID description) of the license.
+ * 
+ * Edits
+ * [30/03/2015: Jeremy Debattista] - A dataset should have its licence attached to a void:Dataset description
+ * 
+ * TODO: we should also ensure that if no void:Dataset is available, we look into local resources and check if 
+ * they have some licencing information as described in Issue XIV (Hogan et al.)
+ * 
  */
 public class MachineReadableLicense implements QualityMetric {
 	
@@ -36,27 +48,32 @@ public class MachineReadableLicense implements QualityMetric {
 	 * The key of the map corresponds to the URI of the resource (i.e. subject in the quads) and the value contains the 
 	 * object node containing the information about the license
 	 */
-	private ConcurrentHashMap<String, Node> mapLicensedResources = new ConcurrentHashMap<String, Node>();
+	private HTreeMap<String, Pair<String,Node>> mapLicensedResources = MapDbFactory.createFilesystemDB().createHashMap("machine-licence").make();
 	
 	/**
-	 * Holds the URI corresponding to the dataset. The URI of the subject representing the dataset   
-	 * will be set here as soon as it is found in the processed quads
+	 * Holds the URI corresponding to the base uri of the assessed dataset. 
 	 */
-	private String dataSetURI = null;
+	private String baseURI = EnvironmentProperties.getInstance().getBaseURI();
 	
 	/**
 	 * Allows to determine if a predicate states what is the licensing schema of a resource
 	 */
 	private LicensingModelClassifier licenseClassifier = new LicensingModelClassifier();
 	
+	/**
+	 * Mapping all licenses that are attached to a void:Dataset
+	 */
+	private Map<String, Node> mapLicensedDatasets = new HashMap<String, Node>();
+	
 	
 	/**
-	 * We might need to figure out the base URI ourselves if we do not have any voID description
+	 * Holds the local resource URIs seen
 	 */
-	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
-
+	private Set<String> localURIs =  MapDbFactory.createFilesystemDB().createHashSet("local-uris").make();
+	
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
+	
 	
 	/**
 	 * Processes a single quad being part of the dataset. Firstly, tries to figure out the URI of the dataset whence the quads come. 
@@ -71,32 +88,32 @@ public class MachineReadableLicense implements QualityMetric {
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		
-		// If not found yet, try to obtain the dataset's URI from the current quad, if succeded store it in the dataSetURI attribute for future use
-		if(dataSetURI == null) {
-			try {
-				dataSetURI = EnvironmentProperties.getInstance().getDatasetURI();
-			} catch(Exception ex) {
-				logger.error("Error retrieven dataset URI, processor not initialised yet", ex);
-				// Try to get the dataset URI from the VOID property, as last resource
-				dataSetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
+		if (object.matches(VOID.Dataset.asNode())){
+			if (subject.getURI().startsWith(this.baseURI)){
+				Node licence = ModelFactory.createDefaultModel().createResource().asNode();
+				if(this.mapLicensedResources.containsKey(subject.getURI())){
+					licence = this.mapLicensedResources.get(subject.getURI()).getSecondElement();
+					this.mapLicensedResources.remove(subject.getURI());
+				}
+				if (!(this.mapLicensedDatasets.containsKey(subject.getURI()))) 
+					mapLicensedDatasets.put(subject.getURI(), licence);
 			}
-			logger.trace("Trying to get dataset URI, loaded: {}", dataSetURI); 
 		}
-
-		//It might be the case that there is no voID description in the dataset or RDF Document, therefore we will try to extract the base URI
-		oracle.addHint(quad);
 		
-		// Check if the property of the quad is known to provide licensing information
-		if(predicate != null && predicate.isURI() && subject != null) {
-			
-			// Search for the predicate's URI in the set of license properties...
-			if(licenseClassifier.isLicensingPredicate(predicate)) {
-				
-				// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
-				String curSubjectURI = ((subject.isURI())?(subject.getURI()):(subject.toString()));
-				logger.trace("Quad providing license info detected. Subject: {}, object: {}", curSubjectURI, object);
-				
-				mapLicensedResources.put(curSubjectURI, object);
+		if (subject.isURI()){
+			if (subject.getURI().startsWith(this.baseURI)){
+				if(licenseClassifier.isLicensingPredicate(predicate)) {
+					// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
+					
+					logger.trace("Quad providing license info detected. Subject: {}, object: {}", subject.getURI(), object);
+					
+					if(this.mapLicensedDatasets.containsKey(subject.getURI())){
+						this.mapLicensedDatasets.put(subject.getURI(), object);
+					} else {
+						mapLicensedResources.put(subject.getURI(), new Pair<String,Node>(EnvironmentProperties.getInstance().getDatasetURI(), object));
+					}
+				}
+				localURIs.add(subject.getURI());
 			}
 		}
 	}
@@ -107,43 +124,58 @@ public class MachineReadableLicense implements QualityMetric {
 	 * @return Current value of the Machine-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */
 	public double metricValue() {
-		if(dataSetURI != null) {
-			Node dataset = ModelFactory.createDefaultModel().createResource(dataSetURI).asNode();
-			if(mapLicensedResources.containsKey(dataSetURI)){
-				Node n = mapLicensedResources.get(dataSetURI);
-				return hasValidLicence(dataset,n);
+		
+		double voidValidLicences = 0.0;
+		
+		//check the licences per void dataset
+		for(String voidDS : this.mapLicensedDatasets.keySet()){
+			Node dataset = ModelFactory.createDefaultModel().createResource(voidDS).asNode();
+			Node licence = this.mapLicensedDatasets.get(voidDS);
+			if (licence != null){
+				if (hasValidLicence(dataset,licence)) voidValidLicences++;
 			} else {
 				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
 				this._problemList.add(q);
-				return 0.0;
-			}
-		} else {
-			String ds = oracle.getEstimatedResourceDatasetURI();
-			Node dataset = ModelFactory.createDefaultModel().createResource(ds).asNode();
-
-			if (mapLicensedResources.containsKey(ds)){
-				Node n = mapLicensedResources.get(ds);
-				return hasValidLicence(dataset,n);
-			} else {
-				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
-				this._problemList.add(q);
-				return 0.0;
 			}
 		}
+		
+		//TODO: check the licences per resource
+//		double resourceValidLicences = 0.0;
+//		for(String resURI : this.mapLicensedResources.keySet()){
+//			Pair<String,Node> pair = this.mapLicensedResources.get(resURI);
+//			
+//			Node resource = ModelFactory.createDefaultModel().createResource(resURI).asNode();
+//			Node licence = pair.getSecondElement();
+//			
+//			//if there exists a void:Dataset but no licence attachment then we need to check all resources
+//			
+//			if (this.mapLicensedDatasets.containsKey(pair.getFirstElement()) && (this.mapLicensedDatasets.get(pair.getFirstElement()) == null)){
+//				if (hasValidLicence(resource,licence)) resourceValidLicences++;
+//				
+//			} else if (!this.mapLicensedDatasets.containsKey(pair.getFirstElement())){
+//				if (hasValidLicence(resource,licence)) resourceValidLicences++;
+//			} else {
+//				this.localURIs.remove(resURI);
+//			}
+//		}
+		
+		//calculating the metric
+		double metValue = (voidValidLicences) / ((double)this.mapLicensedDatasets.size());
+		
+		return metValue;
 	}
 	
-	private double hasValidLicence(Node dataset, Node licence){
-		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return 1.0;
+	private boolean hasValidLicence(Node dataset, Node licence){
+		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return true;
 		else if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(licence)){
 			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NotRecommendedLicenceInDataset.asNode());
 			this._problemList.add(q);
-			return 1.0;
-		} 
-		else {
+			return true;
+		} else {
 			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
 			this._problemList.add(q);
-			return 0.0;
 		}
+		return false;
 	}
 
 	public Resource getMetricURI() {

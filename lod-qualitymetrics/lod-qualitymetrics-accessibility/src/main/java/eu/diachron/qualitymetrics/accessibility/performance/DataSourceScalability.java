@@ -7,7 +7,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
@@ -51,14 +50,9 @@ public class DataSourceScalability implements QualityMetric {
 	
 	
 	/**
-	 * An oracle which tries to extract the PLD of a dataset
-	 */
-	private ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
-	
-	/**
 	 * Dataset PLD
 	 */
-	private String datasetURI = null;
+	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
 
 	/**
 	 * Holds the metric value
@@ -73,15 +67,7 @@ public class DataSourceScalability implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		if (datasetURI == null){
-			try {
-				datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
-			} catch(Exception ex) {
-				logger.error("Error retrieving dataset URI, processor not initialised yet", ex);
-				datasetURI = ResourceBaseURIOracle.extractDatasetURI(quad);
-				if (datasetURI == null) oracle.addHint(quad);
-			}
-		}
+		//Nothing to compute here
 	}
 
 	/**
@@ -94,8 +80,6 @@ public class DataSourceScalability implements QualityMetric {
 	 */
 	public double metricValue() {
 		if (this.metricValue == null){
-			
-			if (this.datasetURI == null) this.datasetURI = this.oracle.getEstimatedResourceDatasetURI();
 			
 			// Send parallel requests and accumulate their response times as the total delay
 			logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);
