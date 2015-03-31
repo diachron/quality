@@ -183,6 +183,8 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 		for(Tld tld : this.tldsReservoir.getItems()){
 			List<String> uriSet = tld.getfqUris().getItems(); 
 			httpRetreiver.addListOfResourceToQueue(uriSet);
+			httpRetreiver.start();
+			
 			while(uriSet.size() > 0){
 				String uri = uriSet.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);

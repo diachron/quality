@@ -125,6 +125,8 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 		for(Tld tld : this.tldsReservoir.getItems()){
 			List<String> uris = tld.getfqUris().getItems(); 
 			httpRetreiver.addListOfResourceToQueue(uris);
+			httpRetreiver.start();
+			
 			while(uris.size() > 0){
 				String uri = uris.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
