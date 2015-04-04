@@ -2,6 +2,7 @@ package eu.diachron.qualitymetrics.utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -20,6 +21,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -28,6 +30,7 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,10 +177,25 @@ public class HTTPRetriever {
 								}
 		
 								public void failed(final Exception ex) {
+									BasicStatusLine statusLine = null;
+									BasicHttpResponse response = null;
+									// Properly set the status line
+									if((ex instanceof ConnectException) && (((ConnectException)ex).getMessage().toLowerCase().contains("timed out"))) {
+										statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), HttpStatus.SC_REQUEST_TIMEOUT, "Request failed: timed out");
+										response = new BasicHttpResponse(statusLine);
+									} else {
+										statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed");
+									}
+									
 									newResource.setDereferencabilityStatusCode(StatusCode.BAD);
-									newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed"));
+									newResource.addStatusLines(statusLine);
+									// If response could be inferred from the exception, set it
+									if(response != null) {
+										newResource.addResponse(response);
+									}
+									
 									DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
-		
+
 									logger.debug("Failed in retreiving request : {}, with the following exception : {}. {} pending requests", request.getURI().toString(), ex, mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
 								}
