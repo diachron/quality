@@ -94,7 +94,7 @@ public class ReservoirSampler<T> implements Serializable {
 	public synchronized T findItem(T item) {		
 		// If the index is available, use it to find the item in O(1) time!
 		if(this.mapIndex != null) {
-			if(this.mapIndex.containsKey(item)) {
+			if(this.mapIndex.containsKey(item) && (this.lstItems.size() > this.mapIndex.get(item))) {
 				return this.lstItems.get(this.mapIndex.get(item));
 			}
 		} else {
