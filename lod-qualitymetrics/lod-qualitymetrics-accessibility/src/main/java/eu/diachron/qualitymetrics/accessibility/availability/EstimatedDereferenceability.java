@@ -160,9 +160,12 @@ public class EstimatedDereferenceability implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> pl = null;
 		try {
-			pl = new ProblemList<Quad>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException e) {
-//			logger.debug(e.getStackTrace());
 			logger.error(e.getMessage());
 		}
 		return pl;

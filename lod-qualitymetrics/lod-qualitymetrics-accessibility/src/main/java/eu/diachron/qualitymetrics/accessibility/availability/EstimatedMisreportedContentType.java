@@ -180,7 +180,11 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Model> pl = null;
 		try {
-			pl = new ProblemList<Model>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Model>(this._problemList);
+			} else {
+				pl = new ProblemList<Model>();
+			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
 		}
