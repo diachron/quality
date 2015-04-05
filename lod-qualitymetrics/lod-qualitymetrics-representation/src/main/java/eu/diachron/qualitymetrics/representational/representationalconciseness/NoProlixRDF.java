@@ -102,13 +102,18 @@ public class NoProlixRDF implements QualityMetric {
 		return DQM.NoProlixRDFMetric;
 	}
 
+	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> pl = null;
-			try {
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
 				pl = new ProblemList<Quad>(this._problemList);
-			} catch (ProblemListInitialisationException e) {
-				logger.error(e.getMessage());
+			} else {
+				pl = new ProblemList<Quad>();
 			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error(e.getMessage());
+		}
 		return pl;
 	}
 

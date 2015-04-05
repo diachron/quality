@@ -172,7 +172,11 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> pl = null;
 		try {
-			pl = new ProblemList<Quad>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
 		}
@@ -195,7 +199,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	 */
 	@Override
 	public void before(Object [] args) throws BeforeException {
-		if (args != null && args.length > 0 && args[0] == null){
+		if (args == null || args.length <= 0 || args[0] == null){
 			logger.error("Argument in the Reuse Existing Vocabulary metric should not be null.");
 			throw new BeforeException("Argument should not be a string with a filename.");
 		}
