@@ -329,7 +329,11 @@ public class ResourceBaseURIOracle {
 		
 		String matched = (resourceURI.startsWith("http://")) ? resourceURI.substring(7, extract) : resourceURI.substring(8, extract);
 		
-		return InternetDomainName.from(matched).topPrivateDomain().toString();
+		if(InternetDomainName.isValid(matched) && InternetDomainName.from(matched).isUnderPublicSuffix()) {
+			return InternetDomainName.from(matched).topPrivateDomain().toString();
+		} else {
+			return null;
+		}
 	}
 
 }

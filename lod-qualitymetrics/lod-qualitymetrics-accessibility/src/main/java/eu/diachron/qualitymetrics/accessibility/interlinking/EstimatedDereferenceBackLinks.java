@@ -75,8 +75,8 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 50;
-	private static int MAX_FQURIS_PER_TLD = 10000;
+	private static int MAX_TLDS = 10;
+	private static int MAX_FQURIS_PER_TLD = 250;
 	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
 	
 	
@@ -198,7 +198,7 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 				}
 				if (this.isDereferenceable(httpResource)){
 					Model m = this.getMeaningfulData(httpResource);
-					if (m.size() > 0){
+					if (m != null && m.size() > 0){
 						List<Pair<String,String>> lst = this.object_di_p.get(uri);
 						for(Pair<String,String> p_uri : lst){
 							List<Statement> allStatements = m.listStatements(null, null,  m.createResource(p_uri.getFirstElement())).toList();

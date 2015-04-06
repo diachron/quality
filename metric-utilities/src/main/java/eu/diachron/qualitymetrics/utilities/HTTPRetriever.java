@@ -182,11 +182,11 @@ public class HTTPRetriever {
 									// Properly set the status line
 									if((ex instanceof ConnectException) && (((ConnectException)ex).getMessage().toLowerCase().contains("timed out"))) {
 										statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), HttpStatus.SC_REQUEST_TIMEOUT, "Request failed: timed out");
-										response = new BasicHttpResponse(statusLine);
 									} else {
 										statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed");
 									}
 									
+									response = new BasicHttpResponse(statusLine);
 									newResource.setDereferencabilityStatusCode(StatusCode.BAD);
 									newResource.addStatusLines(statusLine);
 									// If response could be inferred from the exception, set it
@@ -201,6 +201,20 @@ public class HTTPRetriever {
 								}
 		
 								public void cancelled() {
+									// Some unexpected, nasty problems, such as bad URIs can occur when trying to build or process the request, all of which must be handled
+									BasicStatusLine statusLine = null;
+									BasicHttpResponse response = null;
+									// Properly set the status line
+									statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed: Cancelled");
+									response = new BasicHttpResponse(statusLine);
+									
+									newResource.setDereferencabilityStatusCode(StatusCode.BAD);
+									newResource.addStatusLines(statusLine);
+									// If response could be inferred from the exception, set it
+									if(response != null) {
+										newResource.addResponse(response);
+									}
+									
 									DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 									logger.debug("The retreival for {} was cancelled. {} pending requests",request.getURI().toString(), mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
@@ -209,8 +223,19 @@ public class HTTPRetriever {
 					logger.trace("Request launched: {}", queuePeek);
 				} catch(Throwable tex) {
 					// Some unexpected, nasty problems, such as bad URIs can occur when trying to build or process the request, all of which must be handled
+					BasicStatusLine statusLine = null;
+					BasicHttpResponse response = null;
+					// Properly set the status line
+					statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed: Exception detected");
+					response = new BasicHttpResponse(statusLine);
+					
 					newResource.setDereferencabilityStatusCode(StatusCode.BAD);
-					newResource.addStatusLines(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be built or processed"));
+					newResource.addStatusLines(statusLine);
+					// If response could be inferred from the exception, set it
+					if(response != null) {
+						newResource.addResponse(response);
+					}
+					
 					DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 
 					logger.warn("Unexpected error building or processing request : " + queuePeek, tex);

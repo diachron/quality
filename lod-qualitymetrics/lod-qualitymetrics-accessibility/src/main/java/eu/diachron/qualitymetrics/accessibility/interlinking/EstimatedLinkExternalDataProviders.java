@@ -115,16 +115,17 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	private void addUriToSampler(String uri) {
 		String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(uri);
 		
-		if (this.mapPLDs.containsKey(pld)){
-			ReservoirSampler<String> res = this.mapPLDs.get(pld);
-			res.add(uri);
-			mapPLDs.put(pld, res);
-		} else {
-			ReservoirSampler<String> res = new ReservoirSampler<String>(reservoirsize, true);
-			res.add(uri);
-			mapPLDs.put(pld, res);
+		if(pld != null) {
+			if (this.mapPLDs.containsKey(pld)){
+				ReservoirSampler<String> res = this.mapPLDs.get(pld);
+				res.add(uri);
+				mapPLDs.put(pld, res);
+			} else {
+				ReservoirSampler<String> res = new ReservoirSampler<String>(reservoirsize, true);
+				res.add(uri);
+				mapPLDs.put(pld, res);
+			}
 		}
-		
 	}
 
 	/**

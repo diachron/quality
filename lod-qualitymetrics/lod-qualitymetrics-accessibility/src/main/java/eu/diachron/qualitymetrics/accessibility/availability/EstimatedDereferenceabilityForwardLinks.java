@@ -66,8 +66,8 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 50;
-	private static int MAX_FQURIS_PER_TLD = 10000;
+	private static int MAX_TLDS = 10;
+	private static int MAX_FQURIS_PER_TLD = 250;
 	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
 
 	
@@ -156,7 +156,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 						
 						int correct = 0;
 						for(Statement s : allStatements){
-							if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
+							if (s != null && s.getSubject() != null && s.getSubject().getURI() != null && s.getSubject().getURI().equals(httpResource.getUri())) correct++;
 							else this.createViolatingTriple(s, httpResource.getUri());
 						}
 					
