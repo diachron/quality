@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mapdb.HTreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -16,6 +18,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 
 /**
  * @author Jeremy Debattista
@@ -39,10 +42,13 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  */
 public class MultipleLanguageUsage implements QualityMetric {
 	
+	private static Logger logger = LoggerFactory.getLogger(MultipleLanguageUsage.class);
+	
 	static final String DEFAULT_TAG = "en";
 	
 	private HTreeMap<String, List<String>> multipleLanguage = MapDbFactory.createFilesystemDB().createHashMap("multi-lingual-map").make();
 	
+	private List<Quad> _problemList = new ArrayList<Quad>();
 
 	@Override
 	public void compute(Quad quad) {
@@ -50,7 +56,7 @@ public class MultipleLanguageUsage implements QualityMetric {
 		
 		if (object.isLiteral()){
 			String subject = quad.getSubject().getURI();
-			if (object.getLiteralDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#string")){
+			if (object != null && object.getLiteralDatatypeURI() != null && object.getLiteralDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#string")){
 				String lang = (object.getLiteralLanguage().equals("")) ? DEFAULT_TAG : object.getLiteralLanguage();
 				List<String> langList = new ArrayList<String>();
 				if (this.multipleLanguage.containsKey(subject)) langList = this.multipleLanguage.get(subject);
@@ -77,7 +83,17 @@ public class MultipleLanguageUsage implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error(e.getMessage());
+		}
+		return pl;
 	}
 
 	@Override

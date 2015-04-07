@@ -55,8 +55,8 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 50;
-	private static int MAX_FQURIS_PER_TLD = 10000;
+	private static int MAX_TLDS = 10;
+	private static int MAX_FQURIS_PER_TLD = 250;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -160,9 +160,12 @@ public class EstimatedDereferenceability implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> pl = null;
 		try {
-			pl = new ProblemList<Quad>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException e) {
-//			logger.debug(e.getStackTrace());
 			logger.error(e.getMessage());
 		}
 		return pl;

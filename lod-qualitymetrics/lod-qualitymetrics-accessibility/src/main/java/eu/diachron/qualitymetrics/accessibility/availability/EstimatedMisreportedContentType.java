@@ -66,8 +66,8 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 50;
-	private static int MAX_FQURIS_PER_TLD = 10000;
+	private static int MAX_TLDS = 10;
+	private static int MAX_FQURIS_PER_TLD = 250;
 	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
 
 
@@ -125,6 +125,8 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 		for(Tld tld : this.tldsReservoir.getItems()){
 			List<String> uris = tld.getfqUris().getItems(); 
 			httpRetreiver.addListOfResourceToQueue(uris);
+			httpRetreiver.start();
+			
 			while(uris.size() > 0){
 				String uri = uris.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
@@ -178,7 +180,11 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Model> pl = null;
 		try {
-			pl = new ProblemList<Model>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Model>(this._problemList);
+			} else {
+				pl = new ProblemList<Model>();
+			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
 		}

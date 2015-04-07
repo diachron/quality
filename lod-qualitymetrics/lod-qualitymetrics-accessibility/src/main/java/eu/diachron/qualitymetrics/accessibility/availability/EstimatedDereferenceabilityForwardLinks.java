@@ -66,8 +66,8 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 50;
-	private static int MAX_FQURIS_PER_TLD = 10000;
+	private static int MAX_TLDS = 10;
+	private static int MAX_FQURIS_PER_TLD = 250;
 	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
 
 	
@@ -124,7 +124,11 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Model> pl = null;
 		try {
-			pl = new ProblemList<Model>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Model>(this._problemList);
+			} else {
+				pl = new ProblemList<Model>();
+			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
 		}
@@ -136,6 +140,8 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		for(Tld tld : this.tldsReservoir.getItems()){
 			List<String> uriSet = tld.getfqUris().getItems(); 
 			httpRetreiver.addListOfResourceToQueue(uriSet);
+			httpRetreiver.start();
+			
 			while(uriSet.size() > 0){
 				String uri = uriSet.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
@@ -150,7 +156,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 						
 						int correct = 0;
 						for(Statement s : allStatements){
-							if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
+							if (s != null && s.getSubject() != null && s.getSubject().getURI() != null && s.getSubject().getURI().equals(httpResource.getUri())) correct++;
 							else this.createViolatingTriple(s, httpResource.getUri());
 						}
 					

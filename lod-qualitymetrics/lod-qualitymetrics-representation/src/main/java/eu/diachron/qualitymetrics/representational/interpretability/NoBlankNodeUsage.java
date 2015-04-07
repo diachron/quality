@@ -3,12 +3,15 @@
  */
 package eu.diachron.qualitymetrics.representational.interpretability;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -17,6 +20,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 
 /**
  * @author Jeremy Debattista
@@ -33,6 +37,7 @@ public class NoBlankNodeUsage implements QualityMetric {
 	private Set<String> uniqueDLC = MapDbFactory.createFilesystemDB().createHashSet("unique-dlc-set").make();
 	private Set<String> uniqueBN = MapDbFactory.createFilesystemDB().createHashSet("unique-bn-set").make();
 	
+	private List<Quad> _problemList = new ArrayList<Quad>();	
 	
 	@Override
 	public void compute(Quad quad) {
@@ -66,7 +71,17 @@ public class NoBlankNodeUsage implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error(e.getMessage());
+		}
+		return pl;
 	}
 
 	@Override

@@ -115,16 +115,17 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	private void addUriToSampler(String uri) {
 		String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(uri);
 		
-		if (this.mapPLDs.containsKey(pld)){
-			ReservoirSampler<String> res = this.mapPLDs.get(pld);
-			res.add(uri);
-			mapPLDs.put(pld, res);
-		} else {
-			ReservoirSampler<String> res = new ReservoirSampler<String>(reservoirsize, true);
-			res.add(uri);
-			mapPLDs.put(pld, res);
+		if(pld != null) {
+			if (this.mapPLDs.containsKey(pld)){
+				ReservoirSampler<String> res = this.mapPLDs.get(pld);
+				res.add(uri);
+				mapPLDs.put(pld, res);
+			} else {
+				ReservoirSampler<String> res = new ReservoirSampler<String>(reservoirsize, true);
+				res.add(uri);
+				mapPLDs.put(pld, res);
+			}
 		}
-		
 	}
 
 	/**
@@ -216,7 +217,11 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> pl = null;
 		try {
-			pl = new ProblemList<Quad>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
 		}
