@@ -145,11 +145,16 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 			while(uriSet.size() > 0){
 				String uri = uriSet.remove(0);
 				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource == null || httpResource.getResponses() == null) {
+				if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
 					uriSet.add(uri);
 					continue;
 				}
+				
+				logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
+
+				
 				if (this.isDereferenceable(httpResource)){
+					logger.info("Dereferencable resource {}.", httpResource.getUri());
 					Model m = this.getMeaningfulData(httpResource);
 					if (m.size() > 0){
 						List<Statement> allStatements = m.listStatements().toList();
@@ -163,6 +168,8 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 						double per_local_minted_uri = ((double) correct) / ((double)allStatements.size());
 						do_p.put(httpResource.getUri(), per_local_minted_uri);
 					} else {
+						logger.info("Non-meaningful resource {}.", httpResource.getUri());
+
 						// report problem Not Valid Forward Link
 						this.createNotValidForwardLink(httpResource.getUri());
 					}
@@ -201,13 +208,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	private Model getMeaningfulData(CachedHTTPResource resource){
 		Model m = null;
 		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
-						m = this.tryRead(resource.getUri());
-					}
-				}
-			}
+			m = this.tryRead(resource.getUri());
 		}
 		return m;
 	}

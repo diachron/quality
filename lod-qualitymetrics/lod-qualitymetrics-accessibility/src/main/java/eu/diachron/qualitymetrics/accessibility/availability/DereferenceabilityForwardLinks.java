@@ -29,9 +29,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -102,7 +100,7 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 			if(this._problemList != null && this._problemList.size() > 0) {
 				pl = new ProblemList<Model>(this._problemList);
 			} else {
-				pl = new ProblemList<Model>();
+//				pl = new ProblemList<Model>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
@@ -116,24 +114,35 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 		while(uriSet.size() > 0){
 			String uri = uriSet.remove(0);
 			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-			if (httpResource.getResponses() == null) {
+			
+			if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
 				uriSet.add(uri);
 				continue;
 			}
+			
+			logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
+
+			
 			if (this.isDereferenceable(httpResource)){
+				logger.info("Dereferencable resource {}.", httpResource.getUri());
+
 				Model m = this.getMeaningfulData(httpResource);
 				if (m.size() > 0){
 					List<Statement> allStatements = m.listStatements().toList();
 					
 					int correct = 0;
 					for(Statement s : allStatements){
-						if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
-						else this.createViolatingTriple(s, httpResource.getUri());
+						if (s.getSubject().isURIResource()){
+							if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
+							else this.createViolatingTriple(s, httpResource.getUri());
+						}
 					}
 				
 					double per_local_minted_uri = ((double) correct) / ((double)allStatements.size());
 					do_p.put(httpResource.getUri(), per_local_minted_uri);
 				} else {
+					logger.info("Non-meaningful resource {}.", httpResource.getUri());
+
 					// report problem Not Valid Forward Link
 					this.createNotValidForwardLink(httpResource.getUri());
 				}
@@ -171,13 +180,7 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 	private Model getMeaningfulData(CachedHTTPResource resource){
 		Model m = null;
 		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
-						m = this.tryRead(resource.getUri());
-					}
-				}
-			}
+			m = this.tryRead(resource.getUri());
 		}
 		return m;
 	}
@@ -191,8 +194,6 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 		}
 		return m;
 	}
-	
-	
 	
 	// Private Methods for Dereferenceability Process
 	private boolean isDereferenceable(CachedHTTPResource httpResource){
