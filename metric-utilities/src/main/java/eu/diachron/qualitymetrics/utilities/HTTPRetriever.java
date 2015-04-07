@@ -53,6 +53,8 @@ public class HTTPRetriever {
 	 */
 	private static final int MAX_PARALLEL_REQS = 15;
 	
+	private static final int TIMEOUT = 10000;
+	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
 	 */
@@ -269,9 +271,9 @@ public class HTTPRetriever {
 		}
 		
 		return RequestConfig.custom().
-				setSocketTimeout(1000000).
-				setConnectTimeout(1000000).
-				setConnectionRequestTimeout(1000000).
+				setSocketTimeout(TIMEOUT).
+				setConnectTimeout(TIMEOUT).
+				setConnectionRequestTimeout(TIMEOUT).
 				setRedirectsEnabled(followRedirects).
 				setProxy(proxyHost).
 				setAuthenticationEnabled(false).
@@ -376,7 +378,7 @@ public class HTTPRetriever {
 	
 		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
 		//String uri = "http://aksw.org/MichaelMartin";
-		String uri = "http://data.linkededucation.org/resource/lak/reference/lak-dataset/5432";
+		String uri = "http://rdfs.org/ns/void#Dataset";
 //		String uri = "http://dbpedia.org/resource/1974_FIFA_World_Cup_qualification_(UEFA)";
 //		String uri = "http://www.jeremydebattista.info";
 		httpRetreiver.addResourceToQueue(uri);
@@ -388,6 +390,7 @@ public class HTTPRetriever {
 			httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
 		}
 		
+//		System.out.println(httpResource.getStatusLines().get(0).getStatusCode());
 		//System.out.println(httpResource.getResponses().get(0).getEntity().getContentType().getValue());
 		//httpResource.getResponses().get(0).getHeaders("Content-Disposition");
 //		String filename = httpResource.getResponses().get(0).getHeaders("Content-Disposition").replace("filename=\"", "").replace("\"", "");
