@@ -44,7 +44,7 @@ public class VocabularyLoaderTest extends Assert {
 
 	@Test
 	public void unknownVocabularyPropertiesTest() throws IOException, URISyntaxException {
-		assertTrue(VocabularyLoader.checkTerm(DAQ.computedBy.asNode()));
+		assertTrue(VocabularyLoader.checkTerm(DAQ.computedOn.asNode()));
 		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(DAQ.NS+"false").asNode()));
 	}
 	
