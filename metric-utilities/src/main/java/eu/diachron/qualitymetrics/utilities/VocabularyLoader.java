@@ -183,4 +183,15 @@ public class VocabularyLoader {
 		dataset = DatasetFactory.createMem();
 	}
 	
+	public static Boolean knownVocabulary(String uri){
+		return knownDatasets.containsKey(uri);
+	}
+	
+	public static Model getModelForVocabulary(String ns){
+		if(!(dataset.containsNamedModel(ns))) 
+			loadNStoDataset(ns);
+		
+		return dataset.getNamedModel(ns);
+	}
+	
 }
