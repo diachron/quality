@@ -144,7 +144,7 @@ public class HTTPRetriever {
 
 				try {							  
 					final HttpGet request = new HttpGet(queuePeek);					
-					Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/rdf+xml, text/html, text/xml, text/plain, application/n-triples");
+					Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/rdf+xml, text/plain, application/n-triples");
 					request.addHeader(accept);
 					
 					httpclient.execute(request, localContext,

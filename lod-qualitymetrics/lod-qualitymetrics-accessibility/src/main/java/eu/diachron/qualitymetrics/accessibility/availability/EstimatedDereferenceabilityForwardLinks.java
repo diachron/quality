@@ -9,12 +9,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.http.StatusLine;
-import org.apache.jena.atlas.logging.Log;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -36,8 +38,8 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
  * @author Jeremy Debattista
@@ -140,7 +142,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		for(Tld tld : this.tldsReservoir.getItems()){
 			List<String> uriSet = tld.getfqUris().getItems(); 
 			httpRetreiver.addListOfResourceToQueue(uriSet);
-			httpRetreiver.start();
+//			httpRetreiver.start();
 			
 			while(uriSet.size() > 0){
 				String uri = uriSet.remove(0);
@@ -205,25 +207,51 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	}
 	
 	// Private Method to check content type
+	// Private Method to check content type
 	private Model getMeaningfulData(CachedHTTPResource resource){
 		Model m = null;
 		if(resource != null && resource.getResponses() != null) {
-			m = this.tryRead(resource.getUri());
+			
+			//lets first check if the vocabulary exists, so that we do not download it
+			//TODO: this should be done before?
+			Node n = ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode();
+			String ns = n.getNameSpace();
+			if (VocabularyLoader.knownVocabulary(ns)){
+				m = VocabularyLoader.getModelForVocabulary(ns);
+			} else {
+				Lang lang = null;
+				for (SerialisableHttpResponse shr : resource.getResponses()){
+					String conType = shr.getHeaders("Content-Type");
+					String[] s1 = conType.split(",");
+					for(String s : s1){
+						String[] p = s.split(";");
+						lang = WebContent.contentTypeToLang(p[0]);
+						if (lang == Lang.NTRIPLES) lang = Lang.TURTLE;
+					}
+				}
+				m = this.tryRead(resource.getUri(), lang);
+			}
 		}
 		return m;
 	}
 	
-	private Model tryRead(String uri) {
-		Model m = ModelFactory.createDefaultModel();
-		
+	private Model tryRead(String uri, Lang lang) {
+		Model m = ModelFactory.createOntologyModel();
 		try{
 			m = RDFDataMgr.loadModel(uri);
 		} catch (RiotException r) {
-			Log.debug("Resource could not be parsed:", r.getMessage());
+			if (lang != null){
+				logger.info("Resource could not be parsed: {}. Trying with Language : {}", r.getMessage() , lang.toString());
+				try {
+					m = RDFDataMgr.loadModel(uri,lang);
+				} catch (RiotException r2){
+					logger.info("Resource could not be parsed: {}", r2.getMessage());
+				}
+			} else
+				logger.info("Resource could not be parsed: {}", r.getMessage());
 		}
 		return m;
 	}
-	
 	
 	
 	// Private Methods for Dereferenceability Process
