@@ -100,7 +100,7 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 			if(this._problemList != null && this._problemList.size() > 0) {
 				pl = new ProblemList<Model>(this._problemList);
 			} else {
-//				pl = new ProblemList<Model>();
+				pl = new ProblemList<Model>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
