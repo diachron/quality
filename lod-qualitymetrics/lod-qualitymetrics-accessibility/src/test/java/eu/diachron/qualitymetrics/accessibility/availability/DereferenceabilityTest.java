@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 import org.junit.After;
