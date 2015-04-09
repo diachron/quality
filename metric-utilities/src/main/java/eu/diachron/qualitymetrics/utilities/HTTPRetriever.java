@@ -24,7 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -130,6 +130,7 @@ public class HTTPRetriever {
 			
 			for(final String queuePeek : this.httpQueue) {
 				// TODO: Remove artificial delay!!!! There must be a way to get rid of this
+				logger.debug("Retrieving "+queuePeek);
 				Thread.sleep(100);
 				
 				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
@@ -142,8 +143,8 @@ public class HTTPRetriever {
 				final HttpClientContext localContext = HttpClientContext.create(); // Each request must have it's own context
 				newResource.setUri(queuePeek);
 
-				try {							  
-					final HttpGet request = new HttpGet(queuePeek);					
+				try {					
+					final HttpHead request = new HttpHead(queuePeek);					
 					Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/rdf+xml, text/plain, application/n-triples");
 					request.addHeader(accept);
 					
@@ -263,11 +264,11 @@ public class HTTPRetriever {
 		try {
 			final HttpClientContext localContext = HttpClientContext.create();
 			httpclient.start();
-			final List<HttpGet> requests = this.toHttpGetList(uriRoute);
+			final List<HttpHead> requests = this.toHttpGetList(uriRoute);
 
 			final CountDownLatch redirectionLatch = new CountDownLatch(requests.size());			
 			
-			for (final HttpGet request : requests) {
+			for (final HttpHead request : requests) {
 				httpclient.execute(request, localContext, new FutureCallback<HttpResponse>() {
 
 							public void completed(final HttpResponse response) {
@@ -295,10 +296,10 @@ public class HTTPRetriever {
 		return httpResponses;
 	}
 
-	private List<HttpGet> toHttpGetList(List<URI> uriRoute) {
-		List<HttpGet> requests = new ArrayList<HttpGet>();
+	private List<HttpHead> toHttpGetList(List<URI> uriRoute) {
+		List<HttpHead> requests = new ArrayList<HttpHead>();
 		for (URI uri : uriRoute) {
-			requests.add(new HttpGet(uri.toString()));
+			requests.add(new HttpHead(uri.toString()));
 		}
 
 		return requests;
@@ -420,8 +421,8 @@ public class HTTPRetriever {
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
 		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-		//String uri = "http://aksw.org/MichaelMartin";
-		String uri = "http://rdfs.org/ns/void#Dataset";
+		String uri = "http://pleiades.stoa.org/places/55500001010#this";
+//		String uri = "http://rdfs.org/ns/void#Dataset";
 //		String uri = "http://dbpedia.org/resource/1974_FIFA_World_Cup_qualification_(UEFA)";
 //		String uri = "http://www.jeremydebattista.info";
 		httpRetreiver.addResourceToQueue(uri);
@@ -433,7 +434,7 @@ public class HTTPRetriever {
 			httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
 		}
 		
-//		System.out.println(httpResource.getStatusLines().get(0).getStatusCode());
+		System.out.println(httpResource.getStatusLines().get(0).getStatusCode());
 		//System.out.println(httpResource.getResponses().get(0).getEntity().getContentType().getValue());
 		//httpResource.getResponses().get(0).getHeaders("Content-Disposition");
 //		String filename = httpResource.getResponses().get(0).getHeaders("Content-Disposition").replace("filename=\"", "").replace("\"", "");
