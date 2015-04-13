@@ -121,7 +121,7 @@ public class Dereferenceability implements QualityMetric {
 				this.notFetchedQueue.add(uri);
 			} else {
 				this.totalURI++;
-				if (Dereferencer.isDereferenceable(httpResource)){
+				if (Dereferencer.hasValidDereferencability(httpResource)){
 					if(ModelParser.hasRDFContent(httpResource)){
 						this.dereferencedURI++;
 						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());

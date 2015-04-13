@@ -17,7 +17,7 @@ import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
  */
 public class Dereferencer {
 
-	public static boolean isDereferenceable(CachedHTTPResource httpResource){
+	public static boolean hasValidDereferencability(CachedHTTPResource httpResource){
 		if (httpResource.getDereferencabilityStatusCode() == null){
 			List<Integer> statusCode = getStatusCodes(httpResource.getStatusLines());
 			
