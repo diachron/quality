@@ -40,7 +40,7 @@ public class ModelParser {
 	final static Logger logger = LoggerFactory.getLogger(ModelParser.class);
 
 	
-	private static boolean snapshotParser(final CachedHTTPResource httpResource){
+	private static boolean snapshotParser(final CachedHTTPResource httpResource, final Lang givenLang){
 		if (httpResource.isContainsRDF() != null) return httpResource.isContainsRDF();
 		
 		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.TURTLE;
@@ -58,14 +58,15 @@ public class ModelParser {
 			public void run() {
 				try{
 					logger.info("Trying to parse resource {}.", httpResource.getUri());
-					RDFDataMgr.parse(rdfStream, httpResource.getUri());
+					if (givenLang == null) RDFDataMgr.parse(rdfStream, httpResource.getUri());
+					else RDFDataMgr.parse(rdfStream, httpResource.getUri(), givenLang, null);
 				} catch (Exception e){
 					logger.info("Resource {} could not be parsed.", httpResource.getUri());
 					rdfStream.finish();
 				}
 			}			
 		};
-		
+
 		executor.submit(parser);
 	
 		try{
@@ -143,9 +144,19 @@ public class ModelParser {
 	}
 
 	public static boolean hasRDFContent(CachedHTTPResource httpResource){
-		boolean returnRes = snapshotParser(httpResource);
+		return hasRDFContent(httpResource, null);
+	}
+
+	public static boolean hasRDFContent(CachedHTTPResource httpResource, Lang lang){
+		boolean returnRes = snapshotParser(httpResource, lang);
 		httpResource.setContainsRDF(returnRes);
 		destroy();
 		return returnRes;
 	}
+
+	public static void main(String [] args){
+		initiate(Lang.TURTLE);
+		RDFDataMgr.parse(rdfStream, "http://pleiades.stoa.org/places/903083");
+	}
+
 }

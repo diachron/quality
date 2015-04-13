@@ -4,13 +4,11 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.riot.RiotException;
 import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.datatypes.Pair;
+import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
@@ -29,9 +27,12 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -48,16 +49,16 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 public class EstimatedMisreportedContentType implements QualityMetric{
 	private final Resource METRIC_URI = DQM.MisreportedContentTypesMetric;
 
-	// TODO check why parsing slows down at
-	// TODO handle unknown host exception (people.comiles.eu,fb.comiles.eu)
 	private double misReportedType=0;
 	private double correctReportedType=0;
+	private double notOkResponses=0;
 	
+
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	private boolean metricCalculated = false;
 
 
-	final static Logger logger = LoggerFactory.getLogger(EstimatedMisreportedContentType.class);
+	private static Logger logger = LoggerFactory.getLogger(EstimatedMisreportedContentType.class);
 	boolean followRedirects = true;
 	
 	private List<Model> _problemList = new ArrayList<Model>();
@@ -69,7 +70,7 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	private static int MAX_TLDS = 10;
 	private static int MAX_FQURIS_PER_TLD = 250;
 	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
-
+	private List<String> uriSet = new ArrayList<String>();
 
 
 	public void compute(Quad quad) {
@@ -90,13 +91,24 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 
 	public double metricValue() {
 		if (!this.metricCalculated){
+			for(Tld tld : this.tldsReservoir.getItems()){
+				uriSet.addAll(tld.getfqUris().getItems()); 
+			}
+			
+			httpRetreiver.addListOfResourceToQueue(uriSet);
+			
 			httpRetreiver.start();
 
 			this.checkForMisreportedContentType();
 			this.metricCalculated = true;
+			httpRetreiver.stop();
 		}
 		
-		double metricValue = correctReportedType / (misReportedType + correctReportedType);
+		double metricValue = 0.0;
+		logger.debug(String.format("Computing metric. Correct: %.0f. Misreported: %.0f. Not OK: %.0f", correctReportedType, misReportedType, notOkResponses));
+		if((misReportedType + correctReportedType) != 0.0) {
+			metricValue = correctReportedType / (misReportedType + correctReportedType);
+		}
 
 		return metricValue;
 	}
@@ -122,57 +134,62 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	
 	
 	private void checkForMisreportedContentType(){
-		for(Tld tld : this.tldsReservoir.getItems()){
-			List<String> uris = tld.getfqUris().getItems(); 
-			httpRetreiver.addListOfResourceToQueue(uris);
-			httpRetreiver.start();
+		while(uriSet.size() > 0){
+			// Get the next URI to be processed and remove it from the set (i.e. the uriSet is used as a queue, the next element is poped)
+			String uri = uriSet.remove(0);	
 			
-			while(uris.size() > 0){
-				String uri = uris.remove(0);
-				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource == null || httpResource.getResponses() == null) {
-					uris.add(uri);
-					continue;
+			// Check if the URI has already been dereferenced, in which case, it would be part of the Cache
+			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
+			
+			if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
+				// If the URI is not part of the cache, add it back in to the uriSet, so that it's tried to be dereferenced by the HTTP Retriever
+				if(!uriSet.contains(uri)) {
+					uriSet.add(uri);
 				}
-				for (SerialisableHttpResponse response : httpResource.getResponses()){
-					if (response.getHeaders("Status") != null && response.getHeaders("Status").contains("200")){
-						String contentDisposition = response.getHeaders("Content-Disposition");
-						
-						if ((contentDisposition != null) && (contentDisposition.length() > 0)){
-							//we can check the file it returns avoiding the loading of file
-							String filename = response.getHeaders("Content-Disposition").split(";")[1].replace("filename=\"", "").replace("\"", "");
-							Lang language = RDFLanguages.filenameToLang(filename); // if any other type of file but not a LOD compatible, it will return null and we skip
-							if (language == null) continue;
-							if (response.getHeaders("Content-Type").equals(WebContent.mapLangToContentType(language))) {
-								httpResource.setContainsRDF(true);
-								correctReportedType++;
-							}
-							else {
-								httpResource.setContainsRDF(false);
-								misReportedType++;
-								this.createProblemModel(uri, response.getHeaders("Content-Type"), WebContent.mapLangToContentType(language));
-							}
-							break;
+				continue;
+			}
+			
+			if (Dereferencer.hasOKStatus(httpResource)){
+				logger.info("Checking "+httpResource.getUri()+ " for misreported content type");
+				
+				SerialisableHttpResponse res = HTTPResourceUtils.getSemanticResponse(httpResource);
+				if (res != null){
+					String ct = res.getHeaders("Content-Type");
+					Lang lang = WebContent.contentTypeToLang(ct);
+					
+					//should the resource be dereferencable?
+					if (lang != null){
+						//the resource might be a semantic resource
+						if (ModelParser.hasRDFContent(httpResource, lang)){
+							correctReportedType++;
 						} else {
-							Pair<Boolean, Lang> tryP = this.tryParse(httpResource, response);
-							if (tryP.getFirstElement() == true) {
-								httpResource.setContainsRDF(true);
-								correctReportedType++;
-							}
-							else if (tryP.getSecondElement() == null){
-								httpResource.setContainsRDF(false);
-								misReportedType++;
-								this.createProblemModel(uri, response.getHeaders("Content-Type"), "null");
-							} else {
-								httpResource.setContainsRDF(false);
-								misReportedType++;
-								this.createProblemModel(uri, response.getHeaders("Content-Type"), tryP.getSecondElement().getName());
-							}
+							misReportedType++;
+							
+							ContentType actualCT = HTTPResourceUtils.determineActualContentType(httpResource) ;
+							this.createProblemModel(httpResource.getUri(), ct, actualCT.toString());
 						}
 					}
+				} else {
+					logger.info("No semantic content type for {}. Trying to parse the content.", httpResource.getUri());
+					SerialisableHttpResponse possible = HTTPResourceUtils.getPossibleSemanticResponse(httpResource); //we are doing this to get more statistical detail for the problem report
+					if (possible != null){
+						String location = HTTPResourceUtils.getResourceLocation(possible);
+						if (location != null){
+							Lang language = RDFLanguages.filenameToLang(location); // if the attachment has an non semantic file type, it is skipped
+							if (language != null){
+								misReportedType++;
+								
+								ContentType actualCT = HTTPResourceUtils.determineActualContentType(httpResource);
+								this.createProblemModel(httpResource.getUri(), possible.getHeaders("Content-Type"), actualCT.toString());
+							} else 
+								logger.info("Not possible to parse {}. Not a recognised file extension", location);	
+						}
+					}
+					else logger.info("Not possible to parse {}.", httpResource.getUri());
 				}
 			}
 		}
+			
 	}
 	
 	
@@ -203,33 +220,6 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 		this._problemList.add(m);
 	}
 	
-	private Pair<Boolean, Lang> tryParse(CachedHTTPResource httpResource, SerialisableHttpResponse response){
-		for (SerialisableHttpResponse res : httpResource.getResponses()){
-			try {
-				Lang lang = RDFLanguages.contentTypeToLang(res.getHeaders("Content-Type"));
-				RDFDataMgr.loadModel(httpResource.getUri(), lang);
-				return new Pair<Boolean, Lang>(true, lang);
-			} catch (RiotException e){
-				Collection<Lang> langs = this.createLangSet(RDFLanguages.contentTypeToLang(res.getHeaders("Content-Type")));
-				for(Lang l : langs){
-					try{
-						RDFDataMgr.loadModel(httpResource.getUri(), l);
-						return new Pair<Boolean, Lang>(false, l);
-					}catch (RiotException e1){
-						logger.debug("Could not load the model as " + l);
-					}
-				}
-			}
-		}
-		return new Pair<Boolean, Lang>(false, null);
-	}
-	
-	private Collection<Lang> createLangSet(Lang skipLang){
-		Collection<Lang> retSet = RDFLanguages.getRegisteredLanguages();
-		retSet.remove(skipLang);
-		return retSet;
-	}
-	
 	@Override
 	public boolean isEstimate() {
 		return true;
@@ -239,4 +229,4 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
 	}
-}
+	}

@@ -96,4 +96,16 @@ public class Dereferencer {
 		}
 		return false;
 	}
+
+	public static boolean hasOKStatus(CachedHTTPResource resource) {
+		List<StatusLine> lstStatusLines = resource.getStatusLines();
+		
+		if(lstStatusLines != null) {
+			synchronized(lstStatusLines) {
+				return lstStatusLines.toString().contains("200 OK");
+			}
+		}
+		return false;
+	}
+
 }

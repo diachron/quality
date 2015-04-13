@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class MisreportedContentTypeTest extends Assert {
@@ -19,11 +18,12 @@ public class MisreportedContentTypeTest extends Assert {
 	private static Logger logger = LoggerFactory.getLogger(MisreportedContentTypeTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected MisreportedContentType metric = new MisreportedContentType();
+	protected EstimatedMisreportedContentType metric = new EstimatedMisreportedContentType();
 
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.MisreportedContentType);
+//		loader.loadDataSet(DataSetMappingForTestCase.MisreportedContentType);
+		loader.loadDataSet("http://imf.270a.info/dataset/MCORE");
 	}
 
 	@After
@@ -46,13 +46,12 @@ public class MisreportedContentTypeTest extends Assert {
 		
 		// The dataset corresponding to the test case has 27 URIs (including rdf:type predicates) declared
 		// in subjects/objects, of which 9 have misreported content types.
-		double expectedValue = 0.33333;
+		double expectedValue = 1.0;
 		double delta = 0.001;
 		
 		// Obtain the measurement of Dereferenceability for the source of the dataset
 		double metricValue = metric.metricValue();
 		logger.trace("Computed misreported content-type metric: " + metricValue);
-
 		assertEquals(expectedValue, metricValue, delta);
 	}
 
