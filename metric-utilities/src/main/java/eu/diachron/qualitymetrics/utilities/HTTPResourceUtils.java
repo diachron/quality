@@ -5,11 +5,8 @@ package eu.diachron.qualitymetrics.utilities;
 
 import java.util.regex.Pattern;
 
-import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.atlas.web.TypedInputStream;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.riot.WebContent;
 
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
@@ -17,7 +14,8 @@ import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpRespo
 /**
  * @author Jeremy Debattista
  * 
- * Utility methods to parse HTTPResource responses
+ * Utility methods to parse HTTPResource responses.
+ * Some of the below methods are modified from Apache Jena
  */
 public class HTTPResourceUtils {
 	
@@ -32,7 +30,7 @@ public class HTTPResourceUtils {
 		for(SerialisableHttpResponse res : httpResponse.getResponses()){
 			String ct = parsedContentType(res.getHeaders("Content-Type"));
 			if (ct.equals("text/plain")) continue;
-			if (WebContent.contentTypeToLang(ct) != null){
+			if (LinkedDataContent.contentTypeToLang(ct) != null){
 				return res;
 			}
 		}
@@ -48,27 +46,27 @@ public class HTTPResourceUtils {
 		return "";
 	}
 	
-	public static ContentType determineActualContentType(CachedHTTPResource httpResource)
+	public static String determineActualContentType(CachedHTTPResource httpResource)
     {
 		TypedInputStream in = RDFDataMgr.open(httpResource.getUri());
 		String target = httpResource.getUri();
 		String ctStr = in.getContentType();
 		
-        boolean isTextPlain = WebContent.contentTypeTextPlain.equals(ctStr) ;
+        boolean isTextPlain = (ctStr.equals("text/plain")) ? true : false ;
 
-        if (ctStr != null) ctStr = WebContent.contentTypeCanonical(ctStr) ;
+        if (ctStr != null) ctStr = LinkedDataContent.contentTypeCanonical(ctStr) ;
 
-        ContentType ct = null ;
-        if ( ! isTextPlain ) ct = (ctStr==null) ? null : ContentType.create(ctStr) ;
+        String ct = null ;
+        if (!isTextPlain ) ct = (ctStr==null) ? null : ctStr ;
         
-        if ( ct == null ) ct = RDFLanguages.guessContentType(target) ;
+        if ( ct == null ) ct = LinkedDataContent.guessContentType(target) ;
         
         return ct ;
     }
 	
 	public static SerialisableHttpResponse getPossibleSemanticResponse(CachedHTTPResource httpResponse){
 		for(SerialisableHttpResponse res : httpResponse.getResponses()){
-			if ((res.getHeaders("Content-Location") != null) || (res.getHeaders("Content-Disposition") != null)  || (res.getHeaders("location") != null)){				
+			if ((res.getHeaders("Content-Location") != null) || (res.getHeaders("Content-Disposition") != null)  || (res.getHeaders("location") != null) || (res.getHeaders("Location") != null)) {				
 				return res;
 			}
 		}
@@ -82,7 +80,30 @@ public class HTTPResourceUtils {
 					? (ptnFileName.matcher(res.getHeaders("Content-Disposition"))).group(1) :
 					(res.getHeaders("location") != null) 
 						? res.getHeaders("location") : 
-						null;
+						(res.getHeaders("Location") != null) 
+							? res.getHeaders("Location") : 
+							null;
+	}
+	
+	/**
+	 * In this method we use a number of heuristics in order to do
+	 * a URI lookup for semantic resources without having to parse
+	 * (or process) the URI's content. This idea is based
+	 * on the work of Umbrich et al.: Four Heuristics
+	 * to Guide Structured Content Crawling.
+	 * 
+	 * As an example we take the following resource:
+	 * http://dbpedia.org/resource/Malta
+	 * 
+	 * @param httpResponse
+	 */
+	public static void semanticURILookup(CachedHTTPResource httpResponse){
+		//H1: Does the resource have the correct semantic content-type?
+		
+		//H2: Does the semantic resource have the correct file type?
+		
+		//H3: What is the PATH of the semantic resource? (e.g. /data/Malta)
+
 	}
 	
 }

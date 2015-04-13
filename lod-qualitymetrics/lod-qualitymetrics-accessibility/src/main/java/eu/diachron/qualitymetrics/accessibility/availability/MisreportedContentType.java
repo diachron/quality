@@ -3,7 +3,6 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.WebContent;
@@ -134,8 +133,8 @@ public class MisreportedContentType implements QualityMetric {
 						} else {
 							misReportedType++;
 							
-							ContentType actualCT = HTTPResourceUtils.determineActualContentType(httpResource) ;
-							this.createProblemModel(httpResource.getUri(), ct, actualCT.toString());
+							String actualCT = HTTPResourceUtils.determineActualContentType(httpResource) ;
+							this.createProblemModel(httpResource.getUri(), ct, actualCT);
 						}
 					}
 				} else {
@@ -148,8 +147,8 @@ public class MisreportedContentType implements QualityMetric {
 							if (language != null){
 								misReportedType++;
 								
-								ContentType actualCT = HTTPResourceUtils.determineActualContentType(httpResource);
-								this.createProblemModel(httpResource.getUri(), possible.getHeaders("Content-Type"), actualCT.toString());
+								String actualCT = HTTPResourceUtils.determineActualContentType(httpResource);
+								this.createProblemModel(httpResource.getUri(), possible.getHeaders("Content-Type"), actualCT);
 							} else 
 								logger.info("Not possible to parse {}. Not a recognised file extension", location);	
 						}
