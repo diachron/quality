@@ -92,18 +92,30 @@ public class HTTPResourceUtils {
 	 * on the work of Umbrich et al.: Four Heuristics
 	 * to Guide Structured Content Crawling.
 	 * 
-	 * As an example we take the following resource:
-	 * http://dbpedia.org/resource/Malta
+	 * In our case, we have two heuristics, that either of them would
+	 * return true if satisfied by a semantic URI.
 	 * 
 	 * @param httpResponse
 	 */
-	public static void semanticURILookup(CachedHTTPResource httpResponse){
+	public static boolean semanticURILookup(CachedHTTPResource httpResponse){
 		//H1: Does the resource have the correct semantic content-type?
+		SerialisableHttpResponse h1 = getSemanticResponse(httpResponse);
+		if (h1 != null){
+			//h1 passed
+			return true;
+		}
 		
 		//H2: Does the semantic resource have the correct file type?
+		SerialisableHttpResponse h2 = getPossibleSemanticResponse(httpResponse);
+		if (h2 != null){
+			String resourceFile = getResourceLocation(h2);
+			String ct = LinkedDataContent.guessContentType(resourceFile);
+			if (ct != null){
+				//h2 passed
+				return true;
+			}
+		}
 		
-		//H3: What is the PATH of the semantic resource? (e.g. /data/Malta)
-
-	}
-	
+		return false;
+	}	
 }
