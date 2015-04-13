@@ -45,11 +45,8 @@ public class MisreportedContentType implements QualityMetric {
 
 	private final Resource METRIC_URI = DQM.MisreportedContentTypesMetric;
 
-	// TODO check why parsing slows down at
-	// TODO handle unknown host exception (people.comiles.eu,fb.comiles.eu)
 	private double misReportedType=0;
 	private double correctReportedType=0;
-	private double notOkResponses=0;
 	
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	private boolean metricCalculated = false;
@@ -96,7 +93,7 @@ public class MisreportedContentType implements QualityMetric {
 		}
 		
 		double metricValue = 0.0;
-		logger.debug(String.format("Computing metric. Correct: %.0f. Misreported: %.0f. Not OK: %.0f", correctReportedType, misReportedType, notOkResponses));
+		logger.debug(String.format("Computing metric. Correct: %.0f. Misreported: %.0f. Not OK: %.0f", correctReportedType, misReportedType));
 		if((misReportedType + correctReportedType) != 0.0) {
 			metricValue = correctReportedType / (misReportedType + correctReportedType);
 		}
