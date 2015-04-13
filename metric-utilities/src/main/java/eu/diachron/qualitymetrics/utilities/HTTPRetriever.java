@@ -24,7 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -57,6 +57,10 @@ public class HTTPRetriever {
 	private static final int MAX_PARALLEL_REQS = 15;
 	
 	private static final int TIMEOUT = 10000;
+	
+	//private static final String ACCEPT_TYPE = "application/rdf+xml, text/turtle, text/rdf+n3, application/n3, text/n3, application/turtle, application/rdf+json, application/n-triples, text/trig, application/n-quads, text/nquads" ;
+
+	private static final String ACCEPT_TYPE = "text/n3, text/turtle, application/rdf+xml, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig" ;
 	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
@@ -144,8 +148,8 @@ public class HTTPRetriever {
 				newResource.setUri(queuePeek);
 
 				try {					
-					final HttpHead request = new HttpHead(queuePeek);					
-					Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/rdf+xml, text/plain, application/n-triples");
+					final HttpGet request = new HttpGet(queuePeek);		
+					Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
 					request.addHeader(accept);
 					
 					httpclient.execute(request, localContext,
@@ -264,11 +268,11 @@ public class HTTPRetriever {
 		try {
 			final HttpClientContext localContext = HttpClientContext.create();
 			httpclient.start();
-			final List<HttpHead> requests = this.toHttpGetList(uriRoute);
+			final List<HttpGet> requests = this.toHttpGetList(uriRoute);
 
 			final CountDownLatch redirectionLatch = new CountDownLatch(requests.size());			
 			
-			for (final HttpHead request : requests) {
+			for (final HttpGet request : requests) {
 				httpclient.execute(request, localContext, new FutureCallback<HttpResponse>() {
 
 							public void completed(final HttpResponse response) {
@@ -296,10 +300,10 @@ public class HTTPRetriever {
 		return httpResponses;
 	}
 
-	private List<HttpHead> toHttpGetList(List<URI> uriRoute) {
-		List<HttpHead> requests = new ArrayList<HttpHead>();
+	private List<HttpGet> toHttpGetList(List<URI> uriRoute) {
+		List<HttpGet> requests = new ArrayList<HttpGet>();
 		for (URI uri : uriRoute) {
-			requests.add(new HttpHead(uri.toString()));
+			requests.add(new HttpGet(uri.toString()));
 		}
 
 		return requests;
@@ -421,10 +425,10 @@ public class HTTPRetriever {
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
 		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
-		String uri = "http://pleiades.stoa.org/places/55500001010#this";
+//		String uri = "http://pleiades.stoa.org/places/55500001010#this";
 //		String uri = "http://rdfs.org/ns/void#Dataset";
-//		String uri = "http://dbpedia.org/resource/1974_FIFA_World_Cup_qualification_(UEFA)";
-//		String uri = "http://www.jeremydebattista.info";
+//		String uri = "http://pleiades.stoa.org/places/903083";
+		String uri = "http://imf.270a.info/dataset/void";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start();
 		Thread.sleep(5000);
@@ -586,7 +590,7 @@ public class HTTPRetriever {
 			// Create a new HttpURLConnection object for each request, since each instance is intended to perform a single request (view Javadoc)
 			// note that this call does not establish the actual network connection to the target resource and thus the timer is not initiated here
 			httpConn = (HttpURLConnection)targetUrl.openConnection();
-			httpConn.setRequestProperty("Content-Type", "application/rdf+xml");
+			httpConn.setRequestProperty("Content-Type", ACCEPT_TYPE);
 			
 			// Initiate the timer, as the call to getInputStream connects to the target resource and sends GET and HEADers
 			startTimeStamp = System.currentTimeMillis();
