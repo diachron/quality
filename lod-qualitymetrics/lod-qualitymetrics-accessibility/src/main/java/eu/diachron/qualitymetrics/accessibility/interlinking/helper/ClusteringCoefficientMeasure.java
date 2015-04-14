@@ -121,6 +121,7 @@ public class ClusteringCoefficientMeasure {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private double calculateClusteringCoefficient() {
 		Map<String, Double> vertexCC = new HashMap<String, Double>();
 		
