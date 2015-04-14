@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.WebContent;
 import org.apache.jena.riot.lang.PipedQuadsStream;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
@@ -22,6 +21,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debattista
@@ -136,7 +136,7 @@ public class ModelParser {
 			String[] s1 = conType.split(",");
 			for(String s : s1){
 				String[] p = s.split(";");
-				lang = WebContent.contentTypeToLang(p[0]);
+				lang = LinkedDataContent.contentTypeToLang(p[0]);
 				if (lang == Lang.NTRIPLES) lang = Lang.TURTLE;
 			}
 		}
@@ -153,10 +153,4 @@ public class ModelParser {
 		destroy();
 		return returnRes;
 	}
-
-	public static void main(String [] args){
-		initiate(Lang.TURTLE);
-		RDFDataMgr.parse(rdfStream, "http://pleiades.stoa.org/places/903083");
-	}
-
 }
