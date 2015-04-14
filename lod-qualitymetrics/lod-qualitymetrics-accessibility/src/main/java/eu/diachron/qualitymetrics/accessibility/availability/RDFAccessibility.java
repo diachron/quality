@@ -22,8 +22,8 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debattista
@@ -82,7 +82,7 @@ public class RDFAccessibility implements QualityMetric {
 				CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
 				
 				for(SerialisableHttpResponse response : httpResource.getResponses()){
-					if ((response.getHeaders("Status").contains("200")) && (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type")))){
+					if ((response.getHeaders("Status").contains("200")) && (LinkedDataContent.contentTypes.contains(response.getHeaders("Content-Type")))){
 						workingDataDumps++;
 						break;
 					} else {
