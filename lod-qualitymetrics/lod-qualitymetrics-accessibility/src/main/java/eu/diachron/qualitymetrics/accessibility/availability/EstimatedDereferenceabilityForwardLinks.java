@@ -4,15 +4,11 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.http.StatusLine;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotException;
-import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +18,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -35,9 +32,10 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -62,7 +60,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	private double metricValue = 0.0;
 	
 	private List<Model> _problemList = new ArrayList<Model>();
-
+	private List<String> uriSet = new ArrayList<String>();
 
 	/**
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
@@ -102,6 +100,11 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 
 	public double metricValue() {
 		if (!this.metricCalculated){
+			for(Tld tld : this.tldsReservoir.getItems()){
+				uriSet.addAll(tld.getfqUris().getItems());
+			}
+			httpRetreiver.addListOfResourceToQueue(uriSet);
+			
 			httpRetreiver.start();
 
 			this.checkForForwardLinking();
@@ -139,43 +142,57 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	
 	// Private Method for checking forward linking
 	private void checkForForwardLinking(){
-		for(Tld tld : this.tldsReservoir.getItems()){
-			List<String> uriSet = tld.getfqUris().getItems(); 
-			httpRetreiver.addListOfResourceToQueue(uriSet);
-//			httpRetreiver.start();
+		while(uriSet.size() > 0){
+			String uri = uriSet.remove(0);
+			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
 			
-			while(uriSet.size() > 0){
-				String uri = uriSet.remove(0);
-				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
-					uriSet.add(uri);
-					continue;
-				}
-				
-				logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
+			if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
+				uriSet.add(uri);
+				continue;
+			}
+			
+			logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
 
-				
-				if (this.isDereferenceable(httpResource)){
+			// We perform a semantic lookup using heuristics to check if we
+			// really need to try parsing or not
+			if (HTTPResourceUtils.semanticURILookup(httpResource)){
+				logger.info("Trying to find any dereferencable forward links for {}.", httpResource.getUri());
+				if (Dereferencer.hasValidDereferencability(httpResource)){
 					logger.info("Dereferencable resource {}.", httpResource.getUri());
-					Model m = this.getMeaningfulData(httpResource);
-					if (m.size() > 0){
-						List<Statement> allStatements = m.listStatements().toList();
-						
-						int correct = 0;
-						for(Statement s : allStatements){
-							if (s != null && s.getSubject() != null && s.getSubject().getURI() != null && s.getSubject().getURI().equals(httpResource.getUri())) correct++;
+					
+					Iterator<?> iter = null;
+					//lets first check if the vocabulary exists, so that we do not download it
+					Node n = ModelFactory.createDefaultModel().createResource(httpResource.getUri()).asNode();
+					String ns = n.getNameSpace();
+					if (VocabularyLoader.knownVocabulary(ns)){
+						Model m = VocabularyLoader.getModelForVocabulary(ns);
+						iter = m.listStatements();
+					} else {
+						iter = ModelFactory.createDefaultModel().read(httpResource.getUri()).listStatements();
+					}
+					
+					int correct = 0;
+					int triples = 0;
+					while(iter.hasNext()){
+						triples++;
+						Statement s = ((StmtIterator)iter).next();
+
+						if (s.getSubject().isURIResource()){
+							if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
 							else this.createViolatingTriple(s, httpResource.getUri());
 						}
-					
-						double per_local_minted_uri = ((double) correct) / ((double)allStatements.size());
-						do_p.put(httpResource.getUri(), per_local_minted_uri);
-					} else {
-						logger.info("Non-meaningful resource {}.", httpResource.getUri());
-
-						// report problem Not Valid Forward Link
-						this.createNotValidForwardLink(httpResource.getUri());
+						
+						if (triples > 0){
+							double per_local_minted_uri = ((double) correct) / ((double)triples);
+							do_p.put(httpResource.getUri(), per_local_minted_uri);
+						} else {
+							this.createNotValidForwardLink(httpResource.getUri());
+						}
 					}
 				}
+			} else {
+				logger.info("Non-meaningful dereferencable resource {}.", httpResource.getUri());
+				this.createNotValidForwardLink(httpResource.getUri());
 			}
 		}
 	}
@@ -206,122 +223,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		this._problemList.add(m);
 	}
 	
-	// Private Method to check content type
-	// Private Method to check content type
-	private Model getMeaningfulData(CachedHTTPResource resource){
-		Model m = null;
-		if(resource != null && resource.getResponses() != null) {
-			
-			//lets first check if the vocabulary exists, so that we do not download it
-			//TODO: this should be done before?
-			Node n = ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode();
-			String ns = n.getNameSpace();
-			if (VocabularyLoader.knownVocabulary(ns)){
-				m = VocabularyLoader.getModelForVocabulary(ns);
-			} else {
-				Lang lang = null;
-				for (SerialisableHttpResponse shr : resource.getResponses()){
-					String conType = shr.getHeaders("Content-Type");
-					String[] s1 = conType.split(",");
-					for(String s : s1){
-						String[] p = s.split(";");
-						lang = WebContent.contentTypeToLang(p[0]);
-						if (lang == Lang.NTRIPLES) lang = Lang.TURTLE;
-					}
-				}
-				m = this.tryRead(resource.getUri(), lang);
-			}
-		}
-		return m;
-	}
-	
-	private Model tryRead(String uri, Lang lang) {
-		Model m = ModelFactory.createOntologyModel();
-		try{
-			m = RDFDataMgr.loadModel(uri);
-		} catch (RiotException r) {
-			if (lang != null){
-				logger.info("Resource could not be parsed: {}. Trying with Language : {}", r.getMessage() , lang.toString());
-				try {
-					m = RDFDataMgr.loadModel(uri,lang);
-				} catch (RiotException r2){
-					logger.info("Resource could not be parsed: {}", r2.getMessage());
-				}
-			} else
-				logger.info("Resource could not be parsed: {}", r.getMessage());
-		}
-		return m;
-	}
-	
-	
-	// Private Methods for Dereferenceability Process
-	private boolean isDereferenceable(CachedHTTPResource httpResource){
-		if (httpResource.getDereferencabilityStatusCode() == null){
-			List<Integer> statusCode = this.getStatusCodes(httpResource.getStatusLines());
-			
-			if (httpResource.getUri().contains("#") && statusCode.contains(200)) httpResource.setDereferencabilityStatusCode(StatusCode.HASH);
-			else if (statusCode.contains(200)){
-				httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
-				if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
-				else {
-					if (statusCode.contains(301)) httpResource.setDereferencabilityStatusCode(StatusCode.SC301);
-					else if (statusCode.contains(302)) httpResource.setDereferencabilityStatusCode(StatusCode.SC302);
-					else if (statusCode.contains(307)) httpResource.setDereferencabilityStatusCode(StatusCode.SC307);
-				}
-			}
-			
-			if (has4xxCode(statusCode)) {
-				httpResource.setDereferencabilityStatusCode(StatusCode.SC4XX);
-			}
-			if (has5xxCode(statusCode)) {
-				httpResource.setDereferencabilityStatusCode(StatusCode.SC5XX);
-			}
-		} 					
-		
-		StatusCode scode = httpResource.getDereferencabilityStatusCode();
-		return this.mapDerefStatusCode(scode);
-		
-	}
-	
-	private List<Integer> getStatusCodes(List<StatusLine> statusLines){
-		ArrayList<Integer> codes = new ArrayList<Integer>();
-		
-		if(statusLines != null) {
-			synchronized(statusLines) {
-				for(StatusLine s : statusLines){
-					codes.add(s.getStatusCode());
-				}
-			}
-		}
-		
-		return codes;
-	}
-	
-	private boolean mapDerefStatusCode(StatusCode statusCode){
-		if(statusCode == null) {
-			return false;
-		} else {
-			switch(statusCode){
-				case SC303 : case HASH : return true;
-				default : return false;
-			}
-		}
-	}
-	
-	
-	private boolean has4xxCode(List<Integer> statusCode){
-		for (int i : statusCode) {
-			if ((i >= 400) && (i < 499))  return true; else continue;
-		}
-		return false;
-	}
-	
-	private boolean has5xxCode(List<Integer> statusCode){
-		for (int i : statusCode) {
-			if ((i >= 500) && (i < 599))  return true; else continue;
-		}
-		return false;
-	}
+
 	
 	@Override
 	public boolean isEstimate() {
