@@ -399,7 +399,12 @@ dqm:LuzzuProvenanceAgent
 		rdfs:comment	"Provides a qualitative measure for detecting the overlap of terms used in a dataset with existing terms." ;
 		rdfs:label	"Reuse existing terms metric" .
 
-
+	dqm:ReuseExistingVocabularyMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Provides a qualitative measure for detecting the overlap of vocabularies used in a dataset." ;
+		rdfs:label	"Reuse existing vocabularies metric" .
 	
 	dqm:CurrencyOfDocumentStatementsMetric
 		a	rdfs:Class ;
@@ -879,10 +884,19 @@ dqm:LuzzuProvenanceAgent
 	dqm:hasReuseExistingTermsMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Interpretability Dimension with No Blank Node metric";
-		rdfs:label	"Versatility has no blank node metric " ;
-		rdfs:domain	dqm:Interpretability ;
+		rdfs:comment	"Links Interoperability Dimension with Reuse Existing Terms";
+		rdfs:label	"Interoperability has reuse existing terms metric " ;
+		rdfs:domain	dqm:Interoperability ;
 		rdfs:range	dqm:ReuseExistingTermsMetric .
+
+
+	dqm:hasReuseExistingVocabularyMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:comment	"Links Interoperability Dimension with reuse existing vocabulary metric";
+		rdfs:label	"Interoperability has reuse existing vocabularies metric " ;
+		rdfs:domain	dqm:Interoperability ;
+		rdfs:range	dqm:ReuseExistingVocabularyMetric .
 
 
 
