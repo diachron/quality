@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
  * @author Jeremy Debattista
@@ -61,7 +62,8 @@ public class CorrectURIUsage implements QualityMetric {
 	 private Set<String> pSetHashURI = mapDB.createHashSet("HashURISet").make();
 	 private Set<String> pSetSlashURI = mapDB.createHashSet("SlashURISet").make();
 
-	 private List<Resource> _problemList = new ArrayList<Resource>();
+//	 private List<Resource> _problemList = new ArrayList<Resource>();
+	 private List<Quad> _problemList = new ArrayList<Quad>();
 
 	 private final Resource METRIC_URI = DQM.CorrectURIUsage;
 	
@@ -138,18 +140,28 @@ public class CorrectURIUsage implements QualityMetric {
 		if (this.tripleCounter >= MAX_TRIPLES){
 			if (this.slashURICounter == this.tripleCounter) return 1.0;
 			else {
-				for(String problemUri : this.pSetHashURI) {
-					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
-				}
+				//TODO: fix, this is temporary - report should include all resources that are not hashURIs
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), 
+						QPRO.exceptionDescription.asNode(), ModelFactory.createDefaultModel().createLiteral(this.hashURICounter.toString()).asNode());
+				this._problemList.add(q);
+
+//				for(String problemUri : this.pSetHashURI) {
+//					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
+//				}
 				if (this.slashURICounter == 0) return 0.0;
 				return ((double)this.slashURICounter) / ((double)this.tripleCounter) ;
 			}
 		} else {
 			if (this.hashURICounter == this.tripleCounter) return 1.0;
 			else {
-				for(String problemUri : this.pSetSlashURI) {
-					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
-				}
+				//TODO: fix, this is temporary - report should include all resources that are not hashURIs
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), 
+						QPRO.exceptionDescription.asNode(), ModelFactory.createDefaultModel().createLiteral(this.slashURICounter.toString()).asNode());
+				this._problemList.add(q);
+				
+//				for(String problemUri : this.pSetSlashURI) {
+//					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
+//				}
 				if (this.hashURICounter == 0) return 0.0;
 				return ((double)this.hashURICounter) / ((double)this.tripleCounter) ;
 			}
@@ -165,9 +177,9 @@ public class CorrectURIUsage implements QualityMetric {
 	
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Resource> pl = null;
+		ProblemList<Quad> pl = null;
 		try {
-			pl = new ProblemList<Resource>(this._problemList);
+			pl = new ProblemList<Quad>(this._problemList);
 		} catch (ProblemListInitialisationException e) {
 			logger.error("Error building problems list for metric Correct URI Usage", e);
 		}
