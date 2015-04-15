@@ -20,6 +20,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
 /**
  * @author Jeremy Debattista
@@ -95,10 +96,8 @@ public class CorrectURIUsage implements QualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		String subject = (quad.getSubject().isURI()) ? quad.getSubject().getURI() : "";
-		if (!(subject.equals(""))){
+		if (!(subject.equals("")) && (subject.startsWith(EnvironmentProperties.getInstance().getBaseURI()))){
 			logger.debug("Processing triple with subject URI: {}.", subject);
-
-			this.tripleCounter++;
 			
 			// URIs ending in slash are valid, yet would be problematic to dissect. Remove trailing slash if found
 			if(subject.endsWith("/")) {
@@ -122,9 +121,11 @@ public class CorrectURIUsage implements QualityMetric {
 				if (isHashURI) {
 					this.pSetHashURI.add(subject);
 					this.hashURICounter++; 
+					this.tripleCounter++;
 				} else {
 					this.pSetSlashURI.add(subject);
 					this.slashURICounter++;
+					this.tripleCounter++;
 				}
 			}
 		} else {
@@ -140,7 +141,8 @@ public class CorrectURIUsage implements QualityMetric {
 				for(String problemUri : this.pSetHashURI) {
 					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
 				}
-				return 0.0;
+				if (this.slashURICounter == 0) return 0.0;
+				return ((double)this.slashURICounter) / ((double)this.tripleCounter) ;
 			}
 		} else {
 			if (this.hashURICounter == this.tripleCounter) return 1.0;
@@ -148,7 +150,8 @@ public class CorrectURIUsage implements QualityMetric {
 				for(String problemUri : this.pSetSlashURI) {
 					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
 				}
-				return 0.0;
+				if (this.hashURICounter == 0) return 0.0;
+				return ((double)this.hashURICounter) / ((double)this.tripleCounter) ;
 			}
 		}
 	}
