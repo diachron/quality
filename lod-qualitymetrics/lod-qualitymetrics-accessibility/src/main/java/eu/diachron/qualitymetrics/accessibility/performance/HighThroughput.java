@@ -46,7 +46,7 @@ public class HighThroughput implements QualityMetric {
 	/**
 	 * Dataset PLD
 	 */
-	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();;
+	private String datasetURI = null;
 
 	/**
 	 * Holds the metric value
@@ -74,6 +74,8 @@ public class HighThroughput implements QualityMetric {
 	 * @return Current value of the High Throughput metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
+		this.datasetURI = EnvironmentProperties.getInstance().getBaseURI();
+		
 		if (this.metricValue == null){
 			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);

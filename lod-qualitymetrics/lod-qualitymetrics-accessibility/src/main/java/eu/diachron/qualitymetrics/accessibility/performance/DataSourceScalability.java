@@ -56,7 +56,7 @@ public class DataSourceScalability implements QualityMetric {
 	/**
 	 * Dataset PLD
 	 */
-	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+	private String datasetURI = null;
 
 	/**
 	 * Holds the metric value
@@ -85,6 +85,8 @@ public class DataSourceScalability implements QualityMetric {
 	 * @return Current value of the Scalability of a Data Source metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
+		this.datasetURI = EnvironmentProperties.getInstance().getBaseURI();
+		
 		if (this.metricValue == null){
 			
 			// Send parallel requests and accumulate their response times as the total delay

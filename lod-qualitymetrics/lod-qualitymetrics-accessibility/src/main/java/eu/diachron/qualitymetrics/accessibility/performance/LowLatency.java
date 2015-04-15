@@ -42,7 +42,7 @@ public class LowLatency implements QualityMetric {
 	/**
 	 * Dataset PLD
 	 */
-	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
+	private String datasetURI = null;
 
 	/**
 	 * Holds the metric value
@@ -76,6 +76,8 @@ public class LowLatency implements QualityMetric {
 	 * @return Current value of the Low Latency metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
+		this.datasetURI = EnvironmentProperties.getInstance().getBaseURI();
+		
 		if (this.metricValue == null){
 			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_SAMPLES);
 			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
