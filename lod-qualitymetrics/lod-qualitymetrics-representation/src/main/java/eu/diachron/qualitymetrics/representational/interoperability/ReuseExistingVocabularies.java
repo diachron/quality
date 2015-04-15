@@ -133,7 +133,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		return DQM.ReuseExistingTermsMetric;
+		return DQM.ReuseExistingVocabularyMetric;
 	}
 
 	@Override
