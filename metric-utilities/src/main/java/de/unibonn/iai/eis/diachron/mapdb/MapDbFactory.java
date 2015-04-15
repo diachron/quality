@@ -38,9 +38,9 @@ public class MapDbFactory {
 			.closeOnJvmShutdown()
 			.deleteFilesAfterClose()
 			.transactionDisable()
-			.compressionEnable()
+			/*.compressionEnable()*/
 			.mmapFileEnable()
-			.asyncWriteEnable()
+			/*.asyncWriteEnable()*/
 			.asyncWriteFlushDelay(500)
 	    	.make();
 		
@@ -59,7 +59,7 @@ public class MapDbFactory {
 		}
 		
 		DB mapDB = DBMaker.newFileDB(new File(mapDbDir + "mapasyncdb-" + timestamp)).
-				asyncWriteEnable().
+				/*asyncWriteEnable().*/
 				asyncWriteFlushDelay(500).
 				transactionDisable().
 				closeOnJvmShutdown().

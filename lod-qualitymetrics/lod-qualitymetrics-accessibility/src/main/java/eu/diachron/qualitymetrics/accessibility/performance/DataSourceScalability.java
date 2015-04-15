@@ -1,5 +1,8 @@
 package eu.diachron.qualitymetrics.accessibility.performance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
@@ -58,6 +62,8 @@ public class DataSourceScalability implements QualityMetric {
 	 * Holds the metric value
 	 */
 	private Double metricValue = null;
+	
+	private List<Quad> _problemList = new ArrayList<Quad>();
 	
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
@@ -110,10 +116,19 @@ public class DataSourceScalability implements QualityMetric {
 		return METRIC_URI;
 	}
 
+	@Override
 	public ProblemList<?> getQualityProblems() {
-		// Not implemented for this metric
-		logger.debug("Quality problems not implemented for Data Source Scalability metric");
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error("Error building problems list for metric Data Source Scalability", e);
+		}
+		return pl;
 	}
 	
 	@Override

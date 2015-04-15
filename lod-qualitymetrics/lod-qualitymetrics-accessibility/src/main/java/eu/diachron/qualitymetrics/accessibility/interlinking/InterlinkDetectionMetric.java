@@ -4,6 +4,12 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -11,6 +17,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.CentralityMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ClusteringCoefficientMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DegreeMeasure;
@@ -22,6 +29,8 @@ import eu.diachron.qualitymetrics.accessibility.interlinking.helper.SameAsMeasur
  * 
  */
 public class InterlinkDetectionMetric implements ComplexQualityMetric {
+	
+	final static Logger logger = LoggerFactory.getLogger(InterlinkDetectionMetric.class);
 
 	private MapDBGraph graph = new MapDBGraph();
 	
@@ -30,6 +39,8 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	private double metricValue = 0.0; //In order to calculate the metric value, we get the IDEAL value of all other sub-metrics and multiply it by a 0.2 weight
 	
 	private final Resource METRIC_URI = DQM.InterlinkDetectionMetric;
+	
+	private List<Quad> _problemList = new ArrayList<Quad>();
 	
 	public void compute(Quad quad) {
 		String subject = "";
@@ -61,9 +72,19 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 		return this.METRIC_URI;
 	}
 
+	@Override
 	public ProblemList<?> getQualityProblems() {
-		// nothing to report
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error(e.getMessage());
+		}
+		return pl;
 	}
 
 	public double metricValue() {

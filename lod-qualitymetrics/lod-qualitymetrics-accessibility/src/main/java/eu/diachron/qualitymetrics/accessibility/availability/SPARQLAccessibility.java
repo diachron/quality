@@ -91,7 +91,7 @@ public class SPARQLAccessibility implements QualityMetric {
 		return this.METRIC_URI;
 	}
 
-	
+	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
 		
@@ -103,7 +103,11 @@ public class SPARQLAccessibility implements QualityMetric {
 		}
 		
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList);
+			if(this.problemList != null && this.problemList.size() > 0) {
+				tmpProblemList = new ProblemList<Quad>(this.problemList);
+			} else {
+				tmpProblemList = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.debug(problemListInitialisationException.getStackTrace());
 			logger.error(problemListInitialisationException.getMessage());

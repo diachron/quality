@@ -95,6 +95,7 @@ public class RDFAccessibility implements QualityMetric {
 		}
 	}
 
+	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;
 		
@@ -106,7 +107,11 @@ public class RDFAccessibility implements QualityMetric {
 		}
 		
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList);
+			if(this.problemList != null && this.problemList.size() > 0) {
+				tmpProblemList = new ProblemList<Quad>(this.problemList);
+			} else {
+				tmpProblemList = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.debug(problemListInitialisationException.getStackTrace());
 			logger.error(problemListInitialisationException.getMessage());

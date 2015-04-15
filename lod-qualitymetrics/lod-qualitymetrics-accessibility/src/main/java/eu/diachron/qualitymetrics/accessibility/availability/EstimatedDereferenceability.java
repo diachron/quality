@@ -321,7 +321,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
 						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
 							Model m = this.tryRead(resource.getUri());
-							if (m.size() == 0){
+							if (m != null && m.size() == 0){
 								this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
 								resource.setContainsRDF(false);
 								return false;

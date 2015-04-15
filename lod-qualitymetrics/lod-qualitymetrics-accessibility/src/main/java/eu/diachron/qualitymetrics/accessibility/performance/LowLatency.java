@@ -1,5 +1,8 @@
 package eu.diachron.qualitymetrics.accessibility.performance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -38,7 +42,7 @@ public class LowLatency implements QualityMetric {
 	/**
 	 * Dataset PLD
 	 */
-	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();;
+	private String datasetURI = EnvironmentProperties.getInstance().getDatasetURI();
 
 	/**
 	 * Holds the metric value
@@ -50,6 +54,8 @@ public class LowLatency implements QualityMetric {
 	 * which response times for resources will get a perfect score of 1.0. 
 	 */
 	private static final double NORM_TOTAL_RESPONSE_TIME = 750.0;
+	
+	private List<Resource> _problemList = new ArrayList<Resource>();
 
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI of the dataset wherefrom the quads were obtained. 
@@ -84,10 +90,19 @@ public class LowLatency implements QualityMetric {
 		return METRIC_URI;
 	}
 
+	@Override
 	public ProblemList<?> getQualityProblems() {
-		// Not implemented for this metric
-		logger.debug("Quality problems not implemented for Low Latency metric");
-		return null;
+		ProblemList<Resource> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Resource>(this._problemList);
+			} else {
+				pl = new ProblemList<Resource>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error("Error building problems list for metric Low Latency", e);
+		}
+		return pl;
 	}
 
 	@Override

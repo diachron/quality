@@ -1,5 +1,8 @@
 package eu.diachron.qualitymetrics.accessibility.performance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -49,6 +53,8 @@ public class HighThroughput implements QualityMetric {
 	 */
 	private Double metricValue = null;
 	
+	private List<Quad> _problemList = new ArrayList<Quad>();
+	
 
 	/**
 	 * Processes a single quad making part of the dataset. Firstly, tries to figure out the URI/PLD of the dataset where from the quads were obtained. 
@@ -83,9 +89,17 @@ public class HighThroughput implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// Not implemented for this metric
-		logger.debug("Quality problems not implemented for High Throughput metric");
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error("Error building problems list for metric High Throughput", e);
+		}
+		return pl;
 	}
 
 	@Override

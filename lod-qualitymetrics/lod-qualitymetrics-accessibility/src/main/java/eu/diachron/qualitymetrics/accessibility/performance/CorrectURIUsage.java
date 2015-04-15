@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -53,10 +53,7 @@ public class CorrectURIUsage implements QualityMetric {
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	transient private static DB mapDB = DBMaker.newTempFileDB()
-			.closeOnJvmShutdown()
-			.deleteFilesAfterClose()
-        	.make();
+	transient private static DB mapDB = MapDbFactory.createFilesystemDB();
 	
 
 	 private Set<String> pSetHashURI = mapDB.createHashSet("HashURISet").make();
@@ -179,7 +176,11 @@ public class CorrectURIUsage implements QualityMetric {
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> pl = null;
 		try {
-			pl = new ProblemList<Quad>(this._problemList);
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error("Error building problems list for metric Correct URI Usage", e);
 		}
