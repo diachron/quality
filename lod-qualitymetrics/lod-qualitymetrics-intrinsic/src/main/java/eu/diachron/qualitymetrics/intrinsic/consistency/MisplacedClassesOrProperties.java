@@ -32,7 +32,6 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * Worst Case : 0
  * 
  * @author Jeremy Debattista
- * @date 16th April 2015
  */
 public class MisplacedClassesOrProperties implements QualityMetric {
 	/**
