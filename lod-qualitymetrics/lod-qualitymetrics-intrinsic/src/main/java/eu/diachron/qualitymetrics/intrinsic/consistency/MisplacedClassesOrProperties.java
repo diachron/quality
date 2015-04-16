@@ -7,13 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
+
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -57,7 +62,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	/**
 	 * list of problematic quads
 	 */
-	protected List<Quad> problemList = new ArrayList<Quad>();
+	protected List<Model> problemList = new ArrayList<Model>();
 
 	/**
 	 * This method identifies whether a given quad is a misplaced class or a
@@ -76,7 +81,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 			this.totalPropertiesCount++;
 			if ((VocabularyLoader.isClass(predicate)) && (VocabularyLoader.checkTerm(predicate))){
 				this.misplacedPropertiesCount++;
-				//problem
+				this.createProblemModel(quad.getSubject(), predicate, DQM.MisplacedClass);
 			}
 			
 			//checking if properties are found in the object position
@@ -85,9 +90,24 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 				this.totalClassesCount++;
 				if (VocabularyLoader.isProperty(object)){
 					this.misplacedClassesCount++;
-					//problem
+					this.createProblemModel(quad.getSubject(), object, DQM.MisplacedProperty);
 				}
 			}
+	}
+	
+	private void createProblemModel(Node resource, Node classOrProperty, Resource type){
+		Model m = ModelFactory.createDefaultModel();
+		
+		Resource subject = m.createResource(resource.toString());
+		m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
+		
+		if (type.equals(DQM.MisplacedClass))
+			m.add(new StatementImpl(subject, DQM.hasMisplacedClass, m.asRDFNode(classOrProperty)));		
+		else
+			m.add(new StatementImpl(subject, DQM.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
+		
+
+		this.problemList.add(m);
 	}
 
 	/**
@@ -127,10 +147,13 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	 * @return list of problematic quads
 	 */
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> tmpProblemList = null;
+		ProblemList<Model> tmpProblemList = null;
 		try {
-			tmpProblemList = new ProblemList<Quad>(this.problemList);
-		} catch (ProblemListInitialisationException problemListInitialisationException) {
+			if(this.problemList != null && this.problemList.size() > 0) {
+				tmpProblemList = new ProblemList<Model>(this.problemList);
+			} else {
+				tmpProblemList = new ProblemList<Model>();
+			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}
 		return tmpProblemList;
@@ -141,7 +164,6 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	 */
 	@Override
 	public boolean isEstimate() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -150,8 +172,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	 */
 	@Override
 	public Resource getAgentURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return DQM.LuzzuProvenanceAgent;
 	}
 	
 }
