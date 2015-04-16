@@ -1,31 +1,34 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.jena.riot.RiotException;
-import org.apache.log4j.Logger;
+import org.mapdb.HTreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import eu.diachron.semantics.vocabulary.DQM;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
  * 
@@ -40,60 +43,53 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	/**
 	 * logger static object
 	 */
-	static Logger logger = Logger
-			.getLogger(EntitiesAsMembersOfDisjointClasses.class);
+	private static Logger logger = LoggerFactory.getLogger(EntitiesAsMembersOfDisjointClasses.class);
+	
 	/**
 	 * number of entities that are instances of disjoint classes
 	 */
 	protected long entitiesAsMembersOfDisjointClasses = 0;
-	/**
-	 * set of all entities
-	 * TODO OK to use HashSet, or should we use something concurrent?
-	 */
-	protected Set<Node> allEntities = new HashSet<Node>();
+	
+	
 	/**
 	 * the data structure that for each resource collects the classes it's an
 	 * instance of
 	 */
-	protected Map<Node, Set<Node>> typesOfResource = new Hashtable<Node, Set<Node>>();
+	protected HTreeMap<String, Set<String>> typesOfResource = MapDbFactory.createFilesystemDB().createHashMap("entities_members_disjoinedclasses").make();
+	
+	
 	/**
 	 * list of problematic nodes
 	 */
-	protected List<Node> problemList = new ArrayList<Node>();
+	protected List<Model> problemList = new ArrayList<Model>();
+	
+	private boolean metricCalculated = false;
 
 	/**
 	 */
 	
 	public void compute(Quad quad) {
-		logger.trace("compute() --Started--");
 		try {
-			Node subject = quad.getSubject();
+			String subject = quad.getSubject().toString();
 			Node predicate = quad.getPredicate();
-			Node object = quad.getObject();
+			String object = quad.getObject().toString();
 
-			// TODO I suspect a lot of metrics count the entities they process.  If I'm right, should we centralise this functionality?
-			allEntities.add(subject);
-			
 			if (RDF.type.asNode().equals(predicate)) {
 				// If we have a triple ?s rdf:type ?o, we add ?o to the list of
 				// types of ?s
 
-				Set<Node> tmpTypes = typesOfResource.get(subject);
+				Set<String> tmpTypes = typesOfResource.get(subject);
 
 				if (tmpTypes == null) {
-					// FIXME Is it OK to use HashSet here, or should we be using
-					// something that permits concurrency?
-					tmpTypes = new HashSet<Node>();
+					tmpTypes = new HashSet<String>();
 					typesOfResource.put(subject, tmpTypes);
 				}
 
 				tmpTypes.add(object);
 			}
 		} catch (Exception exception) {
-			logger.debug(exception);
 			logger.error(exception.getMessage());
 		}
-		logger.trace("compute() --Ended--");
 	}
 
 	/**
@@ -104,48 +100,52 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	protected long countEntitiesAsMembersOfDisjointClasses() {
 		long count = 0;
 		
-		for (Map.Entry<Node, Set<Node>> entry : typesOfResource.entrySet()) {
+		for (Map.Entry<String, Set<String>> entry : typesOfResource.entrySet()) {
 			// one entity in the dataset …
-			Node entity = entry.getKey();
+			String entity = entry.getKey();
 			// … and the classes it's an instance of
-			Set<Node> classes = entry.getValue();
+			Set<String> classes = entry.getValue();
 
 			if (classes.size() >= 2) {
 				// we only need to check disjointness when there are at least 2 classes
 				
-				classesLoop: for (Node _class : classes) {
-					// retrieve an RDF description of the class (and possibly of more stuff, maybe even the whole vocabularies) in an LOD way
-					// TODO it's terribly inefficient to do this all the time.  We need a library that caches downloaded vocabularies
-					Model model = ModelFactory.createDefaultModel();
-
-					//Quick hack to break the loop when URIs resolve into bad RDF models
-					//TODO: fix
-					try{
-						model.read(_class.getURI());
-					} catch (RiotException riotExc){
-						riotExc.getStackTrace();
-						break classesLoop;
-					}
+				Iterator<String> iter = new ArrayList<String>(classes).iterator();
+				while (iter.hasNext()){
+					String _class = iter.next();
+					Resource classAsResource = ModelFactory.createDefaultModel().createResource(_class);
+					Model model = VocabularyLoader.getModelForVocabulary(classAsResource.getNameSpace());
 					
 					// wrap the class under consideration into something that we can use to query the model
-					// TODO can this be done more elegantly?
-					Resource classAsResource = model.createResource(_class.getURI());
 					
 					// query the model for ?class owl:disjointWith ?otherClass
 					for (StmtIterator i = model.listStatements(classAsResource, OWL.disjointWith, (RDFNode) null); i.hasNext(); ) {
-						Node otherClass = i.next().getObject().asNode();
+						String otherClass = i.next().getObject().toString();
 						// if ?otherClass is among the set of classes of our entity, the entity is a member of disjoint classes
 						if (classes.contains(otherClass)) {
 							count++;
-							problemList.add(entity);
-							break classesLoop;
+							createProblemModel(ModelFactory.createDefaultModel().createResource(entity).asNode(), classAsResource.asNode(), ModelFactory.createDefaultModel().createResource(otherClass).asNode());							
 						}
 					}
+					classes.remove(_class);
 				}
 			}
 		}
-		
+		metricCalculated = true;
 		return count;
+	}
+	
+	private void createProblemModel(Node resource, Node _class, Node _otherClass){
+		Model m = ModelFactory.createDefaultModel();
+		
+		Resource subject = m.createResource(resource.toString());
+		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
+		
+		
+		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));		
+		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_otherClass)));
+
+
+		this.problemList.add(m);
 	}
 
 	/**
@@ -157,20 +157,16 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	
 	public double metricValue() {
 
-		logger.trace("metricValue() --Started--");
-
-		this.entitiesAsMembersOfDisjointClasses = countEntitiesAsMembersOfDisjointClasses();
-
-		// return ZERO if total number of entities is ZERO [WARN]
-		if (allEntities.size() <= 0) {
+		if (!metricCalculated){
+			this.entitiesAsMembersOfDisjointClasses = countEntitiesAsMembersOfDisjointClasses();
+		}
+		
+		if (typesOfResource.entrySet().size() <= 0) {
 			logger.warn("Total number of entities in given dataset is found to be zero.");
 			return 0.0;
 		}
 
-		double metricValue = (double) entitiesAsMembersOfDisjointClasses
-				/ allEntities.size();
-
-		logger.trace("metricValue() --Ended--");
+		double metricValue = (double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size();
 
 		return metricValue;
 	}
@@ -192,14 +188,26 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	 */
 	
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Node> tmpProblemList = null;
+		ProblemList<Model> tmpProblemList = null;
 		try {
-			tmpProblemList = new ProblemList<Node>(this.problemList);
-		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.debug(problemListInitialisationException);
+			if(this.problemList != null && this.problemList.size() > 0) {
+				tmpProblemList = new ProblemList<Model>(this.problemList);
+			} else {
+				tmpProblemList = new ProblemList<Model>();
+			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}
 		return tmpProblemList;
+	}
+
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return DQM.LuzzuProvenanceAgent;
 	}
 
 }

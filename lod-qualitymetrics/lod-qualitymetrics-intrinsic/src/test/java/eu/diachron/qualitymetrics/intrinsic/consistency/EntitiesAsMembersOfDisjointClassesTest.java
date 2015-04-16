@@ -1,4 +1,4 @@
-package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
+package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.List;
 

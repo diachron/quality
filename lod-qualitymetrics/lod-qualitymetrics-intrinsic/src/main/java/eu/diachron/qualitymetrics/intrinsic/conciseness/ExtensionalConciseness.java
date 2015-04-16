@@ -8,17 +8,16 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.semantics.vocabulary.DQM;
 
 /**
  * @author Santiago Londono
@@ -34,10 +33,7 @@ public class ExtensionalConciseness implements QualityMetric {
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	private DB mapDB = DBMaker.newTempFileDB()
-			.closeOnJvmShutdown()
-			.deleteFilesAfterClose()
-        	.make();
+	private DB mapDB = MapDbFactory.createFilesystemDB();
 	
 	/**
 	 * Map indexing the subjects detected during the computation of the metric. Every subject is identified 
@@ -52,20 +48,27 @@ public class ExtensionalConciseness implements QualityMetric {
 	 */
 	
 	public void compute(Quad quad) {
-		// Every time a new quad is considered, check whether the subject has already been identified
-		ComparableSubject subject = pMapSubjects.get(quad.getSubject().getURI());
+		if(quad.getSubject() != null && quad.getSubject().isURI() && quad.getPredicate() != null && quad.getPredicate().isURI()) {
+			// Every time a new quad is considered, check whether the subject has already been identified
+			ComparableSubject subject = pMapSubjects.get(quad.getSubject().getURI());
+	
+			if(subject == null) {
+				// The subject does not exists in the map. Add it, indexed by its URI
+				subject = new ComparableSubject(quad.getSubject().getURI());
+				pMapSubjects.put(quad.getSubject().getURI(), subject);
+				logger.trace("Added new subject: " + quad.getSubject().getURI());
+			}
+	
+			// Add or update the property stated by the current quad into the subject, as a predicate with a value.
+			// The value of the property is extracted from the quad's object
+			subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
 
-		if(subject == null) {
-			// The subject does not exists in the map. Add it, indexed by its URI
-			subject = new ComparableSubject(quad.getSubject().getURI());
+			// Make sure the map is updated...
 			pMapSubjects.put(quad.getSubject().getURI(), subject);
-//			logger.trace("Added new subject: " + quad.getSubject().getURI());
+			logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
+		} else {
+			logger.trace("Ignored triple with non-URI subject or predicate");
 		}
-
-		// Add or update the property stated by the current quad into the subject, as a predicate with a value.
-		// The value of the property is extracted from the quad's object
-		subject.addProperty(quad.getPredicate().getURI(), quad.getObject());
-//		logger.trace(" - Added property to subject: " + subject.getUri() + " -> " + quad.getObject().toString());
 	}
 
 	/**
@@ -83,11 +86,18 @@ public class ExtensionalConciseness implements QualityMetric {
 		// Keep a list free from redundant subjects, that is with all its unique elements
 		List<ComparableSubject> lstUniqueSubjects = new ArrayList<ComparableSubject>();
 		boolean isCurSubjectUnique;
+		long countCompared = 0;
+		int mapSize = pMapSubjects.size();
+		logger.debug("Starting metric value computation, with " + mapSize + "instances...");
 		
+		
+		
+//		int i = 0;
 		// Compare each of the subjects with the ones already recognized as unique...
 		for(ComparableSubject curSubject : pMapSubjects.values()) {
 			isCurSubjectUnique = true;
-
+//			i++;
+//			int z = 0;
 			for(ComparableSubject curUniqueSubject : lstUniqueSubjects) {
 				// and if the subject currently examined is equivalent to one of the existing 
 				// unique subjects, do not regard it as unique, continue with the next one
@@ -95,12 +105,21 @@ public class ExtensionalConciseness implements QualityMetric {
 					isCurSubjectUnique = false;
 					break;
 				}
+//				z++;
+//				if ((z % 10000) == 0) System.out.println("compared "+i + "/" + z);
 			}
+			
+//			if ((i % 1000 == 0)) System.out.println("compared "+i);
 			
 			// Finally, if the current subject is not equivalent to any of 
 			// the existing unique subjects, add it as unique
 			if(isCurSubjectUnique) {
 				lstUniqueSubjects.add(curSubject);
+			}
+			
+			countCompared++;
+			if((countCompared % 50000) == 0) {
+				logger.debug("Estimated value with " + countCompared + " compared instances: " +  (((double)lstUniqueSubjects.size()) / ((double)mapSize)));
 			}
 		}
 		
@@ -136,7 +155,11 @@ public class ExtensionalConciseness implements QualityMetric {
 		} catch(Throwable ex) {
 			logger.warn("Persistent HashMap or backing database could not be closed", ex);
 		} finally {
-			super.finalize();
+			try {
+				super.finalize();
+			} catch(Throwable ex) {
+				logger.warn("Persistent HashMap or backing database could not be closed", ex);
+			}
 		}
 	}
 	
@@ -229,5 +252,15 @@ public class ExtensionalConciseness implements QualityMetric {
 			return uri;
 		}
 
+	}
+
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return DQM.LuzzuProvenanceAgent;
 	}
 }
