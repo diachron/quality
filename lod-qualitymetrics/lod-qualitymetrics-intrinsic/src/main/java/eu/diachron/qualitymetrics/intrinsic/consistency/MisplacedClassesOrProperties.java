@@ -34,42 +34,16 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * @author Jeremy Debattista
  */
 public class MisplacedClassesOrProperties implements QualityMetric {
-	/**
-	 * Metric URI
-	 */
-	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
-	/**
-	 * static logger object
-	 */
-	static Logger logger = LoggerFactory.getLogger(MisplacedClassesOrProperties.class);
-	/**
-	 * total number of misplaces classes
-	 */
-	protected long misplacedClassesCount = 0;
-	/**
-	 * total number of classes
-	 */
-	protected long totalClassesCount = 0;
-	/**
-	 * total number of misplaces properties
-	 */
-	protected long misplacedPropertiesCount = 0;
-	/**
-	 * total number properties
-	 */
-	protected long totalPropertiesCount = 0;
-	/**
-	 * list of problematic quads
-	 */
-	protected List<Model> problemList = new ArrayList<Model>();
 
-	/**
-	 * This method identifies whether a given quad is a misplaced class or a
-	 * misplaced property.
-	 * 
-	 * @param quad - to be identified
-	 */
-	
+	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
+	private static Logger logger = LoggerFactory.getLogger(MisplacedClassesOrProperties.class);
+
+	private double misplacedClassesCount = 0.0;
+	private double totalClassesCount = 0.0;
+	private double misplacedPropertiesCount = 0.0;
+	private double totalPropertiesCount = 0.0;
+	private List<Model> problemList = new ArrayList<Model>();
+
 	public void compute(Quad quad) {
 
 			Node predicate = quad.getPredicate(); // retrieve predicate
@@ -122,9 +96,9 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 
 		double metricValue = 1.0;
 		
-		double misplaced = (double)this.misplacedPropertiesCount + (double)this.misplacedPropertiesCount;
-		if (misplaced > 0) 
-			metricValue = 1.0 - (misplaced / ((double)this.totalPropertiesCount + (double)this.totalClassesCount));
+		double misplaced = this.misplacedPropertiesCount + this.misplacedPropertiesCount;
+		if (misplaced > 0.0) 
+			metricValue = 1.0 - (misplaced / (this.totalPropertiesCount + this.totalClassesCount));
 		
 		logger.info("Metric Value: {}", metricValue);
 		return metricValue;
