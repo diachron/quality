@@ -1418,3 +1418,74 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:label "Unused suggested vocabulary" .
 
 
+### Entities members of disjoint classes
+	
+	dqm:MultiTypedResourceWithDisjointedClasses
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource is multi-typed with disjoined classes." ;
+		rdfs:label "Disjoined Classes Typing" .
+
+	dqm:violatingDisjoinedClass
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	rdfs:Resource;
+		rdfs:range	rdfs:Resource .
+
+
+### Entities members of disjoint classes
+	
+	dqm:MisplacedClass
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource used a defined class instead of a property." ;
+		rdfs:label "Misplaced Class" .
+
+	dqm:hasMisplacedClass
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	rdfs:Resource;
+		rdfs:range	rdfs:Resource .
+
+
+	dqm:MisplacedProperty
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource used a defined property instead of a class." ;
+		rdfs:label "Misplaced Property" .
+
+	dqm:hasMisplacedProperty
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	rdfs:Resource;
+		rdfs:range	rdfs:Resource .
+
+
+### Misuse of owl:DatatypeProperty or owl:ObjectProprty	
+	dqm:MisusedDatatypeProperty
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource used a datatype property instead of an Object Property." ;
+		rdfs:label "Misused Datatype Property" .
+
+	dqm:hasMisusedDatatypeProperty
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	rdfs:Resource;
+		rdfs:range	rdfs:Resource .
+
+
+	dqm:MisusedObjectProperty
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource used an object property instead of a datatype property." ;
+		rdfs:label "Misplaced Property" .
+
+	dqm:hasMisusedObjectProperty
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	rdfs:Resource;
+		rdfs:range	rdfs:Resource .
+
+
+
