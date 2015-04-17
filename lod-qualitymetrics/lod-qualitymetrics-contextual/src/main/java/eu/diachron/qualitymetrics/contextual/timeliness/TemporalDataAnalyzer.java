@@ -1,4 +1,4 @@
-package eu.diachron.qualitymetrics.dynamicity.currency;
+package eu.diachron.qualitymetrics.contextual.timeliness;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +14,8 @@ import com.hp.hpl.jena.graph.NodeFactory;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.XSD;
+
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.PROV;
 
 /**
  * @author slondono
@@ -36,6 +38,12 @@ public class TemporalDataAnalyzer {
 	private static HashMap<String, DateFormatters> mapPublishingTimeProps;
 	
 	/**
+	 * Map containing the set of properties known to provide the creation time of a resource
+	 */
+	private static HashMap<String, DateFormatters> mapCreationTimeProps;
+	
+	
+	/**
 	 * Map containing the set of properties known to provide the valid time of a resource
 	 */
 	private static HashMap<String, DateFormatters> mapValidTimeProps;
@@ -56,17 +64,41 @@ public class TemporalDataAnalyzer {
 		mapLastUpdateTimeProps = new HashMap<String, DateFormatters>();
 		mapPublishingTimeProps = new HashMap<String, DateFormatters>();
 		mapValidTimeProps = new HashMap<String, DateFormatters>();
+		mapCreationTimeProps = new HashMap<String, DateFormatters>();
+
 		
-		mapLastUpdateTimeProps.put(DCTerms.modified.getURI(), DateFormatters.INTL_LONG);
-		mapLastUpdateTimeProps.put("http://purl.org/dc/terms/#modified", DateFormatters.INTL_LONG);
+		mapLastUpdateTimeProps.put(DCTerms.modified.getURI(), DateFormatters.XSD);		
+//		mapLastUpdateTimeProps.put("http://purl.org/dc/terms/#modified", DateFormatters.INTL_LONG);
 		mapLastUpdateTimeProps.put("http://semantic-mediawiki.org/swivt/1.0#wikiPageModificationDate", DateFormatters.INTL_LONG);
 		
 		mapPublishingTimeProps.put(DCTerms.issued.getURI(), DateFormatters.XSD);
-		mapPublishingTimeProps.put(DCTerms.created.getURI(), DateFormatters.XSD);
+		mapPublishingTimeProps.put(PROV.generatedAtTime.getURI(), DateFormatters.XSD);
 		mapPublishingTimeProps.put("http://semantic-mediawiki.org/swivt/1.0#creationDate", DateFormatters.XSD);
 		
+		mapCreationTimeProps.put(DCTerms.created.getURI(), DateFormatters.XSD);
+		
+
 		mapValidTimeProps.put(DCTerms.valid.getURI(), DateFormatters.XSD);
+		mapValidTimeProps.put(PROV.invalidatedAtTime.getURI(), DateFormatters.XSD);
+//		mapValidTimeProps.put(DCTerms.accrualPeriodicity, value)
+		
 	}
+	
+	
+	public static boolean isCreationTime(Quad statement) {
+		// Extract the predicate of the statement, as the result will be determined based on its URI
+		Node predicate = statement.getPredicate();
+		
+		if(predicate != null && predicate.isURI()) {
+			// Check whether the URI of the predicate corresponds to one of the "Creation Time" properties 
+			if(mapCreationTimeProps.containsKey(predicate.getURI())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	
 	/**
 	 * Tells whether the quad provided as parameter, refers to the last time when the resource was updated. 

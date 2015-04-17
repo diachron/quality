@@ -1,18 +1,23 @@
-package eu.diachron.qualitymetrics.dynamicity.timeliness;
+package eu.diachron.qualitymetrics.contextual.timeliness;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.semantics.vocabulary.DQM;
-import eu.diachron.qualitymetrics.dynamicity.currency.TemporalDataAnalyzer;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
  * @author Santiago Londono
@@ -25,6 +30,8 @@ public class TimelinessOfResource implements QualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(TimelinessOfResource.class);
 	
+	private List<Quad> _problemList = new ArrayList<Quad>();
+
 	/**
 	 * Timestamp representing the instant when the dataset is considered to have been observed 
 	 */
@@ -65,23 +72,25 @@ public class TimelinessOfResource implements QualityMetric {
 		// Extract the predicate and object of the statement
 		Node subject = quad.getSubject();
 		Node object = quad.getObject();
-				
-		// Check whether the current property corresponds to the Expiration/Valid Time of the subject described by the quad
-		if(TemporalDataAnalyzer.isValidTime(quad)) {
-			// Process the Expiration/Valid Time property
-			logger.trace("Parsing valid time: {}, for subject: {}", object, subject);
-						
-			// Parse the date contained into object's the literal value and set it as current Publishing Time
-			Date valValidTime = TemporalDataAnalyzer.extractTimeFromObject(quad);
-
-			if(valValidTime != null) {
-				// Calculate the difference between the Expiration/Valid time of the current instance and the observation time and accumulate it
-				accuValidTimeDiffs += (observationTime.getTime() - valValidTime.getTime());	
-				// The Expiration/Valid Time property has been successfully processed for another subject, count it
-				countTotalAccountedSubjects++;
-			} else {
-				// Increase the counter of temporal values with unrecognized format 
-				countInvalidFormatDates++;
+		
+		if ((subject.isURI()) && (subject.getURI().equals(EnvironmentProperties.getInstance().getDatasetURI()))){
+			// Check whether the current property corresponds to the Expiration/Valid Time of the subject described by the quad
+			if(TemporalDataAnalyzer.isValidTime(quad)) {
+				// Process the Expiration/Valid Time property
+				logger.trace("Parsing valid time: {}, for subject: {}", object, subject);
+							
+				// Parse the date contained into object's the literal value and set it as current Publishing Time
+				Date valValidTime = TemporalDataAnalyzer.extractTimeFromObject(quad);
+	
+				if(valValidTime != null) {
+					// Calculate the difference between the Expiration/Valid time of the current instance and the observation time and accumulate it
+					accuValidTimeDiffs += (observationTime.getTime() - valValidTime.getTime());	
+					// The Expiration/Valid Time property has been successfully processed for another subject, count it
+					countTotalAccountedSubjects++;
+				} else {
+					// Increase the counter of temporal values with unrecognized format 
+					countInvalidFormatDates++;
+				}
 			}
 		}
 		
@@ -102,6 +111,8 @@ public class TimelinessOfResource implements QualityMetric {
 			return (((double)accuValidTimeDiffs)/((double)countTotalAccountedSubjects));
 		} else {
 			logger.trace("Timeliness of the Resource could not be calculated. Insufficient information");
+			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), QPRO.exceptionDescription.asNode(), DQM.MissingMetadataForTimelinessOfResource.asNode());
+			this._problemList.add(q);
 			return 0; //If insufficient information, return 0 - lowest possible
 		}
 	}
@@ -128,8 +139,27 @@ public class TimelinessOfResource implements QualityMetric {
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> pl = null;
+		try {
+			if(this._problemList != null && this._problemList.size() > 0) {
+				pl = new ProblemList<Quad>(this._problemList);
+			} else {
+				pl = new ProblemList<Quad>();
+			}
+		} catch (ProblemListInitialisationException e) {
+			logger.error(e.getMessage());
+		}
+		return pl;
+	}
+
+	@Override
+	public boolean isEstimate() {
+		return false;
+	}
+
+	@Override
+	public Resource getAgentURI() {
+		return DQM.LuzzuProvenanceAgent;
 	}
 
 }

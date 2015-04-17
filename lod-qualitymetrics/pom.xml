@@ -11,6 +11,8 @@
   <modules>
   	<module>lod-qualitymetrics-accessibility</module>
   	<module>lod-qualitymetrics-representation</module>
+  	<module>lod-qualitymetrics-intrinsic</module>
+  	<module>lod-qualitymetrics-contextual</module>
   </modules>
   
   <dependencies>

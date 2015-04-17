@@ -412,7 +412,14 @@ dqm:LuzzuProvenanceAgent
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Compares the time when the data was observed with the time when the data (document as a whole and individual triples) were last modified, thereby providing a measure of how current the dataset is" ;
 		rdfs:label	"Currency of document/statements metric" .
-		
+	
+	dqm:FreshnessOfDataMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"Checks if the data in the dataset is being updated with the original data" ;
+		rdfs:label	"Freshness of Data Metric" .
+	
 	dqm:TimeSinceModificationMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
@@ -1008,6 +1015,13 @@ dqm:LuzzuProvenanceAgent
 		rdfs:label	"Timeliness has timeliness of resource metric" ;
 		rdfs:domain	dqm:Timeliness ;
 		rdfs:range	dqm:TimelinessOfResourceMetric .
+
+	dqm:hasFreshnessOfDataMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Timeliness ;
+		rdfs:range	dqm:FreshnessOfDataMetric .
+
 		
 	#Reputation
 	dqm:hasReputationOfDatasetMetric
@@ -1488,4 +1502,22 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:range	rdfs:Resource .
 
 
+### CurrencyOfDataset
+	dqm:MissingMetadataForCurrency
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate currency." ;
+		rdfs:label "Missing Metadata for Currency Calculation" .
+
+	dqm:MissingMetadataForFreshness
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate data freshness." ;
+		rdfs:label "Missing Metadata for Freshness Calculation" .
+
+	dqm:MissingMetadataForTimelinessOfResource
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate data timeliness." ;
+		rdfs:label "Missing Metadata for Timeliness Calculation" .
 

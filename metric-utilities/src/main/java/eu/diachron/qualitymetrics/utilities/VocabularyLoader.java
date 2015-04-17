@@ -21,7 +21,9 @@ import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -193,5 +195,24 @@ public class VocabularyLoader {
 		
 		return dataset.getNamedModel(ns);
 	}
+	
+	public static boolean isProperty(Node term){
+		String ns = term.getNameSpace();
+		
+		Model m = getModelForVocabulary(ns);
+		
+		return (m.contains(m.createResource(term.getURI()), RDF.type, RDF.Property) 
+				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.DatatypeProperty)
+				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty));
+	}
+	
+	public static boolean isClass(Node term){
+		String ns = term.getNameSpace();
+		
+		Model m = getModelForVocabulary(ns);
+		
+		return (m.contains(m.createResource(term.getURI()), RDF.type, RDFS.Class) || m.contains(m.createResource(term.getURI()), RDF.type, OWL.Class)) ;
+	}
+	
 	
 }
