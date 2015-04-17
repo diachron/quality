@@ -1,11 +1,14 @@
 package eu.diachron.qualitymetrics.intrinsic.conciseness;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -13,6 +16,8 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.RLBSBloomFilter;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
  * @author Santiago Londono
@@ -23,6 +28,8 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(EstimatedExtensionalConciseness.class);
+	
+	private List<Quad> problemList = new ArrayList<Quad>();
 	
 	private final Resource METRIC_URI = DQM.ExtensionalConcisenessMetric;
 	
@@ -88,6 +95,9 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 					// Bits didn't changed, it might be a false positive, but most likely it's duplicated
 					this.estimatedDuplInstances++;
 					logger.debug("Duplicate instance definition detected, subject URI: {}", this.currentSubjectURI);
+					
+					Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(this.currentSubjectURI).asNode(), QPRO.exceptionDescription.asNode(), DQM.ResourceReplica.asNode());
+					this.problemList.add(q);
 				}
 			}
 			
@@ -123,8 +133,16 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			if(this.problemList != null && this.problemList.size() > 0) {
+				tmpProblemList = new ProblemList<Quad>(this.problemList);
+			} else {
+				tmpProblemList = new ProblemList<Quad>();
+			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+			logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;
 	}
 		
 	@Override

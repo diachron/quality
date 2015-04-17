@@ -717,13 +717,13 @@ dqm:LuzzuProvenanceAgent
 		rdfs:range	dqm:HomogeneousDatatypesMetric .
 				
 		
-	dqm:hasMisuseOwlDatatypeOrObjectPropertiesMetric
+	dqm:hasMisusedOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Consistency Dimension with Misuse Owl- datatype or object properties metric" ;
 		rdfs:label	"hasMisuseOwlDatatypeOrObjectPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
-		rdfs:range	dqm:MisuseOwlDatatypeOrObjectPropertiesMetric .
+		rdfs:range	dqm:MisusedOwlDatatypeOrObjectPropertiesMetric .
 		
 	dqm:hasMisplacedClassesOrPropertiesMetric
 		a	rdfs:Property ;
@@ -1519,5 +1519,11 @@ dqm:ObsoleteConceptsInOntologyMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate data timeliness." ;
-		rdfs:label "Missing Metadata for Timeliness Calculation" .
+		rdfs:label "Missing Metadata for  Calculation" .
 
+### Extensional Conciseness
+	dqm:ResourceReplica
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource has a replica resource with a different id." ;
+		rdfs:label "Resource Replica" .
