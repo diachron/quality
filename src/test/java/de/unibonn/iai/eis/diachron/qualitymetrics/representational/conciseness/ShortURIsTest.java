@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import eu.diachron.qualitymetrics.utilities.TestLoader;
-import eu.diachron.qualitymetrics.representational.conciseness.ShortURIs;
+import eu.diachron.qualitymetrics.representational.representationalconciseness.ShortURIs;
 
 public class ShortURIsTest extends Assert {
 	

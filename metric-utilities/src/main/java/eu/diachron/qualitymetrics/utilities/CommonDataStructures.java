@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.apache.jena.riot.WebContent;
 
-
+@Deprecated
 public final class CommonDataStructures {
 	
 	private CommonDataStructures(){}

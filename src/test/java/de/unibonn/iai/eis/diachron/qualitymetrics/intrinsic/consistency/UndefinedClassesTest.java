@@ -3,6 +3,8 @@ package de.unibonn.iai.eis.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.ArrayList;
 import java.util.List;
 
+import old_classes.UndefinedClasses;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -19,7 +21,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import eu.diachron.qualitymetrics.intrinsic.consistency.UndefinedClasses;
 
 public class UndefinedClassesTest {
   private static ComplexQualityMetric metric;
