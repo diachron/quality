@@ -12,7 +12,6 @@ import java.util.Map;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.util.EntityUtils;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.luzzu.cache.CacheObject;
@@ -36,8 +35,6 @@ public class CachedHTTPResource implements CacheObject {
 	public void addResponse(HttpResponse response) {
 		if (this.responses == null) this.responses = new ArrayList<SerialisableHttpResponse>();
 		
-		// TODO: REMOVE TEST CODE!!!
-		EntityUtils.consumeQuietly(response.getEntity());
 		this.responses.add(new SerialisableHttpResponse(response));
 		this.addStatusLines(response.getStatusLine());
 	}
@@ -45,8 +42,6 @@ public class CachedHTTPResource implements CacheObject {
 		if (this.responses == null) this.responses = new ArrayList<SerialisableHttpResponse>();
 		
 		for(HttpResponse res : responses){
-			// TODO: REMOVE TEST CODE!!!
-			EntityUtils.consumeQuietly(res.getEntity());
 			this.responses.add(new SerialisableHttpResponse(res));
 			this.addStatusLines(res.getStatusLine());
 		}

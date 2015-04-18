@@ -99,7 +99,7 @@ public class FreshnessOfDataset implements QualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		return DQM.FreshnessOfDataMetric;
+		return DQM.FreshnessOfDatasetMetric;
 	}
 
 	@Override

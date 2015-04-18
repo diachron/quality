@@ -42,7 +42,11 @@ public class TimelinessSharedResources {
 		if (ageInMills == -1){
 			return -1.0;
 		} else {
-			dCurrency = 1 - ((double)ageInMills / (df.getObservationDate().getTime() - ((df.getCreationDate() == null) ? df.getPublishedDate().getTime() : df.getCreationDate().getTime())));
+			if(df != null && (df.getObservationDate() != null) && (df.getCreationDate() != null || df.getPublishedDate() != null)) {
+				dCurrency = 1 - ((double)ageInMills / (df.getObservationDate().getTime() - ((df.getCreationDate() == null)?(df.getPublishedDate().getTime()):(df.getCreationDate().getTime()))));
+			} else {
+				dCurrency = 0.0;
+			}
 		}
 		
 		return dCurrency;
@@ -62,8 +66,8 @@ public class TimelinessSharedResources {
 		
 		public long calculateAge(){
 			long ageInMills = -1l;
-			if (((this.getUpdateDate() != null) && (this.getUpdateDate() != null) && (this.getUpdateDate().after(this.getCreationDate()))) 
-					|| ((this.getUpdateDate() != null) && (this.getUpdateDate() == null))) {
+			if (((this.getUpdateDate() != null) && (this.getCreationDate() != null) && (this.getUpdateDate().after(this.getCreationDate()))) 
+					|| ((this.getUpdateDate() != null) && (this.getCreationDate() == null))) {
 				ageInMills = this.getObservationDate().getTime() - this.getUpdateDate().getTime();
 			} else if ((this.getUpdateDate() == null) && (this.getCreationDate() != null)){
 				ageInMills = this.getObservationDate().getTime() - this.getCreationDate().getTime();
@@ -74,42 +78,32 @@ public class TimelinessSharedResources {
 		public Date getPublishedDate() {
 			return publishedDate;
 		}
-		public void setPublishedDate(Date publishedDate) {
-			synchronized(this.publishedDate){
-				this.publishedDate = publishedDate;
-			}
+		public synchronized void setPublishedDate(Date publishedDate) {
+			this.publishedDate = publishedDate;
 		}
 		public Date getCreationDate() {
 			return creationDate;
 		}
-		public void setCreationDate(Date creationDate) {
-			synchronized(this.creationDate){
-				this.creationDate = creationDate;
-			}
+		public synchronized void setCreationDate(Date creationDate) {
+			this.creationDate = creationDate;
 		}
 		public Date getUpdateDate() {
 			return updateDate;
 		}
-		public void setUpdateDate(Date updateDate) {
-			synchronized(this.updateDate){
-				this.updateDate = updateDate;
-			}
+		public synchronized void setUpdateDate(Date updateDate) {
+			this.updateDate = updateDate;
 		}
 		public Date getExpiryDate() {
 			return expiryDate;
 		}
-		public void setExpiryDate(Date expiryDate) {
-			synchronized(this.expiryDate){
-				this.expiryDate = expiryDate;
-			}
+		public synchronized void setExpiryDate(Date expiryDate) {
+			this.expiryDate = expiryDate;
 		}
 		public Date getObservationDate() {
 			return observationDate;
 		}
-		public void setObservationDate(Date observationDate) {
-			synchronized(this.observationDate){
-				this.observationDate = observationDate;
-			}
+		public synchronized void setObservationDate(Date observationDate) {
+			this.observationDate = observationDate;
 		}
 	}
 }

@@ -125,8 +125,8 @@ public class VocabularyLoader {
 	
 	private static void loadNStoDataset(String ns){
 		if (knownDatasets.containsKey(ns)){
-			String filepath = VocabularyLoader.class.getClassLoader().getResource("vocabs/"+knownDatasets.get(ns)).getPath();
-			Model m = RDFDataMgr.loadModel(filepath);
+			//String filepath = VocabularyLoader.class.getClassLoader().getResource("vocabs/"+knownDatasets.get(ns)).getPath();
+			Model m = RDFDataMgr.loadModel("vocabs/" + knownDatasets.get(ns));
 			dataset.addNamedModel(ns, m);
 		} else {
 			//download and store in cache

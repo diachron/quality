@@ -406,19 +406,19 @@ dqm:LuzzuProvenanceAgent
 		rdfs:comment	"Provides a qualitative measure for detecting the overlap of vocabularies used in a dataset." ;
 		rdfs:label	"Reuse existing vocabularies metric" .
 	
-	dqm:CurrencyOfDocumentStatementsMetric
+	dqm:CurrencyOfDatasetMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Compares the time when the data was observed with the time when the data (document as a whole and individual triples) were last modified, thereby providing a measure of how current the dataset is" ;
 		rdfs:label	"Currency of document/statements metric" .
 	
-	dqm:FreshnessOfDataMetric
+	dqm:FreshnessOfDatasetMetric
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
 		daq:expectedDataType xsd:double ;
 		rdfs:comment	"Checks if the data in the dataset is being updated with the original data" ;
-		rdfs:label	"Freshness of Data Metric" .
+		rdfs:label	"Freshness of Dataset Metric" .
 	
 	dqm:TimeSinceModificationMetric
 		a	rdfs:Class ;
@@ -958,13 +958,13 @@ dqm:LuzzuProvenanceAgent
 		rdfs:domain dqm:Dynamicity ;
 		rdfs:range dqm:Currency .
 
-	dqm:hasCurrencyOfDocumentStatementsMetric
+	dqm:hasCurrencyOfDatasetMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links the Currency Dimension with the Currency of Document/Statements Metric (Currency of Document/Statements Metric belongs to the Currency Dimension)" ;
 		rdfs:label	"Currency has currency of document/statements metric" ;
 		rdfs:domain	dqm:Currency ;
-		rdfs:range	dqm:CurrencyOfDocumentStatementsMetric .
+		rdfs:range	dqm:CurrencyOfDatasetMetric .
 
 	dqm:hasTimeSinceModificationMetric
 		a	rdfs:Property ;
@@ -1016,11 +1016,11 @@ dqm:LuzzuProvenanceAgent
 		rdfs:domain	dqm:Timeliness ;
 		rdfs:range	dqm:TimelinessOfResourceMetric .
 
-	dqm:hasFreshnessOfDataMetric
+	dqm:hasFreshnessOfDatasetMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:domain	dqm:Timeliness ;
-		rdfs:range	dqm:FreshnessOfDataMetric .
+		rdfs:range	dqm:FreshnessOfDatasetMetric .
 
 		
 	#Reputation

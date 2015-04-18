@@ -18,6 +18,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 
 /**
  * @author Santiago Londono
@@ -41,6 +42,8 @@ public class ExtensionalConciseness implements QualityMetric {
 	 * resource. A ConcurrentHashMap is used since it is synchronized and metric instances ought to be thread safe.
 	 */
 	private HTreeMap<String, ComparableSubject> pMapSubjects = this.mapDB.createHashMap("extensional-conciseness-map").make();
+	
+	private List<Quad> problemList = new ArrayList<Quad>();
 	
 	/**
 	 * Re-computes the value of the Extensional Conciseness Metric, by considering a new quad provided.
@@ -136,9 +139,18 @@ public class ExtensionalConciseness implements QualityMetric {
 		return METRIC_URI;
 	}
 
+	@Override
 	public ProblemList<?> getQualityProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		ProblemList<Quad> tmpProblemList = null;
+		try {
+			if(this.problemList != null && this.problemList.size() > 0) {
+				tmpProblemList = new ProblemList<Quad>(this.problemList);
+			} else {
+				tmpProblemList = new ProblemList<Quad>();
+			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+			logger.error(problemListInitialisationException.getMessage());
+		}
+		return tmpProblemList;
 	}
 	
 	@Override

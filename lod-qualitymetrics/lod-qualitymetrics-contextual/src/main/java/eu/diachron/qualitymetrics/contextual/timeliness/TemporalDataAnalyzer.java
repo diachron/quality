@@ -175,11 +175,16 @@ public class TemporalDataAnalyzer {
 		// Datetime values can be extracted from literal objects only
 		if(object != null && object.isLiteral()) {
 			// First, try to parse date/time literal as an xsd type. Check whether the object is of xsd:dateTime
-			if(rdfDate.isValid(object.getLiteralValue().toString()) || rdfDateTime.isValid(object.getLiteralValue().toString())) {
+			if(rdfDateTime.isValid(object.getLiteralValue().toString())) {
 				logger.trace("Parsing date/time: " + object.toString() + ", as xsd:date/time value");
 				
 				XSDDateTime xsdDateTime = (XSDDateTime)rdfDateTime.parse(object.getLiteralValue().toString());
 				return xsdDateTime.asCalendar().getTime();
+			} else if(rdfDate.isValid(object.getLiteralValue().toString())) {
+				logger.trace("Parsing date: " + object.toString() + ", as xsd:date value");
+				
+				XSDDateTime xsdDate = (XSDDateTime)rdfDate.parse(object.getLiteralValue().toString());
+				return xsdDate.asCalendar().getTime();
 			}
 
 			// For non-xsd:date/time literals, try to determine the appropriate format specifier, associated to their property. 

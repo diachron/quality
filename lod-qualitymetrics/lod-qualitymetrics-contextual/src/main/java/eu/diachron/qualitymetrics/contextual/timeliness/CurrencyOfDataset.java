@@ -77,7 +77,7 @@ public class CurrencyOfDataset implements QualityMetric{
 
 	@Override
 	public Resource getMetricURI() {
-		return DQM.CurrencyOfDocumentStatementsMetric;
+		return DQM.CurrencyOfDatasetMetric;
 	}
 
 	@Override
