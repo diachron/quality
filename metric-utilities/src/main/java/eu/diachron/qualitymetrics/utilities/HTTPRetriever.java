@@ -1,5 +1,6 @@
 package eu.diachron.qualitymetrics.utilities;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
@@ -7,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,21 +19,36 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.Header;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.apache.http.nio.ContentDecoder;
+import org.apache.http.nio.IOControl;
+import org.apache.http.nio.client.methods.AsyncCharConsumer;
+import org.apache.http.nio.client.methods.HttpAsyncMethods;
+import org.apache.http.nio.client.methods.ZeroCopyConsumer;
+import org.apache.http.nio.protocol.AbstractAsyncResponseConsumer;
+import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
+import org.apache.http.nio.protocol.HttpAsyncResponseConsumer;
+import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,6 +139,7 @@ public class HTTPRetriever {
 		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
 		
 		CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom().
+				useSystemProperties().
 				setDefaultRequestConfig(requestConfig).
 				setMaxConnTotal(MAX_PARALLEL_REQS).
 				setMaxConnPerRoute(MAX_PARALLEL_REQS/5).
@@ -147,12 +165,35 @@ public class HTTPRetriever {
 				final HttpClientContext localContext = HttpClientContext.create(); // Each request must have it's own context
 				newResource.setUri(queuePeek);
 
-				try {					
+				try {
 					final HttpGet request = new HttpGet(queuePeek);		
 					Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
 					request.addHeader(accept);
+					HttpAsyncRequestProducer httpProd = HttpAsyncMethods.create(request);
+		            
+		            AsyncCharConsumer<HttpResponse> consumer = new AsyncCharConsumer<HttpResponse>() {
+		            	HttpResponse response = null;
+		            	
+						@Override
+						protected void onCharReceived(CharBuffer buf, IOControl ioctrl) throws IOException {
+							while (buf.hasRemaining()) {
+								buf.get();
+				            }
+						}
+
+						@Override
+						protected void onResponseReceived(HttpResponse response) throws HttpException, IOException {
+							this.response = response;
+							logger.debug("Response received!", response.getStatusLine());
+						}
+
+						@Override
+						protected HttpResponse buildResult(HttpContext context) throws Exception {
+							return response;
+						}
+		            };
 					
-					httpclient.execute(request, localContext,
+					httpclient.execute(httpProd, consumer, localContext, 
 							new FutureCallback<HttpResponse>() {
 						
 								public void completed(final HttpResponse response) {
@@ -310,22 +351,21 @@ public class HTTPRetriever {
 	}
 
 	private RequestConfig getRequestConfig(boolean followRedirects) {
-		
-		HttpHost proxyHost = null;
-		
-		// If a proxy was set to be used, set it
-		if(getWebProxy() != null && !getWebProxy().trim().equals("") && getWebProxyPort() != null) {
-			proxyHost = new HttpHost(getWebProxy(), getWebProxyPort());
-		}
-		
-		return RequestConfig.custom().
+		Builder configBuilder = null;
+				
+		configBuilder = RequestConfig.custom().
 				setSocketTimeout(TIMEOUT).
 				setConnectTimeout(TIMEOUT).
 				setConnectionRequestTimeout(TIMEOUT).
 				setRedirectsEnabled(followRedirects).
-				setProxy(proxyHost).
-				setAuthenticationEnabled(false).
-				build();
+				setAuthenticationEnabled(false);
+		
+		// If a proxy was set to be used, set it
+		if(getWebProxy() != null && !getWebProxy().trim().equals("") && getWebProxyPort() != null) {
+			configBuilder.setProxy(new HttpHost(getWebProxy(), getWebProxyPort()));
+		}
+		
+		return configBuilder.build();
 	}
 
 	public boolean isPossibleURL(String url) {

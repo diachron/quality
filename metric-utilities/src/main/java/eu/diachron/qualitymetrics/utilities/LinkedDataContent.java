@@ -49,12 +49,16 @@ public class LinkedDataContent {
 
     
 	//Registering JSONLD to Jena
-	public static final Lang JSONLD   = LangBuilder.create("JSONLD", contentTypeJSONLD)
+	public static Lang JSONLD = LangBuilder.create("JSONLD", contentTypeJSONLD)
              .addAltNames("JSONLD")
              .addFileExtensions(".jsonld")
              .build();
 	static{
-		RDFLanguages.register(JSONLD);
+		if(RDFLanguages.nameToLang(contentTypeJSONLD) == null) {
+			RDFLanguages.register(JSONLD);
+		} else {
+			JSONLD = RDFLanguages.nameToLang(contentTypeJSONLD);
+		}
 	}
     
     private static Map<String, Lang> mapContentTypeToLang = new HashMap<String, Lang>() ;

@@ -38,10 +38,12 @@ public class HTTPResourceUtils {
 	}
 	
 	public static String parsedContentType(String ct){
-		String[] s1 = ct.split(",");
-		for(String s : s1){
-			String[] p = s.split(";");
-			return p[0];
+		if(ct != null) {
+			String[] s1 = ct.split(",");
+			for(String s : s1){
+				String[] p = s.split(";");
+				return p[0];
+			}
 		}
 		return "";
 	}

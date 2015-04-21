@@ -55,8 +55,8 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 10;
-	private static int MAX_FQURIS_PER_TLD = 250;
+	private static int MAX_TLDS = 20;
+	private static int MAX_FQURIS_PER_TLD = 500;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -231,9 +231,8 @@ public class EstimatedDereferenceability implements QualityMetric {
 					if(this.is200AnRDF(httpResource)) { 
 						curUrlResult.isRdfXml = true;
 					} else this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
-				}
-				if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200) {
-					curUrlResult.isDeref = false;
+				} else if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200) {
+					curUrlResult.isDeref = true;
 					// Check if the resource contains RDF on XML
 					if(this.is200AnRDF(httpResource)) {
 						curUrlResult.isRdfXml = true;
