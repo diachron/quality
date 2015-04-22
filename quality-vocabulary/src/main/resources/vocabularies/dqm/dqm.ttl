@@ -163,6 +163,12 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Refers to the easy with which data can be compreshended without ambiguity and used by a human data consumer" ;
 		rdfs:label	"Understandability" .
+		
+	dqm:Provenance
+		a	rdfs:Class ;
+		rdfs:subClassOf daq:Dimension ;
+		rdfs:comment "Refers to the dataset's representation of provenance information" ;
+		rdfs:label "Provenance" .
 			
 	#Metric Classes
 	dqm:EndPointAvailabilityMetric
@@ -497,6 +503,20 @@ dqm:LuzzuProvenanceAgent
 		rdfs:comment "Measures the degree to which the resource is linked to external data providers, that is, refers to the detection of links that connect the resource to external data provided by another data sources" ; 
 		rdfs:label "Existence of links to external data providers" .
 		
+	dqm:ExtendedProvenanceMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		daq:expectedDataType xsd:double ;
+		rdfs:comment "Measures the degree of the available provenance information (Agent and Datasource for Entities and Activities) that is available in a dataset for a consumer to get to know the origin of the datasource using the standard W3C Prov-O" ; 
+		rdfs:label "Extended Provenance Metric" .
+		
+	dqm:BasicProvenanceMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		daq:expectedDataType xsd:double ;
+		rdfs:comment "Measures the degree of the basic provenance information, i.e. the creator or publisher, of a datasource" ; 
+		rdfs:label "Basic Provenance Metric" .
+		
 	#Properties
 	#Accessibility Dimensions Properties
 	dqm:hasAvailabilityDimension
@@ -826,6 +846,26 @@ dqm:LuzzuProvenanceAgent
 		rdfs:label	"Representational conciseness has no usage of prolix RDF features metric" ;
 		rdfs:domain	dqm:RepresentationalConciseness ;
 		rdfs:range	dqm:NoProlixRDFMetric .
+		
+	#Provenance Dimension Properties
+	dqm:hasProvenanceDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:domain dqm:Representational ;
+		rdfs:range dqm:Provenance .
+		
+	dqm:hasBasicProvenanceMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Provenance ;
+		rdfs:range	dqm:BasicProvenanceMetric .
+		
+	dqm:hasExtendedProvenanceMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Provenance ;
+		rdfs:range	dqm:ExtendedProvenanceMetric .
+	
 
 	#Versatility Dimension Properties
 	dqm:hasVersatilityDimension
