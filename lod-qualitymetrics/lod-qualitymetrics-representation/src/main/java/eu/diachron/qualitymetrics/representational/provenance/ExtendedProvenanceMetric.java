@@ -56,38 +56,39 @@ public class ExtendedProvenanceMetric implements QualityMetric {
 		
 		//is it an identification of an Agent?
 		if (predicate.hasURI(PROV.wasAttributedTo.getURI())){
-			Entity e = this.getOrPutEntity(quad.getSubject().getURI());
-			e.agent = quad.getObject().getURI();
+			Entity e = this.getOrPutEntity(quad.getSubject().toString());
+			e.agent = quad.getObject().toString();
 		}
 		
 		//is it an activity in an entity?
 		if (predicate.hasURI(PROV.wasGeneratedBy.getURI())){
-			Activity a = this.getOrPutActivity(quad.getObject().getURI());
-			activityDirectory.put(quad.getSubject().getURI(), a);
-			Entity e = this.getOrPutEntity(quad.getSubject().getURI());
+			Activity a = this.getOrPutActivity(quad.getObject().toString());
+			activityDirectory.put(quad.getSubject().toString(), a);
+			Entity e = this.getOrPutEntity(quad.getSubject().toString());
 			e.activities.add(a);
 		}
 		
 		//is it an identification of a datasource in an activity?
 		if (predicate.hasURI(PROV.used.getURI())){
-			Activity a = this.getOrPutActivity(quad.getSubject().getURI());
-			a.datasource = quad.getObject().getURI();
+			Activity a = this.getOrPutActivity(quad.getSubject().toString());
+			a.datasource = quad.getObject().toString();
 		}
 		
 		//is it an identification of an agent in an activity?
 		if (predicate.hasURI(PROV.wasAssociatedWith.getURI()) || predicate.hasURI(PROV.actedOnBehalfOf.getURI())){
-			Activity a = this.getOrPutActivity(quad.getSubject().getURI());
+			Activity a = null;
+				a = this.getOrPutActivity(quad.getSubject().toString());
 			a.agent = quad.getObject().getURI();
 		}
 		
 		//is it an entity?
 		if (object.hasURI(PROV.Entity.getURI())){
-			this.getOrPutEntity(quad.getSubject().getURI());
+				this.getOrPutEntity(quad.getSubject().toString());
 		}
 		
 		//is it an activity?
 		if (object.hasURI(PROV.Activity.getURI())){
-			this.getOrPutActivity(quad.getSubject().getURI());
+				this.getOrPutActivity(quad.getSubject().toString());
 		}
 	}
 

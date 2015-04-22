@@ -55,7 +55,7 @@ public class MultipleLanguageUsage implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (object.isLiteral()){
-			String subject = quad.getSubject().getURI();
+			String subject = quad.getSubject().toString();
 			if (object != null && object.getLiteralDatatypeURI() != null && object.getLiteralDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#string")){
 				String lang = (object.getLiteralLanguage().equals("")) ? DEFAULT_TAG : object.getLiteralLanguage();
 				List<String> langList = new ArrayList<String>();
