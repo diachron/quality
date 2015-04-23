@@ -95,7 +95,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 			
 			if (object.isURI()){
 				if (formats.contains(object.getURI())) {
-					List<String> features = this.datasetFeatures.get(datasetURI);
+					List<String> features = getOrCreate(datasetURI);
 					features.add(object.getURI());
 					this.datasetFeatures.put(datasetURI, features);
 				}
@@ -105,9 +105,16 @@ public class DifferentSerialisationFormats implements QualityMetric{
 				}
 			}
 		}
-		
 	}
 
+	private List<String> getOrCreate(String datasetURI){
+		List<String> lst = new ArrayList<String>();
+		if (this.datasetFeatures.containsKey(datasetURI)) lst = this.datasetFeatures.get(datasetURI);
+		else this.datasetFeatures.put(datasetURI, lst);
+		return lst;
+	}
+	
+	
 	@Override
 	public double metricValue() {
 		if (!flag){
