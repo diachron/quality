@@ -4,6 +4,8 @@
 package eu.diachron.qualitymetrics.representational.provenance;
 
 import org.mapdb.HTreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -32,8 +34,13 @@ public class BasicProvenanceMetric implements QualityMetric {
 	
 	protected HTreeMap<String, String> dataset = MapDbFactory.createFilesystemDB().createHashMap("basic-provenance-map").make();
 
+	private static Logger logger = LoggerFactory.getLogger(BasicProvenanceMetric.class);
+
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing quad: " + quad.asTriple().toString());
+
+		
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();
 		Node object = quad.getSubject();

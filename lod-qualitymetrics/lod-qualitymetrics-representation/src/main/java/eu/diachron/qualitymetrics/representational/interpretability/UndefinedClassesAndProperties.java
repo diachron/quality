@@ -50,6 +50,8 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 	
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing quad: " + quad.asTriple().toString());
+
 		Node predicate = quad.getPredicate();
 		
 		if (predicate.hasURI(RDF.type.getURI())){
@@ -105,6 +107,8 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 
 	@Override
 	public double metricValue() {
+		logger.debug("Values: Undefined Classes {}, Undefined Properties {}", this.undefinedClasses, this.undefinedProperties );
+
 		return (this.undefinedClasses + this.undefinedProperties == 0) ? 1.0 
 				: 1.0 - ((double)(this.undefinedClasses + this.undefinedProperties)/(double)(this.totalClasses + this.totalProperties));
 	}

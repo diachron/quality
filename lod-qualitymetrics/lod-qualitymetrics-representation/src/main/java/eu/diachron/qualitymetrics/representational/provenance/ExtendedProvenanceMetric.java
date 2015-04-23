@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -49,8 +52,11 @@ public class ExtendedProvenanceMetric implements QualityMetric {
 	private ConcurrentMap<String, Entity> entityDirectory = new ConcurrentHashMap<String, Entity>();
 	private ConcurrentMap<String, Activity> activityDirectory =  new ConcurrentHashMap<String, Activity>();
 
+	private static Logger logger = LoggerFactory.getLogger(ExtendedProvenanceMetric.class);
+
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}",quad.asTriple().toString());
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		

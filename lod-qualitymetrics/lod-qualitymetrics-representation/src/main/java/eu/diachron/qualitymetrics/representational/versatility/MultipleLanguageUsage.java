@@ -52,6 +52,7 @@ public class MultipleLanguageUsage implements QualityMetric {
 
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}",quad.asTriple().toString());
 		Node object = quad.getObject();
 		
 		if (object.isLiteral()){
@@ -70,6 +71,8 @@ public class MultipleLanguageUsage implements QualityMetric {
 	public double metricValue() {
 		double totLang = 0.0;
 		for(List<String> lst : this.multipleLanguage.values()) totLang += (double) lst.size();
+		
+		logger.debug("Values: Total Languages {}, Multiple Languages Found {}", totLang, this.multipleLanguage.size() );
 		
 		double val = totLang / (double) this.multipleLanguage.size();
 		

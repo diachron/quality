@@ -60,6 +60,8 @@ public class NoBlankNodeUsage implements QualityMetric {
 
 	@Override
 	public double metricValue() {
+		logger.debug("Values: Unique DLC {}, Unique BN {}", uniqueDLC.size(), uniqueBN.size() );
+
 		return ((double) uniqueDLC.size()) / ((double) uniqueDLC.size() + (double) uniqueBN.size());
 	}
 

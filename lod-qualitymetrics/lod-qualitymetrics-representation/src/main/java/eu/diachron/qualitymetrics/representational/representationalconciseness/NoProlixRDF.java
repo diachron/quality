@@ -41,6 +41,8 @@ public class NoProlixRDF implements QualityMetric {
 
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing quad: " + quad.asTriple().toString());
+
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		Node subject = quad.getSubject();
@@ -94,6 +96,8 @@ public class NoProlixRDF implements QualityMetric {
 
 	@Override
 	public double metricValue() {
+		logger.debug("Values: Total RCC {}, Total Triples {}", this.totalRCC, this.totalTriples);
+
 		return (this.totalRCC == 0) ? 1.0 : 1.0 - (this.totalRCC / this.totalTriples);
 	}
 

@@ -84,6 +84,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}",quad.asTriple().toString());
 		this.datasetFeatures.putIfAbsent(EnvironmentProperties.getInstance().getDatasetURI(), new ArrayList<String>());
 		
 		Node predicate = quad.getPredicate();
@@ -120,7 +121,8 @@ public class DifferentSerialisationFormats implements QualityMetric{
 				datasetsWithMoreThanOneFeature++;
 			}
 		}
-		
+		logger.debug("Values: Datasets With More than One Feature {}, Total Number Dataset{}",datasetsWithMoreThanOneFeature,totalNumberDatasets);
+
 		return (double)datasetsWithMoreThanOneFeature / (double) totalNumberDatasets;
 	}
 	

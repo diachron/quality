@@ -56,6 +56,8 @@ public class ShortURIs implements QualityMetric {
 
 	
 	public void compute(Quad quad) {
+		logger.debug("Assessing quad: " + quad.asTriple().toString());
+
 		if (!(quad.getPredicate().hasURI(RDF.type.getURI()))){
 			Node subject = quad.getSubject();
 			if ((!(subject.isBlank())) && (!(this.seenSet.contains(subject.getURI())))){
@@ -103,6 +105,8 @@ public class ShortURIs implements QualityMetric {
 
 	
 	public double metricValue() {
+		logger.debug("Values: Short URI Count {}, Possible Local Deref URIs {}", shortURICount, countLocalDefURIs);
+
 		return (this.shortURICount == 0) ? 1.0 : ((double)shortURICount / (double)countLocalDefURIs);
 	}
 
