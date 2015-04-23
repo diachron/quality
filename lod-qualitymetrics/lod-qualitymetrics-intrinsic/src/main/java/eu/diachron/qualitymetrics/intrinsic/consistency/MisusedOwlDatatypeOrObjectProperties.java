@@ -53,6 +53,8 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	 */
 	
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();

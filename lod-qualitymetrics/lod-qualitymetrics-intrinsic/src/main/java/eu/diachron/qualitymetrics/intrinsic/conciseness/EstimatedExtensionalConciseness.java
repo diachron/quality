@@ -77,6 +77,7 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	 * @param quad The new quad to be considered in the computation of the metric. Must be not null.
 	 */
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
 		// Every time a new quad is considered, get the URI of the subject
 		String subjectURI = quad.getSubject().getURI();
 		String predicateURI = ((quad.getPredicate() != null)?(quad.getPredicate().toString()):(""));
@@ -123,6 +124,7 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	 */
 	@Override
 	public double metricValue() {
+		logger.debug("Values: Total Created Instances {}, Estimated Duplicates {}", this.totalCreatedInstances, this.estimatedDuplInstances);
 		return ((double)(this.totalCreatedInstances - this.estimatedDuplInstances))/((double)this.totalCreatedInstances);
 	}
 	

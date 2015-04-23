@@ -45,6 +45,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private List<Model> problemList = new ArrayList<Model>();
 
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
 
 			Node predicate = quad.getPredicate(); // retrieve predicate
 			Node object = quad.getObject(); // retrieve object

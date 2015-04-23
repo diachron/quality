@@ -69,6 +69,8 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	 */
 	
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		try {
 			String subject = quad.getSubject().toString();
 			Node predicate = quad.getPredicate();
@@ -165,6 +167,8 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 			logger.warn("Total number of entities in given dataset is found to be zero.");
 			return 0.0;
 		}
+
+		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
 
 		double metricValue = (double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size();
 
