@@ -44,6 +44,8 @@ public class CurrencyOfDataset implements QualityMetric{
 	//we cannot capture Age as required by [29] BUT we can say that age is the observed date, i.e. the date the dataset is assessed
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		Node subject = quad.getSubject();
 		if ((subject.isURI()) && (subject.getURI().equals(EnvironmentProperties.getInstance().getDatasetURI()))){
 			logger.debug("Checking dataset {}, with predicate {}", subject.getURI(), quad.getPredicate().getURI());

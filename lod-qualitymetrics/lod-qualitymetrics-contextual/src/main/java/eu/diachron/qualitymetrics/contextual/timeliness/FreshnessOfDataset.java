@@ -46,6 +46,8 @@ public class FreshnessOfDataset implements QualityMetric {
 
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		Node subject = quad.getSubject();
 		if ((subject.isURI()) && (subject.getURI().equals(EnvironmentProperties.getInstance().getDatasetURI()))){
 			logger.debug("Checking dataset {}, with predicate {}", subject.getURI(), quad.getPredicate().getURI());

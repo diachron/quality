@@ -69,6 +69,8 @@ public class TimelinessOfResource implements QualityMetric {
 	 * @param quad Quad to be processed and examined for temporal information of interest for the calculation of the metric
 	 */
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		// Extract the predicate and object of the statement
 		Node subject = quad.getSubject();
 		Node object = quad.getObject();
