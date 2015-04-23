@@ -69,6 +69,7 @@ public class CurrencyOfDataset implements QualityMetric{
 				avgSum += currency;
 				totalOk++;
 			} else {
+				avgSum = 0.0;
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(key).asNode(), QPRO.exceptionDescription.asNode(), DQM.MissingMetadataForCurrency.asNode());
 				this._problemList.add(q);
 			}

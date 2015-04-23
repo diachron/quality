@@ -79,9 +79,9 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Assessing {}", quad.asTriple().toString());
 		// Every time a new quad is considered, get the URI of the subject
-		String subjectURI = quad.getSubject().getURI();
+		String subjectURI = (quad.getSubject().isURI()) ? quad.getSubject().getURI() : quad.getSubject().toString();
 		String predicateURI = ((quad.getPredicate() != null)?(quad.getPredicate().toString()):(""));
-		String objectValue = ((quad.getObject() != null)?(quad.getObject().toString()):(""));;
+		String objectValue = ((quad.getObject() != null)?(quad.getObject().toString()):(""));
 		
 		// Serializate statement
 		String statement = predicateURI + " " + objectValue;
