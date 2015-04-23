@@ -48,7 +48,7 @@ public class MachineReadableLicense implements QualityMetric {
 	 * The key of the map corresponds to the URI of the resource (i.e. subject in the quads) and the value contains the 
 	 * object node containing the information about the license
 	 */
-	private HTreeMap<String, Pair<String,Node>> mapLicensedResources = MapDbFactory.createFilesystemDB().createHashMap("machine-licence").make();
+	private HTreeMap<String, Pair<String,String>> mapLicensedResources = MapDbFactory.createFilesystemDB().createHashMap("machine-licence").make();
 	
 	/**
 	 * Holds the URI corresponding to the base uri of the assessed dataset. 
@@ -95,7 +95,7 @@ public class MachineReadableLicense implements QualityMetric {
 				if (subject.getURI().startsWith(this.baseURI)){
 					Node licence = ModelFactory.createDefaultModel().createResource().asNode();
 					if(this.mapLicensedResources.containsKey(subject.getURI())){
-						licence = this.mapLicensedResources.get(subject.getURI()).getSecondElement();
+						licence = ModelFactory.createDefaultModel().createResource(this.mapLicensedResources.get(subject.getURI()).getSecondElement()).asNode();
 						this.mapLicensedResources.remove(subject.getURI());
 					}
 					if (!(this.mapLicensedDatasets.containsKey(subject.getURI()))) 
@@ -115,7 +115,7 @@ public class MachineReadableLicense implements QualityMetric {
 						if(this.mapLicensedDatasets.containsKey(subject.getURI())){
 							this.mapLicensedDatasets.put(subject.getURI(), object);
 						} else {
-							mapLicensedResources.put(subject.getURI(), new Pair<String,Node>(EnvironmentProperties.getInstance().getDatasetURI(), object));
+							mapLicensedResources.put(subject.getURI(), new Pair<String,String>(EnvironmentProperties.getInstance().getDatasetURI(), object.toString()));
 						}
 					}
 					localURIs.add(subject.getURI());
