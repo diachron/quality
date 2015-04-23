@@ -91,31 +91,35 @@ public class MachineReadableLicense implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (object.matches(VOID.Dataset.asNode())){
-			if (subject.getURI().startsWith(this.baseURI)){
-				Node licence = ModelFactory.createDefaultModel().createResource().asNode();
-				if(this.mapLicensedResources.containsKey(subject.getURI())){
-					licence = this.mapLicensedResources.get(subject.getURI()).getSecondElement();
-					this.mapLicensedResources.remove(subject.getURI());
+			if (subject.isURI()){
+				if (subject.getURI().startsWith(this.baseURI)){
+					Node licence = ModelFactory.createDefaultModel().createResource().asNode();
+					if(this.mapLicensedResources.containsKey(subject.getURI())){
+						licence = this.mapLicensedResources.get(subject.getURI()).getSecondElement();
+						this.mapLicensedResources.remove(subject.getURI());
+					}
+					if (!(this.mapLicensedDatasets.containsKey(subject.getURI()))) 
+						mapLicensedDatasets.put(subject.getURI(), licence);
 				}
-				if (!(this.mapLicensedDatasets.containsKey(subject.getURI()))) 
-					mapLicensedDatasets.put(subject.getURI(), licence);
 			}
 		}
 		
 		if (subject.isURI()){
-			if (subject.getURI().startsWith(this.baseURI)){
-				if(licenseClassifier.isLicensingPredicate(predicate)) {
-					// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
-					
-					logger.trace("Quad providing license info detected. Subject: {}, object: {}", subject.getURI(), object);
-					
-					if(this.mapLicensedDatasets.containsKey(subject.getURI())){
-						this.mapLicensedDatasets.put(subject.getURI(), object);
-					} else {
-						mapLicensedResources.put(subject.getURI(), new Pair<String,Node>(EnvironmentProperties.getInstance().getDatasetURI(), object));
+			if (subject.isURI()){
+				if (subject.getURI().startsWith(this.baseURI)){
+					if(licenseClassifier.isLicensingPredicate(predicate)) {
+						// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
+						
+						logger.trace("Quad providing license info detected. Subject: {}, object: {}", subject.getURI(), object);
+						
+						if(this.mapLicensedDatasets.containsKey(subject.getURI())){
+							this.mapLicensedDatasets.put(subject.getURI(), object);
+						} else {
+							mapLicensedResources.put(subject.getURI(), new Pair<String,Node>(EnvironmentProperties.getInstance().getDatasetURI(), object));
+						}
 					}
+					localURIs.add(subject.getURI());
 				}
-				localURIs.add(subject.getURI());
 			}
 		}
 	}

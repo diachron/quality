@@ -93,14 +93,16 @@ public class DifferentSerialisationFormats implements QualityMetric{
 		if (predicate.hasURI(VOID.feature.getURI())){
 			datasetURI = quad.getSubject().getURI();
 			
-			if (formats.contains(object.getURI())) {
-				List<String> features = this.datasetFeatures.get(datasetURI);
-				features.add(object.getURI());
-				this.datasetFeatures.put(datasetURI, features);
-			}
-			else {
-				Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.IncorrectFormatDefined.asNode());
-				this._problemList.add(q);
+			if (object.isURI()){
+				if (formats.contains(object.getURI())) {
+					List<String> features = this.datasetFeatures.get(datasetURI);
+					features.add(object.getURI());
+					this.datasetFeatures.put(datasetURI, features);
+				}
+				else {
+					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.IncorrectFormatDefined.asNode());
+					this._problemList.add(q);
+				}
 			}
 		}
 		

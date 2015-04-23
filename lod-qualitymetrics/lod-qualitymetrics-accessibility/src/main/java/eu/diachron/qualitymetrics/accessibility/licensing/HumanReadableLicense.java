@@ -98,14 +98,16 @@ public class HumanReadableLicense implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (object.matches(VOID.Dataset.asNode())){
-			if (subject.getURI().startsWith(this.baseURI)){
-				Node licence = ModelFactory.createDefaultModel().createResource().asNode();
-				if(this.possibleHumanReadableLicense.containsKey(subject.getURI())){
-					licence = this.possibleHumanReadableLicense.get(subject.getURI());
-					this.possibleHumanReadableLicense.remove(subject.getURI());
+			if (subject.isURI()){
+				if (subject.getURI().startsWith(this.baseURI)){
+					Node licence = ModelFactory.createDefaultModel().createResource().asNode();
+					if(this.possibleHumanReadableLicense.containsKey(subject.getURI())){
+						licence = this.possibleHumanReadableLicense.get(subject.getURI());
+						this.possibleHumanReadableLicense.remove(subject.getURI());
+					}
+					if (!(this.humanLicencePerDataset.containsKey(subject.getURI()))) 
+						humanLicencePerDataset.put(subject.getURI(), licence);
 				}
-				if (!(this.humanLicencePerDataset.containsKey(subject.getURI()))) 
-					humanLicencePerDataset.put(subject.getURI(), licence);
 			}
 		}
 		
