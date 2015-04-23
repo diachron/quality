@@ -6,7 +6,11 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -33,7 +37,7 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  */
 public class RDFAccessibility implements QualityMetric {
 	
-	static Logger logger = Logger.getLogger(RDFAccessibility.class);
+	static Logger logger = LoggerFactory.getLogger(RDFAccessibility.class);
 	
 	protected List<Quad> problemList = new ArrayList<Quad>();
 
@@ -53,6 +57,8 @@ public class RDFAccessibility implements QualityMetric {
 	
 
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
 			httpRetreiver.addResourceToQueue(quad.getObject().getURI());
 			dataDumpsURIs.add(quad.getObject().getURI());
@@ -113,8 +119,7 @@ public class RDFAccessibility implements QualityMetric {
 				tmpProblemList = new ProblemList<Quad>();
 			}
 		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.debug(problemListInitialisationException.getStackTrace());
-			logger.error(problemListInitialisationException.getMessage());
+			//TODO
 		}
 		return tmpProblemList;
 	}

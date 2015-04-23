@@ -94,6 +94,8 @@ public class CorrectURIUsage implements QualityMetric {
 	 */
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		String subject = (quad.getSubject().isURI()) ? quad.getSubject().getURI() : "";
 		if (!(subject.equals("")) && (subject.startsWith(EnvironmentProperties.getInstance().getBaseURI()))){
 			logger.debug("Processing triple with subject URI: {}.", subject);

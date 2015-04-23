@@ -31,6 +31,7 @@ import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpRespo
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -85,6 +86,9 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * @param quad Triple (in quad format) to be evaluated
 	 */
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
+		
 		// we are currently ignoring triples ?s a ?o
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){ 
 			
@@ -317,7 +321,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 		if(resource != null && resource.getResponses() != null) {
 			for (SerialisableHttpResponse response : resource.getResponses()) {
 				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
+					if (LinkedDataContent.contentTypes.contains(response.getHeaders("Content-Type"))) { 
 						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
 							Model m = this.tryRead(resource.getUri());
 							if (m != null && m.size() == 0){

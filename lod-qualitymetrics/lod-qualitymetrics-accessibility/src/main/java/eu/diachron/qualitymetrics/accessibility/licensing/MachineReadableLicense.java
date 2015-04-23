@@ -83,6 +83,8 @@ public class MachineReadableLicense implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		// Extract the predicate (property) of the statement, the described resource (subject) and the value set (object)
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();

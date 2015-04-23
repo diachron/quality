@@ -3,7 +3,11 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryException;
@@ -34,7 +38,7 @@ public class SPARQLAccessibility implements QualityMetric {
 
 	private final Resource METRIC_URI = DQM.EndPointAvailabilityMetric;
 	
-	static Logger logger = Logger.getLogger(SPARQLAccessibility.class);
+	static Logger logger = LoggerFactory.getLogger(SPARQLAccessibility.class);
 	
 	/**
 	 * list of problematic quads
@@ -57,6 +61,8 @@ public class SPARQLAccessibility implements QualityMetric {
 	
 	
 	public void compute(Quad quad) {
+		logger.debug("Assessing {}", quad.asTriple().toString());
+
 		if (endpointProperty.contains(quad.getPredicate())) {
 			String sparqlQuerystring = "SELECT ?s where {?s ?p ?o} LIMIT 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
@@ -109,8 +115,7 @@ public class SPARQLAccessibility implements QualityMetric {
 				tmpProblemList = new ProblemList<Quad>();
 			}
 		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.debug(problemListInitialisationException.getStackTrace());
-			logger.error(problemListInitialisationException.getMessage());
+			//TODO
 		}
 		return tmpProblemList;
 	}
