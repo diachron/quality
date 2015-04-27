@@ -49,29 +49,23 @@ public class RDFAccessibility implements QualityMetric {
 	private double metricValue = 0.0d;
 	
 	private double totalDataDumps = 0.0d;
-	private double workingDataDumps = 0.0d;
+	@Deprecated private double workingDataDumps = 0.0d;
 	private List<String> dataDumpsURIs = new ArrayList<String>();
-	private HTTPRetriever httpRetreiver = new HTTPRetriever();
+	@Deprecated private HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
-	private boolean metricCalculated = false;
+	@Deprecated private boolean metricCalculated = false;
 	
 
 	public void compute(Quad quad) {
 		logger.debug("Assessing {}", quad.asTriple().toString());
 
 		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
-			httpRetreiver.addResourceToQueue(quad.getObject().getURI());
-			dataDumpsURIs.add(quad.getObject().getURI());
 			totalDataDumps++;
 		}
 	}
 
 	public double metricValue() {
-		if (!metricCalculated){
-			this.checkForRDFDataset();
-			metricCalculated = true;
-		}
-		metricValue = workingDataDumps / totalDataDumps;
+		metricValue = (totalDataDumps > 0) ? 1.0 : 0.0;
 		return metricValue;
 	}
 
@@ -80,6 +74,7 @@ public class RDFAccessibility implements QualityMetric {
 		return this.METRIC_URI;
 	}
 	
+	@Deprecated //This method won't always work because datadumps might be zip files!
 	private void checkForRDFDataset(){
 		httpRetreiver.start();
 		

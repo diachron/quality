@@ -51,11 +51,11 @@ public class SPARQLAccessibility implements QualityMetric {
 	double totalDefinedSparqlEndPoints = 0.0;
 	
 	
-	final static List<Resource> endpointProperty = new ArrayList<Resource>();
+	final static List<String> endpointProperty = new ArrayList<String>();
 	static{
-		endpointProperty.add(VOID.sparqlEndpoint);
+		endpointProperty.add(VOID.sparqlEndpoint.getURI());
 //		endpointProperty.add(SIOCSERVICES.service_endpoint);
-		endpointProperty.add(SD.endpoint);
+		endpointProperty.add(SD.endpoint.getURI());
 	}
 	
 	
@@ -63,7 +63,8 @@ public class SPARQLAccessibility implements QualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Assessing {}", quad.asTriple().toString());
 
-		if (endpointProperty.contains(quad.getPredicate())) {
+		if ((endpointProperty.contains(quad.getPredicate().getURI())) && (quad.getSubject().getURI().equals(EnvironmentProperties.getInstance().getDatasetURI()))) {
+			totalDefinedSparqlEndPoints++;
 			String sparqlQuerystring = "SELECT ?s where {?s ?p ?o} LIMIT 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
 
@@ -85,11 +86,12 @@ public class SPARQLAccessibility implements QualityMetric {
 				Quad q = new Quad(null, quad.getSubject() , QPRO.exceptionDescription.asNode(), DQM.InvalidSPARQLEndPoint.asNode());
 				problemList.add(q);
 			}
-			totalDefinedSparqlEndPoints++;
+			
 		}
 	}
 
 	public double metricValue() {
+		if (totalDefinedSparqlEndPoints == 0.0) return 0.0;
 		return sparqlEndPoints/totalDefinedSparqlEndPoints;
 	}
 
