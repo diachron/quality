@@ -4,7 +4,9 @@
 package eu.diachron.qualitymetrics.representational.versatility;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -25,8 +27,9 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
  * 
  * In this metric we check if data (in this case literals) is
  * available in different languages, i.e. a dataset supports 
- * multilinguality. In this metric, we will check ALL resources
- * whose properties define a String literal.
+ * multilinguality. In this metric, we will check ALL literals
+ * having a language tag. Those without a language tag will be
+ * ignored.
  * 
  * The value of this metric is the average number of languages 
  * used throughout the dataset (per resource).
@@ -44,9 +47,9 @@ public class MultipleLanguageUsage implements QualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(MultipleLanguageUsage.class);
 	
-	static final String DEFAULT_TAG = "en";
+//	static final String DEFAULT_TAG = "en";
 	
-	private HTreeMap<String, List<String>> multipleLanguage = MapDbFactory.createFilesystemDB().createHashMap("multi-lingual-map").make();
+	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.createFilesystemDB().createHashMap("multi-lingual-map").make();
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
 
@@ -57,9 +60,9 @@ public class MultipleLanguageUsage implements QualityMetric {
 		
 		if (object.isLiteral()){
 			String subject = quad.getSubject().toString();
-			if (object != null && object.getLiteralDatatypeURI() != null && object.getLiteralDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#string")){
-				String lang = (object.getLiteralLanguage().equals("")) ? DEFAULT_TAG : object.getLiteralLanguage();
-				List<String> langList = new ArrayList<String>();
+			String lang = object.getLiteralLanguage();
+			if (!(lang.equals(""))){
+				Set<String> langList = new HashSet<String>();
 				if (this.multipleLanguage.containsKey(subject)) langList = this.multipleLanguage.get(subject);
 				langList.add(lang);
 				this.multipleLanguage.put(subject,langList);
@@ -70,13 +73,13 @@ public class MultipleLanguageUsage implements QualityMetric {
 	@Override
 	public double metricValue() {
 		double totLang = 0.0;
-		for(List<String> lst : this.multipleLanguage.values()) totLang += (double) lst.size();
+		for(Set<String> lst : this.multipleLanguage.values()) totLang += (double) lst.size();
 		
 		logger.debug("Values: Total Languages {}, Multiple Languages Found {}", totLang, this.multipleLanguage.size() );
 		
 		double val = totLang / (double) this.multipleLanguage.size();
 		
-		return Math.round(val);
+		return (Math.round(val) == 0) ? 1 : Math.round(val) ;
 	}
 
 	@Override
