@@ -32,11 +32,6 @@ public class MisplacedClassesOrPropertiesTest extends Assert{
 	public void tearDown() throws Exception {
 	}
 
-	/**
-	 * a minimal example for entities being members of disjoint classes: one entity is (of foaf:Person and foaf:Document), one isn't.
-	 * 
-	 * Note that the FOAF vocabulary has been published as LOD, and that foaf:Person is explicitly declared disjoint with foaf:Document.
-	 */
 	@Test
 	public void testEntitiesAsMembersOfDisjointClassesMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
@@ -46,8 +41,8 @@ public class MisplacedClassesOrPropertiesTest extends Assert{
 			metric.compute(quad);
 		}
 		
-		// 2 / 4
-		assertEquals(0.5,metric.metricValue(), 0.0001);
+		// 1- (2 / 6)
+		assertEquals(0.66666666666,metric.metricValue(), 0.0001);
 	}	
 
 }

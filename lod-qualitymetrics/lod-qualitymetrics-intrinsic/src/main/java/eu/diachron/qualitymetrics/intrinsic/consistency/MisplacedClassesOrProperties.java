@@ -43,6 +43,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private double misplacedPropertiesCount = 0.0;
 	private double totalPropertiesCount = 0.0;
 	private List<Model> problemList = new ArrayList<Model>();
+	
 
 	public void compute(Quad quad) {
 		logger.debug("Assessing {}", quad.asTriple().toString());
@@ -51,7 +52,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 			Node object = quad.getObject(); // retrieve object
 			
 			//checking if classes are found in the property position
-			logger.info("Checking {} for misplaced class", predicate.getURI());
+			logger.info("Is the used predicate {} actually a class?", predicate.getURI());
 			this.totalPropertiesCount++;
 			if ((VocabularyLoader.isClass(predicate)) && (VocabularyLoader.checkTerm(predicate))){
 				this.misplacedPropertiesCount++;

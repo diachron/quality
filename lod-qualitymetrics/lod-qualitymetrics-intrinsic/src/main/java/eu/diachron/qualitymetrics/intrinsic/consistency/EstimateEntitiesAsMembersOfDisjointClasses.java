@@ -140,14 +140,14 @@ public class EstimateEntitiesAsMembersOfDisjointClasses {
 			this.entitiesAsMembersOfDisjointClasses = countEntitiesAsMembersOfDisjointClasses();
 		}
 		
-		if (typesOfResource.entrySet().size() <= 0) {
+		if (this.reservoir.getItems().size() <= 0) {
 			logger.warn("Total number of entities in given dataset is found to be zero.");
 			return 0.0;
 		}
 
-		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
+		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size());
 
-		double metricValue = (double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size();
+		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.reservoir.getItems().size());
 
 		return metricValue;
 	}

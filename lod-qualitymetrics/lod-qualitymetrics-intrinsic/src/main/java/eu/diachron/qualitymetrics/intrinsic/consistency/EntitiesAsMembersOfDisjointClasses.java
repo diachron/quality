@@ -170,7 +170,7 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 
 		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
 
-		double metricValue = (double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size();
+		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
 
 		return metricValue;
 	}

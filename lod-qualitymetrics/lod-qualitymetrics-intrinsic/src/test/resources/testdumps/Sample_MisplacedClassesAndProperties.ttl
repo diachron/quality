@@ -1,8 +1,9 @@
 @prefix : <http://example.org/data/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-:anne rdf:type foaf:Person ;
+:anne a foaf:Person ;
 	foaf:Image :someImage  ;
 	foaf:name "Anne" .
 	
-:city rdf:type rdfs:range .
+:city a rdfs:range .
