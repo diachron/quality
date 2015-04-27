@@ -27,7 +27,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.exceptions.VocabularyUnreachableException;
 
 /**
  * @author Jeremy Debattista
@@ -137,16 +136,12 @@ public class VocabularyLoader {
 				m.read(reader, ns, cv.getLanguage());
 				dataset.addNamedModel(ns, m);
 			} else {
-				try {
-					downloadAndLoadVocab(ns);
-				} catch (VocabularyUnreachableException e) {
-					logger.info(e.getMessage());
-				}
+				downloadAndLoadVocab(ns);
 			}
 		}
 	}
 	
-	private static void downloadAndLoadVocab(String ns) throws VocabularyUnreachableException{
+	private static void downloadAndLoadVocab(String ns) {
 		try{
 			Model m = RDFDataMgr.loadModel(ns,Lang.RDFXML);
 			dataset.addNamedModel(ns, m);
@@ -162,7 +157,7 @@ public class VocabularyLoader {
 			dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
 		} catch (RiotException | HttpException e){
 			logger.error("Vocabulary {} could not be accessed.",ns);
-			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+			//throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
 		}
 	}
 	
