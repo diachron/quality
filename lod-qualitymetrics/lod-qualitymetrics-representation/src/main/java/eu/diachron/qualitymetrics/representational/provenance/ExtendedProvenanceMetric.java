@@ -125,7 +125,7 @@ public class ExtendedProvenanceMetric implements QualityMetric {
 		double val = 0.0;
 		for (Entity e : entityDirectory.values()) val += e.getBasicValue();
 		
-		return (val / (double)entityDirectory.size());
+		return (entityDirectory.size() == 0) ? 0.0 : (val / (double)entityDirectory.size());
 	}
 
 	@Override
