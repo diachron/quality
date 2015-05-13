@@ -105,7 +105,6 @@ public class MachineReadableLicense implements QualityMetric {
 		}
 		
 		if (subject.isURI()){
-			if (subject.isURI()){
 				if (subject.getURI().startsWith(this.baseURI)){
 					if(licenseClassifier.isLicensingPredicate(predicate)) {
 						// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
@@ -120,7 +119,6 @@ public class MachineReadableLicense implements QualityMetric {
 					}
 					localURIs.add(subject.getURI());
 				}
-			}
 		}
 	}
 

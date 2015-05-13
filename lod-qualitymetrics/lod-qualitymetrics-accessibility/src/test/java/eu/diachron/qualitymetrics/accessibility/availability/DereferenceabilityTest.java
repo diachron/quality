@@ -24,7 +24,8 @@ public class DereferenceabilityTest extends Assert {
 
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.Dereferenceability);
+//		loader.loadDataSet(DataSetMappingForTestCase.Dereferenceability);
+		loader.loadDataSet("http://transparency.270a.info/dataset/corruption-perceptions-index.ttl");
 	}
 
 	@After

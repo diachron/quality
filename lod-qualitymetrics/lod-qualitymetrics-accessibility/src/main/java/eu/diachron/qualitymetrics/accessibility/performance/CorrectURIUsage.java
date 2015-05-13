@@ -137,7 +137,7 @@ public class CorrectURIUsage implements QualityMetric {
 	@Override
 	public double metricValue() {		
 		if (this.tripleCounter >= MAX_TRIPLES){
-			if (this.slashURICounter == this.tripleCounter) return 1.0;
+			if (this.slashURICounter.equals(this.tripleCounter)) return 1.0;
 			else {
 				//TODO: fix, this is temporary - report should include all resources that are not hashURIs
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), 
@@ -151,7 +151,7 @@ public class CorrectURIUsage implements QualityMetric {
 				return ((double)this.slashURICounter) / ((double)this.tripleCounter) ;
 			}
 		} else {
-			if (this.hashURICounter == this.tripleCounter) return 1.0;
+			if (this.hashURICounter.equals(this.tripleCounter)) return 1.0;
 			else {
 				//TODO: fix, this is temporary - report should include all resources that are not hashURIs
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), 

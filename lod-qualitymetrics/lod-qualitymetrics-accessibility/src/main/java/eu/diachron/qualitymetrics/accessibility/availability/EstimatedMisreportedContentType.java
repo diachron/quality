@@ -213,9 +213,13 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 		
 		Resource subject = m.createResource(resource);
 		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MisreportedTypeException));
-		m.add(new StatementImpl(subject, DQM.expectedContentType, m.createLiteral(expectedContentType)));
-		m.add(new StatementImpl(subject, DQM.actualContentType, m.createLiteral(actualContentType)));
-		
+		if ((expectedContentType == null) || (expectedContentType.equals("")))
+			m.add(new StatementImpl(subject, DQM.expectedContentType, m.createLiteral("Unknown Expected Content Type")));
+		else m.add(new StatementImpl(subject, DQM.expectedContentType, m.createLiteral(expectedContentType)));
+		if ((actualContentType == null) || (actualContentType.equals("")))
+			m.add(new StatementImpl(subject, DQM.actualContentType, m.createLiteral("Unknown Content Type")));
+		else 
+			m.add(new StatementImpl(subject, DQM.actualContentType, m.createLiteral(actualContentType)));
 		this._problemList.add(m);
 	}
 	

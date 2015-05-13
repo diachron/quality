@@ -45,6 +45,7 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  * @see <a href="http://dl.dropboxusercontent.com/u/4138729/paper/dereference_iswc2011.pdf">
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
+ * TODO:FIX
  */
 public class EstimatedDereferenceability implements QualityMetric {
 	

@@ -23,7 +23,7 @@ public class MisreportedContentTypeTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 //		loader.loadDataSet(DataSetMappingForTestCase.MisreportedContentType);
-		loader.loadDataSet("http://imf.270a.info/dataset/MCORE");
+		loader.loadDataSet("/Volumes/Green-TeaExternal/transparency.270a.info/CPI2009.ttl");
 	}
 
 	@After
