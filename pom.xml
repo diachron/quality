@@ -256,7 +256,7 @@
 	<artifactId>diachron</artifactId>
 	<modules>
 		<module>ebi</module>
-		<module>luzzu-integration</module>
+		<!-- <module>luzzu-integration</module> -->
 		<module>metric-utilities</module>
 		<module>quality-vocabulary</module>
 		<module>lod-qualitymetrics</module>
