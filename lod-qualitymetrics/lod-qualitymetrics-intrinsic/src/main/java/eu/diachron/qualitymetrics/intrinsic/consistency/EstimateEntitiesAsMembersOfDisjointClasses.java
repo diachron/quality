@@ -3,7 +3,6 @@
  */
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,9 +30,11 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.intrinsic.consistency.helper.MDC;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -42,10 +43,10 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * An Estimate version for the metric Entities as members of
  * disjoint classes using reservoir sampling
  */
-public class EstimateEntitiesAsMembersOfDisjointClasses {
+public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric{
 
 	private final Resource METRIC_URI = DQM.EntitiesAsMembersOfDisjointClassesMetric;
-	private static Logger logger = LoggerFactory.getLogger(EntitiesAsMembersOfDisjointClasses.class);
+	private static Logger logger = LoggerFactory.getLogger(EstimateEntitiesAsMembersOfDisjointClasses.class);
 	protected long entitiesAsMembersOfDisjointClasses = 0;
 	
 	protected HTreeMap<String, MDC> typesOfResource = MapDbFactory.createFilesystemDB().createHashMap("entities_members_disjoinedclasses").make();
@@ -189,17 +190,5 @@ public class EstimateEntitiesAsMembersOfDisjointClasses {
 	    	 objects.add(rs.next().get("object").toString());
 	    }
 	    return objects;
-	}
-	
-	class MDC implements Serializable{
-		private static final long serialVersionUID = 2235605621422072042L;
-		protected String subject;
-		protected Set<String> objects;
-		
-		public MDC(String subject, String object){
-			this.subject = subject;
-			this.objects = new HashSet<String>();
-			this.objects.add(object);
-		}
 	}
 }

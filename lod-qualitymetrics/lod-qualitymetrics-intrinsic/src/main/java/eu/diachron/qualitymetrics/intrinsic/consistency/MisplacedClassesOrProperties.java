@@ -3,6 +3,7 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -37,6 +39,9 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 
 	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
 	private static Logger logger = LoggerFactory.getLogger(MisplacedClassesOrProperties.class);
+	
+	private HTreeMap<String, Boolean> seenProperties = MapDbFactory.createFilesystemDB().createHashMap("misplaced-classes-seenProperties").makeOrGet();
+	private HTreeMap<String, Boolean> seenClasses = MapDbFactory.createFilesystemDB().createHashMap("misplaced-classes-seenClasses").makeOrGet();
 
 	private double misplacedClassesCount = 0.0;
 	private double totalClassesCount = 0.0;
@@ -46,28 +51,46 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	
 
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+//		logger.debug("Assessing {}", quad.asTriple().toString());
 
-			Node predicate = quad.getPredicate(); // retrieve predicate
-			Node object = quad.getObject(); // retrieve object
-			
-			//checking if classes are found in the property position
-			logger.info("Is the used predicate {} actually a class?", predicate.getURI());
-			this.totalPropertiesCount++;
-			if ((VocabularyLoader.isClass(predicate)) && (VocabularyLoader.checkTerm(predicate))){
+		Node predicate = quad.getPredicate(); // retrieve predicate
+		Node object = quad.getObject(); // retrieve object
+		
+		//checking if classes are found in the property position
+//		logger.info("Is the used predicate {} actually a class?", predicate.getURI());
+		this.totalPropertiesCount++;
+		if (seenProperties.containsKey(predicate.toString())){
+			if (!(seenProperties.get(predicate.toString()))){
 				this.misplacedPropertiesCount++;
 				this.createProblemModel(quad.getSubject(), predicate, DQM.MisplacedClass);
 			}
-			
-			//checking if properties are found in the object position
-			if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI())) && (VocabularyLoader.checkTerm(object))){
-				logger.info("Checking {} for misplaced class", object.getURI());
-				this.totalClassesCount++;
-				if (VocabularyLoader.isProperty(object)){
+		} else {
+			if ((VocabularyLoader.isClass(predicate)) && (VocabularyLoader.checkTerm(predicate))){
+				this.misplacedPropertiesCount++;
+				this.createProblemModel(quad.getSubject(), predicate, DQM.MisplacedClass);
+				seenProperties.put(predicate.toString(), false);
+			}
+			seenProperties.put(predicate.toString(), true);
+		}
+		
+		//checking if properties are found in the object position
+		if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI())) && (VocabularyLoader.checkTerm(object))){
+//			logger.info("Checking {} for misplaced class", object.getURI());
+			this.totalClassesCount++;
+			if (seenClasses.containsKey(object.toString())){
+				if (!(seenClasses.get(object.toString()))){
 					this.misplacedClassesCount++;
 					this.createProblemModel(quad.getSubject(), object, DQM.MisplacedProperty);
 				}
+			} else {
+				if (VocabularyLoader.isProperty(object)){
+					this.misplacedClassesCount++;
+					this.createProblemModel(quad.getSubject(), object, DQM.MisplacedProperty);
+					seenClasses.put(object.toString(), false);
+				}
+				seenClasses.put(object.toString(), true);
 			}
+		}
 	}
 	
 	private void createProblemModel(Node resource, Node classOrProperty, Resource type){
