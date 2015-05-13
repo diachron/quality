@@ -5,6 +5,7 @@ package eu.diachron.qualitymetrics.accessibility.availability.helper;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -67,11 +68,12 @@ public class ModelParser {
 			}			
 		};
 
-		executor.submit(parser);
+		Future future = executor.submit(parser);
 	
 		try{
 			while (iterator.hasNext()){
 				logger.info("{} contains RDF", httpResource.getUri());
+				future.cancel(true);
 				return true;
 			}
 		} catch (Exception e){
@@ -118,11 +120,13 @@ public class ModelParser {
 			e1.printStackTrace();
 		}
 		
-		if (!executor.isShutdown()){
-			try{
-				rdfStream.finish();
-			}catch (Exception e){}
-			executor.shutdownNow();
+		if (executor != null){
+			if (!executor.isShutdown()){
+				try{
+					rdfStream.finish();
+				}catch (Exception e){}
+				executor.shutdownNow();
+			}
 		}
 		
 		iterator = null;
@@ -150,7 +154,7 @@ public class ModelParser {
 	public static boolean hasRDFContent(CachedHTTPResource httpResource, Lang lang){
 		boolean returnRes = snapshotParser(httpResource, lang);
 		httpResource.setContainsRDF(returnRes);
-		destroy();
+//		destroy();
 		return returnRes;
 	}
 }
