@@ -38,7 +38,6 @@ public class LOVInterface {
 	
 	private static Logger logger = LoggerFactory.getLogger(LOVInterface.class);
 
-
 	
 	public static List<String> getKnownVocabsPerDomain(String domain) throws ClientProtocolException, IOException{
 		List<String> vocabs = new ArrayList<String>();
@@ -57,8 +56,12 @@ public class LOVInterface {
 		while(results.hasNext()){
 			JsonNode res = results.next();
 			JsonNode source = res.findValue("_source");
-			vocabs.add(source.get("uri").getTextValue());
-			VocabularyLoader.loadVocabulary(source.get("uri").getTextValue());
+			String uri = source.get("uri").getTextValue();
+			//TODO: some sort of blacklist
+			if (!(uri.contains("vocab.deri.ie"))){
+				VocabularyLoader.loadVocabulary(uri);
+				if (VocabularyLoader.getModelForVocabulary(uri) != null) vocabs.add(uri);
+			}
 		}
 		return vocabs;
 	}

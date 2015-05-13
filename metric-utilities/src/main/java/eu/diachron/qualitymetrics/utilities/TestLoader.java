@@ -38,10 +38,10 @@ public class TestLoader {
 	 * @param fileName
 	 */
 	public void loadDataSet(String fileName){
-		String filename = this.getClass().getClassLoader().getResource(fileName).toExternalForm();
+//		String filename = this.getClass().getClassLoader().getResource(fileName).toExternalForm();
 		
 		Model m = ModelFactory.createDefaultModel();
-		m.read(filename, null);
+		m.read(fileName, null);
 		
 		StmtIterator si = m.listStatements();
 		while(si.hasNext()){

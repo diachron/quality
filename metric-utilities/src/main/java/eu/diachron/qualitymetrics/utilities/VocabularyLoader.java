@@ -157,7 +157,7 @@ public class VocabularyLoader {
 			dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
 		} catch (RiotException | HttpException e){
 			logger.error("Vocabulary {} could not be accessed.",ns);
-			//throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+//			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
 		}
 	}
 	
@@ -181,7 +181,7 @@ public class VocabularyLoader {
 	}
 	
 	public static Boolean knownVocabulary(String uri){
-		return knownDatasets.containsKey(uri);
+		return (knownDatasets.containsKey(uri) || dataset.containsNamedModel(uri));
 	}
 	
 	public static Model getModelForVocabulary(String ns){
