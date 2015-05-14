@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.unibonn.iai.eis</groupId>
+		<artifactId>diachron</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>quality-semantics</artifactId>
+	<name>Quality Vocabularies</name>
+	<description>Contains vocabularies (such as DQM) that are required to run these metrics</description>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<echo message="Compiling Vocabularies into Classes" />
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i src/main/resources/vocabularies/dqm/dqm.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.semantics -o src/main/java -n DQM" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://www.w3.org/ns/dcat.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n DCAT" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://rdfs.org/sioc/ns.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SIOC" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://rdfs.org/sioc/services.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SIOCSERVICES" />
+								</java>
+								<java classname="jena.schemagen" classpath="${runtime_classpath}">
+									<arg line="-i http://www.w3.org/ns/sparql-service-description.rdf  --inference --package de.unibonn.iai.eis.diachron.semantics.knownvocabs -o src/main/java -n SD" />
+								</java>
+								
+								
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		<!-- 	<plugin>
+				<groupId>de.unibonn.iai.eis</groupId>
+				<artifactId>luzzu-plugins</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>daQValidator</goal>
+						</goals>
+						<configuration>
+							<vocabLocation>/Users/jeremy/Documents/Workspaces/eis/quality/quality-vocabulary/src/main/resources/vocabularies/dqm/dqm.ttl</vocabLocation></configuration>
+					</execution>
+				</executions>
+			</plugin> -->
+		</plugins>
+	</build>
+	
+	
+</project>

@@ -1,8 +1,0 @@
-@prefix : <http://example.org/data/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-
-# foaf:Person and foaf:Project are explicitly declared disjoint in FOAF.
-:Alice a foaf:Person .
-:Alice a foaf:Project .
-
-:Bob a foaf:Person .

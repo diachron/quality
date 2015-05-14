@@ -1,0 +1,2457 @@
+@prefix a-102: <http://oecd.270a.info/attribute/1.0/> .
+@prefix d-097: <http://oecd.270a.info/dimension/1.0/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix m-100: <http://oecd.270a.info/measure/1.0/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdmx: <http://purl.org/linked-data/sdmx#> .
+@prefix sdmx-code: <http://purl.org/linked-data/sdmx/2009/code#> .
+@prefix sdmx-concept: <http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#> .
+@prefix sdmx-metadata: <http://purl.org/linked-data/sdmx/2009/metadata#> .
+@prefix sdmx-subject: <http://purl.org/linked-data/sdmx/2009/subject#> .
+@prefix sdmxa: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix sdmxdim: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xkos: <http://purl.org/linked-data/xkos#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUS/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUS> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.3116e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUS/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUS> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.9693e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUS/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUS> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.009e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.49833e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.69151e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.95145e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.41611e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.953855e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.008721e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.731303e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.472864e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.348765e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/AUT/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/AUT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.31033e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.701225e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.452078e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.210222e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.41331e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.782795e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.137534e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.478949e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.099965e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/BEL/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/BEL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHE/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.57e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHE/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.76e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHE/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.19e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHE/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.753e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHE/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.9189e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHE/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/01/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.562458e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.3081e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.832822e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.77023e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.2028e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.821416e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.517457e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.23e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.692401e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CHL/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CHL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.009e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.1361e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.14572e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.184445e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.540194e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.102047e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.315976e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.091281e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.362864e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.346212e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/CZE/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/CZE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.56272e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.449307e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.868539e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.070218e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.136024e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.909902e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.47176e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.993145e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.49573e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DEU/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DEU> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.5065e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.0808e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.206222e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.12682e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.980007e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.092604e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.032323e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.337833e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.361971e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/DNK/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/DNK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.81478e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.17323e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.63607e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.33902e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.72967e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.794241e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.352008e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.991152e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.31439e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ESP/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ESP> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.09867e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.452793e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.7155e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.534457e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.51677e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.36281e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.464128e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.961708e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.89647e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/EST/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/EST> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.77203e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.4851e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.519883e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.44007e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.63015e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.464455e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.11686e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.559417e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.036535e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FIN/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FIN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.6818e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.05301e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.0352e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.9262e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.66857e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.602259e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.49145e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.153813e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.488884e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/FRA/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/FRA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.944e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.309183e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.971356e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.2275e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.321293e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.037667e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.606748e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.447085e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.525744e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GBR/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GBR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.07e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.47932e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.9222e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.102858e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.411e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.08608e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.6361e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.94787e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.031233e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/GRC/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/GRC> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.8766e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.659e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.13098e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.71823e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.221e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.07035e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.87291e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.40599e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.558772e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/HUN/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/HUN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.0114e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.19567e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.25731e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.3365e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.90478e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.60976e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.90413e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.972204e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.930644e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/IRL/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/IRL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/01/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.24e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISL/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.011e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISR/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.25e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISR/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.5e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ISR/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ISR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.009e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.2673e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.41857e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.903613e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.8106e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.3968e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.783974e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.906351e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.17937e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.545633e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/ITA/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/ITA> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.510866e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/01/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.509021e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.157749e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.158129e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.08249e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.31347e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/JPN/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/JPN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/KOR/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/KOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.9874e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/KOR/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/KOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.008e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.55e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.289e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.9768e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.06e+00 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.4939e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.73135e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.0352e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.7869e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.039944e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/LUX/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/LUX> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.948188e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.84387e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.40591e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.155595e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.91e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.783777e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.475736e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.421266e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.168524e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NLD/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NLD> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.953e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.6576e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.68722e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.827e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.391e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.5428e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.77455e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.763033e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.433e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/NOR/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/NOR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.54303e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.154046e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.855938e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.025039e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.11443e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.080716e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.297936e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.491845e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.547942e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/POL/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/POL> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.93e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.2059e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.76554e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.5551e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.04328e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.107056e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.360697e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.624788e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.834076e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/PRT/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/PRT> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.2559e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.6558e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.70582e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.7765e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.82346e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.78611e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.6368e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 4.37099e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.052101e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVK/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVK> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.4128e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.172e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.4546e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.577e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.776e+01 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.50947e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.31674e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.16867e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 5.07927e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SVN/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SVN> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/01-03/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/01-03> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.0895e+02 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 8.902621e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.82005e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.47789e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/36-39/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/36-39> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.8456e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/41-43/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/41-43> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 9.38123e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 6.48096e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.51541e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.163409e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/SWE/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/SWE> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/05-09/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/05-09> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.237911e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/10-33/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/10-33> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.140627e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/35/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/35> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 1.857783e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/45-98/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/45-98> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.958202e+04 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/HAZ/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/HAZ> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 3.22605e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/TOTAL/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/TOTAL> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 7.833572e+05 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://oecd.270a.info/dataset/WSECTOR/TUR/YEAR/9999> a qb:Observation ;
+    a-102:POWERCODE <http://oecd.270a.info/code/1.0/CL_WSECTOR_POWERCODE/3> ;
+    a-102:TIME_FORMAT <http://oecd.270a.info/code/1.0/CL_WSECTOR_TIME_FORMAT/P1Y> ;
+    d-097:COU <http://oecd.270a.info/code/1.0/CL_WSECTOR_LOCATION/TUR> ;
+    d-097:ISIC <http://oecd.270a.info/code/1.0/CL_WSECTOR_ISIC/YEAR> ;
+    d-097:TIME <http://reference.data.gov.uk/id/year/9999> ;
+    m-100:OBS_VALUE 2.01e+03 ;
+    qb:dataSet <http://oecd.270a.info/dataset/WSECTOR> .
+
+<http://csarven.ca/linked-sdmx-data> a prov:Association ;
+    rdfs:label "Linked SDMX Data"@en ;
+    dcterms:creator <http://csarven.ca/#i> ;
+    prov:agent <https://github.com/csarven/linked-sdmx> ;
+    prov:hadRole <https://github.com/csarven/linked-sdmx#sdmx-ml-to-rdfxml> .
+
+<http://oecd.270a.info/provenance/activity/20140307055216> a prov:Activity ;
+    rdfs:label "Transformed WSECTOR data"@en ;
+    prov:generated <http://oecd.270a.info/dataset/WSECTOR> ;
+    prov:qualifiedAssociation <http://csarven.ca/linked-sdmx-data> ;
+    prov:qualifiedUsage [ a prov:Usage ;
+            prov:atTime "2014-03-07T05:52:16+00:00"^^xsd:dateTime ;
+            prov:entity <http://oecd.270a.info/data/WSECTOR.xml> ],
+        [ a prov:Usage ;
+            prov:atTime "2014-03-07T05:52:16+00:00"^^xsd:dateTime ;
+            prov:entity <http://oecd.270a.info/data/WSECTOR.Structure.xml> ] ;
+    prov:startedAtTime "2014-03-07T05:52:16+00:00"^^xsd:dateTime ;
+    prov:used <http://oecd.270a.info/data/WSECTOR.Structure.xml>,
+        <http://oecd.270a.info/data/WSECTOR.xml> ;
+    prov:wasAssociatedWith <https://github.com/csarven/linked-sdmx> ;
+    prov:wasInformedBy <http://oecd.270a.info/provenance/activity/20140304053120>,
+        <http://oecd.270a.info/provenance/activity/20140304053126> ;
+    prov:wasStartedBy <http://csarven.ca/#i> .
+
+<https://github.com/csarven/linked-sdmx#sdmx-ml-to-rdfxml> rdfs:label "Transformation from SDMX-ML to RDF/XML"@en .
+
+<http://oecd.270a.info/data/WSECTOR.Structure.xml> a prov:Entity .
+
+<https://github.com/csarven/linked-sdmx> a prov:Agent ;
+    rdfs:label "Linked SDMX"@en .
+
+<http://oecd.270a.info/data/WSECTOR.xml> a prov:Entity .
+
+<http://csarven.ca/#i> a prov:Agent ;
+    rdfs:label "Sarven Capadisli"@en .
+
+<http://oecd.270a.info/dataset/WSECTOR> a qb:DataSet,
+        prov:Entity ;
+    dcterms:creator <http://csarven.ca/#i> ;
+    dcterms:identifier "WSECTOR" ;
+    dcterms:issued "2014-03-07T05:52:16+00:00"^^xsd:dateTime ;
+    dcterms:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+    qb:structure <http://oecd.270a.info/structure/WSECTOR> ;
+    prov:generatedAtTime "2014-03-07T05:52:16+00:00"^^xsd:dateTime ;
+    prov:wasAttributedTo <http://csarven.ca/#i> ;
+    prov:wasDerivedFrom <http://oecd.270a.info/data/WSECTOR.xml> ;
+    prov:wasGeneratedBy <http://oecd.270a.info/provenance/activity/20140307055216> .
+
+

@@ -1,0 +1,32 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lmi: <http://purl.org/eis/vocab/lmi#> .
+
+#--- Timeliness Dimension ------------------------------------------------------------------------------------------------- 
+
+_:EstimatedExtensionalConciseness a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Extensional Conciseness (Estimated)" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.conciseness.EstimatedExtensionalConciseness" .
+
+_:ExtensionalConciseness a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Extensional Conciseness" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.conciseness.ExtensionalConciseness" .
+	
+_:EntitiesAsMembersOfDisjointClasses a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Entities As Members Of Disjoint Classes" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.EntitiesAsMembersOfDisjointClasses" .
+	
+_:MisplacedClassesOrProperties a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Misplaced Classes Or Properties" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties" .
+	
+_:MisusedOwlDatatypeOrObjectProperties a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Misused Owl Datatype Or Object Properties" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.MisusedOwlDatatypeOrObjectProperties" .
+
+_:EstimatedEntitiesAsMembersOfDisjointClasses a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Entities As Members Of Disjoint Classes (Estimated)" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.EstimateEntitiesAsMembersOfDisjointClasses" .
+	

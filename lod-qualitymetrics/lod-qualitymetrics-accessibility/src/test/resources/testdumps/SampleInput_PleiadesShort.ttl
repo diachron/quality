@@ -1,0 +1,93 @@
+# Pleiades RDF Dump
+# Contents: Pleiades Places Range 9,z
+# Date: 2014/04/06 11:26:29.783 GMT-4
+# License: http://creativecommons.org/licenses/by/3.0/us/
+# Credits: http://pleiades.stoa.org/credits
+# Triple count: 120414
+
+@base <http://pleiades.stoa.org/places>
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix osgeo: <http://data.ordnancesurvey.co.uk/ontology/geometry/> .
+@prefix osspatial: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pleiades: <http://pleiades.stoa.org/places/vocab#> .
+@prefix prov: <http://www.w3.org/TR/prov-o/#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix spatial: <http://geovocab.org/spatial#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+
+<> a void:Dataset ;
+	dcterms:title "Pleiades Places Range 9,z".
+	
+<http://pleiades.stoa.org/places/90032637> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Balāwāt";
+    rdfs:comment "A place from the TAVO Index";
+    dcterms:contributor <http://pleiades.stoa.org/author/Jweiland>;
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/90032637/rdf#> .
+
+<http://pleiades.stoa.org/places/903080> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Media/Mad(aya)";
+    rdfs:comment "Media/Mad(aya) was a region of northwestern Iran.";
+    dcterms:contributor <http://pleiades.stoa.org/author/ShannonMT>;
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903080/rdf#> .
+
+<http://pleiades.stoa.org/places/903083> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Mihragan Kadag";
+    rdfs:comment "An ancient place, cited: BAtlas 92 C4 Mihragan Kadag";
+    dcterms:contributor <http://pleiades.stoa.org/author/abenaissa>;
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903083/rdf#> .
+
+<http://pleiades.stoa.org/places/903085> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Naisar";
+    rdfs:comment "An ancient place, cited: BAtlas 92 G3 Naisar";
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903085/rdf#> .
+
+<http://pleiades.stoa.org/places/903086> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Natanz";
+    rdfs:comment "An ancient place, cited: BAtlas 92 G3 Natanz";
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903086/rdf#> .
+
+<http://pleiades.stoa.org/places/903087> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Navish";
+    rdfs:comment "An ancient place, cited: BAtlas 92 F2 Navish";
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903087/rdf#> .
+
+<http://pleiades.stoa.org/places/903088> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Nemavand/Laodicea/Niphaunda";
+    rdfs:comment "Nemavand/Laodicea/Niphaunda was an ancient city in Media founded by Darius the Great.";
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/903088/rdf> .
+    
+# [slondono] Authors section. Added manually for testing purposes, taken from: http://atlantides.org/downloads/pleiades/rdf/authors.ttl
+
+<http://pleiades.stoa.org/author/Jweiland> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Jonathan Weiland" .
+
+<http://pleiades.stoa.org/author/ShannonMT> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Shannon Turner" .
+
+<http://pleiades.stoa.org/author/abenaissa> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Amin Benaissa" .
+
+# [slondono] Non-dereferenceable section. Artificial triples with unresolvable URIs, added for testing purposes
+
+<http://pleiades.stoa.org/places/55500001010#this> a <http://geovocab.org/spatial#Feature>;
+    rdfs:label "Fake Place";
+    rdfs:comment "A fake place added for testing purposes";
+    foaf:primaryTopicOf <http://pleiades.stoa.org/places/55500001010> .
+
+<http://pleiades.stoa.org/places/55500001010> a <http://pleiades.stoa.org/places/vocab#Place>;
+	dcterms:description "A fake place added for testing purposes";
+	pleiades:hasName <http://pleiades.stoa.org/places/55500001010/bogus>;
+	dcterms:contributor <http://pleiades.stoa.org/author_fake/fake_author_one>,
+        <http://pleiades.stoa.org/author_fake/fake_author_two> .
+
+<http://pleiades.stoa.org/author_fake/fake_author_one> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Fake Author One" .
+
+<http://pleiades.stoa.org/author_fake/fake_author_two> a <http://xmlns.com/foaf/0.1/Person>;
+    foaf:name "Fake Author Two" .
