@@ -44,7 +44,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * 
  */
 public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
-	
+	//TODO:fix
 	private final Resource METRIC_URI = DQM.DereferenceabilityForwardLinksMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(EstimatedDereferenceabilityForwardLinks.class);
