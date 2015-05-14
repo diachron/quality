@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -45,52 +46,46 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * Based on: Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance.
  * 
  * Best Case 1, Worst Case 0
+ * 
  */
 public class DereferenceabilityForwardLinks implements QualityMetric {
 	
+	//TODO: FIX metric
 	private final Resource METRIC_URI = DQM.DereferenceabilityForwardLinksMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(DereferenceabilityForwardLinks.class);
 		
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 
-	/** Stores the % of locally-minted subjects URIs of dereferenced Resource (i.e. the % of how many times 
-	 *  the dereferenced resource appears to be as the subject in the dereferenced triples)
-	 */
-	private Map<String, Double> do_p = new ConcurrentHashMap<String, Double>();
 	
 	private boolean metricCalculated = false;
 	private double metricValue = 0.0;
 	
+	private double totalDerefSubj = 0.0;
+	private double totalDerefDataWithSub = 0.0;
+	
 	private List<Model> _problemList = new ArrayList<Model>();
-	private List<String> uriSet;
+	private List<String> uriSet = new ArrayList<String>();
 
 	
 	public void compute(Quad quad) {
 		String subject = quad.getSubject().toString();
 		if (httpRetreiver.isPossibleURL(subject)){
 			httpRetreiver.addResourceToQueue(subject);
-			do_p.put(subject, 0.0);
+			uriSet.add(subject);
 		}
 	}
 
 	public double metricValue() {
 		if (!this.metricCalculated){
-			uriSet = new ArrayList<String>(do_p.keySet());
-			httpRetreiver.addListOfResourceToQueue(uriSet);
-			
 			httpRetreiver.start();
 
 			this.checkForForwardLinking();
 			this.metricCalculated = true;
 			httpRetreiver.stop();
 			
-			double sum = 0.0;
-			for(String s : do_p.keySet()){
-				sum += do_p.get(s);
-			}
 			
-			metricValue = (sum == 0.0) ? 0.0 : sum / do_p.keySet().size();
+//			metricValue = (sum == 0.0) ? 0.0 : sum / do_p.keySet().size();
 		}
 		
 		return metricValue;
@@ -134,35 +129,20 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 				if (Dereferencer.hasValidDereferencability(httpResource)){
 					logger.info("Dereferencable resource {}.", httpResource.getUri());
 					
-					Iterator<?> iter = null;
+					List<Statement> stmtList;
 					//lets first check if the vocabulary exists, so that we do not download it
-					Node n = ModelFactory.createDefaultModel().createResource(httpResource.getUri()).asNode();
+					Resource res = ModelFactory.createDefaultModel().createResource(httpResource.getUri());
+					Node n = res.asNode();
 					String ns = n.getNameSpace();
 					if (VocabularyLoader.knownVocabulary(ns)){
 						Model m = VocabularyLoader.getModelForVocabulary(ns);
-						iter = m.listStatements();
+						stmtList = m.listStatements(res, (Property) null, (RDFNode) null).toList();
 					} else {
-						iter = ModelFactory.createDefaultModel().read(httpResource.getUri()).listStatements();
+						stmtList = ModelFactory.createDefaultModel().read(httpResource.getUri()).listStatements(res, (Property) null, (RDFNode) null).toList();
 					}
 					
-					int correct = 0;
-					int triples = 0;
-					while(iter.hasNext()){
-						triples++;
-						Statement s = ((StmtIterator)iter).next();
-
-						if (s.getSubject().isURIResource()){
-							if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
-							else this.createViolatingTriple(s, httpResource.getUri());
-						}
-						
-						if (triples > 0){
-							double per_local_minted_uri = ((double) correct) / ((double)triples);
-							do_p.put(httpResource.getUri(), per_local_minted_uri);
-						} else {
-							this.createNotValidForwardLink(httpResource.getUri());
-						}
-					}
+//					if (stmtList.size() > 1) 
+					
 				}
 			} else {
 				logger.info("Non-meaningful dereferencable resource {}.", httpResource.getUri());
