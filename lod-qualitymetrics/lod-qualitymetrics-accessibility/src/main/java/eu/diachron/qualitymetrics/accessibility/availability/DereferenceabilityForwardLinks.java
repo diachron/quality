@@ -109,6 +109,8 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 		return pl;
 	}
 	
+	//TODO:fix
+	
 	// Private Method for checking forward linking
 	private void checkForForwardLinking(){
 		while(uriSet.size() > 0){

@@ -51,7 +51,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * 
  */
 public class DereferenceBackLinks implements QualityMetric {
-
+	//TODO:fix
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
