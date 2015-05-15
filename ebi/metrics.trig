@@ -1,0 +1,31 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lmi: <http://purl.org/eis/vocab/lmi#> .
+
+#--- Timeliness Dimension ------------------------------------------------------------------------------------------------- 
+
+_:DefinedOntologyAuthor a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Defined Ontology Author" ;
+	lmi:javaPackageName "de.unibonn.iai.eis.diachron.ebi.DefinedOntologyAuthor" .
+
+_:OBOFoundry a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "OBO Foundry" ;
+	lmi:javaPackageName "de.unibonn.iai.eis.diachron.ebi.OBOFoundry" .
+	
+_:ObsoleteConceptsInOntology a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Obsolete Concepts In Ontology" ;
+	lmi:javaPackageName "de.unibonn.iai.eis.diachron.ebi.ObsoleteConceptsInOntology" .
+	
+_:POBODefinitionUsage a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "POBO Definition Usage" ;
+	lmi:javaPackageName "de.unibonn.iai.eis.diachron.ebi.POBODefinitionUsage" .
+	
+_:SynonymUsage a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Synonym Usage" ;
+	lmi:javaPackageName "de.unibonn.iai.eis.diachron.ebi.SynonymUsage" .
+	
+_:OntologyVersioningConciseness a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Ontology Versioning Conciseness" ;
+	lmi:javaPackageName "de.unibonn.iai.eis.diachron.ebi.OntologyVersioningConciseness" .
