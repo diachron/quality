@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$1" == dependencies ] ; then
 	echo "downloading dependencies";
-	git clone https://github.com/diachron/Luzzu ../Luzzu;
+	git clone https://github.com/EIS-Bonn/Luzzu.git ../Luzzu;
 elif [ "$1" == build ] ; then
 	echo "Compiling Diachron Quality Metrics";
 	mvn clean install -Dmaven.test.skip=true;
