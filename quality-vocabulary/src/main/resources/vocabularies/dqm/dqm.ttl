@@ -54,12 +54,6 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subClassOf	daq:Category ;
 		rdfs:comment	"Groups dimensions related to the design of the data, which provide information about how the chosen representation of the data affect its quality" ;
 		rdfs:label	"Representational" .
-	
-	dqm:Reputation
-		a	rdfs:Class ;
-		rdfs:subClassOf	daq:Category ;
-		rdfs:comment	"Reputation dimensions related to the reputation of the data, which provide information about how the reputable the data is based on its providers and host" ;
-		rdfs:label	"Reputation" .
 		
 	#Dimension Classes
 	dqm:Availability
@@ -1187,7 +1181,7 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment "Links Reputation category with OBO foundry metric" ; 
 		rdfs:label "Reputation category has OBO foundry metric" ;
-		rdfs:domain	dqm:Reputation ;
+		rdfs:domain	dqm:Provenance ;
 		rdfs:range	dqm:OBOFoundryMetric .
 
 
