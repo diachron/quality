@@ -41,6 +41,40 @@ public class ModelParser {
 	final static Logger logger = LoggerFactory.getLogger(ModelParser.class);
 
 	
+	public static boolean snapshotParser(final String uri){
+		Lang lang  =  Lang.TURTLE;
+		
+		initiate(lang);
+		
+		Runnable parser = new Runnable(){
+			@Override
+			public void run() {
+				try{
+					logger.info("Trying to parse resource {}.", uri);
+					RDFDataMgr.parse(rdfStream, uri);
+				} catch (Exception e){
+					logger.info("Resource {} could not be parsed.", uri);
+					rdfStream.finish();
+				}
+			}			
+		};
+
+		Future future = executor.submit(parser);
+	
+		try{
+			while (iterator.hasNext()){
+				logger.info("{} contains RDF", uri);
+				future.cancel(true);
+				return true;
+			}
+		} catch (Exception e){
+			return false;
+		}
+		
+		return false;
+	}
+	
+	
 	private static boolean snapshotParser(final CachedHTTPResource httpResource, final Lang givenLang){
 		if (httpResource.isContainsRDF() != null) return httpResource.isContainsRDF();
 		

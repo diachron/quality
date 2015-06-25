@@ -332,7 +332,7 @@ public class ResourceBaseURIOracle {
 		if(InternetDomainName.isValid(matched) && InternetDomainName.from(matched).isUnderPublicSuffix()) {
 			return InternetDomainName.from(matched).topPrivateDomain().toString();
 		} else {
-			return null;
+			return resourceURI;
 		}
 	}
 

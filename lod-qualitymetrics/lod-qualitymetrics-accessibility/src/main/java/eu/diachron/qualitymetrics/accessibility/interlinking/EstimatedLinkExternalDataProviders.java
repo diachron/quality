@@ -32,6 +32,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
@@ -63,7 +64,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	/**
 	 * Parameter: default size for the reservoir 
 	 */
-	private static int reservoirsize = 5;
+	private static int reservoirsize = 5000;
 		
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
@@ -107,7 +108,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			
 			if (!(subjectPLD.equals(objectPLD))){
 				if (quad.getSubject().isURI()) this.addUriToSampler(quad.getSubject().toString());
-				if (quad.getObject().isURI()) this.addUriToSampler(quad.getSubject().toString());
+				if (quad.getObject().isURI()) this.addUriToSampler(quad.getObject().toString());
 			}
 		}
 	}
@@ -172,18 +173,10 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			if (httpResource == null || httpResource.getStatusLines() == null) {
 				this.notFetchedQueue.add(uri);
 			} else {
-				if (httpResource.isContainsRDF() != null){
-					if (httpResource.isContainsRDF()) {
-						String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri());
-						if (mapPLDtotresRDF.containsKey(pld)) mapPLDtotresRDF.put(pld, mapPLDtotresRDF.get(pld) + 1);
-						else mapPLDtotresRDF.put(pld, 1);
-					}
-				} else {
-					if (this.is200AnRDF(httpResource)){
-						String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri());
-						if (mapPLDtotresRDF.containsKey(pld)) mapPLDtotresRDF.put(pld, mapPLDtotresRDF.get(pld) + 1);
-						else mapPLDtotresRDF.put(pld, 1);
-					}
+				if (ModelParser.hasRDFContent(httpResource)){
+					String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri());
+					if (mapPLDtotresRDF.containsKey(pld)) mapPLDtotresRDF.put(pld, mapPLDtotresRDF.get(pld) + 1);
+					else mapPLDtotresRDF.put(pld, 1);
 				}
 			}
 		}

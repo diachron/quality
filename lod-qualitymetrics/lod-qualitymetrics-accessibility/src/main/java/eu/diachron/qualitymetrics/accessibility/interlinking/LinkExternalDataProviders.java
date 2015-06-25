@@ -33,6 +33,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
@@ -86,15 +87,13 @@ public class LinkExternalDataProviders implements QualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		
-		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
 			String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-			
-			if (!(subject.equals(object))){
-				if (quad.getSubject().isURI()) setResources.add(quad.getSubject().toString());
-				if (quad.getObject().isURI()) setResources.add(quad.getSubject().toString());
+			if (!(subject.equals("linkededucation.org"))) setResources.add(quad.getSubject().toString());
+
+			if (quad.getObject().isURI()){
+				String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+				if (!(object.equals("linkededucation.org"))) setResources.add(quad.getObject().toString());
 			}
-		}
 	}
 
 	@Override
@@ -148,23 +147,9 @@ public class LinkExternalDataProviders implements QualityMetric {
 	}
 	
 	private void checkForRDFLinks() {
-		httpRetriever.addListOfResourceToQueue(new ArrayList<String>(setResources));
-		httpRetriever.start();
-
-		this.notFetchedQueue.addAll(setResources);
-		
-		while (this.notFetchedQueue.size() > 0){
-			String uri = this.notFetchedQueue.poll();
-			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
-			if (httpResource == null || httpResource.getStatusLines() == null) {
-				this.notFetchedQueue.add(uri);
-			} else {
-				if (httpResource.isContainsRDF() != null){
-					if (httpResource.isContainsRDF()) setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri()));
-				} else {
-					if (this.is200AnRDF(httpResource)) setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri()));
-				}
-			}
+		for (String s : setResources){
+			if (ModelParser.snapshotParser(s))
+				setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
 		}
 	}
 	

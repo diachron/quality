@@ -130,11 +130,15 @@ public class VocabularyLoader {
 		} else {
 			//download and store in cache
 			if (dcm.existsInCache(DiachronCacheManager.VOCABULARY_CACHE, ns)){
-				CachedVocabulary cv = (CachedVocabulary) dcm.getFromCache(DiachronCacheManager.VOCABULARY_CACHE, ns);
-				StringReader reader = new StringReader(cv.getTextualContent());
-				Model m = ModelFactory.createDefaultModel();
-				m.read(reader, ns, cv.getLanguage());
-				dataset.addNamedModel(ns, m);
+				try{
+					CachedVocabulary cv = (CachedVocabulary) dcm.getFromCache(DiachronCacheManager.VOCABULARY_CACHE, ns);
+					StringReader reader = new StringReader(cv.getTextualContent());
+					Model m = ModelFactory.createDefaultModel();
+					m.read(reader, ns, cv.getLanguage());
+					dataset.addNamedModel(ns, m);
+				}catch (ClassCastException cce){
+					logger.error("Cannot cast {} " + ns);
+				}
 			} else {
 				downloadAndLoadVocab(ns);
 			}

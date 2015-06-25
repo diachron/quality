@@ -43,16 +43,16 @@ public class BasicProvenanceMetric implements QualityMetric {
 		
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();
-		Node object = quad.getSubject();
+		Node object = quad.getObject();
 		
 		if (predicate.hasURI(RDF.type.getURI()) && (object.hasURI(VOID.Dataset.getURI()) || object.hasURI(DCAT.Dataset.getURI()))){
 			dataset.putIfAbsent(subject.getURI(), "");
 		}
 		
 		if (predicate.hasURI(DCTerms.creator.getURI()) || predicate.hasURI(DCTerms.publisher.getURI())){
-			if (subject.hasURI(EnvironmentProperties.getInstance().getDatasetURI())){
+			if (subject.hasURI(EnvironmentProperties.getInstance().getBaseURI())){
 				if (object.isURI())
-					dataset.put(EnvironmentProperties.getInstance().getDatasetURI(), object.getURI());
+					dataset.put(EnvironmentProperties.getInstance().getBaseURI(), object.getURI());
 			}
 		}
 	}

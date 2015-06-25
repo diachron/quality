@@ -15,7 +15,8 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.XSD;
 
-import de.unibonn.iai.eis.luzzu.semantics.vocabularies.PROV;
+import de.unibonn.iai.eis.diachron.semantics.knownvocabs.PROV;
+
 
 /**
  * @author slondono
