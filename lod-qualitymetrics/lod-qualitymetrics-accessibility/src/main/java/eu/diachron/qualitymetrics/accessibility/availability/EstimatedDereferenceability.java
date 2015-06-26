@@ -2,17 +2,12 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.http.StatusLine;
-import org.apache.jena.atlas.logging.Log;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotException;
-import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -26,12 +21,11 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -45,7 +39,6 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  * @see <a href="http://dl.dropboxusercontent.com/u/4138729/paper/dereference_iswc2011.pdf">
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
- * TODO:FIX
  */
 public class EstimatedDereferenceability implements QualityMetric {
 	
@@ -75,9 +68,14 @@ public class EstimatedDereferenceability implements QualityMetric {
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
 
 	private double metricValue = 0.0;
+	private double totalURI = 0;
+	private double dereferencedURI = 0;
 	private boolean metricCalculated = false;
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
+	
+	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
+
 
 	
 	/**
@@ -121,40 +119,22 @@ public class EstimatedDereferenceability implements QualityMetric {
 				lstUrisToDeref.add(tld.getUri());
 			}
 			
-			// Dereference all TLD URIs
-			List<DerefResult> lstDeRefTlds = this.deReferenceUris(lstUrisToDeref);
+			httpRetriever.addListOfResourceToQueue(lstUrisToDeref);
+			httpRetriever.start();
 			
-			long totalDerefUris = 0;
-			long totalUris = 0;
+			do {
+				this.startDereferencingProcess(lstUrisToDeref);
+				lstUrisToDeref.clear();
+				lstUrisToDeref.addAll(this.notFetchedQueue);
+				this.notFetchedQueue.clear();
+			// Continue trying to dereference all URIs in uriSet, that is, those not fetched up to now
+			} while(!lstUrisToDeref.isEmpty());
 			
-			for(DerefResult curTldDeRefRes : lstDeRefTlds) {
-				// Obtain the TLD corresponding to the URI whose result currently is being examined
-				Tld derefTld = this.tldsReservoir.findItem(new Tld(curTldDeRefRes.uri, MAX_FQURIS_PER_TLD));
-				totalUris += ((derefTld.getfqUris() != null)?(derefTld.getfqUris().size()):(0));
-				
-				// Only URIs comprised by dereferenceable TLDs are subject to be counted as successfully dereferenced
-				if(curTldDeRefRes.isDeref && derefTld.getfqUris() != null) {
-					// Dereference all URIs part of the TLD
-					List<DerefResult> lstDeRefUris = this.deReferenceUris(derefTld.getfqUris().getItems());
-					
-					// Count those successfully dereferenced
-					for(DerefResult curUriDeRefRes : lstDeRefUris) {						
-						if(curUriDeRefRes.isDeref && curUriDeRefRes.isRdfXml) {
-							logger.debug("-- URI successfully dereferenced: {}", curUriDeRefRes.uri);
-							totalDerefUris += 1;
-						} else {
-							logger.debug("-- URI: {} failed to be dereferenced", curUriDeRefRes.uri);							
-						}
-					}
-					logger.debug("TLD: {} successfully dereferenced, sampling from: {} URIs", curTldDeRefRes.uri, derefTld.countFqUris());
-				} else {
-					logger.debug("TLD: {} non-dereferenced", curTldDeRefRes.uri);
-				}
-			}
+			this.metricCalculated = true;
 			
-			this.metricValue = (double)totalDerefUris / (double)totalUris;
 		}
 		
+		this.metricValue = this.dereferencedURI / this.totalURI;
 		return this.metricValue;
 	}
 	
@@ -201,190 +181,59 @@ public class EstimatedDereferenceability implements QualityMetric {
 		}
 	}
 	
-	/**
-	 * Tries to dereference all the URIs contained in the parameter, by retrieving them from the cache. URIs
-	 * not found in the cache are added to the queue containing the URIs to be fetched by the async HTTP retrieval process
-	 * @param uriSet Set of URIs to be dereferenced
-	 * @return list with the results of the dereferenceability operations, for those URIs that were found in the cache 
-	 */
-	private List<DerefResult> deReferenceUris(List<String> uriSet) {
-		// Start the dereferencing process, which will be run in parallel
-		httpRetriever.addListOfResourceToQueue(uriSet);
-		httpRetriever.start();
-		
-		List<DerefResult> lstDerefUris = new ArrayList<DerefResult>();
-		List<String> lstToDerefUris = new ArrayList<String>(uriSet);
-				
-		// Dereference each and every one of the URIs contained in the specified set
-		while(lstToDerefUris.size() > 0) {
-			// Remove the URI at the head of the queue of URIs to be dereferenced                
-			String headUri = lstToDerefUris.remove(0);
-			
-			// First, search for the URI in the cache
-			CachedHTTPResource httpResource = (CachedHTTPResource)dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, headUri);
-			
+	
+	
+	
+	private void startDereferencingProcess(List<String> uriSet) {
+		for(String uri : uriSet){
+			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
 			if (httpResource == null || httpResource.getStatusLines() == null) {
-				// URIs not found in the cache, is still to be fetched via HTTP, add it to the end of the list
-				lstToDerefUris.add(headUri);
+				this.notFetchedQueue.add(uri);
 			} else {
-				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
-				DerefResult curUrlResult = new DerefResult(headUri, false, false);
-				lstDerefUris.add(curUrlResult);
+				this.totalURI++;
+				if (Dereferencer.hasValidDereferencability(httpResource)){
+					if(ModelParser.hasRDFContent(httpResource)){
+						this.dereferencedURI++;
+						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());
+					} else {
+						this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
+						logger.trace("URI was dereferenced but response was not valid: {}", httpResource.getUri());
+					}
+				} else {
+					logger.trace("URI failed to be dereferenced: {}", httpResource.getUri());
+				}
+
+				createProblemReport(httpResource);
 				
-				if (this.isDereferenceable(httpResource)) {
-					curUrlResult.isDeref = true;
-					if(this.is200AnRDF(httpResource)) { 
-						curUrlResult.isRdfXml = true;
-					} else this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
-				} else if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200) {
-					curUrlResult.isDeref = true;
-					// Check if the resource contains RDF on XML
-					if(this.is200AnRDF(httpResource)) {
-						curUrlResult.isRdfXml = true;
-					}
-				}
-				logger.trace("Resource fetched: {}. Deref. status: {}. Is RDF: {}", headUri, httpResource.getDereferencabilityStatusCode(), curUrlResult.isRdfXml);
-			}
-		}
-		
-		return lstDerefUris;
-	}
-	
-	private boolean isDereferenceable(CachedHTTPResource httpResource){
-		if (httpResource.getDereferencabilityStatusCode() == null){
-			List<Integer> statusCode = this.getStatusCodes(httpResource.getStatusLines());
-			
-			if (httpResource.getUri().contains("#") && statusCode.contains(200)) httpResource.setDereferencabilityStatusCode(StatusCode.HASH);
-			else if (statusCode.contains(200)){
-				httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
-				if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
-				else {
-					if (statusCode.contains(301)) { 
-						httpResource.setDereferencabilityStatusCode(StatusCode.SC301);
-						this.createProblemQuad(httpResource.getUri(), DQM.SC301MovedPermanently);
-					}
-					else if (statusCode.contains(302)){
-						httpResource.setDereferencabilityStatusCode(StatusCode.SC302);
-						this.createProblemQuad(httpResource.getUri(), DQM.SC302Found);
-					}
-					else if (statusCode.contains(307)) {
-						httpResource.setDereferencabilityStatusCode(StatusCode.SC307);
-						this.createProblemQuad(httpResource.getUri(), DQM.SC307TemporaryRedirectory);
-					}
-					else {
-						if (hasBad3xxCode(statusCode)) this.createProblemQuad(httpResource.getUri(), DQM.SC3XXRedirection);
-					}
-				}
-			}
-			
-			if (has4xxCode(statusCode)) {
-				httpResource.setDereferencabilityStatusCode(StatusCode.SC4XX);
-				this.createProblemQuad(httpResource.getUri(), DQM.SC4XXClientError);
-			}
-			if (has5xxCode(statusCode)) {
-				httpResource.setDereferencabilityStatusCode(StatusCode.SC5XX);
-				this.createProblemQuad(httpResource.getUri(), DQM.SC5XXServerError);
-			}
-		} 					
-		
-		StatusCode scode = httpResource.getDereferencabilityStatusCode();
-		return this.mapDerefStatusCode(scode);
-		
-	}
-	
-	private List<Integer> getStatusCodes(List<StatusLine> statusLines){
-		ArrayList<Integer> codes = new ArrayList<Integer>();
-		
-		if(statusLines != null) {
-			synchronized(statusLines) {
-				for(StatusLine s : statusLines){
-					codes.add(s.getStatusCode());
-				}
-			}
-		}
-		
-		return codes;
-	}
-	
-	private boolean mapDerefStatusCode(StatusCode statusCode){
-		if(statusCode == null) {
-			return false;
-		} else {
-			switch(statusCode){
-				case SC303 : case HASH : return true;
-				default : return false;
+				logger.trace("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
 	}
 	
-	private boolean is200AnRDF(CachedHTTPResource resource) {
-		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
-		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (LinkedDataContent.contentTypes.contains(response.getHeaders("Content-Type"))) { 
-						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
-							Model m = this.tryRead(resource.getUri());
-							if (m != null && m.size() == 0){
-								this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
-								resource.setContainsRDF(false);
-								return false;
-							}
-						}
-						this.createProblemQuad(resource.getUri(), DQM.SC200WithRDF);
-						resource.setContainsRDF(true);
-						return true;
-					}
-				}
-			}
-		}
-		this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
-		resource.setContainsRDF(false);
-		return false;
-	}
 	
-	private boolean hasBad3xxCode(List<Integer> statusCode){
-		for (int i : statusCode){
-			if ((i == 300) || (i == 304) || (i == 305) || 
-					(i == 306) || (i == 308) ||
-					((i >= 308) && (i < 399)))  return true; else continue;
-		}
-		return false;
-	}
-	
-	
-	private boolean has4xxCode(List<Integer> statusCode){
-		for (int i : statusCode) {
-			if ((i >= 400) && (i < 499))  return true; else continue;
-		}
-		return false;
-	}
-	
-	private boolean has5xxCode(List<Integer> statusCode){
-		for (int i : statusCode) {
-			if ((i >= 500) && (i < 599))  return true; else continue;
-		}
-		return false;
-	}
-	
-	/**
-	 * Inner class, with the purpose of coupling an URI with the result of its dereferencing process
-	 * It's basically a pair establishing a relation between an URI and its dereferenceability
-	 * @author slondono
-	 */
-	private class DerefResult {
+	private void createProblemReport(CachedHTTPResource httpResource){
+		StatusCode sc = httpResource.getDereferencabilityStatusCode();
 		
-		private String uri;
-		private boolean isDeref;
-		private boolean isRdfXml;
-		
-		private DerefResult(String uri, boolean isDeref, boolean isRdfXml) {
-			this.uri = uri;
-			this.isDeref = isDeref;
-			this.isRdfXml = isRdfXml;
+		switch (sc){
+			case SC200 : if (ModelParser.hasRDFContent(httpResource)) this.createProblemQuad(httpResource.getUri(), DQM.SC200WithRDF); 
+						 else this.createProblemQuad(httpResource.getUri(), DQM.SC200WithoutRDF);
+						 break;
+			case SC301 : this.createProblemQuad(httpResource.getUri(), DQM.SC301MovedPermanently); break;
+			case SC302 : this.createProblemQuad(httpResource.getUri(), DQM.SC302Found); break;
+			case SC307 : this.createProblemQuad(httpResource.getUri(), DQM.SC307TemporaryRedirectory); break;
+			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQM.SC3XXRedirection); break;
+			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQM.SC4XXClientError); break;
+			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQM.SC5XXServerError); break;
+			default	   : break;
 		}
 	}
-			
+	
+	private void createProblemQuad(String resource, Resource problem){
+		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), problem.asNode());
+		this._problemList.add(q);
+	}
+	
+	
 	public static int getMAX_TLDS() {
 		return MAX_TLDS;
 	}
@@ -399,27 +248,6 @@ public class EstimatedDereferenceability implements QualityMetric {
 
 	public static void setMAX_FQURIS_PER_TLD(int mAX_FQURIS_PER_TLD) {
 		MAX_FQURIS_PER_TLD = mAX_FQURIS_PER_TLD;
-	}
-	
-	private void createProblemQuad(String resource, Resource problem){
-		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), problem.asNode());
-		this._problemList.add(q);
-	}
-	
-
-	/**
-	 * Try Read content returned by text/plain 
-	 * @param uri
-	 * @return
-	 */
-	private Model tryRead(String uri) {
-		Model m = ModelFactory.createDefaultModel();
-		try{
-			m = RDFDataMgr.loadModel(uri, Lang.NTRIPLES);
-		} catch (RiotException r) {
-			Log.debug("Resource could not be parsed:", r.getMessage());
-		}
-		return m;
 	}
 	
 	@Override
