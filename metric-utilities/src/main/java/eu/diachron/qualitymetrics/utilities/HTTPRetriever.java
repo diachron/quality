@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHeaders;
@@ -369,12 +370,8 @@ public class HTTPRetriever {
 	}
 
 	public boolean isPossibleURL(String url) {
-		try {
-			java.net.URL uri = new URL(url);
-		} catch (MalformedURLException e) {
-			return false;
-		} 
-		return true;
+		UrlValidator valid = new UrlValidator();
+		return valid.isValid(url);
 	}
 	
 	/**
