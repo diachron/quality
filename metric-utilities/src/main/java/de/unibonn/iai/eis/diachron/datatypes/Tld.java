@@ -65,6 +65,7 @@ public class Tld {
 	 */
 	@Override
 	public int hashCode() {
+		if (this.uri == null) return 0;
 		return this.uri.hashCode();
 	}
 	

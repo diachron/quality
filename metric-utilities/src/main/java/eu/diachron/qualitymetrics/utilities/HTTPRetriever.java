@@ -369,8 +369,12 @@ public class HTTPRetriever {
 	}
 
 	public boolean isPossibleURL(String url) {
-		// TODO: add more protocols
-		return ((url.startsWith("http")) || (url.startsWith("https")));
+		try {
+			java.net.URL uri = new URL(url);
+		} catch (MalformedURLException e) {
+			return false;
+		} 
+		return true;
 	}
 	
 	/**
