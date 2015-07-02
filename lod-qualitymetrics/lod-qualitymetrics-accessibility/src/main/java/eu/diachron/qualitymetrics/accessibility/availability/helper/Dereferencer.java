@@ -10,6 +10,8 @@ import org.apache.http.StatusLine;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
  * @author Jeremy Debattista
@@ -107,5 +109,19 @@ public class Dereferencer {
 		}
 		return false;
 	}
+	
+//	public static void main (String [] args){
+//		HTTPRetriever httpRetriever = new HTTPRetriever();
+//		httpRetriever.addResourceToQueue("http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+//		httpRetriever.start();
+//		System.out.println(httpRetriever.isPossibleURL("http:/"));
+//		
+//		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+//		while (res == null){
+//			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+//		}
+//		
+//		System.out.println(hasValidDereferencability(res));
+//	}
 
 }
