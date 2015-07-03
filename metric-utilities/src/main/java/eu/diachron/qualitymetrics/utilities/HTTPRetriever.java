@@ -105,7 +105,11 @@ public class HTTPRetriever {
 	}
 	
 
-	public void start() {
+	public void start(){
+		start(false);
+	}
+	
+	public void start(final boolean requiresContentType) {
 		// Dereference all the URIs stored in the queue, asynchronously. Wait until all have been resolved
 		if(!httpQueue.isEmpty()) {
 			executor = Executors.newSingleThreadExecutor();
@@ -113,7 +117,7 @@ public class HTTPRetriever {
 			Runnable retreiver = new Runnable() {
 				public void run() {
 					try {
-						runHTTPAsyncRetreiver();
+						runHTTPAsyncRetreiver(requiresContentType);
 					} catch (InterruptedException e) {
 						// The thread being interrupted for whatever reason, is severe enough to report a runtime exception
 						logger.error("HTTP async request thread interrupted", e);
@@ -134,7 +138,8 @@ public class HTTPRetriever {
 		executor.shutdown();
 	}
 	
-	private void runHTTPAsyncRetreiver() throws InterruptedException {
+	
+	private void runHTTPAsyncRetreiver(final boolean requiresContentType) throws InterruptedException {
 		
 		RequestConfig requestConfig = this.getRequestConfig(true);
 		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
@@ -168,8 +173,11 @@ public class HTTPRetriever {
 
 				try {
 					final HttpGet request = new HttpGet(queuePeek);		
-					Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
-					request.addHeader(accept);
+					if (requiresContentType)
+					{
+						Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
+						request.addHeader(accept);
+					}
 					HttpAsyncRequestProducer httpProd = HttpAsyncMethods.create(request);
 		            
 		            AsyncCharConsumer<HttpResponse> consumer = new AsyncCharConsumer<HttpResponse>() {

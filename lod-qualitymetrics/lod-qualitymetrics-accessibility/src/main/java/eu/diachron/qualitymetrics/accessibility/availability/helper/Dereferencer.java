@@ -110,18 +110,17 @@ public class Dereferencer {
 		return false;
 	}
 	
-//	public static void main (String [] args){
-//		HTTPRetriever httpRetriever = new HTTPRetriever();
-//		httpRetriever.addResourceToQueue("http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
-//		httpRetriever.start();
-//		System.out.println(httpRetriever.isPossibleURL("http:/"));
-//		
-//		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
-//		while (res == null){
-//			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
-//		}
-//		
-//		System.out.println(hasValidDereferencability(res));
-//	}
+	public static void main (String [] args){
+		HTTPRetriever httpRetriever = new HTTPRetriever();
+		httpRetriever.addResourceToQueue("http://data.europeana.eu/item/00718/4E1E6748FC9804FFF2CA853462A6FD2112ADD3E4");
+		httpRetriever.start();
+		
+		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+		while (res == null){
+			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+		}
+		
+		System.out.println(hasValidDereferencability(res));
+	}
 
 }

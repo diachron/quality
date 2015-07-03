@@ -50,13 +50,15 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 1000;
-	private static int MAX_FQURIS_PER_TLD = 300;
+	private static int MAX_TLDS = 40;
+	private static int MAX_FQURIS_PER_TLD = 20;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
 	 */
 	private HTTPRetriever httpRetriever = new HTTPRetriever();
+	private HTTPRetriever fqRetriever = new HTTPRetriever();
+
 	
 	/**
 	 * Holds the set of dereferenceable top-level domains found among the subjects and objects of the triples,
@@ -120,12 +122,16 @@ public class EstimatedDereferenceability implements QualityMetric {
 			}
 			
 			httpRetriever.addListOfResourceToQueue(lstUrisToDeref);
-			httpRetriever.start();
+			httpRetriever.start(false); //we do not need content negotiation for this
 			
+			List<String> lst = this.filterTLDs(lstUrisToDeref);	
+
 			do {
-				this.startDereferencingProcess(lstUrisToDeref);
-				lstUrisToDeref.clear();
-				lstUrisToDeref.addAll(this.notFetchedQueue);
+				fqRetriever.addListOfResourceToQueue(lst);
+				fqRetriever.start(true);
+				this.startDereferencingProcess(lst);
+				lst.clear();
+				lst.addAll(this.notFetchedQueue);
 				this.notFetchedQueue.clear();
 			// Continue trying to dereference all URIs in uriSet, that is, those not fetched up to now
 			} while(!lstUrisToDeref.isEmpty());
@@ -181,6 +187,31 @@ public class EstimatedDereferenceability implements QualityMetric {
 		}
 	}
 	
+	
+	private List<String> filterTLDs(List<String> uriSet){
+		List<String> possibleDeref = new ArrayList<String>();
+		Queue<String> q = new ConcurrentLinkedQueue<String>();
+		q.addAll(uriSet);
+		while (!(q.isEmpty())){
+			String uri = q.poll();
+			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
+			if (httpResource == null || httpResource.getStatusLines() == null) {
+				q.add(uri);
+			} else {
+				Tld newTld = new Tld(httpResource.getUri(), MAX_TLDS);		
+				Tld foundTld = this.tldsReservoir.findItem(newTld);
+				if (Dereferencer.hasOKStatus(httpResource)){
+					if (foundTld.getfqUris().getItems() != null)
+						possibleDeref.addAll(foundTld.getfqUris().getItems());
+				} else {
+					this.totalURI += foundTld.getfqUris().getItems().size();
+					logger.trace("URI failed to be dereferenced: {}", httpResource.getUri());
+					//problem report
+				}
+			}
+		}
+		return possibleDeref;
+	}
 	
 	
 	

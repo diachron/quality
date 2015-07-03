@@ -2,7 +2,16 @@ package eu.diachron.qualitymetrics.utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.apache.jena.riot.lang.PipedRDFStream;
+import org.apache.jena.riot.lang.PipedTriplesStream;
+
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -56,4 +65,27 @@ public class TestLoader {
 	public List<Quad> getStreamingQuads(){
 		return this.streamingQuads;
 	}	
+	
+	
+	public PipedRDFIterator<?> streamParser(final String fileName){
+		PipedRDFIterator<?> iterator = new PipedRDFIterator<Triple>();
+		final PipedRDFStream<?> rdfStream = new PipedTriplesStream((PipedRDFIterator<Triple>) iterator);
+		
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+
+		Runnable parser = new Runnable(){
+			@Override
+			public void run() {
+				try{
+					RDFDataMgr.parse(rdfStream, fileName);
+				} catch (Exception e){
+					rdfStream.finish();
+				}
+			}			
+		};
+		executor.submit(parser);
+
+		
+		return iterator;
+	}
 }
