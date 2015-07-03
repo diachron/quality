@@ -68,6 +68,9 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 					Boolean defined = null;
 					if (seen == null) {
 						defined = VocabularyLoader.checkTerm(object);
+						if (!defined){
+							defined = VocabularyLoader.checkTerm(object, false);
+						}
 						shared.addClassOrProperty(object.getURI(), defined);
 					}
 					else defined = seen;
@@ -90,7 +93,10 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
 				Boolean defined = null;
 				if (seen == null) {
-					defined = VocabularyLoader.checkTerm(predicate);
+					defined = VocabularyLoader.isProperty(predicate);
+					if (!defined){
+						defined = VocabularyLoader.isProperty(predicate, false);
+					}
 					shared.addClassOrProperty(predicate.getURI(), defined);
 				}
 				else defined = seen;

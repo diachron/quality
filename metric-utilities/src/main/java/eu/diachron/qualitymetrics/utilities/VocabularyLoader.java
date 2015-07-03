@@ -214,4 +214,32 @@ public class VocabularyLoader {
 	}
 	
 	
+	public static Boolean checkTerm(Node term, boolean useCache){
+		if (useCache) return checkTerm(term);
+		else{
+			Model m = RDFDataMgr.loadModel(term.getURI(),Lang.RDFXML);
+			
+			if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
+				return true;
+			}
+			
+			if (term.isURI()) {
+				Resource r = m.createResource(term.getURI());
+				return m.containsResource(r);
+			}
+			
+			return null;
+		}
+	}
+	
+	public static boolean isProperty(Node term, boolean useCache){
+		if (useCache) return isProperty(term);
+		else{
+			Model m = RDFDataMgr.loadModel(term.getURI(),Lang.RDFXML);
+			return (m.contains(m.createResource(term.getURI()), RDF.type, RDF.Property) 
+					|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.DatatypeProperty)
+					|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty));
+		}
+	}
+	
 }
