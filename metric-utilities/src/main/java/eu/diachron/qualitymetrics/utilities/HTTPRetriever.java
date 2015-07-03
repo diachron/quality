@@ -72,7 +72,7 @@ public class HTTPRetriever {
 	 * Maximum number of simultaneous HTTP request that can be sent in separate threads, configuration parameter
 	 * of the performance utilitarian methods for measurement of performance (namely measurement of parallel reqs.)
 	 */
-	private static final int MAX_PARALLEL_REQS = 5;
+	private static final int MAX_PARALLEL_REQS = 15;
 	
 	private static final int TIMEOUT = 10000;
 	
@@ -112,7 +112,7 @@ public class HTTPRetriever {
 	public void start(final boolean requiresContentType) {
 		// Dereference all the URIs stored in the queue, asynchronously. Wait until all have been resolved
 		if(!httpQueue.isEmpty()) {
-			executor = Executors.newSingleThreadExecutor();
+			executor = Executors.newFixedThreadPool(10);
 			
 			Runnable retreiver = new Runnable() {
 				public void run() {
