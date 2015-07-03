@@ -57,7 +57,6 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * Performs HTTP requests, used to try to fetch identified URIs
 	 */
 	private HTTPRetriever httpRetriever = new HTTPRetriever();
-	private HTTPRetriever fqRetriever = new HTTPRetriever();
 
 	
 	/**
@@ -127,8 +126,9 @@ public class EstimatedDereferenceability implements QualityMetric {
 			List<String> lst = this.filterTLDs(lstUrisToDeref);	
 
 			do {
-				fqRetriever.addListOfResourceToQueue(lst);
-				fqRetriever.start(true);
+				httpRetriever.stop();
+				httpRetriever.addListOfResourceToQueue(lst);
+				httpRetriever.start(true);
 				this.startDereferencingProcess(lst);
 				lst.clear();
 				lst.addAll(this.notFetchedQueue);

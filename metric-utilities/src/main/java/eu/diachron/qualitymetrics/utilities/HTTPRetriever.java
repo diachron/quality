@@ -72,7 +72,7 @@ public class HTTPRetriever {
 	 * Maximum number of simultaneous HTTP request that can be sent in separate threads, configuration parameter
 	 * of the performance utilitarian methods for measurement of performance (namely measurement of parallel reqs.)
 	 */
-	private static final int MAX_PARALLEL_REQS = 15;
+	private static final int MAX_PARALLEL_REQS = 5;
 	
 	private static final int TIMEOUT = 10000;
 	

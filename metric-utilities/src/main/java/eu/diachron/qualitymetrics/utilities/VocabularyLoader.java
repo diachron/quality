@@ -217,7 +217,7 @@ public class VocabularyLoader {
 	public static Boolean checkTerm(Node term, boolean useCache){
 		if (useCache) return checkTerm(term);
 		else{
-			Model m = RDFDataMgr.loadModel(term.getURI(),Lang.RDFXML);
+			Model m = RDFDataMgr.loadModel(term.getURI());
 			
 			if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
 				return true;
@@ -235,7 +235,7 @@ public class VocabularyLoader {
 	public static boolean isProperty(Node term, boolean useCache){
 		if (useCache) return isProperty(term);
 		else{
-			Model m = RDFDataMgr.loadModel(term.getURI(),Lang.RDFXML);
+			Model m = RDFDataMgr.loadModel(term.getURI());
 			return (m.contains(m.createResource(term.getURI()), RDF.type, RDF.Property) 
 					|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.DatatypeProperty)
 					|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty));
