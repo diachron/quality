@@ -35,7 +35,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * @author Christoph Lange
  * @date 13th May 2014
  */
-public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
+public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	/**
 	 * Metric URI
 	 */
@@ -43,7 +43,7 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	/**
 	 * logger static object
 	 */
-	private static Logger logger = LoggerFactory.getLogger(EntitiesAsMembersOfDisjointClasses.class);
+	private static Logger logger = LoggerFactory.getLogger(SimpleEntitiesAsMembersOfDisjointClasses.class);
 	
 	/**
 	 * number of entities that are instances of disjoint classes
@@ -128,7 +128,6 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 							createProblemModel(ModelFactory.createDefaultModel().createResource(entity).asNode(), classAsResource.asNode(), ModelFactory.createDefaultModel().createResource(otherClass).asNode());							
 						}
 					}
-					classes.remove(_class);
 				}
 			}
 		}
@@ -149,7 +148,7 @@ public class EntitiesAsMembersOfDisjointClasses implements QualityMetric {
 
 		this.problemList.add(m);
 	}
-
+	
 	/**
 	 * Returns metric value for the object of this class
 	 * 

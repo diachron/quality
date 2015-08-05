@@ -4,30 +4,23 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -43,47 +36,43 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * An Estimate version for the metric Entities as members of
  * disjoint classes using reservoir sampling
  */
-public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric{
+public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric{
 
 	private final Resource METRIC_URI = DQM.EntitiesAsMembersOfDisjointClassesMetric;
-	private static Logger logger = LoggerFactory.getLogger(EstimateEntitiesAsMembersOfDisjointClasses.class);
+	private static Logger logger = LoggerFactory.getLogger(EstimateSimpleEntitiesAsMembersOfDisjointClasses.class);
 	protected long entitiesAsMembersOfDisjointClasses = 0;
 	
-	protected HTreeMap<String, MDC> typesOfResource = MapDbFactory.createFilesystemDB().createHashMap("entities_members_disjoinedclasses").make();
 	protected List<Model> problemList = new ArrayList<Model>();
 	private boolean metricCalculated = false;
 	
 	//Reservoir Settings
-	private static int MAX_SIZE = 100000;
+	private int MAX_SIZE = 100000;
 	private ReservoirSampler<MDC> reservoir = new ReservoirSampler<MDC>(MAX_SIZE, true);
 
+	public void setMaxSize(int size){
+		MAX_SIZE = size;
+		reservoir = new ReservoirSampler<MDC>(MAX_SIZE, true);
+	}
+	
 	
 	public void compute(Quad quad) {
 		logger.debug("Assessing {}", quad.asTriple().toString());
 
 		try {
-			String subject = quad.getSubject().toString();
+			RDFNode subject = ModelFactory.createDefaultModel().asRDFNode(quad.getSubject());
 			Node predicate = quad.getPredicate();
-			String object = quad.getObject().toString();
+			RDFNode object = ModelFactory.createDefaultModel().asRDFNode(quad.getObject());
 
 			if (RDF.type.asNode().equals(predicate)) {
-				
-				if (this.typesOfResource.containsKey(subject)){
-					MDC mdc = this.typesOfResource.get(subject);
-					MDC foundMDC = this.reservoir.findItem(mdc);
-					if (foundMDC == null){
-						logger.trace("Subject not in reservoir: {}... Trying to add it", mdc.subject);
-
-						mdc.objects.add(object);
-						this.reservoir.add(mdc);
-					} else {
-						foundMDC.objects.add(object);
-					}
-				} else{
-					MDC mdc = new MDC(subject,object);
-					this.typesOfResource.put(subject, mdc);
+				MDC mdc = new MDC(subject.asResource());
+				MDC foundMDC = this.reservoir.findItem(mdc);
+				if (foundMDC == null){
 					logger.trace("Subject not in reservoir: {}... Trying to add it", mdc.subject);
+
+					mdc.objects.add(object);
 					this.reservoir.add(mdc);
+				} else {
+					foundMDC.objects.add(object);
 				}
 			}
 		} catch (Exception exception) {
@@ -100,17 +89,16 @@ public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric
 		long count = 0;
 		for (MDC mdc : this.reservoir.getItems()){
 			if (mdc.objects.size() >= 2){
-				Iterator<String> iter = new ArrayList<String>(mdc.objects).iterator();
+				Iterator<RDFNode> iter = new ArrayList<RDFNode>(mdc.objects).iterator();
 				while (iter.hasNext()){
-					String _class = iter.next();
-					Resource classAsResource = ModelFactory.createDefaultModel().createResource(_class);
-					Model model = VocabularyLoader.getModelForVocabulary(classAsResource.getNameSpace());
-					Set<String> disjoinedClasses = this.getDisjointClasses(model, _class);
+					RDFNode _class = iter.next();
+					Model model = VocabularyLoader.getModelForVocabulary(_class.asResource().getNameSpace());
+					Set<RDFNode> disjoinedClasses = model.listObjectsOfProperty(_class.asResource(), OWL.disjointWith).toSet();
 					disjoinedClasses.retainAll(mdc.objects);
 					if (disjoinedClasses.size() > 0){
 						count++;
-						this.createProblemModel(ModelFactory.createDefaultModel().createResource(mdc.subject).asNode(), classAsResource.asNode(), disjoinedClasses);
-					}
+						this.createProblemModel(mdc.subject.asNode(), _class.asNode(), disjoinedClasses);
+					} 
 				}
 			}
 		}
@@ -119,7 +107,8 @@ public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric
 		return count;
 	}
 	
-	private void createProblemModel(Node resource, Node _class, Set<String> _otherClasses){
+	
+	private void createProblemModel(Node resource, Node _class, Set<RDFNode> _otherClasses){
 		Model m = ModelFactory.createDefaultModel();
 		
 		Resource subject = m.createResource(resource.toString());
@@ -127,8 +116,8 @@ public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric
 		
 		
 		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));	
-		for(String s : _otherClasses){
-			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.createResource(s)));
+		for(RDFNode s : _otherClasses){
+			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, s));
 		}
 
 
@@ -148,7 +137,7 @@ public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric
 
 		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size());
 
-		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.reservoir.getItems().size());
+		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.reservoir.size());
 
 		return metricValue;
 	}
@@ -176,19 +165,5 @@ public class EstimateEntitiesAsMembersOfDisjointClasses implements QualityMetric
 
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
-	}
-	
-	private Set<String> getDisjointClasses(Model m, String _class){
-		String query = "SELECT ?object WHERE { <" + _class + "> <" + OWL.disjointWith.getURI() + "> ?object }";
-
-		Query qry = QueryFactory.create(query);
-	    QueryExecution qe = QueryExecutionFactory.create(qry, m);
-	    ResultSet rs = qe.execSelect();
-	    Set<String> objects = new HashSet<String>();
-
-	    while (rs.hasNext()){
-	    	 objects.add(rs.next().get("object").toString());
-	    }
-	    return objects;
 	}
 }
