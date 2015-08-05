@@ -1592,3 +1592,17 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "The property used is deprecated in its respective schema." ;
 		rdfs:label "Deprecated Property" .
+		
+### Ontology Hijacking
+
+	dqm:OntologyHijackingException
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred resource hijacked an external authorative concept." ;
+		rdfs:label "Misplaced Property" .
+
+	dqm:hijackedTripleStatement
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	dqm:OntologyHijackingException;
+		rdfs:range	rdf:Statement .

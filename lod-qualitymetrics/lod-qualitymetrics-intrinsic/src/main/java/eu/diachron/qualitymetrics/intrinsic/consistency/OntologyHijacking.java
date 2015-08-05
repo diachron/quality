@@ -1,167 +1,222 @@
-//package eu.diachron.qualitymetrics.intrinsic.consistency;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import org.apache.log4j.Logger;
-//import org.apache.xerces.util.URI;
-//import org.apache.xerces.util.URI.MalformedURIException;
-//
-//import com.hp.hpl.jena.graph.Node;
-//import com.hp.hpl.jena.rdf.model.Model;
-//import com.hp.hpl.jena.rdf.model.Resource;
-//import com.hp.hpl.jena.sparql.core.Quad;
-//import com.hp.hpl.jena.vocabulary.RDF;
-//
-//import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
-//import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-//import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-//import eu.diachron.semantics.vocabulary.DQM;
-//import eu.diachron.qualitymetrics.utilities.VocabularyReader;
-//
-///**
-// * The Ontology Hijacking detects the redefinition by analyzing defined classes or 
-// * properties in data set and looks of same definition in its respective vocabulary. 
-// * 
-// * Metric Value Range : [0 - 1]
-// * Best Case : 0
-// * Worst Case : 1
-// * 
-// * Note: This class uses utilities.VocabularyReader to download models (vocabularies) from
-// * web. Though VocabularyReader has it own cache but it has some inherit performance/scalability issues.   
-// *  
-// * @author Muhammad Ali Qasmi
-// * @date 10th June 2014
-// * 
-// */
-//public class OntologyHijacking implements QualityMetric{
-//        
-//        /**
-//         * Metric URI
-//         */
-//        private final Resource METRIC_URI = DQM.OntologyHijackingMetric;
-//        /**
-//         * logger static object
-//         */
-//        static Logger logger = Logger.getLogger(OntologyHijacking.class);
-//        /**
-//         * total number of locally defined classes or properties count 
-//         */
-//        protected double totalLocallyDefinedClassesOrPropertiesCount = 0;
-//        /**
-//         * total number of hijacked classes or properties found 
-//         */
-//        protected double hijackedClassesOrPropertiesCount = 0;
-//        /**
-//         * list of problematic quads
-//         */
-//        protected List<Quad> problemList = new ArrayList<Quad>();
-//        
-//        /**
-//         * Check if the given quad has predicate of URI with given fragment
-//         * 
-//         * @param predicate
-//         * @param fragment
-//         * @return true if predicate is URI with given fragment
-//         */
-//        protected boolean isDefinedClassOrProperty(Quad quad, String fragment){
-//                try {
-//                       if (quad.getPredicate().isURI()) { // predicate is a URI
-//                           URI tmpURI = new URI(quad.getPredicate().getURI());
-//                           return (tmpURI.getFragment() != null && tmpURI.getFragment().toLowerCase().equals(fragment)) ?  true : false;
-//                       }
-//                       
-//                } catch (MalformedURIException e) {
-//                        logger.debug(e.getStackTrace());
-//                        logger.error(e.getMessage());
-//                }
-//                return false;
-//        }
-//        
-//        /**
-//         * Detects if given node is defined in vocabulary or not
-//         * 
-//         * @param node
-//         * @return true - if given node is found in the vocabulary with property of RDF.type
-//         */
-//        protected boolean isHijacked(Node node){
-//                Model model = VocabularyReader.read(node.getURI());
-//                if (!model.isEmpty()){
-//                        if (model.getResource(node.getURI()).isURIResource()){
-//                                if ( model.getResource(node.getURI()).hasProperty(RDF.type)) {
-//                                     return true;   
-//                                }
-//                        }
-//                }
-//                return false;
-//        }
-//        
-//        /**
-//         * Filters quad triples that are locally defined in the data set.
-//         * Detects if filtered triples are already defined in vocabulary
-//         */
-//        
-//        public void compute(Quad quad) {
-//                try {
-//                    if (isDefinedClassOrProperty(quad, "type")){ // quad represent a locally defined statement
-//                            this.totalLocallyDefinedClassesOrPropertiesCount++; // increments defined class or property count
-//                            Node subject = quad.getSubject(); // retrieve subject
-//                            if (isHijacked(subject)){ 
-//                                    this.hijackedClassesOrPropertiesCount++; // increments redefined class or property count
-//                                    this.problemList.add(quad);
-//                            }
-//                    }
-//                    else if (isDefinedClassOrProperty(quad, "domain")){ // quad represent a locally defined statement
-//                            this.totalLocallyDefinedClassesOrPropertiesCount++; // increments defined class or property count
-//                            Node object = quad.getObject(); // retrieve object
-//                            if (isHijacked(object)){ 
-//                                    this.hijackedClassesOrPropertiesCount++; // increments redefined class or property count
-//                                    this.problemList.add(quad);
-//                            }
-//                    }
-//                }
-//                catch (Exception e) {
-//                     logger.debug(e.getStackTrace());
-//                     logger.error(e.getMessage());
-//                }
-//        }
-//        
-//        /**
-//         * Returns metric value for between 0 to 1. Where 0 as the best case and 1 as worst case 
-//         * @return double - range [0 - 1] 
-//         */
-//        
-//        public double metricValue() {
-//                if (this.totalLocallyDefinedClassesOrPropertiesCount <= 0) {
-//                        logger.warn("Total classes or properties count is ZERO");
-//                        return 0;
-//                }
-//                return (this.hijackedClassesOrPropertiesCount / this.totalLocallyDefinedClassesOrPropertiesCount);
-//        }
-//
-//        /*
-//         * (non-Javadoc)
-//         * @see de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric#getMetricURI()
-//         */
-//        
-//        public Resource getMetricURI() {
-//                return this.METRIC_URI;
-//        }
-//
-//        /*
-//         * (non-Javadoc)
-//         * @see de.unibonn.iai.eis.diachron.qualitymetrics.AbstractQualityMetric#getQualityProblems()
-//         */
-//        
-//        public ProblemList<?> getQualityProblems() {
-//                ProblemList<Quad> tmpProblemList = null;
-//                try {
-//                    tmpProblemList = new ProblemList<Quad>(this.problemList);
-//                } catch (ProblemListInitialisationException problemListInitialisationException) {
-//                    logger.debug(problemListInitialisationException.getStackTrace());
-//                    logger.error(problemListInitialisationException.getMessage());
-//                }
-//                return tmpProblemList;
-//        }
-//
-//}
+package eu.diachron.qualitymetrics.intrinsic.consistency;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.hp.hpl.jena.rdf.model.AnonId;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
+
+import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
+
+/**
+ * The Ontology Hijacking detects the redefinition by analyzing defined classes or 
+ * properties in data set and looks of same definition in its respective vocabulary. 
+ * 
+ * This metric uses table 1 from http://www.aidanhogan.com/docs/saor_aswc08.pdf
+ * in order to identify the rules for Ontology Hijacking.
+ * 
+ * @author Jeremy Debattista
+ * 
+ */
+public class OntologyHijacking implements QualityMetric{
+        
+        private final Resource METRIC_URI = DQM.OntologyHijackingMetric;
+        static Logger logger = LoggerFactory.getLogger(OntologyHijacking.class);
+
+        private double totalPossibleHijacks = 0; // total number of redefined classes or properties
+        private double totalHijacks = 0;
+
+        private List<Model> problemList = new ArrayList<Model>();
+        
+        private List<HijackingRule> hijackingRules = new CustomList<HijackingRule>();
+        {
+        	hijackingRules.add(new HijackingRule(RDFS.subClassOf, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.equivalentClass, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.equivalentClass, TriplePosition.OBJECT));
+        	hijackingRules.add(new HijackingRule(RDFS.subPropertyOf, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.equivalentProperty, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.equivalentProperty, TriplePosition.OBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.inverseOf, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.inverseOf, TriplePosition.OBJECT));
+        	hijackingRules.add(new HijackingRule(RDFS.domain, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(RDFS.range, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.SymmetricProperty, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.SymmetricProperty, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.onProperty, TriplePosition.OBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.hasValue, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.unionOf, TriplePosition.OBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.intersectionOf, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.intersectionOf, TriplePosition.OBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.FunctionalProperty, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.InverseFunctionalProperty, TriplePosition.SUBJECT));
+        	hijackingRules.add(new HijackingRule(OWL.TransitiveProperty, TriplePosition.SUBJECT));
+        }
+        
+        
+        public void compute(Quad quad) {
+        	Resource subject = Commons.asRDFNode(quad.getSubject()).asResource();
+        	Resource predicate = Commons.asRDFNode(quad.getPredicate()).asResource();
+        	Resource object = Commons.asRDFNode(quad.getObject()).asResource();
+        	
+        	// class type hijacking
+        	if (predicate.equals(RDF.type)){
+        		if (hijackingRules.contains(object)){
+        			// we triggered a hijacking rule
+
+        			if (!isAuthorative(subject)) {
+        				totalHijacks++;
+        				this.addToProblem(quad);
+        			}
+        			totalPossibleHijacks++;
+        		}
+        	} else if (hijackingRules.contains(predicate)){
+        		// property type hijacking - we might have multiple rules here
+        		List<HijackingRule> rules = new ArrayList<HijackingRule>();
+        		for (HijackingRule rule : hijackingRules){
+        			if (rule.equals(predicate)) rules.add(rule);
+        		}
+        		
+        		for (HijackingRule r : rules){
+        			Resource authoritativeCheck;
+            		if (r.authorativeSource == TriplePosition.SUBJECT) authoritativeCheck = subject;
+            		else authoritativeCheck = object;
+            		
+            		if (!isAuthorative(authoritativeCheck)) {
+        				totalHijacks++;
+        				this.addToProblem(quad);
+        			}
+        		}
+        		totalPossibleHijacks++;
+
+        	}
+        }
+        
+        private void addToProblem(Quad q){
+        	Model m = ModelFactory.createDefaultModel();
+        	
+        	Resource gen = Commons.generateURI();
+        	m.createStatement(gen, RDF.type, DQM.OntologyHijackingException);
+        	
+        	Resource anon = m.createResource(AnonId.create());
+        	m.createStatement(gen, DQM.hijackedTripleStatement, anon);
+        	m.createStatement(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
+        	m.createStatement(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
+        	m.createStatement(anon, RDF.object, Commons.asRDFNode(q.getObject()));
+        }
+        
+        
+		/**
+		 * @param Concept being check for authority
+		 * @return true if the assessed dataset is authorative to the concept
+		 */
+		private boolean isAuthorative(Resource node){
+			/* A source s is authorative of concept c if:
+			 *   1) c is a blank node OR
+			 *   2) s is retrievable and is part of the namespace identifying c - given that c exists.
+			 */
+			
+			if (node.isAnon()) return true;
+			
+			if (node.getNameSpace().equals(EnvironmentProperties.getInstance().getBaseURI())) 
+				return true;
+			else 
+				return !(VocabularyLoader.checkTerm(node.asNode()));
+		}
+		
+        
+        /**
+         * Returns metric value for between 0 to 1. Where 1 as the best case and 0 as worst case 
+         * @return double - range [0 - 1] 
+         */
+        
+        public double metricValue() {
+        		double value = 1.0 - (this.totalHijacks / this.totalPossibleHijacks);
+                return value;
+        }
+
+        
+        public Resource getMetricURI() {
+                return this.METRIC_URI;
+        }
+
+        
+    	public ProblemList<?> getQualityProblems() {
+    		ProblemList<Model> tmpProblemList = null;
+    		try {
+    			if(this.problemList != null && this.problemList.size() > 0) {
+    				tmpProblemList = new ProblemList<Model>(this.problemList);
+    			} else {
+    				tmpProblemList = new ProblemList<Model>();
+    			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+    			logger.error(problemListInitialisationException.getMessage());
+    		}
+    		return tmpProblemList;
+    	}
+
+		@Override
+		public boolean isEstimate() {
+			return false;
+		}
+
+		@Override
+		public Resource getAgentURI() {
+			return DQM.LuzzuProvenanceAgent;
+		}
+		
+		private class HijackingRule{
+			Resource hijackProperty; // could be a property or resource
+			TriplePosition authorativeSource;
+			
+			HijackingRule(Resource resource, TriplePosition pos){
+				hijackProperty = resource;
+				authorativeSource = pos;
+			}
+			
+			@Override
+			public boolean equals(Object object){
+				boolean sameSame = false;
+				
+				if (object != null && object instanceof Resource){
+					sameSame = this.hijackProperty.equals(((Resource) object));
+				}
+				
+				return sameSame;
+			}
+		}
+		
+		private enum TriplePosition{
+			SUBJECT, PREDICATE, OBJECT;
+		}
+		
+		private class CustomList<T> extends ArrayList<T>{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public int indexOf(Object o) {
+		        if (o == null) {
+		            for (int i = 0; i < this.size(); i++)
+		                if (this.get(i)==null)return i;
+		        } else {
+		            for (int i = 0; i < this.size(); i++)
+		                if (this.get(i).equals(o))
+		                    return i;
+		        }
+		        return -1;
+		    }
+		}
+}
