@@ -117,6 +117,8 @@ public class OntologyHijacking implements QualityMetric{
         	m.createStatement(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
         	m.createStatement(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
         	m.createStatement(anon, RDF.object, Commons.asRDFNode(q.getObject()));
+        	
+        	this.problemList.add(m);
         }
         
         
