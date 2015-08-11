@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
@@ -48,8 +49,12 @@ public class ValidIFPUsageTest extends Assert {
 		//  In our minimal example only the predicate object pair foaf:jabberID "I_AM_NOT_A_VALID_IFP" 
 		//  was violated with :bob and :alice resources having the same jabberID
 		
-		// 1 - (2 / 4)
-		assertEquals(0.5,metric.metricValue(), 0.0001);
+		// 1 - (1 / 4)
+		assertEquals(0.75,metric.metricValue(), 0.0001);
+		
+		Model m = ((Model)metric.getQualityProblems().getProblemList().get(0));
+		m.write(System.out, "TURTLE");
+		
 	}	
 	
 	
