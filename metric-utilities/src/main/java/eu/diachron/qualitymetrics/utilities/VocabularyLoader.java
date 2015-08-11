@@ -3,7 +3,9 @@
  */
 package eu.diachron.qualitymetrics.utilities;
 
-import java.io.StringReader;
+ import java.io.StringReader;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,13 +20,20 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.XSD;
 
+import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 
@@ -57,7 +66,7 @@ public class VocabularyLoader {
 		knownDatasets.put("http://rdfs.org/sioc/ns#","sioc.rdf");
 //		knownDatasets.put("http://webns.net/mvcb/","admin.rdf");
 		knownDatasets.put("http://www.w3.org/2004/02/skos/core#","skos.rdf");
-		knownDatasets.put("http://rdfs.org/ns/void#","void.rdf");
+		knownDatasets.put("http://rdfs.org/ns/void#","void.rdf"); //TODO update new namespace
 		knownDatasets.put("http://purl.org/vocab/bio/0.1/","bio.rdf");
 		knownDatasets.put("http://purl.org/linked-data/cube#","cube.ttl");
 		knownDatasets.put("http://purl.org/rss/1.0/","rss.rdf");
@@ -213,7 +222,6 @@ public class VocabularyLoader {
 		return (m.contains(m.createResource(term.getURI()), RDF.type, RDFS.Class) || m.contains(m.createResource(term.getURI()), RDF.type, OWL.Class)) ;
 	}
 	
-	
 	public static Boolean checkTerm(Node term, boolean useCache){
 		if (useCache) return checkTerm(term);
 		else{
@@ -255,4 +263,97 @@ public class VocabularyLoader {
 		}
 	}
 	
+	public static boolean isDeprecatedTerm(Node term){
+		
+		String ns = term.getNameSpace();
+		
+		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+		Model m = dataset.getNamedModel(ns);
+		
+		Resource r = Commons.asRDFNode(term).asResource();
+		
+		Filter<RDFNode> filter = new Filter<RDFNode>() {
+	            @Override
+	            public boolean accept(RDFNode node) {
+	            	return ((node.equals(OWL.DeprecatedClass)) || (node.equals(OWL.DeprecatedProperty)));
+	            }
+		};
+
+		return m.listObjectsOfProperty(r, RDF.type).filterKeep(filter).hasNext();
+	}
+
+	public static Set<RDFNode> getPropertyDomain(Node term){
+		String ns = term.getNameSpace();
+		
+		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+		Model m = dataset.getNamedModel(ns);
+		
+		Resource s = Commons.asRDFNode(term).asResource();
+		
+		Set<RDFNode> set = m.listObjectsOfProperty(s, RDFS.domain).toSet();
+//		set.addAll(inferParent(term,m,true));
+		return set;
+	}
+	
+	public static Set<RDFNode> getPropertyRange(Node term){
+		String ns = term.getNameSpace();
+		
+		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+		Model m = dataset.getNamedModel(ns);
+		
+		Resource s = Commons.asRDFNode(term).asResource();
+		
+		Set<RDFNode> set = m.listObjectsOfProperty(s, RDFS.range).toSet();
+//		set.addAll(inferParent(term,m,false));
+		
+		if (set.contains(RDFS.Literal)){
+			set.add(XSD.xfloat);
+			set.add(XSD.xdouble);
+			set.add(XSD.xint);
+			set.add(XSD.xlong);
+			set.add(XSD.xshort);
+			set.add(XSD.xbyte);
+			set.add(XSD.xboolean);
+			set.add(XSD.xstring);
+			set.add(XSD.unsignedByte);
+			set.add(XSD.unsignedShort);
+			set.add(XSD.unsignedInt);
+			set.add(XSD.unsignedLong);
+			set.add(XSD.decimal);
+			set.add(XSD.integer);
+			set.add(XSD.nonPositiveInteger);
+			set.add(XSD.nonNegativeInteger);
+			set.add(XSD.positiveInteger);
+			set.add(XSD.negativeInteger);
+			set.add(XSD.normalizedString);
+		}
+		
+		return set;
+	}
+	
+	
+	public static Set<RDFNode> inferParent(Node term, Model m, boolean isSuperClass){
+		String query;
+		Model _mdl = m;
+		
+		if (_mdl == null){
+			String ns = term.getNameSpace();
+
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			_mdl = dataset.getNamedModel(ns);
+		}
+		
+		if (isSuperClass)
+			query = "SELECT ?super { <"+term.getURI()+"> <"+RDFS.subClassOf.getURI()+">* ?super }";
+		else
+			query = "SELECT ?super { <"+term.getURI()+"> <"+RDFS.subPropertyOf.getURI()+">* ?super }";
+		
+		QueryExecution q = QueryExecutionFactory.create(query,_mdl);
+		ResultSet rs = q.execSelect();
+		Set<RDFNode> set = new HashSet<RDFNode>();
+		set.add(OWL.Thing);
+		set.add(RDFS.Resource);
+		while(rs.hasNext()) set.add(rs.next().get("super"));
+		return set;
+	}
 }
