@@ -47,10 +47,10 @@ public class ValidIFPUsageTest extends Assert {
 		
 		//	Total # IFP Statements : 4; # Violated Predicate-Object Statements : 1
 		//  In our minimal example only the predicate object pair foaf:jabberID "I_AM_NOT_A_VALID_IFP" 
-		//  was violated with :bob and :alice resources having the same jabberID
+		//  was violated with :bob, :alice and :jack resources having the same jabberID
 		
-		// 1 - (1 / 4)
-		assertEquals(0.75,metric.metricValue(), 0.0001);
+		// 1 - (3 / 6)
+		assertEquals(0.5,metric.metricValue(), 0.0001);
 		
 		Model m = ((Model)metric.getQualityProblems().getProblemList().get(0));
 		m.write(System.out, "TURTLE");

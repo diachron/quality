@@ -9,3 +9,7 @@
 :Bob a foaf:Person ;
 	foaf:mbox <mailto:bob@wonderland.com> ;
 	foaf:jabberID "I_AM_NOT_A_VALID_IFP" .
+	
+:Jack a foaf:Person ;
+	foaf:mbox <mailto:jack@wonderland.com> ;
+	foaf:jabberID "I_AM_NOT_A_VALID_IFP" .

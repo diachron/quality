@@ -22,7 +22,6 @@ public class IFPTriple implements Serializable {
 
 	private static final long serialVersionUID = -5330823594542978241L;
 	
-	@SuppressWarnings("unused")
 	private String subject = "";
 	private String predicate = "";
 	private String object = "";
@@ -67,5 +66,9 @@ public class IFPTriple implements Serializable {
 		 }
 		 
 		 return false;
+	 }
+	 
+	 public Resource getSubject(){
+		 return ModelFactory.createDefaultModel().createResource(this.subject);
 	 }
 }

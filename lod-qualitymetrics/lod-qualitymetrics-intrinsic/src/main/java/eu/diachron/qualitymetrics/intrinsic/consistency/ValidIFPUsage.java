@@ -64,15 +64,17 @@ public class ValidIFPUsage implements QualityMetric{
 			if (seenIFPs.containsKey(t)){
 				totalViolatedIFPs++;
 				t = seenIFPs.get(t);
-				this.addProblem(t.getProblemURI(), quad);
+				this.addProblem(t, quad); // if we encounter this violation for the first time, then we'll increment the totalViolatedIFPs once more.
 			} else {
 				seenIFPs.put(t,t);
 			}
 		}
 	}
 	
-	private void addProblem(Resource problemURI, Quad q){
+	private void addProblem(IFPTriple t, Quad q){
 		Bag bag;
+		
+		Resource problemURI = t.getProblemURI();
 		
 		if (!(this.problemModel.contains(problemURI, RDF.type, DQM.InverseFunctionalPropertyViolation))){
 			this.problemModel.add(problemURI, RDF.type, DQM.InverseFunctionalPropertyViolation);
@@ -80,17 +82,18 @@ public class ValidIFPUsage implements QualityMetric{
 			this.problemModel.add(problemURI, DQM.violatedObject, Commons.asRDFNode(q.getObject()));
 			
 			bag = this.problemModel.createBag();
+			bag.add(t.getSubject());
 			this.problemModel.add(problemURI, DQM.violatingSubjects, bag);
+			
+			//if it is the first time we encountered this violation
+			totalViolatedIFPs++;
 		}
-		
 		Resource bagURI = this.problemModel.listObjectsOfProperty(problemURI, DQM.violatingSubjects).next().asResource();
 		bag = this.problemModel.getBag(bagURI);
-		
 		this.problemModel.remove(problemURI, DQM.violatingSubjects, bag);
-		
+			
 		bag.add(Commons.asRDFNode(q.getSubject()));
 		this.problemModel.add(problemURI, DQM.violatingSubjects, bag);
-
 	}
 
 	@Override
