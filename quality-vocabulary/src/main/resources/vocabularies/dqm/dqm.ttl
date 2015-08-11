@@ -1093,6 +1093,18 @@ dqm:LuzzuProvenanceAgent
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:UsageOfIncorrectDomainOrRangeDatatypesMetric .
 		
+	dqm:ValidIFPUsageMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"This metric checks if the Inverse Functional Properties (IFP) is used correctly, i.e. if we have S P O and P is set to be an owl:InverseFunctionalProperty, then S is the one and only resource connected to O. If there is a triple S1 P O, then the IFP is not used correctly and thus since S1 will be 'reasoned' to be the same as S." ;
+		rdfs:label	"Valid Usage of the owl:InverseFunctionalProperty" .
+		
+	dqm:hasValidIFPUsageMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:ValidIFPUsageMetric .
 
 #############################		
 		
@@ -1620,7 +1632,8 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subPropertyOf qpro:extraExceptionProperty ;
 		rdfs:domain	dqm:OntologyHijackingException;
 		rdfs:range	rdf:Statement .
-		
+
+### IncorrectDomainOrRange	
 	dqm:IncorrectRange
 		a	rdfs:Class ;
 		rdfs:subClassOf qpro:Exception ;
@@ -1644,3 +1657,31 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subPropertyOf qpro:extraExceptionProperty ;
 		rdfs:domain	qpro:Exception;
 		rdfs:range	rdf:Statement .
+
+### IFP metric
+	dqm:InverseFunctionalPropertyViolation
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred predicate and objects are used in multiple subject resources which violates the IFP metric." ;
+		rdfs:label "Inverse Functional Property Violation" .
+		
+	dqm:violatedPredicate
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	dqm:InverseFunctionalPropertyViolation;
+		rdfs:range	rdf:Resource .		
+	
+	dqm:violatedObject
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	dqm:InverseFunctionalPropertyViolation;
+		rdfs:range	rdf:Resource .
+		
+	dqm:violatingSubjects
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	dqm:InverseFunctionalPropertyViolation;
+		rdfs:range	rdf:Bag .		
+	
+	
+	

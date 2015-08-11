@@ -1,0 +1,11 @@
+@prefix : <http://example.org/data/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+# foaf:Person and foaf:Project are explicitly declared disjoint in FOAF.
+:Alice a foaf:Person ;
+	foaf:mbox <mailto:alice@wonderland.com> ;
+	foaf:jabberID "I_AM_NOT_A_VALID_IFP" .
+	
+:Bob a foaf:Person ;
+	foaf:mbox <mailto:bob@wonderland.com> ;
+	foaf:jabberID "I_AM_NOT_A_VALID_IFP" .
