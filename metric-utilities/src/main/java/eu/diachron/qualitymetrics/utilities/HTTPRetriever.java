@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -93,7 +95,8 @@ public class HTTPRetriever {
 	 */
 	private static boolean followRedirections = true;
 
-	private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());	
+	//private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());
+	private Queue<String> httpQueue = new ConcurrentLinkedQueue<String>();
 	private ExecutorService executor = null;
 				
 	public void addResourceToQueue(String resourceURI) {
@@ -109,10 +112,16 @@ public class HTTPRetriever {
 		start(false);
 	}
 	
+	private boolean useContentType = false;
+	
+	public void setUseContentType(boolean requiresContentType){
+		this.useContentType = true;
+	}
+	
 	public void start(final boolean requiresContentType) {
 		// Dereference all the URIs stored in the queue, asynchronously. Wait until all have been resolved
 		if(!httpQueue.isEmpty()) {
-			executor = Executors.newFixedThreadPool(10);
+			executor = Executors.newSingleThreadExecutor();
 			
 			Runnable retreiver = new Runnable() {
 				public void run() {
@@ -156,10 +165,12 @@ public class HTTPRetriever {
 		try {
 			httpclient.start();
 			
-			for(final String queuePeek : this.httpQueue) {
+//			for(final String queuePeek : this.httpQueue) {
+			while(!this.httpQueue.isEmpty()){
+				final String queuePeek = this.httpQueue.poll();
 				// TODO: Remove artificial delay!!!! There must be a way to get rid of this
 				logger.debug("Retrieving "+queuePeek);
-				Thread.sleep(100);
+				//Thread.sleep(100);
 				
 				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
 					// Request won't be sent, thus one pending request ought to be discounted from the latch
@@ -167,13 +178,14 @@ public class HTTPRetriever {
 					continue;
 				}
 				
+				
 				final CachedHTTPResource newResource = new CachedHTTPResource();
 				final HttpClientContext localContext = HttpClientContext.create(); // Each request must have it's own context
 				newResource.setUri(queuePeek);
-
+				
 				try {
 					final HttpGet request = new HttpGet(queuePeek);		
-					if (requiresContentType)
+					if (requiresContentType || this.useContentType)
 					{
 						Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
 						request.addHeader(accept);
