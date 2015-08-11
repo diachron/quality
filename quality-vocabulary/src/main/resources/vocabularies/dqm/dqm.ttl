@@ -1079,6 +1079,20 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:UsageOfDeprecatedClassesOrProperties .
+		
+	dqm:UsageOfIncorrectDomainOrRangeDatatypesMetric
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"This metric tests if a property's domain and range are of the same type as declared in the corresponding schema" ;
+		rdfs:label	"Misuse Owl datatype or object properties metric" .
+		
+	dqm:hasUsageOfIncorrectDomainOrRangeDatatypesMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:UsageOfIncorrectDomainOrRangeDatatypesMetric .
+		
 
 #############################		
 		
@@ -1605,4 +1619,28 @@ dqm:ObsoleteConceptsInOntologyMetric
 		a rdfs:Property ;
 		rdfs:subPropertyOf qpro:extraExceptionProperty ;
 		rdfs:domain	dqm:OntologyHijackingException;
+		rdfs:range	rdf:Statement .
+		
+	dqm:IncorrectRange
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The property's value has an incorrect data type" ;
+		rdfs:label "Undefined Class" .
+
+	dqm:IncorrectDomain
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The property should not be used within a resource of this type." ;
+		rdfs:label "Undefined Property" .
+		
+	dqm:UnknownType
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The resource type is unknown." ;
+		rdfs:label "Undefined Property" .
+		
+	dqm:problematicTriple
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	qpro:Exception;
 		rdfs:range	rdf:Statement .
