@@ -42,7 +42,7 @@ public class DereferenceabilityTest extends Assert {
 		// Load quads...
 		long countLoadedQuads = 0;
 		
-		iter = (PipedRDFIterator<Triple>) loader.streamParser("/Volumes/Green-TeaExternal/datasets/europeana-merged-sorted.nt.gz");
+		iter = (PipedRDFIterator<Triple>) loader.streamParser("/Volumes/Green-TeaExternal/datasets/wikidata-merged-sorted.nt.gz");
 
 		
 		while (iter.hasNext()){
@@ -63,7 +63,7 @@ public class DereferenceabilityTest extends Assert {
 		
 		// Obtain the measurement of Dereferenceability for the source of the dataset
 		double metricValue = metric.metricValue();
-		logger.trace("Computed dereferenceability metric: " + metricValue);
+		System.out.println("Computed dereferenceability metric: " + metricValue);
 
 		assertEquals(expectedValue, metricValue, delta);
 	}

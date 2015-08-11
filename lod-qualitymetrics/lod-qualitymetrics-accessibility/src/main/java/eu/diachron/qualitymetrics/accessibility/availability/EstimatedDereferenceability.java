@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cern.colt.Arrays;
+
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -50,8 +52,8 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 40;
-	private static int MAX_FQURIS_PER_TLD = 20;
+	private static int MAX_TLDS = 10;
+	private static int MAX_FQURIS_PER_TLD = 30;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -124,9 +126,10 @@ public class EstimatedDereferenceability implements QualityMetric {
 			httpRetriever.start(false); //we do not need content negotiation for this
 			
 			List<String> lst = this.filterTLDs(lstUrisToDeref);	
-
+			
+			
 			do {
-				httpRetriever.stop();
+				httpRetriever.setUseContentType(true);
 				httpRetriever.addListOfResourceToQueue(lst);
 				httpRetriever.start(true);
 				this.startDereferencingProcess(lst);
@@ -134,7 +137,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 				lst.addAll(this.notFetchedQueue);
 				this.notFetchedQueue.clear();
 			// Continue trying to dereference all URIs in uriSet, that is, those not fetched up to now
-			} while(!lstUrisToDeref.isEmpty());
+			} while(!lst.isEmpty());
 			
 			this.metricCalculated = true;
 			
@@ -172,7 +175,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 	private void addUriToDereference(String uri) {
 		// Extract the top-level domain (a.k.a pay level domain) and look for it in the reservoir 
 		String uriTLD = httpRetriever.extractTopLevelDomainURI(uri);
-		Tld newTld = new Tld(uriTLD, MAX_TLDS);		
+		Tld newTld = new Tld(uriTLD, MAX_FQURIS_PER_TLD);		
 		Tld foundTld = this.tldsReservoir.findItem(newTld);
 		
 		if(foundTld == null) {

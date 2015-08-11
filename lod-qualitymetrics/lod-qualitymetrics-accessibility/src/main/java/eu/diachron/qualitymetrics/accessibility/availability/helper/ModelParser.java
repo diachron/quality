@@ -3,6 +3,12 @@
  */
 package eu.diachron.qualitymetrics.accessibility.availability.helper;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -16,12 +22,15 @@ import org.apache.jena.riot.lang.PipedTriplesStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.io.Files;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
@@ -96,7 +105,7 @@ public class ModelParser {
 					if (givenLang == null) RDFDataMgr.parse(rdfStream, httpResource.getUri());
 					else RDFDataMgr.parse(rdfStream, httpResource.getUri(), givenLang, null);
 				} catch (Exception e){
-					logger.info("Resource {} could not be parsed.", httpResource.getUri());
+					logger.info("Resource {} could not be parsed. Exception {}", httpResource.getUri(), e.getMessage());
 					rdfStream.finish();
 				}
 			}			
@@ -190,5 +199,32 @@ public class ModelParser {
 		httpResource.setContainsRDF(returnRes);
 //		destroy();
 		return returnRes;
+	}
+	
+	
+	public static void main(String[]args) throws IOException{
+		HTTPRetriever ret = new HTTPRetriever();
+		String uris =  Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
+		ret.addListOfResourceToQueue(Arrays.asList(uris.split(",")));
+		ret.start();
+		int counter = 0;
+		int wrong = 0;
+		List<String> nonderef = new ArrayList<String>();
+		for (String uri : uris.split(",")){
+			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);	
+			while (httpResource == null){
+				httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
+			}
+			if (Dereferencer.hasValidDereferencability(httpResource))
+				if (hasRDFContent(httpResource)) counter++; else wrong++;
+			else {
+				nonderef.add(httpResource.getUri());
+				wrong++;
+			}
+		}
+		System.out.println(counter + " " + wrong);
+		for (String s : nonderef){
+			System.out.println(s);
+		}
 	}
 }
