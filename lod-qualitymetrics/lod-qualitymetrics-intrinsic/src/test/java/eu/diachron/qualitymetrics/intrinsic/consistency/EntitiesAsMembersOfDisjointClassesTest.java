@@ -10,12 +10,11 @@ import org.junit.Test;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import eu.diachron.qualitymetrics.utilities.TestLoader;
-import eu.diachron.qualitymetrics.intrinsic.consistency.EntitiesAsMembersOfDisjointClasses;
 
 public class EntitiesAsMembersOfDisjointClassesTest extends Assert{
 	
 	protected TestLoader loader = new TestLoader();
-	protected EntitiesAsMembersOfDisjointClasses metric = new EntitiesAsMembersOfDisjointClasses();
+	protected SimpleEntitiesAsMembersOfDisjointClasses metric = new SimpleEntitiesAsMembersOfDisjointClasses();
 
 	@Before
 	public void setUp() throws Exception {
