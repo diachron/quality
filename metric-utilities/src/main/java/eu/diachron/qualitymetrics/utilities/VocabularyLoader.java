@@ -356,4 +356,25 @@ public class VocabularyLoader {
 		while(rs.hasNext()) set.add(rs.next().get("super"));
 		return set;
 	}
+
+
+	public static boolean isInverseFunctionalProperty(Node term){
+		
+		String ns = term.getNameSpace();
+		
+		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+		Model m = dataset.getNamedModel(ns);
+		
+		Resource r = Commons.asRDFNode(term).asResource();
+		
+		Filter<RDFNode> filter = new Filter<RDFNode>() {
+	            @Override
+	            public boolean accept(RDFNode node) {
+	            	return ((node.equals(OWL.InverseFunctionalProperty)));
+	            }
+		};
+
+		return m.listObjectsOfProperty(r, RDF.type).filterKeep(filter).hasNext();
+	}
+
 }
