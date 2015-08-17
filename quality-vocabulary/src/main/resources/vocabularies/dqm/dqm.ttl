@@ -1683,5 +1683,10 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:domain	dqm:InverseFunctionalPropertyViolation;
 		rdfs:range	rdf:Bag .		
 	
-	
+### Human Readable Labelling metric
+	dqm:NoHumanReadableLabel
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "Entities in this list have no Human Readable Label." ;
+		rdfs:label "No Human Readable Label" .	
 	
