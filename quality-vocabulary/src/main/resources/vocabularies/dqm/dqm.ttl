@@ -1105,6 +1105,21 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:ValidIFPUsageMetric .
+		
+		
+		
+	dqm:VocabularyUsageIndication
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"This metric checks the number of valid vocabularies indicated by the voID metadata against the number of different vocabularies used." ;
+		rdfs:label	"Vocabulary Usage Indication" .
+		
+	dqm:hasVocabularyUsageIndication
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Understandability ;
+		rdfs:range	dqm:VocabularyUsageIndication .
 
 #############################		
 		
@@ -1683,10 +1698,16 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:domain	dqm:InverseFunctionalPropertyViolation;
 		rdfs:range	rdf:Bag .		
 	
-### Human Readable Labelling metric
+### Understandability
 	dqm:NoHumanReadableLabel
 		a	rdfs:Class ;
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "Entities in this list have no Human Readable Label." ;
 		rdfs:label "No Human Readable Label" .	
+		
+	dqm:NoVocabularyIndication
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "Vocabularies in this list are not indicated by a respective voID description." ;
+		rdfs:label "No Vocabulary Indication" .	
 	
