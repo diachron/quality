@@ -1106,8 +1106,6 @@ dqm:LuzzuProvenanceAgent
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:ValidIFPUsageMetric .
 		
-		
-		
 	dqm:VocabularyUsageIndication
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
@@ -1120,6 +1118,23 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:domain	dqm:Understandability ;
 		rdfs:range	dqm:VocabularyUsageIndication .
+		
+	dqm:PresenceOfURIRegEx
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"This metric checks if the dataset has a regular expression defined." ;
+		rdfs:label	"Vocabulary Usage Indication" .
+		
+	dqm:hasVocabularyUsageIndication
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Understandability ;
+		rdfs:range	dqm:PresenceOfURIRegEx .
+				
+		
+		
+		
 
 #############################		
 		
@@ -1710,4 +1725,10 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:subClassOf qpro:Exception ;
 		rdfs:comment "Vocabularies in this list are not indicated by a respective voID description." ;
 		rdfs:label "No Vocabulary Indication" .	
+		
+	dqm:NoURIRegExPresence
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "No regular expression in the voID description." ;
+		rdfs:label "No Regular Expression" .	
 	
