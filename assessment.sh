@@ -23,5 +23,5 @@ elif [ "$1" == run ] ; then
 	cd ../Luzzu/luzzu-communications/;
 	mvn exec:java -X;
 else
-	echo "Please first run 'assessment.sh build' then 'assessment.sh run'";
+	echo "Please first run 'assessment.sh build' then 'assessment.sh run'. If Luzzu is not on your system, please run 'assessment.sh dependencies' prior to the build and run.";
 fi
