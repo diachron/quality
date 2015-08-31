@@ -1132,9 +1132,19 @@ dqm:LuzzuProvenanceAgent
 		rdfs:domain	dqm:Understandability ;
 		rdfs:range	dqm:PresenceOfURIRegEx .
 				
+	dqm:DigitalSignatureUsage
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"This metric checks foaf documents have a digital signature with them." ;
+		rdfs:label	"Digital Signature Usage" .
 		
-		
-		
+	dqm:hasDigitalSignatureUsage
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Security ;
+		rdfs:range	dqm:dqm:DigitalSignatureUsage .
+				
 
 #############################		
 		
