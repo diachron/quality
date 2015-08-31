@@ -5,6 +5,7 @@ package eu.diachron.qualitymetrics.utilities;
 
  import java.io.StringReader;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -22,6 +23,7 @@ import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -57,6 +59,7 @@ public class VocabularyLoader {
 	private static Dataset dataset = DatasetFactory.createMem();
 	private static ConcurrentMap<String, String> knownDatasets = new ConcurrentHashMap<String,String>();
 	static {
+		knownDatasets.put("http://dbpedia.org/ontology/","dbpedia.nt");
 		knownDatasets.put("http://www.w3.org/1999/02/22-rdf-syntax-ns#","rdf.rdf");
 		knownDatasets.put("http://www.w3.org/2000/01/rdf-schema#","rdfs.rdf");
 		knownDatasets.put("http://xmlns.com/foaf/0.1/","foaf.rdf");
@@ -196,6 +199,9 @@ public class VocabularyLoader {
 	public static Boolean knownVocabulary(String uri){
 		return (knownDatasets.containsKey(uri) || dataset.containsNamedModel(uri));
 	}
+	
+	
+		
 	
 	public static Model getModelForVocabulary(String ns){
 		if(!(dataset.containsNamedModel(ns))) 
@@ -348,12 +354,35 @@ public class VocabularyLoader {
 		else
 			query = "SELECT ?super { <"+term.getURI()+"> <"+RDFS.subPropertyOf.getURI()+">* ?super }";
 		
+		
+		QueryExecution q = QueryExecutionFactory.create(query,_mdl);
+		ResultSet rs = q.execSelect();
+		Set<RDFNode> set = new LinkedHashSet<RDFNode>();
+		while(rs.hasNext()) set.add(rs.next().get("super"));
+		set.add(OWL.Thing);
+		return set;
+	}
+	
+	public static Set<RDFNode> inferChildren(Node term, Model m, boolean isSuperClass){
+		String query;
+		Model _mdl = m;
+		
+		if (_mdl == null){
+			String ns = term.getNameSpace();
+
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			_mdl = dataset.getNamedModel(ns);
+		}
+		
+		if (isSuperClass)
+			query = "SELECT ?child { ?child <"+RDFS.subClassOf.getURI()+">* <"+term.getURI()+"> }";
+		else
+			query = "SELECT ?child { ?child <"+RDFS.subPropertyOf.getURI()+">* <"+term.getURI()+"> }";
+		
 		QueryExecution q = QueryExecutionFactory.create(query,_mdl);
 		ResultSet rs = q.execSelect();
 		Set<RDFNode> set = new HashSet<RDFNode>();
-		set.add(OWL.Thing);
-		set.add(RDFS.Resource);
-		while(rs.hasNext()) set.add(rs.next().get("super"));
+		while(rs.hasNext()) set.add(rs.next().get("child"));
 		return set;
 	}
 
@@ -377,4 +406,65 @@ public class VocabularyLoader {
 		return m.listObjectsOfProperty(r, RDF.type).filterKeep(filter).hasNext();
 	}
 
+	public static Model getClassModelNoLiterals(Node term, Model m){
+		String query  = "SELECT * { <"+term.getURI()+"> ?p ?o }";
+		Model _mdl = m;
+		Model _ret = ModelFactory.createDefaultModel();
+		
+		if (_mdl == null){
+			String ns = term.getNameSpace();
+
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			_mdl = dataset.getNamedModel(ns);
+		}
+		
+		
+		QueryExecution q = QueryExecutionFactory.create(query,_mdl);
+		ResultSet rs = q.execSelect();
+		while(rs.hasNext()) {
+			QuerySolution qs = rs.next();
+			if (qs.get("o").isLiteral()) continue;
+			else {
+				Resource prop = qs.get("p").asResource();
+				Resource obj = qs.getResource("o");
+				_ret.add(Commons.asRDFNode(term).asResource(), _ret.createProperty(prop.getURI()), obj);
+			}
+			
+		}
+		
+		return _ret;
+	}
+	
+	public static Model inferAncDec(Node term, Model m){
+		Model _mdl = m;
+		Model _ret = ModelFactory.createDefaultModel();
+		
+		if (_mdl == null){
+			String ns = term.getNameSpace();
+
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			_mdl = dataset.getNamedModel(ns);
+		}
+		
+		String query = "SELECT ?super ?type { <"+term.getURI()+"> <"+RDFS.subClassOf.getURI()+"> ?super . ?super a ?type .}";
+		QueryExecution q = QueryExecutionFactory.create(query,_mdl);
+		ResultSet rs = q.execSelect();
+		while(rs.hasNext()) {
+			QuerySolution sol = rs.next();
+			_ret.add(Commons.asRDFNode(term).asResource(), RDFS.subClassOf, sol.get("super"));
+			_ret.add(sol.get("super").asResource(), RDF.type, sol.get("type"));
+		}
+		
+		query = "SELECT ?child ?type { ?child <"+RDFS.subClassOf.getURI()+"> <"+term.getURI()+">  . ?child a ?type . }";
+		q = QueryExecutionFactory.create(query,_mdl);
+		rs = q.execSelect();
+		while(rs.hasNext()) {
+			QuerySolution sol = rs.next();
+			_ret.add(sol.get("child").asResource(), RDFS.subClassOf,Commons.asRDFNode(term).asResource());
+			_ret.add(sol.get("child").asResource(), RDF.type, sol.get("type"));
+
+		}
+		
+		return _ret;
+	}
 }
