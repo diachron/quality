@@ -4,7 +4,6 @@
 package eu.diachron.qualitymetrics.accessibility.security;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import org.mapdb.HTreeMap;
 
@@ -112,9 +111,12 @@ public class DigitalSignatureUsage implements QualityMetric {
 		return DQM.LuzzuProvenanceAgent;
 	}
 
-	@SuppressWarnings("unused")
 	private class DigitalSignature implements Serializable {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2185956592313988605L;
 		private String endorcement = null;
 		private String endorcer = null;
 		private String assurance = null;
