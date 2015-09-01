@@ -2,7 +2,8 @@
 if [ "$1" == dependencies ] ; then
 	echo "downloading dependencies";
 	wget https://github.com/EIS-Bonn/Luzzu/archive/1.1.tar.gz -O ../Luzzu.tar.gz
-	tar -zxvf Luzzu.tar.gz
+	tar -xvf ../Luzzu.tar.gz
+	mv Luzzu-1.1/ ../Luzzu/
 elif [ "$1" == build ] ; then
 	echo "Compiling Diachron Quality Metrics";
 	mvn clean install -Dmaven.test.skip=true;
@@ -23,5 +24,5 @@ elif [ "$1" == run ] ; then
 	cd ../Luzzu/luzzu-communications/;
 	mvn exec:java -X;
 else
-	echo "Please first run 'assessment.sh build' then 'assessment.sh run'";
+	echo "Please first run 'assessment.sh build' then 'assessment.sh run'. If Luzzu is not on your system, please run 'assessment.sh dependencies' prior to the build and run.";
 fi
