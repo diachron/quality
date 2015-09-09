@@ -99,7 +99,7 @@ public class ValidIFPUsage implements QualityMetric{
 	@Override
 	public double metricValue() {
 		logger.info("Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};"
-				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs); //TODO: these store in a seperate file
+				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs);
 
 		return 1.0 - ((double)totalViolatedIFPs/(double)totalIFPs);
 	}

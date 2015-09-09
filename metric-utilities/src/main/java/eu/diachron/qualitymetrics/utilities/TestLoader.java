@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
@@ -56,7 +55,11 @@ public class TestLoader {
 		while(si.hasNext()){
 			this.streamingQuads.add(new Quad(null, si.next().asTriple()));
 		}
+		
+		// Set the dataset URI into the datasetURI property, so that it's retrieved by EnvironmentProperties
+				PropertyManager.getInstance().addToEnvironmentVars("datasetURI", fileName);
 	}
+	
 	/**
 	 * Returns a list of triples from the loaded dataset. This can be used 
 	 * to simulate the streaming of triples
@@ -66,7 +69,7 @@ public class TestLoader {
 		return this.streamingQuads;
 	}	
 	
-	
+	@SuppressWarnings("unchecked")
 	public PipedRDFIterator<?> streamParser(final String fileName){
 		PipedRDFIterator<?> iterator = new PipedRDFIterator<Triple>();
 		final PipedRDFStream<?> rdfStream = new PipedTriplesStream((PipedRDFIterator<Triple>) iterator);

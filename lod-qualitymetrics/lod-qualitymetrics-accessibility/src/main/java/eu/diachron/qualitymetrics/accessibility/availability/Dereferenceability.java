@@ -24,6 +24,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
@@ -62,6 +63,8 @@ public class Dereferenceability implements QualityMetric {
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){ // we are currently ignoring triples ?s a ?o
 			String subject = quad.getSubject().toString();
 			if (httpRetreiver.isPossibleURL(subject)){
@@ -111,6 +114,10 @@ public class Dereferenceability implements QualityMetric {
 			this.metricCalculated = true;
 		}
 		this.metricValue = this.dereferencedURI / this.totalURI;
+		
+		statsLogger.info("Dataset: {} - Total # URIs : {}; # Dereferenced URIs : {}; Previously calculated : {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), totalURI, dereferencedURI, metricCalculated);
+		
 		return this.metricValue;
 	}
 	

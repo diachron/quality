@@ -1,9 +1,5 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
-import java.util.List;
-
-import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
-import eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 import org.apache.jena.riot.lang.PipedRDFIterator;
@@ -15,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 public class DereferenceabilityTest extends Assert {
@@ -37,6 +32,7 @@ public class DereferenceabilityTest extends Assert {
 		// No clean-up required
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDereferenceability() {
 		// Load quads...
