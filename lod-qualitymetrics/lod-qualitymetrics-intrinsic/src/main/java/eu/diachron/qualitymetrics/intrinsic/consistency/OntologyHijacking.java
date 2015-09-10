@@ -149,6 +149,7 @@ public class OntologyHijacking implements QualityMetric{
          */
         
         public double metricValue() {
+        	logger.debug("Total Hijacks: {}; Total Possible: {}"); 
         		double value = 1.0 - (this.totalHijacks / this.totalPossibleHijacks);
                 return value;
         }
