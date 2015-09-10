@@ -69,6 +69,8 @@ public class OntologyHijacking implements QualityMetric{
         
         
         public void compute(Quad quad) {
+        	if (!quad.getObject().isURI()) return; //we do not need to test this
+        	
         	Resource subject = Commons.asRDFNode(quad.getSubject()).asResource();
         	Resource predicate = Commons.asRDFNode(quad.getPredicate()).asResource();
         	Resource object = Commons.asRDFNode(quad.getObject()).asResource();
