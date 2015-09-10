@@ -15,6 +15,7 @@ import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
+import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.vocabulary.XSD;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -201,8 +203,6 @@ public class VocabularyLoader {
 	}
 	
 	
-		
-	
 	public static Model getModelForVocabulary(String ns){
 		if(!(dataset.containsNamedModel(ns))) 
 			loadNStoDataset(ns);
@@ -269,7 +269,18 @@ public class VocabularyLoader {
 		}
 	}
 	
+	public static Filter<RDFNode> deprecatedfilter = new Filter<RDFNode>() {
+        @Override
+        public boolean accept(RDFNode node) {
+        	return ((node.equals(OWL.DeprecatedClass)) || (node.equals(OWL.DeprecatedProperty)));
+        }
+	};
+	
+	private static HTreeMap<String, Boolean> checkedDeprecatedTerm = MapDbFactory.createFilesystemDB().createHashMap("deprecated-terms").make();
+
 	public static boolean isDeprecatedTerm(Node term){
+		
+		if (checkedDeprecatedTerm.containsKey(term.getURI())) return checkedDeprecatedTerm.get(term.getURI());
 		
 		String ns = term.getNameSpace();
 		
@@ -278,14 +289,9 @@ public class VocabularyLoader {
 		
 		Resource r = Commons.asRDFNode(term).asResource();
 		
-		Filter<RDFNode> filter = new Filter<RDFNode>() {
-	            @Override
-	            public boolean accept(RDFNode node) {
-	            	return ((node.equals(OWL.DeprecatedClass)) || (node.equals(OWL.DeprecatedProperty)));
-	            }
-		};
-
-		return m.listObjectsOfProperty(r, RDF.type).filterKeep(filter).hasNext();
+		boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
+		checkedDeprecatedTerm.put(term.getURI(), isDeprecated);
+		return isDeprecated;
 	}
 
 	public static Set<RDFNode> getPropertyDomain(Node term){
