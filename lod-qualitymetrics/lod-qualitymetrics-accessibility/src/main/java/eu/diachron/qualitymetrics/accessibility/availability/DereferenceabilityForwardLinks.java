@@ -1,10 +1,7 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +13,6 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -88,10 +84,10 @@ public class DereferenceabilityForwardLinks implements QualityMetric {
 			httpRetreiver.stop();
 			
 //			metricValue = (sum == 0.0) ? 0.0 : sum / do_p.keySet().size();
+			
+			statsLogger.info("Dataset: {} - Total # URIs : {}; Previously calculated : {}", 
+					EnvironmentProperties.getInstance().getDatasetURI(), uriSet.size(), metricCalculated);
 		}
-		
-		statsLogger.info("Dataset: {} - Total # URIs : {}; Previously calculated : {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), uriSet.size(), metricCalculated);
 		
 		return metricValue;
 	}

@@ -30,6 +30,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
@@ -72,6 +73,8 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 
 	
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		String subject = quad.getSubject().toString();
 		if (httpRetreiver.isPossibleURL(subject)){
 			addURIToReservoir(subject);
@@ -117,6 +120,9 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 			}
 			
 			metricValue = (sum == 0.0) ? 0.0 : sum / do_p.keySet().size();
+			
+			statsLogger.info("EstimatedDereferenceabilityForwardLinks. Dataset: {} - URI as Subject Ratio : {}; # Different Subject URIs : {};", 
+					EnvironmentProperties.getInstance().getDatasetURI(), sum, do_p.keySet().size());
 		}
 		
 		return metricValue;

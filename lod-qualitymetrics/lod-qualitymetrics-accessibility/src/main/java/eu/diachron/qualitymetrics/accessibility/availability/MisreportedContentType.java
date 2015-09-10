@@ -3,6 +3,7 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.WebContent;
@@ -20,6 +21,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
@@ -59,6 +61,8 @@ public class MisreportedContentType implements QualityMetric {
 
 
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		String subject = quad.getSubject().toString();
 		if (httpRetreiver.isPossibleURL(subject)){
 			httpRetreiver.addResourceToQueue(subject);
@@ -92,10 +96,13 @@ public class MisreportedContentType implements QualityMetric {
 		}
 		
 		double metricValue = 0.0;
-		logger.debug(String.format("Computing metric. Correct: %.0f. Misreported: %.0f. Not OK: %.0f", correctReportedType, misReportedType));
+						
 		if((misReportedType + correctReportedType) != 0.0) {
 			metricValue = correctReportedType / (misReportedType + correctReportedType);
 		}
+		
+		statsLogger.info("MisreportedContentType. Dataset: {} - # Correct : {}; # Misreported : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), correctReportedType, misReportedType);
 
 		return metricValue;
 	}

@@ -32,6 +32,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
@@ -82,6 +83,8 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 	
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
 			String subject = quad.getSubject().toString();
 			String object = quad.getObject().toString();
@@ -140,6 +143,9 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 			}
 			
 			metricValue = (sum == 0.0) ? 0.0 : sum / di_p.keySet().size();
+			
+			statsLogger.info("EstimatedDereferenceBackLinks. Dataset: {} - URI as Subject Ratio : {}; # Different Subject URIs : {};", 
+					EnvironmentProperties.getInstance().getDatasetURI(), sum, di_p.keySet().size());
 		}
 		
 		return metricValue;

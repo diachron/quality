@@ -18,6 +18,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.CentralityMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ClusteringCoefficientMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DegreeMeasure;
@@ -43,6 +44,8 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		String subject = "";
 		if (!quad.getSubject().isBlank()){
 			subject = quad.getSubject().getURI();
@@ -65,9 +68,6 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 		graph.addConnectedNodes(subject, object, predicate);
 	}
 	
-	
-	
-
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
@@ -121,6 +121,11 @@ public class InterlinkDetectionMetric implements ComplexQualityMetric {
 		//5. Description Richness
 		DescriptiveRichnessMeasure drm = new DescriptiveRichnessMeasure(graph);
 		metricValue += drm.getIdealMeasure() * 0.2;
+		
+		statsLogger.info("InterlinkDetectionMetric. Dataset: {} - Degree Measure : {}; Clustering Coef. : {}; " +
+				"Centrality : {}; Open Same As : {}; Description Richness : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), dm.getIdealMeasure(), ccm.getIdealMeasure(), 
+				cm.getIdealMeasure(), sam.getIdealMeasure(), drm.getIdealMeasure());
 	}
 
 

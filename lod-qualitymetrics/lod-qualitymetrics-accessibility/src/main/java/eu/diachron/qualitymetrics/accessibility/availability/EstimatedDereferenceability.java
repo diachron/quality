@@ -8,8 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cern.colt.Arrays;
-
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -22,6 +20,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
@@ -88,8 +87,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * @param quad Triple (in quad format) to be evaluated
 	 */
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
-
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
 		// we are currently ignoring triples ?s a ?o
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){ 
@@ -144,6 +142,10 @@ public class EstimatedDereferenceability implements QualityMetric {
 		}
 		
 		this.metricValue = this.dereferencedURI / this.totalURI;
+		
+		statsLogger.info("EstimatedDereferenceability. Dataset: {} - Total # URIs : {}; # Dereferenced URIs : {}; Previously calculated : {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), totalURI, dereferencedURI, metricCalculated);
+		
 		return this.metricValue;
 	}
 	

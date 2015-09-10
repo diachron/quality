@@ -46,7 +46,7 @@ public class TestLoader {
 	 * @param fileName
 	 */
 	public void loadDataSet(String fileName){
-//		String filename = this.getClass().getClassLoader().getResource(fileName).toExternalForm();
+		//String filename = this.getClass().getClassLoader().getResource(fileName).toExternalForm();
 		
 		Model m = ModelFactory.createDefaultModel();
 		m.read(fileName, null);
@@ -57,7 +57,7 @@ public class TestLoader {
 		}
 		
 		// Set the dataset URI into the datasetURI property, so that it's retrieved by EnvironmentProperties
-				PropertyManager.getInstance().addToEnvironmentVars("datasetURI", fileName);
+		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", fileName);
 	}
 	
 	/**
