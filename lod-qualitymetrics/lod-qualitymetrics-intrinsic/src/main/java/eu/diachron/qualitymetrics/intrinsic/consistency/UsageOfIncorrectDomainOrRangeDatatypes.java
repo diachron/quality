@@ -52,8 +52,9 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 	private HTreeMap<String, List<String>> mapResourceType = MapDbFactory.createAsyncFilesystemDB().createHashMap("resource-type").make();
 	
 	//If the boolean is true, then we need to check the domain, else check the range
-	private HTreeMap<SerialisableTriple,Boolean> unknownTypes = MapDbFactory.createAsyncFilesystemDB().createHashMap("unknown-types").make();
-	
+	private Set<SerialisableTriple> unknownTypesDomain = MapDbFactory.createAsyncFilesystemDB().createHashSet("unknown-types-domain").make();
+	private Set<SerialisableTriple> unknownTypesRange = MapDbFactory.createAsyncFilesystemDB().createHashSet("unknown-types-range").make();
+
 	
 	private long totalPredicates = 0;
 	private long incorrectDomain = 0;
@@ -95,7 +96,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 					}
 				} else {
 					//type is unknown try again later
-					unknownTypes.put(new SerialisableTriple(quad.asTriple()), true);
+					unknownTypesDomain.add(new SerialisableTriple(quad.asTriple()));
 				}
 				// Range Checker
 				Set<RDFNode> range = VocabularyLoader.getPropertyRange(predicate.asNode());
@@ -122,7 +123,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 						}
 					} else {
 						//type is unknown try again later
-						unknownTypes.put(new SerialisableTriple(quad.asTriple()), false);
+						unknownTypesRange.add(new SerialisableTriple(quad.asTriple()));
 					}
 				}
 			} else {
@@ -159,44 +160,44 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 	@Override
 	public double metricValue() {
 
-		logger.debug("Total number of unknowns : {} ", unknownTypes.size());
+		logger.debug("Total number of unknown domain types : {}; Total number of unknown range types: {}", unknownTypesDomain.size(), unknownTypesRange.size() );
 
-		for(SerialisableTriple trip : unknownTypes.keySet()){
+		for(SerialisableTriple trip : unknownTypesDomain){
 			Triple t = trip.getTriple();
-			if (unknownTypes.get(trip)){
-				//check for domain
-				
-				Set<RDFNode> domains = VocabularyLoader.getPropertyDomain(t.getPredicate());
-				if (mapResourceType.containsKey(t.getSubject().getURI())){
-					Set<RDFNode> types = this.toRDFNodeSet(mapResourceType.get(t.getSubject().getURI()));
+			Set<RDFNode> domains = VocabularyLoader.getPropertyDomain(t.getPredicate());
+			if (mapResourceType.containsKey(t.getSubject().getURI())){
+				Set<RDFNode> types = this.toRDFNodeSet(mapResourceType.get(t.getSubject().getURI()));
 
-					if(!(domains.removeAll(types))){
-						addToProblem(new Quad(null, t),'d');
-						incorrectDomain++;
-					}
-				} else {
-					addToProblem(new Quad(null, t),'u');
+				if(!(domains.removeAll(types))){
+					addToProblem(new Quad(null, t),'d');
 					incorrectDomain++;
 				}
-				
-				
 			} else {
-				Set<RDFNode> range = VocabularyLoader.getPropertyRange(t.getPredicate());
-				if (mapResourceType.containsKey(t.getObject().getURI())){
-					Set<RDFNode> types = this.toRDFNodeSet(mapResourceType.get(t.getObject().getURI()));
-
-					if (!range.removeAll(types)){
-						addToProblem(new Quad(null, t),'r');
-						incorrectRange++;
-					}
-				} else {
-					addToProblem(new Quad(null, t),'u');
-					incorrectRange++;
-				}
-				
+				addToProblem(new Quad(null, t),'u');
+				incorrectDomain++;
 			}
 		}
-		if (unknownTypes.size() > 0) unknownTypes.clear();
+		
+		for(SerialisableTriple trip : unknownTypesRange){
+			Triple t = trip.getTriple();
+			Set<RDFNode> range = VocabularyLoader.getPropertyRange(t.getPredicate());
+			if (mapResourceType.containsKey(t.getObject().getURI())){
+				Set<RDFNode> types = this.toRDFNodeSet(mapResourceType.get(t.getObject().getURI()));
+
+				if (!range.removeAll(types)){
+					addToProblem(new Quad(null, t),'r');
+					incorrectRange++;
+				}
+			} else {
+				addToProblem(new Quad(null, t),'u');
+				incorrectRange++;
+			}
+		}
+			
+			
+		if (unknownTypesRange.size() > 0) unknownTypesRange.clear();
+		if (unknownTypesDomain.size() > 0) unknownTypesDomain.clear();
+
 		
 		logger.info("Dataset: {} - # Incorrect Domains : {}; # Incorrect Ranges : {}; # Predicates Assessed : {}; # Undereferenceable Predicates : {} "
 				, EnvironmentProperties.getInstance().getDatasetURI(), incorrectDomain, incorrectRange, totalPredicates, undereferenceablePredicates); //TODO: these store in a seperate file

@@ -4,6 +4,7 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -90,11 +91,14 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 		for (MDC mdc : this.reservoir.getItems()){
 			if (mdc.objects.size() >= 2){
 				Iterator<RDFNode> iter = new ArrayList<RDFNode>(mdc.objects).iterator();
+				Set<RDFNode> checked = new HashSet<RDFNode>();
 				while (iter.hasNext()){
 					RDFNode _class = iter.next();
+					checked.add(_class);
 					Model model = VocabularyLoader.getModelForVocabulary(_class.asResource().getNameSpace());
 					Set<RDFNode> disjoinedClasses = model.listObjectsOfProperty(_class.asResource(), OWL.disjointWith).toSet();
 					disjoinedClasses.retainAll(mdc.objects);
+					disjoinedClasses.removeAll(checked);
 					if (disjoinedClasses.size() > 0){
 						count++;
 						this.createProblemModel(mdc.subject.asNode(), _class.asNode(), disjoinedClasses);

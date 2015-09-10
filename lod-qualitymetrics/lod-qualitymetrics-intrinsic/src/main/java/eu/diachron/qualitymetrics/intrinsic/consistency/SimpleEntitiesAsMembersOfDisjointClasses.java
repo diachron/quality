@@ -112,8 +112,11 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 				// we only need to check disjointness when there are at least 2 classes
 				
 				Iterator<String> iter = new ArrayList<String>(classes).iterator();
+				Set<String> checked = new HashSet<String>();
+
 				while (iter.hasNext()){
 					String _class = iter.next();
+					checked.add(_class);
 					Resource classAsResource = ModelFactory.createDefaultModel().createResource(_class);
 					Model model = VocabularyLoader.getModelForVocabulary(classAsResource.getNameSpace());
 					
@@ -123,7 +126,7 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 					for (StmtIterator i = model.listStatements(classAsResource, OWL.disjointWith, (RDFNode) null); i.hasNext(); ) {
 						String otherClass = i.next().getObject().toString();
 						// if ?otherClass is among the set of classes of our entity, the entity is a member of disjoint classes
-						if (classes.contains(otherClass)) {
+						if ((classes.contains(otherClass)) && (!checked.contains(otherClass))) {
 							count++;
 							createProblemModel(ModelFactory.createDefaultModel().createResource(entity).asNode(), classAsResource.asNode(), ModelFactory.createDefaultModel().createResource(otherClass).asNode());							
 						}
