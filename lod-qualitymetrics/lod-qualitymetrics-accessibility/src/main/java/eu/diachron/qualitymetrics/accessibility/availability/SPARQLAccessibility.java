@@ -61,7 +61,7 @@ public class SPARQLAccessibility implements QualityMetric {
 	
 	
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 
 		if ((endpointProperty.contains(quad.getPredicate().getURI())) && (quad.getSubject().getURI().equals(EnvironmentProperties.getInstance().getDatasetURI()))) {
 			totalDefinedSparqlEndPoints++;
@@ -91,6 +91,9 @@ public class SPARQLAccessibility implements QualityMetric {
 	}
 
 	public double metricValue() {
+		statsLogger.info("SPARQLAccessibility. Dataset: {} - Total # Defined SPARQL Endpoints : {}; Total # Active SPARQL Endpoints : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), totalDefinedSparqlEndPoints, sparqlEndPoints);
+		
 		if (totalDefinedSparqlEndPoints == 0.0) return 0.0;
 		return sparqlEndPoints/totalDefinedSparqlEndPoints;
 	}

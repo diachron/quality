@@ -115,7 +115,7 @@ public class Dereferenceability implements QualityMetric {
 		}
 		this.metricValue = this.dereferencedURI / this.totalURI;
 		
-		statsLogger.info("Dataset: {} - Total # URIs : {}; # Dereferenced URIs : {}; Previously calculated : {}", 
+		statsLogger.info("Dereferenceability. Dataset: {} - Total # URIs : {}; # Dereferenced URIs : {}; Previously calculated : {}", 
 				EnvironmentProperties.getInstance().getDatasetURI(), totalURI, dereferencedURI, metricCalculated);
 		
 		return this.metricValue;

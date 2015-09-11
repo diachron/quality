@@ -25,6 +25,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
@@ -73,6 +74,8 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 
 
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		String subject = quad.getSubject().toString();
 		if (httpRetreiver.isPossibleURL(subject)){
 			addURIToReservoir(subject);
@@ -105,6 +108,10 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 		
 		double metricValue = 0.0;
 		logger.debug(String.format("Computing metric. Correct: %.0f. Misreported: %.0f. Not OK: %.0f", correctReportedType, misReportedType, notOkResponses));
+		
+		statsLogger.info("EstimatedMisreportedContentType. Dataset: {} - # Correct : {}; # Misreported : {}. # Not OK : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), correctReportedType, misReportedType, notOkResponses);
+		
 		if((misReportedType + correctReportedType) != 0.0) {
 			metricValue = correctReportedType / (misReportedType + correctReportedType);
 		}

@@ -86,14 +86,15 @@ public class LinkExternalDataProviders implements QualityMetric {
 	
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-			String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-			if (!(subject.equals("linkededucation.org"))) setResources.add(quad.getSubject().toString());
+		String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
+		if (!(subject.equals("linkededucation.org"))) setResources.add(quad.getSubject().toString());
 
-			if (quad.getObject().isURI()){
-				String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-				if (!(object.equals("linkededucation.org"))) setResources.add(quad.getObject().toString());
-			}
+		if (quad.getObject().isURI()){
+			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+			if (!(object.equals("linkededucation.org"))) setResources.add(quad.getObject().toString());
+		}
 	}
 
 	@Override
@@ -112,6 +113,8 @@ public class LinkExternalDataProviders implements QualityMetric {
 			computed = true;
 		}
 		
+		statsLogger.info("LinkExternalDataProviders. Dataset: {} - # Top Level Domains : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), setPLDsRDF.size());
 		
 		return setPLDsRDF.size();
 	}

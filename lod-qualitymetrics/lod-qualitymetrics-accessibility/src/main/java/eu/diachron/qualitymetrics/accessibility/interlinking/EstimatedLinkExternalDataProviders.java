@@ -99,6 +99,8 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	 * @param quad Quad to be processed as part of the computation of the metric
 	 */
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
+		
 		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
 			String subjectPLD = "";
 			String objectPLD = "";
@@ -148,8 +150,10 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			
 			this.checkForRDFLinks();
 			computed = true;
+			
+			statsLogger.info("EstimatedLinkExternalDataProviders. Dataset: {} - # Top Level Domains : {};", 
+					EnvironmentProperties.getInstance().getDatasetURI(), mapPLDs.size());
 		}
-		
 		
 		return mapPLDs.size();
 	}
@@ -231,6 +235,8 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		return 	DQM.LuzzuProvenanceAgent;
 	}
 	
+	/*
+	 * TODO: Make sure that this method is to be removed...
 	private boolean is200AnRDF(CachedHTTPResource resource) {
 		if(resource != null && resource.getResponses() != null) {
 			for (SerialisableHttpResponse response : resource.getResponses()) {
@@ -255,7 +261,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 		this._problemList.add(q);
 		resource.setContainsRDF(false);
 		return false;
-	}
+	} 
 	
 	private Model tryRead(String uri) {
 		Model m = ModelFactory.createDefaultModel();
@@ -265,6 +271,6 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			Log.debug("Resource could not be parsed:", r.getMessage());
 		}
 		return m;
-	}
+	} */
 
 }

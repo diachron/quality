@@ -57,7 +57,7 @@ public class RDFAccessibility implements QualityMetric {
 	
 
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 
 		if (quad.getPredicate().getURI().equals(VOID.dataDump.getURI())) {
 			totalDataDumps++;
@@ -66,6 +66,10 @@ public class RDFAccessibility implements QualityMetric {
 
 	public double metricValue() {
 		metricValue = (totalDataDumps > 0) ? 1.0 : 0.0;
+		
+		statsLogger.info("RDFAccessibility. Dataset: {} - Total # Datadumps : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), totalDataDumps);
+		
 		return metricValue;
 	}
 
