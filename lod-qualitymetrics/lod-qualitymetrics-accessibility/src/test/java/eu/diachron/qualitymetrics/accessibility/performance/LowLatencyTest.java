@@ -24,7 +24,7 @@ public class LowLatencyTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.LowLatencyTest);
+		loader.loadDataSet(DataSetMappingForTestCase.LowLatencyTest, "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl");
 	}
 
 	@After

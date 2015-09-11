@@ -83,7 +83,7 @@ public class MachineReadableLicense implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 
 		// Extract the predicate (property) of the statement, the described resource (subject) and the value set (object)
 		Node subject = quad.getSubject();
@@ -105,20 +105,19 @@ public class MachineReadableLicense implements QualityMetric {
 		}
 		
 		if (subject.isURI()){
-				if (subject.getURI().startsWith(this.baseURI)){
-					if(licenseClassifier.isLicensingPredicate(predicate)) {
-						// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
-						
-						logger.trace("Quad providing license info detected. Subject: {}, object: {}", subject.getURI(), object);
-						
-						if(this.mapLicensedDatasets.containsKey(subject.getURI())){
-							this.mapLicensedDatasets.put(subject.getURI(), object);
-						} else {
-							mapLicensedResources.put(subject.getURI(), new Pair<String,String>(EnvironmentProperties.getInstance().getDatasetURI(), object.toString()));
-						}
+			if (subject.getURI().startsWith(this.baseURI)){
+				if(licenseClassifier.isLicensingPredicate(predicate)) {
+					// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
+					logger.trace("Quad providing license info detected. Subject: {}, object: {}", subject.getURI(), object);
+					
+					if(this.mapLicensedDatasets.containsKey(subject.getURI())){
+						this.mapLicensedDatasets.put(subject.getURI(), object);
+					} else {
+						mapLicensedResources.put(subject.getURI(), new Pair<String,String>(EnvironmentProperties.getInstance().getDatasetURI(), object.toString()));
 					}
-					localURIs.add(subject.getURI());
 				}
+				localURIs.add(subject.getURI());
+			}
 		}
 	}
 
@@ -165,6 +164,9 @@ public class MachineReadableLicense implements QualityMetric {
 		
 		//calculating the metric
 		double metValue = (voidValidLicences) / ((double)this.mapLicensedDatasets.size());
+		
+		statsLogger.info("MachineReadableLicense. Dataset: {} - Total # Licenses in Dataset : {}; # VOID Valid Licenses : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), mapLicensedDatasets.size(), voidValidLicences);
 		
 		return metValue;
 	}

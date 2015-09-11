@@ -94,7 +94,7 @@ public class CorrectURIUsage implements QualityMetric {
 	 */
 	@Override
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 
 		String subject = (quad.getSubject().isURI()) ? quad.getSubject().getURI() : "";
 		if (!(subject.equals("")) && (subject.startsWith(EnvironmentProperties.getInstance().getBaseURI()))){
@@ -147,6 +147,11 @@ public class CorrectURIUsage implements QualityMetric {
 //				for(String problemUri : this.pSetHashURI) {
 //					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
 //				}
+				
+				statsLogger.info("CorrectURIUsage. Dataset: {} - # Slash URIs Found : {}; Total # Triples with URI Subject : {}; " +
+						"Maximum # Triples : {};", 
+						EnvironmentProperties.getInstance().getDatasetURI(), slashURICounter, tripleCounter, MAX_TRIPLES);
+				
 				if (this.slashURICounter == 0) return 0.0;
 				return ((double)this.slashURICounter) / ((double)this.tripleCounter) ;
 			}
@@ -161,6 +166,12 @@ public class CorrectURIUsage implements QualityMetric {
 //				for(String problemUri : this.pSetSlashURI) {
 //					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
 //				}
+				
+				statsLogger.info("CorrectURIUsage. Dataset: {}; Base URI: {} - # Hash URIs Found : {}; " +
+						"Total # Triples with URI Subject : {}; Maximum # Triples : {};", 
+						EnvironmentProperties.getInstance().getDatasetURI(), EnvironmentProperties.getInstance().getBaseURI(),
+						hashURICounter, tripleCounter, MAX_TRIPLES);
+				
 				if (this.hashURICounter == 0) return 0.0;
 				return ((double)this.hashURICounter) / ((double)this.tripleCounter) ;
 			}

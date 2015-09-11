@@ -24,7 +24,7 @@ public class DataSourceScalabilityTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.DataSourceScalability);
+		loader.loadDataSet(DataSetMappingForTestCase.DataSourceScalability, "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl");
 	}
 
 	@After

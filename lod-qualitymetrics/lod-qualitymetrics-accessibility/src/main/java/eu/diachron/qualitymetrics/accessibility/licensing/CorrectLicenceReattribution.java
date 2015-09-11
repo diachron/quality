@@ -3,12 +3,16 @@
  */
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
 /**
  * @author Jeremy Debattista
@@ -35,13 +39,14 @@ public class CorrectLicenceReattribution implements QualityMetric {
 	
 	//http://2014.eswc-conferences.org/sites/default/files/papers/paper_168.pdf
 	
+	final static Logger logger = LoggerFactory.getLogger(CorrectLicenceReattribution.class);
+	
 	/* (non-Javadoc)
 	 * @see de.unibonn.iai.eis.luzzu.assessment.QualityMetric#compute(com.hp.hpl.jena.sparql.core.Quad)
 	 */
 	@Override
 	public void compute(Quad quad) {
-		// TODO Auto-generated method stub
-		
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +54,9 @@ public class CorrectLicenceReattribution implements QualityMetric {
 	 */
 	@Override
 	public double metricValue() {
-		// TODO Auto-generated method stub
+		statsLogger.info("CorrectLicenceReattribution. Dataset: {} - Metric not implemented;", 
+				EnvironmentProperties.getInstance().getDatasetURI());
+		
 		return 0;
 	}
 

@@ -24,7 +24,7 @@ public class CorrectURIUsageTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.CorrectURIUsage);
+		loader.loadDataSet(DataSetMappingForTestCase.CorrectURIUsage, "http://pleiades.stoa.org/places");
 	}
 
 	@After

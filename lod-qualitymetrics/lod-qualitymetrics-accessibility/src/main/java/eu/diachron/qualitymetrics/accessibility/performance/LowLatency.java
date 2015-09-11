@@ -65,7 +65,7 @@ public class LowLatency implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		//nothing to compute
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 	}
 
 	/**
@@ -84,6 +84,11 @@ public class LowLatency implements QualityMetric {
 
 			double avgRespTime = ((double)totalDelay) / ((double)NUM_HTTP_SAMPLES);
 			this.metricValue = Math.min(1.0, NORM_TOTAL_RESPONSE_TIME / avgRespTime);
+			
+			statsLogger.info("LowLatency. Dataset: {}; Base URI: {} - Total Delay (millisecs) : {}; " +
+					"# HTTP Samples : {}; Norm Total Response Milliseconds : {};", 
+					EnvironmentProperties.getInstance().getDatasetURI(), EnvironmentProperties.getInstance().getBaseURI(), 
+					totalDelay, NUM_HTTP_SAMPLES, NORM_TOTAL_RESPONSE_TIME);
 		}
 		return this.metricValue;
 	}

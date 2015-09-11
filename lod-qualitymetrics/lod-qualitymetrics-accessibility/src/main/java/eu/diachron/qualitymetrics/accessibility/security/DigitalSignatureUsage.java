@@ -6,6 +6,8 @@ package eu.diachron.qualitymetrics.accessibility.security;
 import java.io.Serializable;
 
 import org.mapdb.HTreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -18,6 +20,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
 /**
  * @author Jeremy Debattista
@@ -31,10 +34,12 @@ public class DigitalSignatureUsage implements QualityMetric {
 
 	private HTreeMap<String,DigitalSignature> docs = MapDbFactory.createFilesystemDB().createHashMap("dig-sig-docs").make();
 	private HTreeMap<String,DigitalSignature> endorsements = MapDbFactory.createFilesystemDB().createHashMap("endorcements-docs").make();
-
+	
+	private static Logger logger = LoggerFactory.getLogger(DigitalSignatureUsage.class);
 	
 	@Override
 	public void compute(Quad quad) {
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 	
 		Node subject = quad.getSubject();
 		Node object = quad.getObject();
@@ -71,7 +76,6 @@ public class DigitalSignatureUsage implements QualityMetric {
 			ds.endorcer = object.getURI();
 		}
 		
-		
 		if (quad.getObject().equals(ENDORSEMENT.asNode())){
 			DigitalSignature ds = new DigitalSignature();
 			ds.endorcement = subject.getURI();
@@ -87,6 +91,8 @@ public class DigitalSignatureUsage implements QualityMetric {
 		
 		for(DigitalSignature ds : this.docs.values()) noDocsWithoutEndorcement += (ds.fullEndorcement()) ? 1 : 0;
 
+		statsLogger.info("DigitalSignatureUsage. Dataset: {} - Total # Documents : {}; # Documents without Endorcement : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), noDocs, noDocsWithoutEndorcement);
 		
 		return (noDocsWithoutEndorcement / noDocs);
 	}

@@ -73,7 +73,7 @@ public class DataSourceScalability implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		//Nothing to compute here
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 	}
 
 	/**
@@ -108,6 +108,10 @@ public class DataSourceScalability implements QualityMetric {
 				logger.trace("Calculation of scalability differential factor failed for dataset {}", datasetURI);
 				scalabilityDiff = ((long)DIFFERENCE_THRESHOLD); //return 0 when test fails
 			}
+			
+			statsLogger.info("DataSourceScalability. Dataset: {}; Base URI: {} - Scalability Differential : {}; " +
+					"Difference Threshold : {};", EnvironmentProperties.getInstance().getDatasetURI(), 
+					EnvironmentProperties.getInstance().getBaseURI(), scalabilityDiff, DIFFERENCE_THRESHOLD);
 			
 			this.metricValue = Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, (double)scalabilityDiff));
 		}

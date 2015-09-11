@@ -24,7 +24,7 @@ public class HighThroughputTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.HighThroughput);
+		loader.loadDataSet(DataSetMappingForTestCase.HighThroughput, "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl");
 	}
 
 	@After

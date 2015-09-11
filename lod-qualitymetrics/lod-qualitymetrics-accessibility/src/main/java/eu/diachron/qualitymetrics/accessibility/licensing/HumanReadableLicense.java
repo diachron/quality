@@ -90,7 +90,7 @@ public class HumanReadableLicense implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the text of the licensing statement
 	 */
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 
 		// Extract the predicate (property) of the statement, the described resource (subject) and the value set (object)
 		Node subject = quad.getSubject();
@@ -111,10 +111,7 @@ public class HumanReadableLicense implements QualityMetric {
 			}
 		}
 		
-		// Check whether the predicate corresponds to a documentation property...  
-		
-		
-		
+		// Check whether the predicate corresponds to a documentation property...
 		if (subject.isURI()){
 			if (subject.getURI().startsWith(this.baseURI)){
 				if(setLicensingDocumProps.contains(predicate.getURI())) {
@@ -159,6 +156,9 @@ public class HumanReadableLicense implements QualityMetric {
 		}
 		
 		double metValue = (voidValidLicences) / ((double)this.humanLicencePerDataset.size());
+		
+		statsLogger.info("HumanReadableLicense. Dataset: {} - Total # Licenses in Dataset : {}; # VOID Valid Licenses : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), humanLicencePerDataset.size(), voidValidLicences);
 		
 		return metValue;
 		

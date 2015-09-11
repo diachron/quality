@@ -63,7 +63,7 @@ public class HighThroughput implements QualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	public void compute(Quad quad) {
-		//Nothing to Compute
+		logger.debug("Computing : {} ", quad.asTriple().toString());
 	}
 
 	/**
@@ -82,7 +82,13 @@ public class HighThroughput implements QualityMetric {
 
 			double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
 			this.metricValue = Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
+			
+			statsLogger.info("HighThroughput. Dataset: {}; Base URI: {} - Total Delay (millisecs) : {}; " +
+					"# HTTP Requests Sent : {}; Norm Served Requests per Millisecond : {};", 
+					EnvironmentProperties.getInstance().getDatasetURI(), EnvironmentProperties.getInstance().getBaseURI(), 
+					totalDelay, NUM_HTTP_REQUESTS, NORM_SERVED_REQS_PER_MILLISEC);
 		}
+				
 		return this.metricValue;
 	}
 
