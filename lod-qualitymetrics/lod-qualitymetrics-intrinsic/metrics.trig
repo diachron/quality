@@ -4,7 +4,6 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix lmi: <http://purl.org/eis/vocab/lmi#> .
 
-#--- Timeliness Dimension ------------------------------------------------------------------------------------------------- 
 
 _:EstimatedExtensionalConciseness a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Extensional Conciseness (Estimated)" ;
@@ -16,8 +15,12 @@ _:ExtensionalConciseness a lmi:LuzzuMetricJavaImplementation ;
 	
 _:EntitiesAsMembersOfDisjointClasses a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Entities As Members Of Disjoint Classes" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.EntitiesAsMembersOfDisjointClasses" .
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.SimpleEntitiesAsMembersOfDisjointClasses" .
 	
+_:AdvancedEntitiesAsMembersOfDisjointClasses a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Advanced Entities As Members Of Disjoint Classes" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.AdvanvcedEntitiesAsMembersOfDisjointClasses" .
+
 _:MisplacedClassesOrProperties a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Misplaced Classes Or Properties" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.MisplacedClassesOrProperties" .
@@ -29,4 +32,21 @@ _:MisusedOwlDatatypeOrObjectProperties a lmi:LuzzuMetricJavaImplementation ;
 _:EstimatedEntitiesAsMembersOfDisjointClasses a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Entities As Members Of Disjoint Classes (Estimated)" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.EstimateEntitiesAsMembersOfDisjointClasses" .
+
+_:OntologyHijacking a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Ontology Hijacking" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.OntologyHijacking" .
+
+_:UsageOfDeprecatedClassesOrProperties a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Usage Of Deprecated Classes Or Properties" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.UsageOfDeprecatedClassesOrProperties" .
+
+_:UsageOfIncorrectDomainOrRangeDatatypes a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Usage Of Deprecated Classes Or Properties" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.UsageOfIncorrectDomainOrRangeDatatypes" .
+
+
+_:ValidIFPUsage a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Valid IFP Usage" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.ValidIFPUsage" .
 	
