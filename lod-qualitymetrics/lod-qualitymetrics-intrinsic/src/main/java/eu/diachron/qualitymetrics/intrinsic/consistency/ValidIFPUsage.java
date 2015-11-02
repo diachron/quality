@@ -52,8 +52,10 @@ public class ValidIFPUsage implements QualityMetric{
 
 	private Model problemModel = ModelFactory.createDefaultModel();
 	
+	int counter = 0;
 	@Override
 	public void compute(Quad quad) {
+		counter++;
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
 		if (VocabularyLoader.isInverseFunctionalProperty(quad.getPredicate())){
@@ -98,8 +100,9 @@ public class ValidIFPUsage implements QualityMetric{
 
 	@Override
 	public double metricValue() {
-		statsLogger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};"
-				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs);
+		System.out.println(counter);
+		logger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};    {}"
+				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs,counter);
 
 		if (totalIFPs == 0) return 1.0;
 		return 1.0 - ((double)totalViolatedIFPs/(double)totalIFPs);

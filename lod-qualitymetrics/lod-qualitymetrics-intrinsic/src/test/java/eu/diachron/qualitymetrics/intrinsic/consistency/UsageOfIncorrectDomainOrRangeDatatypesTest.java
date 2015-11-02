@@ -5,11 +5,14 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.List;
 
+import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
@@ -34,7 +37,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 	public void tearDown() throws Exception {
 	}
 	
-
+@Ignore
 	@Test
 	public void testUsageOfDeprecatedClassesAndPropertiesMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
@@ -43,7 +46,6 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
-		
 //		 # Incorrect Domains : 1; # Incorrect Ranges : 2; # Predicates Assessed : 4; # Undereferenceable Predicate : 0
 		
 		// 3 / 8
