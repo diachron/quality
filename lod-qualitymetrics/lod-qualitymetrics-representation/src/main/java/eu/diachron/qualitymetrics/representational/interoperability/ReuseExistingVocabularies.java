@@ -121,6 +121,9 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 	public double metricValue() {
 		double reusedvoc = ((double)this.seenSuggested.size()) / ((double) this.suggestedVocabs.size());
 		
+		statsLogger.info("Reuse Existing Vocabs. Dataset: {} - Total # Seen Suggested : {}; # Suggested Vocab : {};", 
+				EnvironmentProperties.getInstance().getDatasetURI(), this.seenSuggested.size(), this.suggestedVocabs.size());
+
 		for(String s : suggestedVocabs){
 			if (!(seenSuggested.contains(s))){
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(s).asNode(), QPRO.exceptionDescription.asNode(), DQM.UnusedSuggestedVocabulary.asNode());
@@ -166,7 +169,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 	 * a string with the trig filename 
 	 */
 	@Override
-	public void before(Object [] args) throws BeforeException {
+	public void before(Object... args) throws BeforeException {
 		if (args == null || args.length <= 0 || args[0] == null){
 			logger.error("Argument in the Reuse Existing Vocabulary metric should not be null.");
 			throw new BeforeException("Argument should not be a string with a filename.");
@@ -221,7 +224,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 	}
 
 	@Override
-	public void after(Object [] args) throws AfterException {
+	public void after(Object... args) throws AfterException {
 		// nothing to do
 	}
 	

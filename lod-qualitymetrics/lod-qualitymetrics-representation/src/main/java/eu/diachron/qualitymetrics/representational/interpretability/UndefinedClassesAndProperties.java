@@ -20,6 +20,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.representational.utils.SharedResources;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -113,7 +114,9 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		logger.debug("Values: Undefined Classes {}, Undefined Properties {}", this.undefinedClasses, this.undefinedProperties );
+		statsLogger.info("Undefined Classes and Properties. Dataset: {} - Undefined Classes {}, Undefined Properties {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), this.undefinedClasses, this.undefinedProperties);
+
 
 		return (this.undefinedClasses + this.undefinedProperties == 0) ? 1.0 
 				: 1.0 - ((double)(this.undefinedClasses + this.undefinedProperties)/(double)(this.totalClasses + this.totalProperties));

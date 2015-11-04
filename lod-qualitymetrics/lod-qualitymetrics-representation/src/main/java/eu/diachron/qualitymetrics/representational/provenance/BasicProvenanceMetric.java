@@ -49,6 +49,7 @@ public class BasicProvenanceMetric implements QualityMetric {
 			dataset.putIfAbsent(subject.getURI(), "");
 		}
 		
+		//are there more basic provenance requirements? see flemmings thesis pg 154
 		if (predicate.hasURI(DCTerms.creator.getURI()) || predicate.hasURI(DCTerms.publisher.getURI())){
 			if (subject.hasURI(EnvironmentProperties.getInstance().getBaseURI())){
 				if (object.isURI())
@@ -63,6 +64,9 @@ public class BasicProvenanceMetric implements QualityMetric {
 		for (String s : dataset.values()) 
 			if (!(s.equals(""))) validProv++;
 		
+		statsLogger.info("Basic Provenance Metric. Dataset: {} - Valid Provenance {}, Dataset Size {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), validProv, dataset.size());
+
 		return (validProv / (double)dataset.size());
 	}
 

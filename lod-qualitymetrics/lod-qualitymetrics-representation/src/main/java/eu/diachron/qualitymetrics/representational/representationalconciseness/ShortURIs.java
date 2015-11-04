@@ -18,6 +18,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
@@ -105,7 +106,9 @@ public class ShortURIs implements QualityMetric {
 
 	
 	public double metricValue() {
-		logger.debug("Values: Short URI Count {}, Possible Local Deref URIs {}", shortURICount, countLocalDefURIs);
+
+		statsLogger.info("Short URI. Dataset: {} - Short URI Count {}, Possible Local Deref URIs {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), shortURICount, countLocalDefURIs );
 
 		return ((double)shortURICount / (double)countLocalDefURIs);
 	}

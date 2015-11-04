@@ -130,7 +130,8 @@ public class DifferentSerialisationFormats implements QualityMetric{
 				datasetsWithMoreThanOneFeature++;
 			}
 		}
-		logger.debug("Values: Datasets With More than One Feature {}, Total Number Dataset{}",datasetsWithMoreThanOneFeature,totalNumberDatasets);
+		statsLogger.info("Different Serialisation Formats. Dataset: {} - Datasets With More than One Feature {}, Total Number Dataset {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), datasetsWithMoreThanOneFeature,totalNumberDatasets );
 
 		return (double)datasetsWithMoreThanOneFeature / (double) totalNumberDatasets;
 	}

@@ -154,6 +154,9 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 		// calculating the overlapping terms of used suggested vocabularies
 		double olt = ((double) this.overlapClasses + (double) this.overlapProperties) / ((double) this.totalClasses + (double) this.totalProperties) ;
 	
+		statsLogger.info("Reuse Existing Terms. Dataset: {} - Total # Overlap Classes : {}; # Overlap Properties : {}; # Total Classes : {}; # Total Properties : {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), this.overlapClasses, this.overlapProperties, this.totalClasses, this.totalProperties);
+
 		for(String s : suggestedVocabs.keySet()){
 			if (suggestedVocabs.get(s) == 0.0){
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(s).asNode(), QPRO.exceptionDescription.asNode(), DQM.UnusedSuggestedVocabulary.asNode());
@@ -198,7 +201,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	 * a string with the trig filename 
 	 */
 	@Override
-	public void before(Object [] args) throws BeforeException {
+	public void before(Object... args) throws BeforeException {
 		if (args == null || args.length <= 0 || args[0] == null){
 			logger.error("Argument in the Reuse Existing Vocabulary metric should not be null.");
 			throw new BeforeException("Argument should not be a string with a filename.");
@@ -253,7 +256,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	}
 
 	@Override
-	public void after(Object [] args) throws AfterException {
+	public void after(Object... args) throws AfterException {
 		// nothing to do
 	}
 

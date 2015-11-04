@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
 /**
  * @author Jeremy Debattista
@@ -75,8 +76,9 @@ public class MultipleLanguageUsage implements QualityMetric {
 		double totLang = 0.0;
 		for(Set<String> lst : this.multipleLanguage.values()) totLang += (double) lst.size();
 		
-		logger.debug("Values: Total Languages {}, Multiple Languages Found {}", totLang, this.multipleLanguage.size() );
-		
+		statsLogger.info("Multiple Language Usage. Dataset: {} - Total Languages {}, Multiple Languages Found {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(),  totLang, this.multipleLanguage.size()  );
+
 		double val = totLang / (double) this.multipleLanguage.size();
 		
 		return (Math.round(val) == 0) ? 1 : Math.round(val) ;

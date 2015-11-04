@@ -19,6 +19,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 
 /**
@@ -96,7 +97,9 @@ public class NoProlixRDF implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		logger.debug("Values: Total RCC {}, Total Triples {}", this.totalRCC, this.totalTriples);
+		statsLogger.info("No Prolix RDF. Dataset: {} - Total RCC {}, Total Triples {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), this.totalRCC, this.totalTriples );
+
 
 		return (this.totalRCC == 0) ? 1.0 : 1.0 - (this.totalRCC / this.totalTriples);
 	}

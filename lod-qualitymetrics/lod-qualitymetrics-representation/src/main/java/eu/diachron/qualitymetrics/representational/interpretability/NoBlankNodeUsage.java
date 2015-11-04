@@ -20,6 +20,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 
 /**
  * @author Jeremy Debattista
@@ -60,7 +61,8 @@ public class NoBlankNodeUsage implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		logger.debug("Values: Unique DLC {}, Unique BN {}", uniqueDLC.size(), uniqueBN.size() );
+		statsLogger.info("No Blank Node Usage. Dataset: {} - Unique DLC {}, Unique BN {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), uniqueDLC.size(), uniqueBN.size() );
 
 		return ((double) uniqueDLC.size()) / ((double) uniqueDLC.size() + (double) uniqueBN.size());
 	}
