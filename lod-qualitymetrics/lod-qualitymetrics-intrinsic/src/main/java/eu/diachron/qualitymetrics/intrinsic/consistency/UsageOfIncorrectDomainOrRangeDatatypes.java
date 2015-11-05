@@ -246,14 +246,14 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 			return ModelFactory.createDefaultModel().createResource(lit_obj.getLiteralDatatype().getURI());
 		} else {
 			Literal lt = (Literal) n;
-			if (lt.getValue() instanceof Double) return XSD.xdouble;
-			else if (lt.getValue() instanceof Integer) return XSD.xint;
+			if (lt.getValue() instanceof Byte) return XSD.xbyte;
 			else if (lt.getValue() instanceof Boolean) return XSD.xboolean;
-			else if (lt.getValue() instanceof String) return XSD.xstring;
-			else if (lt.getValue() instanceof Float) return XSD.xfloat;
 			else if (lt.getValue() instanceof Short) return XSD.xshort;
+			else if (lt.getValue() instanceof Integer) return XSD.xint;
 			else if (lt.getValue() instanceof Long) return XSD.xlong;
-			else if (lt.getValue() instanceof Byte) return XSD.xbyte;
+			else if (lt.getValue() instanceof Float) return XSD.xfloat;
+			else if (lt.getValue() instanceof Double) return XSD.xdouble;
+			else if (lt.getValue() instanceof String) return XSD.xstring;
 			else return RDFS.Literal;
 		}
 	}

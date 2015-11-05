@@ -50,3 +50,7 @@ _:ValidIFPUsage a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Valid IFP Usage" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.ValidIFPUsage" .
 	
+_:CompatibleDatatype a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Compatible Datatype" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.syntacticaccuracy" .
+	

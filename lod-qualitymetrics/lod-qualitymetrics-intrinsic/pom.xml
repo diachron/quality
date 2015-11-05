@@ -14,5 +14,13 @@
 	<version>2.1</version>
 </dependency>
 
+	
+<dependency>
+	<groupId>com.github.sharispe</groupId>
+	<artifactId>slib-sml</artifactId>
+	<version>0.9.1</version>
+</dependency>
+
+
   </dependencies>
 </project>
