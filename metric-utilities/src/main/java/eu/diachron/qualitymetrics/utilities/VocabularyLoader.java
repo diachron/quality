@@ -4,8 +4,10 @@
 package eu.diachron.qualitymetrics.utilities;
 
  import java.io.StringReader;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -344,7 +346,11 @@ public class VocabularyLoader {
 	}
 	
 	
+	private static Map<Node, Set<RDFNode>> infParent = new HashMap<Node,Set<RDFNode>>(); //TODO: Fix
 	public static Set<RDFNode> inferParent(Node term, Model m, boolean isSuperClass){
+		
+		if (infParent.containsKey(term)) return infParent.get(term);
+		
 		String query;
 		Model _mdl = m;
 		
@@ -366,6 +372,8 @@ public class VocabularyLoader {
 		Set<RDFNode> set = new LinkedHashSet<RDFNode>();
 		while(rs.hasNext()) set.add(rs.next().get("super"));
 		set.add(OWL.Thing);
+		
+		infParent.put(term, set);
 		return set;
 	}
 	
