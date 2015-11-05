@@ -1067,6 +1067,13 @@ dqm:LuzzuProvenanceAgent
 		rdfs:range	dqm:ReputationOfDatasetMetric .
 		
 ### August 2015 Additions ###
+
+	dqm:hasOntologyHijackingMetric
+		a	rdfs:Property ;
+		rdfs:subPropertyOf	daq:hasMetric ;
+		rdfs:domain	dqm:Consistency ;
+		rdfs:range	dqm:OntologyHijackingMetric .
+
 	dqm:UsageOfDeprecatedClassesOrProperties
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Metric ; 
@@ -1148,7 +1155,32 @@ dqm:LuzzuProvenanceAgent
 
 #############################		
 		
-		
+### November 2015 Addition ###
+
+	dqm:SyntacticValidity
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment	"** TODO **" ;
+		rdfs:label	"Syntactic Validity" .
+	
+	dqm:hasSyntacticValidityDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:domain dqm:Intrinsic ;
+		rdfs:range dqm:SyntacticValidity .	
+	
+	dqm:CompatibleDatatype
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"** TODO **" ;
+		rdfs:label	"Compatible Datatype" .
+	
+	dqm:hasCompatibleDatatype
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasMetric ;
+		rdfs:domain dqm:SyntacticValidity ;
+		rdfs:range dqm:CompatibleDatatype .
+
 			
 ##################################
 #				 				 #
