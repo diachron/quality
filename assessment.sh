@@ -3,7 +3,7 @@ if [ "$1" == dependencies ] ; then
 	echo "downloading dependencies";
 	wget https://github.com/EIS-Bonn/Luzzu/archive/1.2.tar.gz -O ../Luzzu.tar.gz
 	tar -xvf ../Luzzu.tar.gz
-	mv Luzzu-1.1/ ../Luzzu/
+	mv Luzzu-1.2/ ../Luzzu/
 elif [ "$1" == build ] ; then
 	echo "Compiling Diachron Quality Metrics";
 	mvn clean install -Dmaven.test.skip=true;
