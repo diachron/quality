@@ -42,18 +42,26 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  * or not
  */
 public class ModelParser {
-	
-	protected static PipedRDFIterator<?> iterator;
-	protected static PipedRDFStream<?> rdfStream;
-	protected static ExecutorService executor;
-	
+			
 	final static Logger logger = LoggerFactory.getLogger(ModelParser.class);
-
 	
+	@SuppressWarnings("unchecked")
 	public static boolean snapshotParser(final String uri){
 		Lang lang  =  Lang.TURTLE;
 		
-		initiate(lang);
+		logger.info("Initiating Streams and Iterators");
+		final PipedRDFIterator<?> iterator;
+		final PipedRDFStream<?> rdfStream;
+		
+		if ((lang == Lang.NQ) || (lang == Lang.NQUADS)) {
+			iterator = new PipedRDFIterator<Quad>();
+			rdfStream = new PipedQuadsStream((PipedRDFIterator<Quad>)iterator);
+		} else {
+			iterator = new PipedRDFIterator<Triple>();
+			rdfStream = new PipedTriplesStream((PipedRDFIterator<Triple>)iterator);
+		}
+		
+		ExecutorService executor = Executors.newSingleThreadExecutor();
 		
 		Runnable parser = new Runnable(){
 			@Override
@@ -68,37 +76,59 @@ public class ModelParser {
 			}			
 		};
 
-		Future future = executor.submit(parser);
+		Future<?> future = executor.submit(parser);
+		executor.shutdown();
+		boolean tripleParsed = false;
 	
-		try{
-			while (iterator.hasNext()){
-				logger.info("{} contains RDF", uri);
-				future.cancel(true);
-				return true;
+		try {
+			if(iterator.hasNext()) {
+				String tripleRead = (iterator.next()).toString();
+				logger.debug("{} contains RDF. Triple read: {}", uri, tripleRead);
+				// OK we know there's some RDF, stop processing
+				tripleParsed = true;
+			} 
+			else {
+				logger.debug("{} does not contain RDF", uri);
 			}
-		} catch (Exception e){
-			return false;
+			future.cancel(true);
+			iterator.close();
+		} catch (Exception e) {
+			tripleParsed = false;
 		}
 		
-		return false;
+		return tripleParsed;
 	}
 	
-	
+	@SuppressWarnings("unchecked")
 	private static boolean snapshotParser(final CachedHTTPResource httpResource, final Lang givenLang){
-		if (httpResource.isContainsRDF() != null) return httpResource.isContainsRDF();
+		// First, check if the resource is already known to contain RDF
+		if (httpResource.isContainsRDF() != null) {
+			return httpResource.isContainsRDF();
+		}
 		
 		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.TURTLE;
-		
-		initiate(lang);
-		
+						
 		if ((httpResource.getDereferencabilityStatusCode() == StatusCode.SC4XX) ||
 				(httpResource.getDereferencabilityStatusCode() == StatusCode.SC5XX) ||
-				(httpResource.getDereferencabilityStatusCode() == StatusCode.BAD)){
+				(httpResource.getDereferencabilityStatusCode() == StatusCode.BAD)) {
 			return false;
 		}
 		
-		Runnable parser = new Runnable(){
-			@Override
+		logger.info("Initiating Streams and Iterators");
+		final PipedRDFIterator<?> iterator;
+		final PipedRDFStream<?> rdfStream;
+		
+		if ((lang == Lang.NQ) || (lang == Lang.NQUADS)) {
+			iterator = new PipedRDFIterator<Quad>();
+			rdfStream = new PipedQuadsStream((PipedRDFIterator<Quad>)iterator);
+		} else {
+			iterator = new PipedRDFIterator<Triple>();
+			rdfStream = new PipedTriplesStream((PipedRDFIterator<Triple>)iterator);
+		}
+		
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		
+		Runnable parser = new Runnable() {
 			public void run() {
 				try{
 					logger.info("Trying to parse resource {}.", httpResource.getUri());
@@ -108,83 +138,44 @@ public class ModelParser {
 					logger.info("Resource {} could not be parsed. Exception {}", httpResource.getUri(), e.getMessage());
 					rdfStream.finish();
 				}
-			}			
+			}
 		};
 
-		Future future = executor.submit(parser);
+		Future<?> future = executor.submit(parser);
+		executor.shutdown();
+		boolean tripleParsed = false;
 	
-		try{
-			while (iterator.hasNext()){
-				logger.info("{} contains RDF", httpResource.getUri());
-				future.cancel(true);
-				return true;
-			}
-		} catch (Exception e){
-			return false;
-		}
-		
-		return false;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static void initiate(Lang lang){
-		logger.info("Initiating Streams and Iterators");
-		
 		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		if ((executor != null) && (!executor.isShutdown())){
-			try{
-				rdfStream.finish();
-			}catch (Exception e){}
-			executor.shutdownNow();
-		}
-		
-		if ((lang == Lang.NQ) || (lang == Lang.NQUADS)){
-			iterator = new PipedRDFIterator<Quad>();
-			rdfStream = new PipedQuadsStream((PipedRDFIterator<Quad>) iterator);
-		} else {
-			iterator = new PipedRDFIterator<Triple>();
-			rdfStream = new PipedTriplesStream((PipedRDFIterator<Triple>) iterator);
-		}
-		
-		executor = Executors.newSingleThreadExecutor();
-	}
-	
-	private static void destroy() {
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		if (executor != null){
-			if (!executor.isShutdown()){
-				try{
-					rdfStream.finish();
-				}catch (Exception e){}
-				executor.shutdownNow();
+			if(iterator.hasNext()) {
+				String tripleRead = (iterator.next()).toString();
+				logger.debug("{} contains RDF. Triple read: {}", httpResource.getUri(), tripleRead);
+				// OK we know there's some RDF, stop processing
+				tripleParsed = true;
+			} else {
+				logger.debug("{} does not contain RDF", httpResource.getUri());
 			}
+			future.cancel(true);
+			iterator.close();
+		} catch (Exception e) {
+			tripleParsed = false;
 		}
 		
-		iterator = null;
-		rdfStream = null;
+		return tripleParsed;
 	}
-	
+		
 	private static Lang tryGetLang(CachedHTTPResource resource){
 		Lang lang = null;
 		for (SerialisableHttpResponse shr : resource.getResponses()){
 			String conType = shr.getHeaders("Content-Type");
-			String[] s1 = conType.split(",");
-			for(String s : s1){
-				String[] p = s.split(";");
-				lang = LinkedDataContent.contentTypeToLang(p[0]);
-				if (lang == Lang.NTRIPLES) lang = Lang.TURTLE;
+			if(conType != null) {
+				String[] s1 = conType.split(",");
+				for(String s : s1){
+					String[] p = s.split(";");
+					lang = LinkedDataContent.contentTypeToLang(p[0]);
+					if (lang == Lang.NTRIPLES) lang = Lang.TURTLE;
+				}
+			} else {
+				return null;
 			}
 		}
 		return lang;
@@ -197,14 +188,12 @@ public class ModelParser {
 	public static boolean hasRDFContent(CachedHTTPResource httpResource, Lang lang){
 		boolean returnRes = snapshotParser(httpResource, lang);
 		httpResource.setContainsRDF(returnRes);
-//		destroy();
 		return returnRes;
 	}
 	
-	
-	public static void main(String[]args) throws IOException{
+	public static void main1(String[]args) throws IOException{
 		HTTPRetriever ret = new HTTPRetriever();
-		String uris =  Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
+		String uris = Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
 		ret.addListOfResourceToQueue(Arrays.asList(uris.split(",")));
 		ret.start();
 		int counter = 0;
