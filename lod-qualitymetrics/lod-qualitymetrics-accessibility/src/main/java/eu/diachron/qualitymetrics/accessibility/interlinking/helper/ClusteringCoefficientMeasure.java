@@ -204,5 +204,23 @@ public class ClusteringCoefficientMeasure {
 		
 		return this.estimateMeasure;
 	}
+	
+	/**
+	 * Returns the current value set for the mixing time factor, the computed mixing time will be directly proportional
+	 * to this factor. Get the larger the mixing time, the more nodes will be available in the random walk
+	 * @return current mixing time factor
+	 */
+	public static double getMixigTimeFactor() {
+		return ClusteringCoefficientMeasure.mixingTimeFactor;
+	}
+
+	/**
+	 * Sets the current value set for the mixing time factor, the computed mixing time will be directly proportional
+	 * to this factor. Get the larger the mixing time, the more nodes will be available in the random walk
+	 * @param mixigTimeFactor current mixing time factor
+	 */
+	public static void setMixigTimeFactor(double mixigTimeFactor) {
+		ClusteringCoefficientMeasure.mixingTimeFactor = mixigTimeFactor;
+	}
 
 }
