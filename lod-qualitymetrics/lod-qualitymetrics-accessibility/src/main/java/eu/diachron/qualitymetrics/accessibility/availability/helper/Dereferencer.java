@@ -56,7 +56,7 @@ public class Dereferencer {
 			return false;
 		} else {
 			switch(statusCode){
-				case SC303 : case HASH : return true;
+				case SC200: case SC303 : case HASH : return true;
 				default : return false;
 			}
 		}
