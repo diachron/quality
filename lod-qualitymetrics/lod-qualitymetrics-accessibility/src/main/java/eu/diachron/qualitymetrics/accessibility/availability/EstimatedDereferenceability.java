@@ -2,8 +2,6 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,6 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
-import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -48,11 +45,9 @@ public class EstimatedDereferenceability implements QualityMetric {
 	final static Logger logger = LoggerFactory.getLogger(EstimatedDereferenceability.class);
 	
 	/**
-	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
-	 * Fully Qualified URIs of each TLD, respectively
+	 * Constants controlling the maximum number of elements in the reservoir of URIs, i.e. sample size
 	 */
-	private static int MAX_TLDS = 10;
-	private static int MAX_FQURIS_PER_TLD = 30;
+	private static int MAX_FQURIS = 5000;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -65,20 +60,16 @@ public class EstimatedDereferenceability implements QualityMetric {
 	 * as a reservoir sampler, if its number of items grows beyond the limit (MAX_TLDS) items will be replaced 
 	 * randomly upon forthcoming insertions. Moreover, the items will be indexed so that search operations are O(1)
 	 */
-	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
+	private ReservoirSampler<String> fqUrisReservoir = new ReservoirSampler<String>(MAX_FQURIS, true);
 
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
 
+	private long totalUris = 0;
+	private long totalDerefUris = 0;
 	private double metricValue = 0.0;
-	private double totalURI = 0;
-	private double dereferencedURI = 0;
 	private boolean metricCalculated = false;
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
-	
-	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
-
-
 	
 	/**
 	 * Processes each triple obtained from the dataset to be assessed (instance declarations, that is, 
@@ -94,14 +85,20 @@ public class EstimatedDereferenceability implements QualityMetric {
 			
 			String subject = quad.getSubject().toString();
 			if (httpRetriever.isPossibleURL(subject)) {
-				logger.trace("URI found on subject: {}", subject);
-				addUriToDereference(subject);
+				// Check also, that the URI has not been already added
+				if(this.fqUrisReservoir.findItem(subject) == null) {
+					boolean uriAdded = this.fqUrisReservoir.add(subject);
+					logger.trace("URI found on subject: {}, was added to reservoir? {}", subject, uriAdded);
+				}
 			}
 
 			String object = quad.getObject().toString();
 			if (httpRetriever.isPossibleURL(object)) {
-				logger.trace("URI found on object: {}", object);
-				addUriToDereference(object);
+				// Check also, that the URI has not been already added
+				if(this.fqUrisReservoir.findItem(object) == null) {
+					boolean uriAdded = this.fqUrisReservoir.add(object);
+					logger.trace("URI found on object: {}, was added to reservoir? {}", object, uriAdded);
+				}
 			}
 		}
 	}
@@ -114,37 +111,22 @@ public class EstimatedDereferenceability implements QualityMetric {
 	public double metricValue() {
 		
 		if(!this.metricCalculated) {
-			// Collect the list of URIs of the TLDs, to be dereferenced
-			List<String> lstUrisToDeref = new ArrayList<String>(this.tldsReservoir.size());			
-			for(Tld tld : this.tldsReservoir.getItems()) {
-				lstUrisToDeref.add(tld.getUri());
+			// Collect the list of URIs to be dereferenced. The reservoir contains a random sample of the 
+			// whole population of URIs found in the data resource
+			List<String> lstUrisToDeref = new ArrayList<String>(this.fqUrisReservoir.size());			
+			for(String fqUri : this.fqUrisReservoir.getItems()) {
+				lstUrisToDeref.add(fqUri);
 			}
 			
-			httpRetriever.addListOfResourceToQueue(lstUrisToDeref);
-			httpRetriever.start(false); //we do not need content negotiation for this
-			
-			List<String> lst = this.filterTLDs(lstUrisToDeref);	
-			
-			
-			do {
-				httpRetriever.setUseContentType(true);
-				httpRetriever.addListOfResourceToQueue(lst);
-				httpRetriever.start(true);
-				this.startDereferencingProcess(lst);
-				lst.clear();
-				lst.addAll(this.notFetchedQueue);
-				this.notFetchedQueue.clear();
-			// Continue trying to dereference all URIs in uriSet, that is, those not fetched up to now
-			} while(!lst.isEmpty());
-			
-			this.metricCalculated = true;
-			
+			// Dereference all URIs
+			this.totalUris = lstUrisToDeref.size();
+			this.totalDerefUris = this.deReferenceUris(lstUrisToDeref);
+
+			this.metricValue = (double)totalDerefUris / (double)totalUris;
 		}
-		
-		this.metricValue = this.dereferencedURI / this.totalURI;
-		
+				
 		statsLogger.info("EstimatedDereferenceability. Dataset: {} - Total # URIs : {}; # Dereferenced URIs : {}; Previously calculated : {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), totalURI, dereferencedURI, metricCalculated);
+				EnvironmentProperties.getInstance().getDatasetURI(), this.totalUris, this.totalDerefUris, metricCalculated);
 		
 		return this.metricValue;
 	}
@@ -170,82 +152,49 @@ public class EstimatedDereferenceability implements QualityMetric {
 	/* ------------------------------------ Private Methods ------------------------------------------------ */
 	
 	/**
-	 * Checks and properly processes an URI found as subject or object of a triple, adding it to the
-	 * set of TLDs and fully-qualified URIs 
-	 * @param uri URI to be processed
+	 * Tries to dereference all the URIs contained in the parameter, by retrieving them from the cache. URIs
+	 * not found in the cache are added to the queue containing the URIs to be fetched by the async HTTP retrieval process
+	 * @param uriSet Set of URIs to be dereferenced
+	 * @return total number of URIs that were successfully dereferenced
 	 */
-	private void addUriToDereference(String uri) {
-		// Extract the top-level domain (a.k.a pay level domain) and look for it in the reservoir 
-		String uriTLD = httpRetriever.extractTopLevelDomainURI(uri);
-		Tld newTld = new Tld(uriTLD, MAX_FQURIS_PER_TLD);		
-		Tld foundTld = this.tldsReservoir.findItem(newTld);
+	private long deReferenceUris(List<String> uriSet) {
+		// Start the dereferenciation process, which will be run in parallel
+		httpRetriever.addListOfResourceToQueue(uriSet);
+		httpRetriever.start();
 		
-		if(foundTld == null) {
-			logger.trace("New TLD found and recorded: {}...", uriTLD);
-			// Add the new TLD to the reservoir
-			this.tldsReservoir.add(newTld);
-			// Add new fully qualified URI to those of the new TLD
-			newTld.addFqUri(uri);
-		} else {
-			// The identified TLD was found, it already exists on the reservoir, just add the fqdn to it
-			foundTld.addFqUri(uri);
-		}
-	}
-	
-	
-	private List<String> filterTLDs(List<String> uriSet){
-		List<String> possibleDeref = new ArrayList<String>();
-		Queue<String> q = new ConcurrentLinkedQueue<String>();
-		q.addAll(uriSet);
-		while (!(q.isEmpty())){
-			String uri = q.poll();
-			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
+		List<String> lstToDerefUris = new ArrayList<String>(uriSet);
+		long totalDerefUris = 0;
+				
+		// Dereference each and every one of the URIs contained in the specified set
+		while(lstToDerefUris.size() > 0) {
+			// Remove the URI at the head of the queue of URIs to be dereferenced                
+			String headUri = lstToDerefUris.remove(0);
+			
+			// First, search for the URI in the cache
+			CachedHTTPResource httpResource = (CachedHTTPResource)dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, headUri);
+			
 			if (httpResource == null || httpResource.getStatusLines() == null) {
-				q.add(uri);
+				// URIs not found in the cache, is still to be fetched via HTTP, add it to the end of the list
+				lstToDerefUris.add(headUri);
 			} else {
-				Tld newTld = new Tld(httpResource.getUri(), MAX_TLDS);		
-				Tld foundTld = this.tldsReservoir.findItem(newTld);
-				if (Dereferencer.hasOKStatus(httpResource)){
-					if (foundTld.getfqUris().getItems() != null)
-						possibleDeref.addAll(foundTld.getfqUris().getItems());
-				} else {
-					this.totalURI += foundTld.getfqUris().getItems().size();
-					logger.trace("URI failed to be dereferenced: {}", httpResource.getUri());
-					//problem report
-				}
-			}
-		}
-		return possibleDeref;
-	}
-	
-	
-	
-	private void startDereferencingProcess(List<String> uriSet) {
-		for(String uri : uriSet){
-			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
-			if (httpResource == null || httpResource.getStatusLines() == null) {
-				this.notFetchedQueue.add(uri);
-			} else {
-				this.totalURI++;
-				if (Dereferencer.hasValidDereferencability(httpResource)){
-					if(ModelParser.hasRDFContent(httpResource)){
-						this.dereferencedURI++;
-						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());
+				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
+				if (Dereferencer.hasValidDereferencability(httpResource)) {
+					if(ModelParser.hasRDFContent(httpResource)) {
+						totalDerefUris++;
+						logger.debug("URI successfully dereferenced and response OK and RDF: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
 					} else {
 						this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
-						logger.trace("URI was dereferenced but response was not valid: {}", httpResource.getUri());
+						logger.debug("URI was dereferenced but response was not valid: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
 					}
-				} else {
-					logger.trace("URI failed to be dereferenced: {}", httpResource.getUri());
 				}
-
-				createProblemReport(httpResource);
 				
-				logger.trace("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
+				createProblemReport(httpResource);
+				logger.trace("{} - {} - {}", headUri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
+		
+		return totalDerefUris;
 	}
-	
 	
 	private void createProblemReport(CachedHTTPResource httpResource){
 		StatusCode sc = httpResource.getDereferencabilityStatusCode();
@@ -269,23 +218,14 @@ public class EstimatedDereferenceability implements QualityMetric {
 		this._problemList.add(q);
 	}
 	
-	
-	public static int getMAX_TLDS() {
-		return MAX_TLDS;
+	public static int getMAX_FQURIS() {
+		return MAX_FQURIS;
 	}
 
-	public static void setMAX_TLDS(int mAX_TLDS) {
-		MAX_TLDS = mAX_TLDS;
+	public static void setMAX_FQURIS(int mAX_FQURIS) {
+		MAX_FQURIS = mAX_FQURIS;
 	}
-
-	public static int getMAX_FQURIS_PER_TLD() {
-		return MAX_FQURIS_PER_TLD;
-	}
-
-	public static void setMAX_FQURIS_PER_TLD(int mAX_FQURIS_PER_TLD) {
-		MAX_FQURIS_PER_TLD = mAX_FQURIS_PER_TLD;
-	}
-	
+		
 	@Override
 	public boolean isEstimate() {
 		return true;
