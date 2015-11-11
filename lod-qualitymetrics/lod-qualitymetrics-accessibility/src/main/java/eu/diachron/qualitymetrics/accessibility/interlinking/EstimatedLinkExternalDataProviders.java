@@ -7,17 +7,11 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.jena.atlas.logging.Log;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotException;
-import org.apache.jena.riot.WebContent;
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -35,8 +29,6 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -65,11 +57,11 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	 * Parameter: default size for the reservoir 
 	 */
 	private static int reservoirsize = 5000;
-		
+	
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	private DB mapDB = MapDbFactory.createAsyncFilesystemDB();
+	private DB mapDB = MapDbFactory.createHeapDB();
 	
 	/**
 	 * A set that holds all unique PLDs together with a sampled set of resources
@@ -90,8 +82,6 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
 	private HTTPRetriever httpRetriever = new HTTPRetriever();
 	private List<Quad> _problemList = new ArrayList<Quad>();
-
-
 	
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
@@ -168,8 +158,9 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 			mapPLDtotres.put(key, uriSet.size());
 			httpRetriever.addListOfResourceToQueue(uriSet);
 			this.notFetchedQueue.addAll(uriSet);
-			httpRetriever.start();
 		}
+		
+		httpRetriever.start();
 		
 		while (this.notFetchedQueue.size() > 0){
 			String uri = this.notFetchedQueue.poll();
@@ -181,6 +172,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 					String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri());
 					if (mapPLDtotresRDF.containsKey(pld)) mapPLDtotresRDF.put(pld, mapPLDtotresRDF.get(pld) + 1);
 					else mapPLDtotresRDF.put(pld, 1);
+					logger.debug("URI successfully dereferenced: {}. To go: {}", uri, this.notFetchedQueue.size());
 				}
 			}
 		}
@@ -201,6 +193,7 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 					Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(plds).asNode(), QPRO.exceptionDescription.asNode(), DQM.LowPercentageOfValidPLDResources.asNode());
 					this._problemList.add(q);
 				}
+				logger.debug("OK -> Computation of percentage for PLD: {}. ORI: {}, RES: {}", plds, iOri, iRes);
 			} else {
 				logger.warn("Computation of percentage for PLD: {} aborted. ORI and/or RES could not be retrieved: ORI: {}, RES: {}", plds, iOri, iRes);
 			}
@@ -233,6 +226,14 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
+	}
+	
+	/**
+	 * Sets the reservoir size parameter
+	 * @param reservoirSize Approximation parameter
+	 */
+	public static void setReservoirSize(int reservoirSize) {
+		EstimatedLinkExternalDataProviders.reservoirsize = reservoirSize;		
 	}
 	
 	/*
