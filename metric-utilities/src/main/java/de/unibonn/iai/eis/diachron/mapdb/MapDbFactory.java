@@ -22,6 +22,14 @@ public class MapDbFactory {
 	public static void setMapDbDirectory(String mapDbDirectory) {
 		mapDbDir = mapDbDirectory + ((mapDbDirectory.endsWith("/"))?(""):("/"));
 	}
+	
+	/**
+	 * Creates a new database, stored in memory (more preciselly, in heap space)
+	 */
+	public static DB createHeapDB() {
+		DB mapDB = DBMaker.newHeapDB().make();		
+		return mapDB;
+	}
 		
 	/**
 	 * Creates a new database, stored as a file
