@@ -74,9 +74,6 @@ public class LinkExternalDataProviders implements QualityMetric {
 	
 	final static Logger logger = LoggerFactory.getLogger(LinkExternalDataProviders.class);
 
-	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
-	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
-	private HTTPRetriever httpRetriever = new HTTPRetriever();
 
 	private final Resource METRIC_URI = DQM.LinksToExternalDataProvidersMetric;
 	
@@ -89,11 +86,11 @@ public class LinkExternalDataProviders implements QualityMetric {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
 		String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-		if (!(subject.equals("linkededucation.org"))) setResources.add(quad.getSubject().toString());
+		setResources.add(subject);
 
 		if (quad.getObject().isURI()){
 			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-			if (!(object.equals("linkededucation.org"))) setResources.add(quad.getObject().toString());
+			setResources.add(object);
 		}
 	}
 
@@ -154,42 +151,5 @@ public class LinkExternalDataProviders implements QualityMetric {
 			if (ModelParser.snapshotParser(s))
 				setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
 		}
-	}
-	
-	
-	private boolean is200AnRDF(CachedHTTPResource resource) {
-		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
-						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
-							Model m = this.tryRead(resource.getUri());
-							if (m.size() == 0){
-								Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoValidRDFDataForExternalLink.asNode());
-								this._problemList.add(q);
-								resource.setContainsRDF(false);
-								return false;
-							}
-						}
-						resource.setContainsRDF(true);
-						return true;
-					}
-				}
-			}
-		}
-		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoValidRDFDataForExternalLink.asNode());
-		this._problemList.add(q);
-		resource.setContainsRDF(false);
-		return false;
-	}
-	
-	private Model tryRead(String uri) {
-		Model m = ModelFactory.createDefaultModel();
-		try{
-			m = RDFDataMgr.loadModel(uri, Lang.NTRIPLES);
-		} catch (RiotException r) {
-			Log.debug("Resource could not be parsed:", r.getMessage());
-		}
-		return m;
 	}
 }
