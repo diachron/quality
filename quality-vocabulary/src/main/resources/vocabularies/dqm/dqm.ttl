@@ -1180,6 +1180,18 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subPropertyOf daq:hasMetric ;
 		rdfs:domain dqm:SyntacticValidity ;
 		rdfs:range dqm:CompatibleDatatype .
+		
+	dqm:CorrectLanguageTag
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ;
+		rdfs:comment	"** TODO **" ;
+		rdfs:label	"Correct Language Tag" .
+	
+	dqm:hasCorrectLanguageTag
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasMetric ;
+		rdfs:domain dqm:SyntacticValidity ;
+		rdfs:range dqm:CorrectLanguageTag .
 
 			
 ##################################
