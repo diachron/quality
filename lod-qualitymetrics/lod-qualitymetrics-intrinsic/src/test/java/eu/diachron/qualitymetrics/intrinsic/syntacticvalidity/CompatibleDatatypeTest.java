@@ -47,9 +47,9 @@ public class CompatibleDatatypeTest extends Assert {
 			metric.compute(quad);
 		}
 		
-		// incorrect and unknown 6
-		// correct 10
-		// 10 / 16
-		assertEquals(0.625,metric.metricValue(), 0.0001);
+		// incorrect and unknown 5
+		// correct 11
+		// 11 / 16
+		assertEquals(0.6875,metric.metricValue(), 0.0001);
 	}	
 }

@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +33,11 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+
+import org.openrdf.rio.datatypes.XMLSchemaDatatypeHandler;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.util.LiteralUtilException;
 
 /**
  * @author Jeremy Debattista
@@ -59,14 +66,13 @@ public class CompatibleDatatype implements QualityMetric {
 		if (obj.isLiteral()){
 			
 			if (obj.getLiteralDatatype() != null){
-				// we will try parse the value and check if it corresponds to
-				// assigned datatype
 				if (this.compatibleDatatype(obj)) 
 					numberCorrectLiterals++; 
 				else {
 					this.addToProblem(quad);
 					numberIncorrectLiterals++;
 				}
+
 			} else {
 				// unknown datatypes cannot be checked for their correctness,
 				// but in the UsageOfIncorrectDomainOrRangeDatatypes metric
@@ -129,81 +135,16 @@ public class CompatibleDatatype implements QualityMetric {
 		return DQM.LuzzuProvenanceAgent;
 	}
 	
+
+		
+	
+	
 	private boolean compatibleDatatype(Node lit_obj){
 		RDFNode n = Commons.asRDFNode(lit_obj);
 		Literal lt = (Literal) n;
 		RDFDatatype dt = lt.getDatatype();
 		String stringValue = lt.getLexicalForm();
 		
-		//datetime
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
-		try {
-			logger.debug("Checking literal value: {}, if it is a valid boolean", stringValue);
-			sdf.parse(stringValue);
-			return true;
-		} catch (ParseException ex){}
-		if ((stringValue.equalsIgnoreCase("true")) || (stringValue.equalsIgnoreCase("false"))){
-			logger.debug("Checking literal value: {}, if it is a valid boolean", stringValue);
-			return dt.getURI().equals(XSD.xboolean.getURI());
-		}
-		else if (stringValue.matches(".*[a-zA-Z]+.*") && (StringUtils.isAlphanumericSpace(stringValue))){
-			logger.debug("Checking literal value: {}, if it is a valid string", stringValue);
-			return dt.getURI().equals(XSD.xstring.getURI()); 
-		}
-		else if (stringValue.matches("[-]*[0-9]+") ){
-			// numeric non-decimal
-			boolean nonNumericDecimal = false;
-			try {
-				logger.debug("Checking literal value: {}, if it is a valid byte", stringValue);
-				Byte.parseByte(stringValue);
-				nonNumericDecimal = dt.getURI().equals(XSD.xbyte.getURI());
-			} catch (NumberFormatException nfe){}
-			
-			if (!nonNumericDecimal)
-				try {
-					logger.debug("Checking literal value: {}, if it is a valid short", stringValue);
-					Short.parseShort(stringValue);
-					nonNumericDecimal = dt.getURI().equals(XSD.xshort.getURI());
-				} catch (NumberFormatException nfe){}
-			
-			if (!nonNumericDecimal)
-				try {
-					logger.debug("Checking literal value: {}, if it is a valid integer", stringValue);
-					Integer.parseInt(stringValue);
-					nonNumericDecimal = dt.getURI().equals(XSD.xint.getURI());
-				} catch (NumberFormatException nfe){}
-			
-			if (!nonNumericDecimal)
-				try {
-					logger.debug("Checking literal value: {}, if it is a valid long", stringValue);
-					Long.parseLong(stringValue);
-					nonNumericDecimal = dt.getURI().equals(XSD.xlong.getURI());
-				} catch (NumberFormatException nfe){}
-			
-			return nonNumericDecimal;
-		} else if (stringValue.contains(".") && !(stringValue.matches(".*[a-zA-Z]+.*"))){
-			// numeric float or double
-			boolean floatOrDouble = false;
-			try {
-				logger.debug("Checking literal value: {}, if it is a valid float", stringValue);
-				Float.parseFloat(stringValue);
-				floatOrDouble = dt.getURI().equals(XSD.xfloat.getURI());
-			} catch (NumberFormatException nfe){}
-			
-			if (!floatOrDouble)
-				try {
-					logger.debug("Checking literal value: {}, if it is a valid double", stringValue);
-					Double.parseDouble(stringValue);
-					floatOrDouble = dt.getURI().equals(XSD.xdouble.getURI());
-				} catch (NumberFormatException nfe){}
-				
-			return floatOrDouble;
-		} 	else if (!StringUtils.isAlphanumeric(stringValue)){
-			logger.debug("Checking literal value: {}, if it is a valid string with non-alphanumeric symbols", stringValue);
-			return dt.getURI().equals(XSD.xstring.getURI()); 
-		}
-		
-		
-		return false;
+		return dt.isValid(stringValue);
 	}
 }
