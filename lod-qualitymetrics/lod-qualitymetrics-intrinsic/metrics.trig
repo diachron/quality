@@ -52,5 +52,9 @@ _:ValidIFPUsage a lmi:LuzzuMetricJavaImplementation ;
 	
 _:CompatibleDatatype a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Compatible Datatype" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.syntacticaccuracy" .
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.syntacticaccuracy.CompatibleDatatype" .
+	
+_:CorrectLanguageTag a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Correct Language Tag" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.syntacticaccuracy.CorrectLanguageTag" .
 	
