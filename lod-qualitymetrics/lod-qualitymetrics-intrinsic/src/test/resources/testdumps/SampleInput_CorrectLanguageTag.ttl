@@ -1,0 +1,12 @@
+@prefix : <http://example.org/data/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+:_ :property "hello"@en .
+:_  :property "hello how are you?"@en .
+:_  :property "my name is jeremy"@it . 
+:_  :property "my name is jeremy" . 
+:_  :property "cazzo"@it . 
+:_  :property "ħobż"@mt . 
+:_  :property "heaven"@mt . 
+:_  :property "schloss"@de . 
+

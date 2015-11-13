@@ -3,14 +3,8 @@
  */
 package eu.diachron.qualitymetrics.intrinsic.syntacticvalidity;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,19 +19,12 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.XSD;
-
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
-
-import org.openrdf.rio.datatypes.XMLSchemaDatatypeHandler;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.util.LiteralUtilException;
 
 /**
  * @author Jeremy Debattista
@@ -134,10 +121,6 @@ public class CompatibleDatatype implements QualityMetric {
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
 	}
-	
-
-		
-	
 	
 	private boolean compatibleDatatype(Node lit_obj){
 		RDFNode n = Commons.asRDFNode(lit_obj);
