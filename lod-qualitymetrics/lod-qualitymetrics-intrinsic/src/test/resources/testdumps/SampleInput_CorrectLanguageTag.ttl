@@ -7,6 +7,5 @@
 :_  :property "my name is jeremy" . 
 :_  :property "cazzo"@it . 
 :_  :property "ħobż"@mt . 
-:_  :property "heaven"@mt . 
-:_  :property "schloss"@de . 
-
+:_  :property "heaven"@mt .  
+:_  :property "柏林爱乐管弦乐团，简称柏林爱乐，德国管弦乐团，成立于1882年。普遍认为柏林爱乐是世界级的管弦乐团。"@zh

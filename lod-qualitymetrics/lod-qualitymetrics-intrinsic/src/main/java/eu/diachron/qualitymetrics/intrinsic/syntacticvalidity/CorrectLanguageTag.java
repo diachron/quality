@@ -115,8 +115,11 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 		String stringValue = lt.getLexicalForm().trim();
 		String language = lt.getLanguage();
 		
+		
 		if (!language.equals("")){
-			if (stringValue.contains(" ")){
+			String[] splited = stringValue.split("\\b+"); 
+			
+			if (splited.length > 2){
 				//its a sentence
 				String lang = "";
 				try {
@@ -139,7 +142,7 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 				if (langMap.containsKey(shortLang)) lexvoLang = langMap.get(shortLang).substring(langMap.get(shortLang).length() - 3);
 				
 				if (!(lexvoLang.equals(""))){
-					String data = this.lexvoDataURI.replace("{language}", lexvoLang).replace("{term}", stringValue);
+					String data = this.lexvoDataURI.replace("{language}", lexvoLang).replace("{term}", URLEncoder.encode(stringValue, "UTF-8"));
 					String uri = this.lexvoResourceURI.replace("{language}", lexvoLang).replace("{term}", URLEncoder.encode(stringValue, "UTF-8"));
 					
 					Model m = RDFDataMgr.loadModel(data);
