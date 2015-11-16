@@ -1,9 +1,7 @@
 package eu.diachron.qualitymetrics.utilities;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -11,46 +9,37 @@ import java.net.URL;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.Header;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.apache.http.nio.ContentDecoder;
 import org.apache.http.nio.IOControl;
 import org.apache.http.nio.client.methods.AsyncCharConsumer;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
-import org.apache.http.nio.client.methods.ZeroCopyConsumer;
-import org.apache.http.nio.protocol.AbstractAsyncResponseConsumer;
 import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
-import org.apache.http.nio.protocol.HttpAsyncResponseConsumer;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +69,7 @@ public class HTTPRetriever {
 	
 	//private static final String ACCEPT_TYPE = "application/rdf+xml, text/turtle, text/rdf+n3, application/n3, text/n3, application/turtle, application/rdf+json, application/n-triples, text/trig, application/n-quads, text/nquads" ;
 
-	private static final String ACCEPT_TYPE = "text/n3, text/turtle, application/rdf+xml, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig" ;
+	private static final String ACCEPT_TYPE = "application/rdf+xml, text/n3, text/turtle, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig" ;
 	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
@@ -170,13 +159,17 @@ public class HTTPRetriever {
 				final String queuePeek = this.httpQueue.poll();
 				// TODO: Remove artificial delay!!!! There must be a way to get rid of this
 				logger.debug("Retrieving "+queuePeek);
-				//Thread.sleep(100);
+				Thread.sleep(50);
 				
 				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
 					// Request won't be sent, thus one pending request ought to be discounted from the latch
 					mainHTTPRetreiverLatch.countDown();
 					continue;
 				}
+				
+//				if (mainHTTPRetreiverLatch.getCount() == 5000){
+//					Thread.sleep(1000);
+//				}
 				
 				
 				final CachedHTTPResource newResource = new CachedHTTPResource();
@@ -249,7 +242,7 @@ public class HTTPRetriever {
 									BasicStatusLine statusLine = null;
 									BasicHttpResponse response = null;
 									// Properly set the status line
-									if((ex instanceof ConnectException) && (((ConnectException)ex).getMessage().toLowerCase().contains("timed out"))) {
+									if(ex instanceof TimeoutException) {
 										statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), HttpStatus.SC_REQUEST_TIMEOUT, "Request failed: timed out");
 									} else {
 										statusLine = new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), 0, "Request could not be processed");

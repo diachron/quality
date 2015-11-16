@@ -10,16 +10,17 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-public class DereferenceabilityTest extends Assert {
+public class EstimatedDereferenceabilityTest extends Assert {
 	
 	
 	protected TestLoader loader = new TestLoader();
-	protected Dereferenceability metric = new Dereferenceability();
+	protected EstimatedDereferenceability metric = new EstimatedDereferenceability();
 
 	@Before
 	public void setUp() throws Exception {
-//		loader.loadDataSet("testdumps/sample_deref.ttl");
+		//loader.loadDataSet("testdumps/sample_deref.ttl");
 		loader.loadDataSet("/Users/jeremy/Downloads/LAK-DATASET-DUMP.nt");
+		
 	}
 	
 	@Test

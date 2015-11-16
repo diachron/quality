@@ -101,7 +101,7 @@ public class Dereferenceability implements QualityMetric {
 			ArrayList<String> uriList = new ArrayList<String>();
 			uriList.addAll(uriSet);
 			httpRetreiver.addListOfResourceToQueue(uriList);
-			httpRetreiver.start();
+			httpRetreiver.start(true);
 
 			do {
 				this.startDereferencingProcess();

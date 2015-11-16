@@ -160,7 +160,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 	private long deReferenceUris(List<String> uriSet) {
 		// Start the dereferenciation process, which will be run in parallel
 		httpRetriever.addListOfResourceToQueue(uriSet);
-		httpRetriever.start();
+		httpRetriever.start(true);
 		
 		List<String> lstToDerefUris = new ArrayList<String>(uriSet);
 		long totalDerefUris = 0;
