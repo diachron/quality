@@ -47,7 +47,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 	/**
 	 * Constants controlling the maximum number of elements in the reservoir of URIs, i.e. sample size
 	 */
-	private static int MAX_FQURIS = 5000;
+	private static int MAX_FQURIS = 6000;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
