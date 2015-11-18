@@ -1,21 +1,16 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
@@ -25,11 +20,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
  * In this metric we identify the total number of external linked used in the dataset. An external link
@@ -74,14 +65,16 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	private Set<String> setPLDsRDF = mapDB.createHashSet("link-external-data-providers-rdf").make();
 
 	/**
-     * Object used to determine the base URI of the resource based on its contents
+     * Base URI of the resource based on its contents
      */
+	private String baseURI = EnvironmentProperties.getInstance().getDatasetURI();
 	
 	private boolean computed = false;
-	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
-	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
-	private HTTPRetriever httpRetriever = new HTTPRetriever();
 	private List<Quad> _problemList = new ArrayList<Quad>();
+	
+	{
+		logger.debug("Using MapDB storage: heap DB");
+	}
 	
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
@@ -91,16 +84,22 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
-			String subjectPLD = "";
-			String objectPLD = "";
-			
-			if (quad.getSubject().isURI()) subjectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-			if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-			
-			if (!(subjectPLD.equals(objectPLD))){
-				if (quad.getSubject().isURI()) this.addUriToSampler(quad.getSubject().toString());
-				if (quad.getObject().isURI()) this.addUriToSampler(quad.getObject().toString());
+		String subjectPLD = "";
+		String objectPLD = "";
+		
+		subjectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
+		if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+		
+		if (!(subjectPLD.equals("linkededucation.org"))) {
+			// Omit URIs containing the base URI of this dataset, because those would not be external links
+			if(!quad.getSubject().toString().contains(this.baseURI)) {
+				this.addUriToSampler(quad.getSubject().toString());
+			}
+		}
+		if ((objectPLD != "") && !(objectPLD.equals("linkededucation.org"))) {
+			// Omit URIs containing the base URI of this dataset, because those would not be external links
+			if(!quad.getObject().toString().contains(this.baseURI)) {
+				this.addUriToSampler(quad.getObject().toString());
 			}
 		}
 	}
@@ -129,15 +128,6 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	 */	
 	public double metricValue() {
 		if (!computed){
-			//remove the base uri from the set because that will not be an "external link"
-			String baseURI = EnvironmentProperties.getInstance().getDatasetURI();
-			
-			Iterator<String> iterator = mapPLDs.keySet().iterator();
-			while (iterator.hasNext()) {
-			    String element = iterator.next();
-			    if (element.contains(baseURI)) iterator.remove();
-			}
-			
 			this.checkForRDFLinks();
 			computed = true;
 			
@@ -145,57 +135,16 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 					EnvironmentProperties.getInstance().getDatasetURI(), mapPLDs.size());
 		}
 		
-		return mapPLDs.size();
+		return setPLDsRDF.size();
 	}
 	
 	private void checkForRDFLinks() {
-		HTreeMap<String, Integer> mapPLDtotres =  mapDB.createHashMap("tempMapToRes").make();
-		HTreeMap<String, Integer> mapPLDtotresRDF =  mapDB.createHashMap("tempMapToResRDF").make();
-
-		for(String key : this.mapPLDs.keySet()){
-			ReservoirSampler<String> resources = this.mapPLDs.get(key);
-			List<String> uriSet = resources.getItems(); 
-			mapPLDtotres.put(key, uriSet.size());
-			httpRetriever.addListOfResourceToQueue(uriSet);
-			this.notFetchedQueue.addAll(uriSet);
-		}
-		
-		httpRetriever.start();
-		
-		while (this.notFetchedQueue.size() > 0){
-			String uri = this.notFetchedQueue.poll();
-			CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);			
-			if (httpResource == null || httpResource.getStatusLines() == null) {
-				this.notFetchedQueue.add(uri);
-			} else {
-				if (ModelParser.hasRDFContent(httpResource)){
-					String pld = ResourceBaseURIOracle.extractPayLevelDomainURI(httpResource.getUri());
-					if (mapPLDtotresRDF.containsKey(pld)) mapPLDtotresRDF.put(pld, mapPLDtotresRDF.get(pld) + 1);
-					else mapPLDtotresRDF.put(pld, 1);
-					logger.debug("URI successfully dereferenced: {}. To go: {}", uri, this.notFetchedQueue.size());
+		for (ReservoirSampler<String> curPldUris : this.mapPLDs.values()) {
+			for (String s : curPldUris.getItems()){
+				if (ModelParser.snapshotParser(s)) {
+					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+					break;
 				}
-			}
-		}
-		
-		// if more than 50% of the resources in the sampler return RDF, then 
-		// we assume that PLD domain return RDF data thus adding it to setPLDsRDF
-		for(String plds : mapPLDtotres.keySet()){
-			Integer iOri = mapPLDtotres.get(plds);
-			Integer iRes = mapPLDtotresRDF.get(plds);
-			
-			if(iOri != null && iRes != null) {
-				double ori = iOri.doubleValue();
-				double res = iRes.doubleValue();
-				double perc = ((res * 100) / ori);
-	
-				if (perc > 50.0) setPLDsRDF.add(plds);
-				else {
-					Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(plds).asNode(), QPRO.exceptionDescription.asNode(), DQM.LowPercentageOfValidPLDResources.asNode());
-					this._problemList.add(q);
-				}
-				logger.debug("OK -> Computation of percentage for PLD: {}. ORI: {}, RES: {}", plds, iOri, iRes);
-			} else {
-				logger.warn("Computation of percentage for PLD: {} aborted. ORI and/or RES could not be retrieved: ORI: {}, RES: {}", plds, iOri, iRes);
 			}
 		}
 	}
@@ -235,43 +184,5 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	public static void setReservoirSize(int reservoirSize) {
 		EstimatedLinkExternalDataProviders.reservoirsize = reservoirSize;		
 	}
-	
-	/*
-	 * TODO: Make sure that this method is to be removed...
-	private boolean is200AnRDF(CachedHTTPResource resource) {
-		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
-						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
-							Model m = this.tryRead(resource.getUri());
-							if (m.size() == 0){
-								Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoValidRDFDataForExternalLink.asNode());
-								this._problemList.add(q);
-								resource.setContainsRDF(false);
-								return false;
-							}
-						}
-						resource.setContainsRDF(true);
-						return true;
-					}
-				}
-			}
-		}
-		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource.getUri()).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoValidRDFDataForExternalLink.asNode());
-		this._problemList.add(q);
-		resource.setContainsRDF(false);
-		return false;
-	} 
-	
-	private Model tryRead(String uri) {
-		Model m = ModelFactory.createDefaultModel();
-		try{
-			m = RDFDataMgr.loadModel(uri, Lang.NTRIPLES);
-		} catch (RiotException r) {
-			Log.debug("Resource could not be parsed:", r.getMessage());
-		}
-		return m;
-	} */
 
 }
