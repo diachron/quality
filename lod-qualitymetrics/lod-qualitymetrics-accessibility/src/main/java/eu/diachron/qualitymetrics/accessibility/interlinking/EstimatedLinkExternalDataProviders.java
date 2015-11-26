@@ -1,18 +1,18 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.mapdb.DB;
-import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
@@ -49,20 +49,17 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	 */
 	private static int reservoirsize = 5000;
 	
-	/**
-	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
-	 */
-	private DB mapDB = MapDbFactory.createHeapDB();
 	
 	/**
 	 * A set that holds all unique PLDs together with a sampled set of resources
 	 */
-	private HTreeMap<String, ReservoirSampler<String>> mapPLDs =  mapDB.createHashMap("estimated-link-external-data-providers").make();
+	private Map<String, ReservoirSampler<String>> mapPLDs =  new HashMap<String, ReservoirSampler<String>>();
+	
 	
 	/**
 	 * A set that holds all unique PLDs that return RDF data
 	 */
-	private Set<String> setPLDsRDF = mapDB.createHashSet("link-external-data-providers-rdf").make();
+	private Set<String> setPLDsRDF = new HashSet<String>();
 
 	/**
      * Base URI of the resource based on its contents
@@ -72,9 +69,6 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	private boolean computed = false;
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	
-	{
-		logger.debug("Using MapDB storage: heap DB");
-	}
 	
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
@@ -84,24 +78,20 @@ public class EstimatedLinkExternalDataProviders implements QualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		String subjectPLD = "";
 		String objectPLD = "";
 		
-		subjectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
 		if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
 		
-		if (!(subjectPLD.equals("linkededucation.org"))) {
-			// Omit URIs containing the base URI of this dataset, because those would not be external links
-			if(!quad.getSubject().toString().contains(this.baseURI)) {
-				this.addUriToSampler(quad.getSubject().toString());
-			}
+		if(!quad.getSubject().toString().contains(this.baseURI)) {
+			this.addUriToSampler(quad.getSubject().toString());
 		}
-		if ((objectPLD != "") && !(objectPLD.equals("linkededucation.org"))) {
-			// Omit URIs containing the base URI of this dataset, because those would not be external links
+
+		if ((objectPLD != "") ) {
 			if(!quad.getObject().toString().contains(this.baseURI)) {
 				this.addUriToSampler(quad.getObject().toString());
 			}
 		}
+		
 	}
 	
 	private void addUriToSampler(String uri) {
