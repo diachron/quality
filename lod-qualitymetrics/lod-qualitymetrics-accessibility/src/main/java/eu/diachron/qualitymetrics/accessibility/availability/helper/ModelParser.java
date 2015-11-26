@@ -24,9 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Files;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
+import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
@@ -162,6 +164,72 @@ public class ModelParser {
 		
 		return tripleParsed;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public static boolean snapshotParserForForwardDereference(final CachedHTTPResource httpResource, final Lang givenLang, final String subjectURI){
+		// First, check if the resource is already known to contain RDF
+		if (httpResource.isContainsRDF() != null) {
+			return httpResource.isContainsRDF();
+		}
+		
+		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.TURTLE;
+						
+		if ((httpResource.getDereferencabilityStatusCode() == StatusCode.SC4XX) ||
+				(httpResource.getDereferencabilityStatusCode() == StatusCode.SC5XX) ||
+				(httpResource.getDereferencabilityStatusCode() == StatusCode.BAD)) {
+			return false;
+		}
+		
+		logger.info("Initiating Streams and Iterators");
+		final PipedRDFIterator<?> iterator;
+		final PipedRDFStream<?> rdfStream;
+		
+		if ((lang == Lang.NQ) || (lang == Lang.NQUADS)) {
+			iterator = new PipedRDFIterator<Quad>();
+			rdfStream = new PipedQuadsStream((PipedRDFIterator<Quad>)iterator);
+		} else {
+			iterator = new PipedRDFIterator<Triple>();
+			rdfStream = new PipedTriplesStream((PipedRDFIterator<Triple>)iterator);
+		}
+		
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		
+		Runnable parser = new Runnable() {
+			public void run() {
+				try{
+					logger.info("Trying to parse resource {}.", httpResource.getUri());
+					if (givenLang == null) RDFDataMgr.parse(rdfStream, httpResource.getUri());
+					else RDFDataMgr.parse(rdfStream, httpResource.getUri(), givenLang, null);
+				} catch (Exception e){
+					logger.info("Resource {} could not be parsed. Exception {}", httpResource.getUri(), e.getMessage());
+					rdfStream.finish();
+				}
+			}
+		};
+
+		Future<?> future = executor.submit(parser);
+		executor.shutdown();
+		boolean tripleParsed = false;
+		
+	
+		try {
+			while((iterator.hasNext()) && (tripleParsed == false))   {
+				Object2Quad stmt = new Object2Quad(iterator.next());
+				String tripleRead = (iterator.next()).toString();
+				logger.debug("{} contains RDF. Triple read: {}", httpResource.getUri(), tripleRead);
+				// OK we know there's some RDF, stop processing
+				if (stmt.getStatement().getSubject().getURI().equals(subjectURI))
+					tripleParsed = true;
+			}
+			future.cancel(true);
+			iterator.close();
+		} catch (Exception e) {
+			tripleParsed = false;
+		}
+		
+		return tripleParsed;
+	}
 		
 	private static Lang tryGetLang(CachedHTTPResource resource){
 		Lang lang = null;
@@ -190,6 +258,8 @@ public class ModelParser {
 		httpResource.setContainsRDF(returnRes);
 		return returnRes;
 	}
+	
+	
 	
 	public static void main1(String[]args) throws IOException{
 		HTTPRetriever ret = new HTTPRetriever();

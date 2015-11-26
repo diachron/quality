@@ -4,27 +4,26 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
-import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -34,11 +33,11 @@ import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
  * @author Jeremy Debattista
@@ -51,82 +50,81 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	final static Logger logger = LoggerFactory.getLogger(EstimatedDereferenceabilityForwardLinks.class);
 		
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
-
-	/** Stores the % of locally-minted subjects URIs of dereferenced Resource (i.e. the % of how many times 
-	 *  the dereferenced resource appears to be as the subject in the dereferenced triples)
-	 */
-	private Map<String, Double> do_p = new ConcurrentHashMap<String, Double>();
 	
 	private boolean metricCalculated = false;
 	private double metricValue = 0.0;
+	private double totalDerefDataWithSub = 0.0;
+
 	
 	private List<Model> _problemList = new ArrayList<Model>();
-	private List<String> uriSet = new ArrayList<String>();
-
-	/**
-	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
-	 * Fully Qualified URIs of each TLD, respectively
-	 */
-	private static int MAX_TLDS = 10;
-	private static int MAX_FQURIS_PER_TLD = 250;
-	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
+	private Queue<String> uriSet = new ConcurrentLinkedQueue<String>();
+	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
 
 	
+	/**
+	 * Constants controlling the maximum number of elements in the reservoir 	 */
+	private static int MAX_FQURIS = 5000;
+	private ReservoirSampler<String> fqurisReservoir = new ReservoirSampler<String>(MAX_FQURIS, true);
+	
+
+	@Override
 	public void compute(Quad quad) {
+		
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		String subject = quad.getSubject().toString();
-		if (httpRetreiver.isPossibleURL(subject)){
-			addURIToReservoir(subject);
-		}
-	}
-	
-	private void addURIToReservoir(String uri) {
-		// Extract the top-level domain (a.k.a pay level domain) and look for it in the reservoir 
-		String uriTLD = httpRetreiver.extractTopLevelDomainURI(uri);
-		Tld newTld = new Tld(uriTLD, MAX_FQURIS_PER_TLD);		
-		Tld foundTld = this.tldsReservoir.findItem(newTld);
+		String predicate = quad.getPredicate().getURI();
 		
-		if(foundTld == null) {
-			logger.trace("New TLD found and recorded: {}...", uriTLD);
-			// Add the new TLD to the reservoir
-			// Add new fully qualified URI to those of the new TLD
-			
-			this.tldsReservoir.add(newTld); 
-			newTld.addFqUri(uri);
-		} else {
-			// The identified TLD was found, it already exists on the reservoir, just add the fqdn to it
-			foundTld.addFqUri(uri);
+		if (!(predicate.equals(RDF.type))){
+			if ((quad.getSubject().isURI()) && (!(quad.getSubject().isBlank()))){
+				boolean isAdded = fqurisReservoir.add(quad.getSubject().getURI());
+				logger.trace("URI found on subject: {}, was added to reservoir? {}", quad.getSubject().getURI(), isAdded);
+				
+			}
 		}
 	}
 	
-
+	
+	
+	/**
+	 * Initiates the dereferencing process of some of the URIs identified in the dataset, chosen in accordance 
+	 * with a statistical sampling method, in order to compute the estimated dereferenceability of the whole dataset 
+	 * @return estimated dereferencibility, computed as aforementioned
+	 */
+	@Override
 	public double metricValue() {
-		if (!this.metricCalculated){
-			for(Tld tld : this.tldsReservoir.getItems()){
-				uriSet.addAll(tld.getfqUris().getItems());
-			}
-			httpRetreiver.addListOfResourceToQueue(uriSet);
-			
-			httpRetreiver.start();
+		
+		if(!this.metricCalculated) {
+			uriSet.addAll(this.fqurisReservoir.getItems());
+			double uriSize = (double) uriSet.size();
 
-			this.checkForForwardLinking();
+			
+			//Process
+			this.httpRetreiver.addListOfResourceToQueue(this.fqurisReservoir.getItems());
+			this.httpRetreiver.start(true);
+			
+			do {
+				this.checkForForwardLinking();
+				uriSet.clear();
+				uriSet.addAll(this.notFetchedQueue);
+				this.notFetchedQueue.clear();
+			} while(!this.uriSet.isEmpty());
+			
 			this.metricCalculated = true;
 			httpRetreiver.stop();
+			//End Process
 			
-			double sum = 0.0;
-			for(String s : do_p.keySet()){
-				sum += do_p.get(s);
-			}
+			metricValue = (totalDerefDataWithSub == 0.0) ? 0.0 : (double) totalDerefDataWithSub / uriSize;
 			
-			metricValue = (sum == 0.0) ? 0.0 : sum / do_p.keySet().size();
-			
-			statsLogger.info("EstimatedDereferenceabilityForwardLinks. Dataset: {} - URI as Subject Ratio : {}; # Different Subject URIs : {};", 
-					EnvironmentProperties.getInstance().getDatasetURI(), sum, do_p.keySet().size());
+			statsLogger.info("Estimated Dereferencable Forward Links Metric: Dataset: {} - Total # Forward Links URIs {}; Total URIs : {}", 
+					EnvironmentProperties.getInstance().getDatasetURI(), totalDerefDataWithSub, uriSize);
 		}
 		
-		return metricValue;
+		return this.metricValue;
 	}
+	
+	
+
+
 	
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
@@ -148,57 +146,52 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	
 	// Private Method for checking forward linking
 	private void checkForForwardLinking(){
-		while(uriSet.size() > 0){
-			String uri = uriSet.remove(0);
+		for(String uri : uriSet){
 			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
 			
 			if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
-				uriSet.add(uri);
-				continue;
-			}
-			
-			logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
+				this.notFetchedQueue.add(uri);
+			} else {
+				logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
 
-			// We perform a semantic lookup using heuristics to check if we
-			// really need to try parsing or not
-			if (HTTPResourceUtils.semanticURILookup(httpResource)){
-				logger.info("Trying to find any dereferencable forward links for {}.", httpResource.getUri());
-				if (Dereferencer.hasValidDereferencability(httpResource)){
-					logger.info("Dereferencable resource {}.", httpResource.getUri());
-					
-					Iterator<?> iter = null;
-					//lets first check if the vocabulary exists, so that we do not download it
-					Node n = ModelFactory.createDefaultModel().createResource(httpResource.getUri()).asNode();
-					String ns = n.getNameSpace();
-					if (VocabularyLoader.knownVocabulary(ns)){
-						Model m = VocabularyLoader.getModelForVocabulary(ns);
-						iter = m.listStatements();
-					} else {
-						iter = ModelFactory.createDefaultModel().read(httpResource.getUri()).listStatements();
-					}
-					
-					int correct = 0;
-					int triples = 0;
-					while(iter.hasNext()){
-						triples++;
-						Statement s = ((StmtIterator)iter).next();
-
-						if (s.getSubject().isURIResource()){
-							if (s.getSubject().getURI().equals(httpResource.getUri())) correct++;
-							else this.createViolatingTriple(s, httpResource.getUri());
-						}
+				// We perform a semantic lookup using heuristics to check if we
+				// really need to try parsing or not
+				if (HTTPResourceUtils.semanticURILookup(httpResource)){
+					logger.info("Trying to find any dereferencable forward links for {}.", httpResource.getUri());
+					if (Dereferencer.hasValidDereferencability(httpResource)){
+						logger.info("Dereferencable resource {}.", httpResource.getUri());
 						
-						if (triples > 0){
-							double per_local_minted_uri = ((double) correct) / ((double)triples);
-							do_p.put(httpResource.getUri(), per_local_minted_uri);
+						
+//						boolean isValid = ModelParser.snapshotParserForForwardDereference(httpResource, (Lang) null, httpResource.getUri()); 
+//						if (isValid){
+//							//ok
+//							logger.info("A description exists for resource {}.", httpResource.getUri());
+//
+//							totalDerefDataWithSub++;
+//						} else {
+//							//not ok
+//							this.createNotValidForwardLink(httpResource.getUri());
+//						}
+						
+						Model m = RDFDataMgr.loadModel(httpResource.getUri()); //load partial model
+						Resource r = m.createResource(httpResource.getUri());
+						List<Statement> stmtList = m.listStatements(r, (Property) null, (RDFNode) null).toList();
+						
+						if (stmtList.size() > 1){
+							//ok
+							logger.info("A description exists for resource {}.", httpResource.getUri());
+
+							totalDerefDataWithSub++;
 						} else {
+							//not ok
 							this.createNotValidForwardLink(httpResource.getUri());
 						}
+						
 					}
+				} else {
+					logger.info("Non-meaningful dereferencable resource {}.", httpResource.getUri());
+					this.createNotValidForwardLink(httpResource.getUri());
 				}
-			} else {
-				logger.info("Non-meaningful dereferencable resource {}.", httpResource.getUri());
-				this.createNotValidForwardLink(httpResource.getUri());
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.diachron.qualitymetrics.accessibility.availability;
+package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import eu.diachron.qualitymetrics.utilities.TestLoader;
  * @author Jeremy Debattista
  * 
  */
-public class DereferenceabiltyForwardLinksTest extends Assert {
+public class DereferenceBackLinksTest extends Assert {
 	
 	//private static Logger logger = LoggerFactory.getLogger(DereferenceabiltyForwardLinksTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected EstimatedDereferenceabilityForwardLinks metric = new EstimatedDereferenceabilityForwardLinks();
+	protected EstimatedDereferenceBackLinks metric = new EstimatedDereferenceBackLinks();
 	
 	@Before
 	public void setUp() throws Exception {

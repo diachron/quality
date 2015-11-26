@@ -1,0 +1,3 @@
+@prefix : <http://example.org/data/> .
+
+:_ :_ <http://dbpedia.org/resource/Malta> .

@@ -8,4 +8,13 @@
   <artifactId>lod-qualitymetrics-accessibility</artifactId>
   <name>Linked Open Data Accessibility Quality Metrics</name>
   
+  
+  
+  <dependencies>
+		<dependency>
+			<groupId>de.unibonn.iai.eis</groupId>
+			<artifactId>luzzu-io</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+  </dependencies>
 </project>

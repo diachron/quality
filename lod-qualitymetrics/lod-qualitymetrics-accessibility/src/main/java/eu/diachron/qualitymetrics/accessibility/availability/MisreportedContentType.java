@@ -88,7 +88,7 @@ public class MisreportedContentType implements QualityMetric {
 
 	public double metricValue() {
 		if (!this.metricCalculated){
-			httpRetreiver.start();
+			httpRetreiver.start(true);
 
 			this.checkForMisreportedContentType();
 			this.metricCalculated = true;

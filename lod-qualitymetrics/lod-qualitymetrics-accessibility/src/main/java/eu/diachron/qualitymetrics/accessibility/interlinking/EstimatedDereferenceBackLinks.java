@@ -5,8 +5,8 @@ package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.http.StatusLine;
 import org.apache.jena.atlas.logging.Log;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -24,9 +25,7 @@ import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.diachron.datatypes.Pair;
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
-import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -35,10 +34,12 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
+import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -53,7 +54,6 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * 
  */
 public class EstimatedDereferenceBackLinks implements QualityMetric {
-	//TODO:fix
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	
@@ -61,94 +61,68 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 		
 	private HTTPRetriever httpRetreiver = new HTTPRetriever();
 
-	private Map<Pair<String,String>, Double> di_p = new ConcurrentHashMap<Pair<String,String>, Double>();
-
-	private Map<String, List<Pair<String,String>>> object_di_p = new ConcurrentHashMap<String, List<Pair<String,String>>>(); //holds object URI and Pair POJO
-
 	
 	private boolean metricCalculated = false;
 	private double metricValue = 0.0;
 	
 	private List<Model> _problemList = new ArrayList<Model>();
-	
+	private Queue<String> uriSet = new ConcurrentLinkedQueue<String>();
+	private Queue<String> notFetchedQueue = new ConcurrentLinkedQueue<String>();
+
+	private int totalDerefBackLinks = 0;
 	
 	/**
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	private static int MAX_TLDS = 10;
-	private static int MAX_FQURIS_PER_TLD = 250;
-	private ReservoirSampler<Tld> tldsReservoir = new ReservoirSampler<Tld>(MAX_TLDS, true);
+	private static int MAX_FQURIS = 3000;
+	private ReservoirSampler<String> fqurisReservoir = new ReservoirSampler<String>(MAX_FQURIS, true);
+
 	
 	
 	@Override
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
-		
-		if (!(quad.getPredicate().matches(RDF.type.asNode()))){
-			String subject = quad.getSubject().toString();
-			String object = quad.getObject().toString();
-			if (httpRetreiver.isPossibleURL(object)){
-				Pair<String,String> p = new Pair<String,String>(subject,object);
-				
-				if (object_di_p.containsKey(object)){
-					List<Pair<String,String>> lst = object_di_p.get(object);
-					lst.add(p);
-					object_di_p.put(object,lst);
-				} else {
-					List<Pair<String,String>> lst = new ArrayList<Pair<String,String>> ();
-					lst.add(p);
-					object_di_p.put(object,lst);
-				}
-				
-				di_p.put(p, 0.0);
-				addURIToReservoir(object);
-			}		
-		}
-	}
 
-	private void addURIToReservoir(String uri) {
-		// Extract the top-level domain (a.k.a pay level domain) and look for it in the reservoir 
-		String uriTLD = httpRetreiver.extractTopLevelDomainURI(uri);
-		Tld newTld = new Tld(uriTLD, MAX_FQURIS_PER_TLD);		
-		Tld foundTld = this.tldsReservoir.findItem(newTld);
+		String predicate = quad.getPredicate().getURI();
 		
-		if(foundTld == null) {
-			logger.trace("New TLD found and recorded: {}...", uriTLD);
-			// Add the new TLD to the reservoir
-			// Add new fully qualified URI to those of the new TLD
-			
-			this.tldsReservoir.add(newTld); 
-			newTld.addFqUri(uri);
-		} else {
-			// The identified TLD was found, it already exists on the reservoir, just add the fqdn to it
-			foundTld.addFqUri(uri);
-		}
+		if (!(predicate.equals(RDF.type))){
+			if ((quad.getObject().isURI()) & (!(quad.getObject().isBlank()))){
+				boolean isAdded = fqurisReservoir.add(quad.getObject().getURI());
+				logger.trace("URI found on object: {}, was added to reservoir? {}", quad.getObject().getURI(), isAdded);
+
+			}
+		}		
 	}
-	
 	
 	@Override
 	public double metricValue() {
-		if (!this.metricCalculated){
-			httpRetreiver.start();
+		if(!this.metricCalculated) {
+			uriSet.addAll(this.fqurisReservoir.getItems());
+			double uriSize = (double) uriSet.size();
 
-			this.checkForBackwardLinking();
+			
+			//Process
+			this.httpRetreiver.addListOfResourceToQueue(this.fqurisReservoir.getItems());
+			this.httpRetreiver.start(true);
+			
+			do {
+				this.checkForBackLinking();
+				uriSet.clear();
+				uriSet.addAll(this.notFetchedQueue);
+				this.notFetchedQueue.clear();
+			} while(!this.uriSet.isEmpty());
+			
 			this.metricCalculated = true;
 			httpRetreiver.stop();
+			//End Process
 			
-			double sum = 0.0;
+			metricValue = (totalDerefBackLinks == 0.0) ? 0.0 : (double) totalDerefBackLinks / uriSize;
 			
-			for(Double d : di_p.values()){
-				sum += d;
-			}
-			
-			metricValue = (sum == 0.0) ? 0.0 : sum / di_p.keySet().size();
-			
-			statsLogger.info("EstimatedDereferenceBackLinks. Dataset: {} - URI as Subject Ratio : {}; # Different Subject URIs : {};", 
-					EnvironmentProperties.getInstance().getDatasetURI(), sum, di_p.keySet().size());
-		}
+			statsLogger.info("Estimated Dereferencable Forward Links Metric: Dataset: {} - Total # Forward Links URIs {}; Total URIs : {}", 
+					EnvironmentProperties.getInstance().getDatasetURI(), totalDerefBackLinks, uriSize);		}
 		
-		return metricValue;
+		return this.metricValue;
 	}
 
 	@Override
@@ -189,43 +163,48 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 	 * position of this triple whilst the subject of the original assessed triple is found in the
 	 * object position.
 	 */
-	private void checkForBackwardLinking(){
-		for(Tld tld : this.tldsReservoir.getItems()){
-			List<String> uriSet = tld.getfqUris().getItems(); 
-			httpRetreiver.addListOfResourceToQueue(uriSet);
-			httpRetreiver.start();
+	private void checkForBackLinking(){
+		for(String uri : uriSet){
+			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
 			
-			while(uriSet.size() > 0){
-				String uri = uriSet.remove(0);
-				CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				if (httpResource == null || httpResource.getResponses() == null) {
-					uriSet.add(uri);
-					continue;
-				}
-				if (this.isDereferenceable(httpResource)){
-					Model m = this.getMeaningfulData(httpResource);
-					if (m != null && m.size() > 0){
-						List<Pair<String,String>> lst = this.object_di_p.get(uri);
-						for(Pair<String,String> p_uri : lst){
-							List<Statement> allStatements = m.listStatements(null, null,  m.createResource(p_uri.getFirstElement())).toList();
-							
-							if (allStatements.size() > 0){
-								di_p.put(p_uri, 1.0);
-							} else {
-								//no backlink found for p_uri.getFirstElement in p_uri.getSecondElement
-								this.createBackLinkViolation(p_uri.getFirstElement(), p_uri.getSecondElement());
-							}
+			if (httpResource == null || (httpResource.getResponses() == null && httpResource.getDereferencabilityStatusCode() != StatusCode.BAD)) {
+				this.notFetchedQueue.add(uri);
+			} else {
+				logger.info("Checking resource: {}. URIs left: {}.", httpResource.getUri(), uriSet.size());
+
+				// We perform a semantic lookup using heuristics to check if we
+				// really need to try parsing or not
+				if (HTTPResourceUtils.semanticURILookup(httpResource)){
+					logger.info("Trying to find any dereferencable back links for {}.", httpResource.getUri());
+					if (Dereferencer.hasValidDereferencability(httpResource)){
+						logger.info("Dereferencable resource {}.", httpResource.getUri());
+						
+						
+						Model m = RDFDataMgr.loadModel(httpResource.getUri()); //load partial model
+						Resource r = m.createResource(httpResource.getUri());
+						List<Statement> stmtList = m.listStatements(r, (Property) null, (RDFNode) null).toList();
+						
+						if (stmtList.size() > 1){
+							//ok
+							logger.info("A description exists for resource {}.", httpResource.getUri());
+
+							this.totalDerefBackLinks++;
+						} else {
+							//not ok
+							this.createNotValidBackLink(httpResource.getUri());
 						}
-					} else {
-						// report problem Not Valid Dereferenced Backlink
-						this.createNotValidDereferenceableBacklinkLink(uri);
+						
 					}
+				} else {
+					logger.info("Non-meaningful dereferencable resource {}.", httpResource.getUri());
+					this.createNotValidBackLink(httpResource.getUri());
 				}
 			}
 		}
 	}
 	
-	private void createNotValidDereferenceableBacklinkLink(String resource){
+	
+	private void createNotValidBackLink(String resource){
 		Model m = ModelFactory.createDefaultModel();
 		
 		Resource subject = m.createResource(resource);

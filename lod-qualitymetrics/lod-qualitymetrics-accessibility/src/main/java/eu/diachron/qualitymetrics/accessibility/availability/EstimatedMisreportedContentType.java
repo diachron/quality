@@ -99,7 +99,7 @@ public class EstimatedMisreportedContentType implements QualityMetric{
 			
 			httpRetreiver.addListOfResourceToQueue(uriSet);
 			
-			httpRetreiver.start();
+			httpRetreiver.start(true);
 
 			this.checkForMisreportedContentType();
 			this.metricCalculated = true;

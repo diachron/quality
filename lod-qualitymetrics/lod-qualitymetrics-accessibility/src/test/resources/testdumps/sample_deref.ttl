@@ -1,0 +1,7 @@
+@prefix : <http://example.org/data/> .
+
+<http://data.linkededucation.org/resource/lak/reference/edm/1001> :_ "" . #incorrect
+<http://dbpedia.org/resource/Malta> :_ "" . #correct
+<http://data.linkededucation.org/resource/lak/reference/lak-dataset/2113> :_ "" . #incorrect
+<http://eis.iai.uni-bonn.de/JeremyDebattista>  :_ "" . #incorrect 302!
+<http://linkedgeodata.org/geometry/node109968> :_ "" . #correct
