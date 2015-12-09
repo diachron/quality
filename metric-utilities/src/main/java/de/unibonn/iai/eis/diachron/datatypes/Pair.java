@@ -52,9 +52,18 @@ public class Pair<U,V> implements Serializable{
 	 
 	 @Override
 	 public int hashCode(){
-		 return (this.getFirstElement().hashCode() + this.getSecondElement().hashCode());
+		 if ((this.getFirstElement() instanceof Integer) && (this.getSecondElement() instanceof Integer)){
+			 Integer first = (Integer) this.getFirstElement();
+			 Integer second = (Integer) this.getSecondElement();
+			 return Double.toString(Math.pow(first,second)).hashCode();
+		 }
+		 else return (this.getFirstElement().hashCode() * this.getSecondElement().hashCode());
 	 }
 	
+	 @Override
+	 public String toString(){
+		 return this.firstElement + ";" + this.secondElement;
+	 }
 	
 
 }
