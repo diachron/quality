@@ -3,8 +3,6 @@
  */
 package eu.diachron.qualitymetrics.representational.interpretability;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -23,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.representational.utils.SharedResources;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -34,7 +33,6 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * are used without any formal definition (e.g. using foaf:image 
  * instead of foaf:img).
  * 
- * 
  */
 public class UndefinedClassesAndProperties implements QualityMetric {
 
@@ -45,7 +43,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(UndefinedClassesAndProperties.class);
 	private SharedResources shared = SharedResources.getInstance();
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 
 	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
 	
@@ -56,7 +54,6 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 		Node predicate = quad.getPredicate();
 		
 		if (predicate.hasURI(RDF.type.getURI())){
-		
 			// Checking for classes
 			Node object = quad.getObject();
 			if ((!(object.isBlank())) &&  (!(this.seenSet.contains(object.getURI())))){
@@ -69,9 +66,6 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 					Boolean defined = null;
 					if (seen == null) {
 						defined = VocabularyLoader.checkTerm(object);
-						if (!defined){
-							defined = VocabularyLoader.checkTerm(object, false);
-						}
 						shared.addClassOrProperty(object.getURI(), defined);
 					}
 					else defined = seen;
@@ -79,7 +73,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 					if (!defined){
 						this.undefinedClasses++;
 						Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.UndefinedClass.asNode());
-						this._problemList.add(q);
+						this._problemList.add(new SerialisableQuad(q));
 					}
 				}
 				this.seenSet.add(object.getURI());
@@ -87,17 +81,15 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 			
 		} 
 		if (!(this.seenSet.contains(predicate.getURI()))){
-				// Checking for properties
-				this.totalProperties++;
-				logger.info("checking predicate: " + predicate.getURI());
-	
+			// Checking for properties
+			this.totalProperties++;
+			logger.info("checking predicate: " + predicate.getURI());
+			
+			if (!(this.isContainerPredicate(predicate))){
 				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
 				Boolean defined = null;
 				if (seen == null) {
 					defined = VocabularyLoader.isProperty(predicate);
-					if (!defined){
-						defined = VocabularyLoader.isProperty(predicate, false);
-					}
 					shared.addClassOrProperty(predicate.getURI(), defined);
 				}
 				else defined = seen;
@@ -105,11 +97,18 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 				if (!defined){
 					this.undefinedProperties++;
 					Quad q = new Quad(null, predicate, QPRO.exceptionDescription.asNode(), DQM.UndefinedProperty.asNode());
-					this._problemList.add(q);
+					this._problemList.add(new SerialisableQuad(q));
 				}
-				
-				this.seenSet.add(predicate.getURI());
+			}
+			this.seenSet.add(predicate.getURI());
 		}	
+	}
+	
+	private boolean isContainerPredicate(Node predicate){
+		if (predicate.getURI().matches(RDF.getURI()+"_[0-9]+")){
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -129,12 +128,12 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);	
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
