@@ -1536,7 +1536,6 @@ dqm:ObsoleteConceptsInOntologyMetric
 
 
 ### No Prolix RDF
-
 	dqm:UsageOfReification
 		a	rdfs:Class ;
 		rdfs:subClassOf qpro:Exception ;
@@ -1614,7 +1613,7 @@ dqm:ObsoleteConceptsInOntologyMetric
 	dqm:MisplacedClass
 		a	rdfs:Class ;
 		rdfs:subClassOf qpro:Exception ;
-		rdfs:comment "The referred resource used a defined class instead of a property." ;
+		rdfs:comment "The referred resource, used a defined class instead of a property, in the property's position." ;
 		rdfs:label "Misplaced Class" .
 
 	dqm:hasMisplacedClass
@@ -1627,7 +1626,7 @@ dqm:ObsoleteConceptsInOntologyMetric
 	dqm:MisplacedProperty
 		a	rdfs:Class ;
 		rdfs:subClassOf qpro:Exception ;
-		rdfs:comment "The referred resource used a defined property instead of a class." ;
+		rdfs:comment "The referred resource, used a defined property instead of a class, in an rdf:type statement object's position." ;
 		rdfs:label "Misplaced Property" .
 
 	dqm:hasMisplacedProperty
