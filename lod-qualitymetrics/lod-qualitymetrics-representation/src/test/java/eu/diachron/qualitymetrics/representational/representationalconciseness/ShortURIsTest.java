@@ -5,10 +5,14 @@ package eu.diachron.qualitymetrics.representational.representationalconciseness;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /*
@@ -46,6 +50,23 @@ public class ShortURIsTest extends Assert {
 		}
 		
 		assertEquals(0.87640449, metric.metricValue(), 0.00001);
+	}
+	
+	@Ignore
+	@Test
+	public void problemReportTest(){
+		for(Quad q : loader.getStreamingQuads()){
+			metric.compute(q);
+		}
+		
+		metric.metricValue();
+		
+		ProblemList<?> pl = metric.getQualityProblems();
+		QualityReport qr = new QualityReport();
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+		
+		plModel.write(System.out, "TURTLE");
 	}
 	
 }

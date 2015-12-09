@@ -46,6 +46,8 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * 
  * In this metric, we measure how much datasets conform to the W3C standard
  * PROV-O ontology.
+ * 
+ * TODO: problem report
  */
 public class ExtendedProvenanceMetric implements QualityMetric {
 	

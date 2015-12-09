@@ -3,9 +3,7 @@
  */
 package eu.diachron.qualitymetrics.representational.versatility;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.mapdb.HTreeMap;
@@ -22,6 +20,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
  * @author Jeremy Debattista
@@ -52,7 +51,7 @@ public class MultipleLanguageUsage implements QualityMetric {
 	
 	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.createFilesystemDB().createHashMap("multi-lingual-map").make();
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 
 	@Override
 	public void compute(Quad quad) {
@@ -91,12 +90,12 @@ public class MultipleLanguageUsage implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());

@@ -4,7 +4,6 @@
 package eu.diachron.qualitymetrics.representational.interoperability;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +34,7 @@ import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.representational.utils.SharedResources;
 import eu.diachron.qualitymetrics.utilities.LOVInterface;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -84,7 +84,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	
 	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
 
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 
 
 	private int overlapClasses = 0;
@@ -160,7 +160,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 		for(String s : suggestedVocabs.keySet()){
 			if (suggestedVocabs.get(s) == 0.0){
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(s).asNode(), QPRO.exceptionDescription.asNode(), DQM.UnusedSuggestedVocabulary.asNode());
-				this._problemList.add(q);
+				this._problemList.add(new SerialisableQuad(q));
 			}
 		}
 		return olt;
@@ -173,12 +173,12 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());

@@ -3,12 +3,21 @@
  */
 package eu.diachron.qualitymetrics.representational.interpretability;
 
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
+import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 
@@ -47,6 +56,7 @@ public class NoBlankNodeUsageTest extends Assert {
 		loader.loadDataSet("testdumps/eis.ttl");
 	}
 	
+
 	@Test
 	public void noBlankNodesTest(){
 		for(Quad q : loader.getStreamingQuads()){
@@ -55,6 +65,57 @@ public class NoBlankNodeUsageTest extends Assert {
 		
 		assertEquals(0.99652173913, metric.metricValue(), 0.00001);
 	}
+	
 
+	@Ignore
+	@Test
+	public void problemReportTest(){
+		for(Quad q : loader.getStreamingQuads()){
+			metric.compute(q);
+		}
+		
+		ProblemList<?> pl = metric.getQualityProblems();
+		QualityReport qr = new QualityReport();
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+		
+		plModel.write(System.out, "TURTLE");
+	
+	}
+
+
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+
+	@Ignore
+	@Test
+	public void problemReportStrechingTest(){
+		Model m = ModelFactory.createDefaultModel();
+		System.out.println("populating");
+		for (long i = 0; i < 10000000; i++){
+			Quad q = new Quad(null, Commons.generateURI().asNode(), m.createProperty("ex:something").asNode(), Commons.generateURI().asNode());
+			_problemList.add(new SerialisableQuad(q));
+		}
+		
+		
+		System.out.println(_problemList.size());
+		System.out.println("creating problem list");
+		ProblemList<SerialisableQuad> pl = null;
+		try {
+			if(_problemList != null && _problemList.size() > 0) {
+				pl = new ProblemList<SerialisableQuad>(_problemList);
+			} else {
+				System.out.println("some error");
+				pl = new ProblemList<SerialisableQuad>();
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+			QualityReport qr = new QualityReport();
+			String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+			Model plModel = qr.getProblemReportFromTBD(plModelURI);
+			System.out.println(plModel.size());
+//			plModel.write(System.out, "TURTLE");
+	}
 
 }

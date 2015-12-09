@@ -7,5 +7,13 @@
   </parent>
   <artifactId>lod-qualitymetrics-representation</artifactId>
   
+  <dependencies>
+
+		<dependency>
+			<groupId>de.unibonn.iai.eis</groupId>
+			<artifactId>luzzu-annotations</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+  </dependencies>
 
 </project>

@@ -3,8 +3,6 @@
  */
 package eu.diachron.qualitymetrics.representational.interpretability;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -21,6 +19,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
  * @author Jeremy Debattista
@@ -37,7 +36,8 @@ public class NoBlankNodeUsage implements QualityMetric {
 	private Set<String> uniqueDLC = MapDbFactory.createFilesystemDB().createHashSet("unique-dlc-set").make();
 	private Set<String> uniqueBN = MapDbFactory.createFilesystemDB().createHashSet("unique-bn-set").make();
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();	
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	
 	
 	@Override
 	public void compute(Quad quad) {
@@ -49,11 +49,17 @@ public class NoBlankNodeUsage implements QualityMetric {
 		
 		// we will skip all "typed" triples
 		if (!(predicate.hasURI(RDF.type.getURI()))){
-			if (subject.isBlank()) uniqueBN.add(subject.getBlankNodeLabel());
+			if (subject.isBlank()) {
+				uniqueBN.add(subject.getBlankNodeLabel());
+				_problemList.add(new SerialisableQuad(quad));
+			}
 			else uniqueDLC.add(subject.getURI());
 			
 			if (!(object.isLiteral())){
-				if (object.isBlank()) uniqueBN.add(object.getBlankNodeLabel());
+				if (object.isBlank()){
+					uniqueBN.add(object.getBlankNodeLabel());
+					_problemList.add(new SerialisableQuad(quad));
+				}
 				else uniqueDLC.add(object.getURI());
 			}
 		}
@@ -74,12 +80,12 @@ public class NoBlankNodeUsage implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);	
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());

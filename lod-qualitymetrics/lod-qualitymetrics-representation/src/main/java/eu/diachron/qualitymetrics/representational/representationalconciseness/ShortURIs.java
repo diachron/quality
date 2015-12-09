@@ -1,8 +1,6 @@
 package eu.diachron.qualitymetrics.representational.representationalconciseness;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -20,6 +18,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
  * @author Santiago Londono
@@ -53,7 +52,7 @@ public class ShortURIs implements QualityMetric {
 	 */
 	private long countLocalDefURIs = 0;
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 
 	
 	public void compute(Quad quad) {
@@ -69,10 +68,10 @@ public class ShortURIs implements QualityMetric {
 						String uri = subject.getURI();
 						if (uri.contains("?")){
 							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
-							this._problemList.add(q);
+							this._problemList.add(new SerialisableQuad(q));
 						} else if (uri.length() > 80){
 							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
-							this._problemList.add(q);
+							this._problemList.add(new SerialisableQuad(q));
 						} else {
 							shortURICount++;
 						}
@@ -90,10 +89,10 @@ public class ShortURIs implements QualityMetric {
 						String uri = object.getURI();
 						if (uri.contains("?")){
 							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
-							this._problemList.add(q);
+							this._problemList.add(new SerialisableQuad(q));
 						} else if (uri.length() > 80){
 							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
-							this._problemList.add(q);
+							this._problemList.add(new SerialisableQuad(q));
 						} else {
 							shortURICount++;
 						}
@@ -120,12 +119,12 @@ public class ShortURIs implements QualityMetric {
 	
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());

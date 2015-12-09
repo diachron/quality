@@ -5,6 +5,7 @@ package eu.diachron.qualitymetrics.representational.versatility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
  * @author Jeremy Debattista
@@ -43,7 +45,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  */
 public class DifferentSerialisationFormats implements QualityMetric{
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	
 	private static Logger logger = LoggerFactory.getLogger(DifferentSerialisationFormats.class);
 	
@@ -101,7 +103,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 				}
 				else {
 					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.IncorrectFormatDefined.asNode());
-					this._problemList.add(q);
+					this._problemList.add(new SerialisableQuad(q));
 				}
 			}
 		}
@@ -141,7 +143,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 			List<String> features = this.datasetFeatures.get(dataset);
 			if (features.size() <= 1){
 				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(dataset).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoMultipleFormatDefined.asNode());
-				this._problemList.add(q);
+				this._problemList.add(new SerialisableQuad(q));
 			}
 		}
 	}
@@ -153,12 +155,12 @@ public class DifferentSerialisationFormats implements QualityMetric{
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());

@@ -3,8 +3,7 @@
  */
 package eu.diachron.qualitymetrics.representational.representationalconciseness;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +14,14 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
  * @author Jeremy Debattista
@@ -36,7 +37,7 @@ public class NoProlixRDF implements QualityMetric {
 	
 	private double totalRCC = 0.0;
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	
 	private static Logger logger = LoggerFactory.getLogger(NoProlixRDF.class);
 
@@ -53,15 +54,15 @@ public class NoProlixRDF implements QualityMetric {
 		if (predicate.hasURI(RDF.type.getURI())){
 			if (object.hasURI(RDF.Statement.getURI())){
 				Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfReification.asNode());
-				this._problemList.add(q);
+				this._problemList.add(new SerialisableQuad(q));
 				totalRCC++;
 			} else if ((object.hasURI(RDFS.Container.getURI())) || object.hasURI(RDFS.ContainerMembershipProperty.getURI())) {
 				Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
-				this._problemList.add(q);
+				this._problemList.add(new SerialisableQuad(q));
 				totalRCC++;
 			} else if ( (object.hasURI(RDF.Alt.getURI())) || (object.hasURI(RDF.Bag.getURI())) || (object.hasURI(RDF.List.getURI())) || (object.hasURI(RDF.Seq.getURI()))){
 				Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfCollections.asNode());
-				this._problemList.add(q);
+				this._problemList.add(new SerialisableQuad(q));
 				totalRCC++;
 			}
 		} else {
@@ -74,26 +75,30 @@ public class NoProlixRDF implements QualityMetric {
 	private void isRCCpredicate(Node subject, Node predicate){
 		if ((predicate.hasURI(RDF.subject.getURI())) || (predicate.hasURI(RDF.predicate.getURI())) || (predicate.hasURI(RDF.object.getURI()))){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfReification.asNode());
-			this._problemList.add(q);
+			this._problemList.add(new SerialisableQuad(q));
 			totalRCC++;
 		}
 		if (predicate.hasURI(RDFS.member.getURI())){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
-			this._problemList.add(q);
+			this._problemList.add(new SerialisableQuad(q));
 			totalRCC++;
 		}
 		if ((predicate.hasURI(RDF.first.getURI())) || (predicate.hasURI(RDF.rest.getURI())) || (predicate.hasURI(RDF.nil.getURI()))){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfCollections.asNode());
-			this._problemList.add(q);
+			this._problemList.add(new SerialisableQuad(q));
 			totalRCC++;
 		}
 		// for rdf:_n where n is a number
 		if (predicate.getURI().matches(RDF.getURI()+"_[0-9]+")){
 			Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.UsageOfContainers.asNode());
-			this._problemList.add(q);
+			this._problemList.add(new SerialisableQuad(q));
 			totalRCC++;
 		}
 	}
+	
+	
+	
+	
 
 	@Override
 	public double metricValue() {
@@ -111,12 +116,12 @@ public class NoProlixRDF implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Quad> pl = null;
+		ProblemList<SerialisableQuad> pl = null;
 		try {
 			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
+				pl = new ProblemList<SerialisableQuad>(this._problemList);
 			} else {
-				pl = new ProblemList<Quad>();
+				pl = new ProblemList<SerialisableQuad>();
 			}
 		} catch (ProblemListInitialisationException e) {
 			logger.error(e.getMessage());
