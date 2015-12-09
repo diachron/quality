@@ -9,17 +9,22 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.output.StringBuilderWriter;
-import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotException;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Dataset;
@@ -161,21 +166,37 @@ public class VocabularyLoader {
 		}
 	}
 	
-	private static void downloadAndLoadVocab(String ns) {
+	private static void downloadAndLoadVocab(final String ns) {
 		try{
-			Model m = RDFDataMgr.loadModel(ns,Lang.RDFXML);
-			dataset.addNamedModel(ns, m);
-	
-			StringBuilderWriter writer = new StringBuilderWriter();
-			m.write(writer, "TURTLE");
 			
-			CachedVocabulary cv = new CachedVocabulary();
-			cv.setLanguage("TURTLE");
-			cv.setNs(ns);
-			cv.setTextualContent(writer.toString());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			Model m = null;
 			
-			dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
-		} catch (RiotException | HttpException e){
+			final Future<Model> handler = executor.submit(new Callable<Model>() {
+			    @Override
+			    public Model call() throws Exception {
+			    	Model m = RDFDataMgr.loadModel(ns,Lang.RDFXML);
+			    	return m;
+			    }
+			});
+			
+			try {
+				m = handler.get(5, TimeUnit.SECONDS);
+				dataset.addNamedModel(ns, m);
+				
+				StringBuilderWriter writer = new StringBuilderWriter();
+				m.write(writer, "TURTLE");
+				
+				CachedVocabulary cv = new CachedVocabulary();
+				cv.setLanguage("TURTLE");
+				cv.setNs(ns);
+				cv.setTextualContent(writer.toString());
+				
+				dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
+			} catch (TimeoutException e) {
+				handler.cancel(true);
+			}
+		} catch (Exception e){
 			logger.error("Vocabulary {} could not be accessed.",ns);
 //			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
 		}
@@ -214,12 +235,12 @@ public class VocabularyLoader {
 	
 	public static boolean isProperty(Node term){
 		String ns = term.getNameSpace();
-		
 		Model m = getModelForVocabulary(ns);
 		
 		return (m.contains(m.createResource(term.getURI()), RDF.type, RDF.Property) 
 				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.DatatypeProperty)
-				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty));
+				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty)
+				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.OntologyProperty));
 	}
 	
 	public static boolean isClass(Node term){
@@ -230,46 +251,6 @@ public class VocabularyLoader {
 		return (m.contains(m.createResource(term.getURI()), RDF.type, RDFS.Class) || m.contains(m.createResource(term.getURI()), RDF.type, OWL.Class)) ;
 	}
 	
-	public static Boolean checkTerm(Node term, boolean useCache){
-		if (useCache) return checkTerm(term);
-		else{
-			Model m = null;
-			try {
-				m = RDFDataMgr.loadModel(term.getURI());
-			} catch (Exception e){
-				System.out.println(term.getURI() + " " + e.getLocalizedMessage());
-				return false;
-			}
-			
-			if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
-				return true;
-			}
-			
-			if (term.isURI()) {
-				Resource r = m.createResource(term.getURI());
-				return m.containsResource(r);
-			}
-			
-			return null;
-		}
-	}
-	
-	public static boolean isProperty(Node term, boolean useCache){
-		if (useCache) return isProperty(term);
-		else{
-			Model m = null;
-			try {
-				m = RDFDataMgr.loadModel(term.getURI());
-			} catch (Exception e){
-				System.out.println(term.getURI() + " " + e.getLocalizedMessage());
-				return false;
-			}
-			
-			return (m.contains(m.createResource(term.getURI()), RDF.type, RDF.Property) 
-					|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.DatatypeProperty)
-					|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty));
-		}
-	}
 	
 	public static Filter<RDFNode> deprecatedfilter = new Filter<RDFNode>() {
         @Override
