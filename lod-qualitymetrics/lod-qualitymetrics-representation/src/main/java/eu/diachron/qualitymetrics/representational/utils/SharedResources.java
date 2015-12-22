@@ -21,7 +21,7 @@ public class SharedResources {
 
 	private static SharedResources instance = null;
 	
-	private HTreeMap<String, Boolean> clsPropUndefined = MapDbFactory.createFilesystemDB().createHashMap("classes-and-properties-undefined").make();
+	private HTreeMap<String, Boolean> clsPropUndefined = MapDbFactory.createAsyncFilesystemDB().createHashMap("shared-resources").make();
 	
 	protected SharedResources(){}
 	
