@@ -67,7 +67,7 @@ public class BasicProvenanceMetric implements QualityMetric {
 		statsLogger.info("Basic Provenance Metric. Dataset: {} - Valid Provenance {}, Dataset Size {}", 
 				EnvironmentProperties.getInstance().getDatasetURI(), validProv, dataset.size());
 
-		return (validProv / (double)dataset.size());
+		return (dataset.size() == 0) ? 0.0 : (validProv / (double)dataset.size());
 	}
 
 	@Override

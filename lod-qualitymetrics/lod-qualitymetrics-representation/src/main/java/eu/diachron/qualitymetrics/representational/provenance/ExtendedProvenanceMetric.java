@@ -167,7 +167,7 @@ public class ExtendedProvenanceMetric implements QualityMetric {
 			for(Activity a : activities) valAct += a.getBasicValue();
 			
 			if (valAct > 0.0){
-				valAct = 0.5 * Math.abs((valAct / activities.size())); //normalising value between 0 and 0.5 
+				valAct = (activities.size() == 0)? 0.0 : 0.5 * Math.abs((valAct / (double)activities.size())); //normalising value between 0 and 0.5 
 				val += valAct;
 			}	
 			return val;
