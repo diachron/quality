@@ -20,7 +20,6 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
-import eu.diachron.qualitymetrics.representational.utils.SharedResources;
 import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -42,7 +41,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 	private int totalProperties = 0;
 	
 	private static Logger logger = LoggerFactory.getLogger(UndefinedClassesAndProperties.class);
-	private SharedResources shared = SharedResources.getInstance();
+//	private SharedResources shared = SharedResources.getInstance();
 	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 
 	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
@@ -62,13 +61,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 				if (!(object.isBlank())){
 					this.totalClasses++;
 					
-					Boolean seen = shared.classOrPropertyDefined(object.getURI());
-					Boolean defined = null;
-					if (seen == null) {
-						defined = VocabularyLoader.checkTerm(object);
-						shared.addClassOrProperty(object.getURI(), defined);
-					}
-					else defined = seen;
+					Boolean defined = VocabularyLoader.checkTerm(object);
 					
 					if (!defined){
 						this.undefinedClasses++;
@@ -86,14 +79,15 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 			logger.info("checking predicate: " + predicate.getURI());
 			
 			if (!(this.isContainerPredicate(predicate))){
-				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
-				Boolean defined = null;
-				if (seen == null) {
-					defined = VocabularyLoader.isProperty(predicate);
-					shared.addClassOrProperty(predicate.getURI(), defined);
-				}
-				else defined = seen;
-				
+//				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
+//				Boolean defined = null;
+//				if (seen == null) {
+//					defined = VocabularyLoader.isProperty(predicate);
+//					shared.addClassOrProperty(predicate.getURI(), defined);
+//				}
+//				else defined = seen;
+				Boolean defined = VocabularyLoader.isProperty(predicate);
+
 				if (!defined){
 					this.undefinedProperties++;
 					Quad q = new Quad(null, predicate, QPRO.exceptionDescription.asNode(), DQM.UndefinedProperty.asNode());
