@@ -2,9 +2,11 @@ package de.unibonn.iai.eis.diachron.mapdb;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Set;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
 
 /**
  * Creates and properly sets up instances of mapdb databases, stored in the filesystem.
@@ -23,6 +25,41 @@ public class MapDbFactory {
 		mapDbDir = mapDbDirectory + ((mapDbDirectory.endsWith("/"))?(""):("/"));
 	}
 	
+	
+	private static DB singletonAsync = null;
+	private static DB singleton = null;
+	
+	public static DB getMapDBAsyncTempFile(){
+		if (singletonAsync == null){
+			singletonAsync = createAsyncFilesystemDB();
+		}
+		return singletonAsync;
+	}
+	
+	public static DB getMapDBTempFile(){
+		if (singleton == null){
+			singleton = createFilesystemDB();
+		}
+		return singleton;
+	}
+	
+	
+	public static <T1,T2> HTreeMap<T1,T2> createHashMap(DB mapDBFile, String name){
+		HTreeMap<T1,T2> _htmap = null;
+		synchronized (mapDBFile) {
+			_htmap = mapDBFile.createHashMap(name).make();
+		}
+		return _htmap;
+	}
+	
+	public static <T> Set<T> createHashSet(DB mapDBFile, String name){
+		Set<T> _hashSet = null;
+		synchronized (mapDBFile) {
+			_hashSet = mapDBFile.createHashSet(name).make();
+		}
+		return _hashSet;
+	}
+	
 	/**
 	 * Creates a new database, stored in memory (more preciselly, in heap space)
 	 */
@@ -31,6 +68,9 @@ public class MapDbFactory {
 		return mapDB;
 	}
 		
+	
+	
+	//TODO: Change to private
 	/**
 	 * Creates a new database, stored as a file
 	 */
@@ -53,6 +93,8 @@ public class MapDbFactory {
 		return mapDB;
 	}
 	
+	
+	//TODO: Change to private
 	/**
 	 * Creates a new database, with async settings
 	 */
@@ -76,14 +118,5 @@ public class MapDbFactory {
 		return mapDB;
 	}
 	
-	private static DB singleton = null;
-	public static DB getSingletonFileInstance(boolean async){
-		if (singleton == null){
-			if (async) singleton = MapDbFactory.createAsyncFilesystemDB();
-			else singleton = MapDbFactory.createFilesystemDB();
-		}
-		
-		return singleton;
-	}
 
 }

@@ -4,6 +4,7 @@ package eu.diachron.qualitymetrics.representational.representationalconciseness;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,8 @@ public class ShortURIs implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.ShortURIsMetric;
 	
-	private Set<String> seenSet = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 	
 	/**
@@ -53,7 +55,7 @@ public class ShortURIs implements QualityMetric {
 	 */
 	private long countLocalDefURIs = 0;
 	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 	
 	public void compute(Quad quad) {

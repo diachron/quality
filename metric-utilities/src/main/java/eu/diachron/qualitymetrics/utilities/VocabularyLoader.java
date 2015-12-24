@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -259,10 +261,10 @@ public class VocabularyLoader {
         }
 	};
 	
-	private static HTreeMap<String, Boolean> checkedDeprecatedTerm = MapDbFactory.createFilesystemDB().createHashMap("deprecated-terms").make();
-
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	private static HTreeMap<String, Boolean> checkedDeprecatedTerm = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+			
 	public static boolean isDeprecatedTerm(Node term){
-		
 		if (checkedDeprecatedTerm.containsKey(term.getURI())) return checkedDeprecatedTerm.get(term.getURI());
 		
 		String ns = term.getNameSpace();

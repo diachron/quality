@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,9 +64,10 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 	private Set<String> seenSuggested = new HashSet<String>();
 	
 //	private SharedResources shared = SharedResources.getInstance();
-	private Set<String> seenSet = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	private static Logger logger = LoggerFactory.getLogger(ReuseExistingVocabularies.class);
 

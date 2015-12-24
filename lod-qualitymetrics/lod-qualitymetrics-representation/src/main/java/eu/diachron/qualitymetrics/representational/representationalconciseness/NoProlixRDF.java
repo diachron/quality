@@ -6,6 +6,7 @@ package eu.diachron.qualitymetrics.representational.representationalconciseness;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +38,8 @@ public class NoProlixRDF implements QualityMetric {
 	private double totalTriples = 0.0;
 	
 	private double totalRCC = 0.0;
-	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
-	
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private static Logger logger = LoggerFactory.getLogger(NoProlixRDF.class);
 
 	@Override

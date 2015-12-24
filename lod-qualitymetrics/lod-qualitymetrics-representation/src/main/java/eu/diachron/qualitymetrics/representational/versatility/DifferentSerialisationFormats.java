@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,8 @@ import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
  */
 public class DifferentSerialisationFormats implements QualityMetric{
 	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	private static Logger logger = LoggerFactory.getLogger(DifferentSerialisationFormats.class);
 	
@@ -54,7 +56,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 	
 	ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
 	
-	private HTreeMap<String, List<String>> datasetFeatures = MapDbFactory.getSingletonFileInstance(true).createHashMap(UUID.randomUUID().toString()).make();
+	private HTreeMap<String, List<String>> datasetFeatures = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 	
 	boolean flag = false;
 	

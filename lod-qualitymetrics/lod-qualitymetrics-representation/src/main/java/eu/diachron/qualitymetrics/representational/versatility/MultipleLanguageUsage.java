@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +51,11 @@ public class MultipleLanguageUsage implements QualityMetric {
 	
 //	static final String DEFAULT_TAG = "en";
 	
-	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.getSingletonFileInstance(true).createHashMap(UUID.randomUUID().toString()).make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+
+	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 	@Override
 	public void compute(Quad quad) {

@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,9 +83,9 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	private static Logger logger = LoggerFactory.getLogger(ReuseExistingTerms.class);
 //	private SharedResources shared = SharedResources.getInstance();
 	
-	private Set<String> seenSet = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
-
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 
 	private int overlapClasses = 0;

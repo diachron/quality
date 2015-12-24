@@ -6,6 +6,7 @@ package eu.diachron.qualitymetrics.representational.interpretability;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +35,10 @@ public class NoBlankNodeUsage implements QualityMetric {
 	private static Logger logger = LoggerFactory.getLogger(NoBlankNodeUsage.class);
 	
 	//we will store all data level constraints that are URIs
-	private Set<String> uniqueDLC = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
-	private Set<String> uniqueBN = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
-	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	private Set<String> uniqueDLC = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	private Set<String> uniqueBN = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	
 	@Override

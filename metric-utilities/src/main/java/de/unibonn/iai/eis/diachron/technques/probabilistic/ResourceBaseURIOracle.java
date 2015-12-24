@@ -74,7 +74,7 @@ public class ResourceBaseURIOracle {
 	}
 	
 	
-	private HTreeMap<String, Pair<Integer, Integer>> builder = MapDbFactory.getSingletonFileInstance(true).createHashMap(UUID.randomUUID().toString()).make();
+	private HTreeMap<String, Pair<Integer, Integer>> builder = MapDbFactory.createHashMap(MapDbFactory.getMapDBAsyncTempFile(),UUID.randomUUID().toString());
 	
 	/**
 	 * Default constructor
