@@ -3,7 +3,8 @@
  */
 package eu.diachron.qualitymetrics.representational.provenance;
 
-import org.mapdb.HTreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.DCAT;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -32,7 +32,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  */
 public class BasicProvenanceMetric implements QualityMetric {
 	
-	protected HTreeMap<String, String> dataset = MapDbFactory.createFilesystemDB().createHashMap("basic-provenance-map").make();
+	protected ConcurrentHashMap<String, String> dataset = new ConcurrentHashMap<String,String>();
 
 	private static Logger logger = LoggerFactory.getLogger(BasicProvenanceMetric.class);
 
@@ -46,7 +46,7 @@ public class BasicProvenanceMetric implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (predicate.hasURI(RDF.type.getURI()) && (object.hasURI(VOID.Dataset.getURI()) || object.hasURI(DCAT.Dataset.getURI()))){
-			dataset.putIfAbsent(subject.getURI(), "");
+			dataset.put(subject.getURI(), "");
 		}
 		
 		//are there more basic provenance requirements? see flemmings thesis pg 154

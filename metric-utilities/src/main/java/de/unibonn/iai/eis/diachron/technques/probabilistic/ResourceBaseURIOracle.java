@@ -74,8 +74,7 @@ public class ResourceBaseURIOracle {
 	}
 	
 	
-//	private Map<String, HTreeMap<String, Pair<Integer, Integer>>> graphDatasetURIs = new ConcurrentHashMap<String, HTreeMap<String, Pair<Integer, Integer>>>();
-	private HTreeMap<String, Pair<Integer, Integer>> builder = MapDbFactory.createFilesystemDB().createHashMap("resource-base-uri-map").make();
+	private HTreeMap<String, Pair<Integer, Integer>> builder = MapDbFactory.getSingletonFileInstance(true).createHashMap(UUID.randomUUID().toString()).make();
 	
 	/**
 	 * Default constructor

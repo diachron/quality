@@ -38,9 +38,9 @@ public class SerialisableQuad extends Quad implements Serializable, JenaCacheObj
 	private String graph = "";
 	
 	
-//	public SerialisableQuad(){
-//		super(null, null);
-//	}
+	public SerialisableQuad(){
+		super(null, null);
+	}
 	
 	public SerialisableQuad(Quad quad){
 		super(quad.getGraph(), quad.asTriple());

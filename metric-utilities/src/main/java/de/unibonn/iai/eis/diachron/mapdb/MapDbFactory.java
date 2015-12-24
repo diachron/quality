@@ -27,7 +27,7 @@ public class MapDbFactory {
 	 * Creates a new database, stored in memory (more preciselly, in heap space)
 	 */
 	public static DB createHeapDB() {
-		DB mapDB = DBMaker.newHeapDB().make();		
+		DB mapDB = 	DBMaker.newHeapDB().make();	
 		return mapDB;
 	}
 		
@@ -43,14 +43,12 @@ public class MapDbFactory {
 		}
 		
 		DB mapDB = DBMaker.newFileDB(new File(mapDbDir + "mapdb-" + timestamp))
-			.closeOnJvmShutdown()
-			.deleteFilesAfterClose()
-			.transactionDisable()
-			/*.compressionEnable()*/
-			.mmapFileEnable()
-			/*.asyncWriteEnable()*/
-			.asyncWriteFlushDelay(500)
-	    	.make();
+		.closeOnJvmShutdown()
+		.deleteFilesAfterClose()
+		.transactionDisable()
+		.mmapFileEnable()
+		.asyncWriteFlushDelay(500)
+		.make();
 		
 		return mapDB;
 	}
@@ -66,15 +64,26 @@ public class MapDbFactory {
 			timestamp = (new Long((new Date()).getTime())).toString();
 		}
 		
-		DB mapDB = DBMaker.newFileDB(new File(mapDbDir + "mapasyncdb-" + timestamp)).
-				/*asyncWriteEnable().*/
-				asyncWriteFlushDelay(500).
-				transactionDisable().
-				closeOnJvmShutdown().
-				deleteFilesAfterClose().
-				make();
+		DB mapDB = DBMaker.newFileDB(new File(mapDbDir + "mapasyncdb-" + timestamp))
+		.closeOnJvmShutdown()
+		.deleteFilesAfterClose()
+		.transactionDisable()
+		.mmapFileEnable()
+		.asyncWriteFlushDelay(500)
+		.asyncWriteEnable()
+		.make();
 		
 		return mapDB;
+	}
+	
+	private static DB singleton = null;
+	public static DB getSingletonFileInstance(boolean async){
+		if (singleton == null){
+			if (async) singleton = MapDbFactory.createAsyncFilesystemDB();
+			else singleton = MapDbFactory.createFilesystemDB();
+		}
+		
+		return singleton;
 	}
 
 }

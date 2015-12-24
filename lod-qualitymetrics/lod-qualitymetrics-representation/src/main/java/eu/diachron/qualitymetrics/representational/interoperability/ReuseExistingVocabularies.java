@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
@@ -30,7 +31,6 @@ import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
-import eu.diachron.qualitymetrics.representational.utils.SharedResources;
 import eu.diachron.qualitymetrics.utilities.LOVInterface;
 import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -62,13 +62,12 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 	private Set<String> suggestedVocabs = new HashSet<String>();
 	private Set<String> seenSuggested = new HashSet<String>();
 	
-	private SharedResources shared = SharedResources.getInstance();
-	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
+//	private SharedResources shared = SharedResources.getInstance();
+	private Set<String> seenSet = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+
+	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
 	
 	private static Logger logger = LoggerFactory.getLogger(ReuseExistingVocabularies.class);
-
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
-
 
 	@Override
 	public void compute(Quad quad) {
@@ -82,13 +81,14 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 			if (!(object.isBlank())){
 				if (!(this.seenSet.contains(object.getURI()))){
 					if (suggestedVocabs.contains(object.getNameSpace())){
-						Boolean seen = shared.classOrPropertyDefined(object.getURI());
-						Boolean defined = null;
-						if (seen == null) {
-							defined = VocabularyLoader.checkTerm(object);
-							shared.addClassOrProperty(object.getURI(), defined);
-						}
-						else defined = seen;
+//						Boolean seen = shared.classOrPropertyDefined(object.getURI());
+//						Boolean defined = null;
+//						if (seen == null) {
+//							defined = VocabularyLoader.checkTerm(object);
+//							shared.addClassOrProperty(object.getURI(), defined);
+//						}
+//						else defined = seen;
+						Boolean defined = VocabularyLoader.checkTerm(object);
 						
 						if (defined){
 							seenSuggested.add(object.getNameSpace());
@@ -101,14 +101,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 		
 		if (!(this.seenSet.contains(predicate.getURI()))){
 			if (suggestedVocabs.contains(predicate.getNameSpace())){
-				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
-				Boolean defined = null;
-				if (seen == null) {
-					defined = VocabularyLoader.checkTerm(predicate);
-					shared.addClassOrProperty(predicate.getURI(), defined);
-				}
-				else defined = seen;
-				
+				Boolean defined = VocabularyLoader.checkTerm(predicate);				
 				if (defined){
 					seenSuggested.add(predicate.getNameSpace());
 				}

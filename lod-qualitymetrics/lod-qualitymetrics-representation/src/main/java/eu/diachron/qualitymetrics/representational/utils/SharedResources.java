@@ -3,6 +3,8 @@
  */
 package eu.diachron.qualitymetrics.representational.utils;
 
+import java.util.UUID;
+
 import org.mapdb.HTreeMap;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
@@ -21,7 +23,7 @@ public class SharedResources {
 
 	private static SharedResources instance = null;
 	
-	private HTreeMap<String, Boolean> clsPropUndefined = MapDbFactory.createAsyncFilesystemDB().createHashMap("shared-resources").make();
+	private HTreeMap<String, Boolean> clsPropUndefined = MapDbFactory.getSingletonFileInstance(true).createHashMap(UUID.randomUUID().toString()).make();
 	
 	protected SharedResources(){}
 	

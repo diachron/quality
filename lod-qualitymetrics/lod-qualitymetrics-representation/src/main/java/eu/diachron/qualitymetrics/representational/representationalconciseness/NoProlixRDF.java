@@ -4,6 +4,7 @@
 package eu.diachron.qualitymetrics.representational.representationalconciseness;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class NoProlixRDF implements QualityMetric {
 	
 	private double totalRCC = 0.0;
 	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
 	
 	private static Logger logger = LoggerFactory.getLogger(NoProlixRDF.class);
 

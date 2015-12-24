@@ -14,7 +14,7 @@
 		<rdf2go.version>4.8.2</rdf2go.version>
 		<jena.version>2.11.0</jena.version>
 		<jung.version>2.0.1</jung.version>
-		<mapdb.version>1.0.6</mapdb.version>
+		<mapdb.version>1.0.8</mapdb.version>
 		<luzzu.version>1.0.2</luzzu.version>
 		<diachron.version>1.0.0</diachron.version>
 		
@@ -65,7 +65,7 @@
 			<type>pom</type>
 			<version>${jena.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>

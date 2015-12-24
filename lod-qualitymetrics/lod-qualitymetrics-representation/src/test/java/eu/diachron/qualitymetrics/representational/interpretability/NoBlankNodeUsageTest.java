@@ -84,7 +84,7 @@ public class NoBlankNodeUsageTest extends Assert {
 	}
 
 
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet("problem-list").make();
 
 	@Ignore
 	@Test

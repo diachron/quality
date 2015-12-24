@@ -4,6 +4,7 @@
 package eu.diachron.qualitymetrics.representational.interpretability;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +43,10 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(UndefinedClassesAndProperties.class);
 //	private SharedResources shared = SharedResources.getInstance();
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private Set<String> seenSet = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
 
-	private Set<String> seenSet = MapDbFactory.createFilesystemDB().createHashSet("seen-set").make();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
+
 	
 	@Override
 	public void compute(Quad quad) {

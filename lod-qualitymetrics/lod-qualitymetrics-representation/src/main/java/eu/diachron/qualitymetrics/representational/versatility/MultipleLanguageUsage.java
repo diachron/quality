@@ -5,6 +5,7 @@ package eu.diachron.qualitymetrics.representational.versatility;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -49,9 +50,9 @@ public class MultipleLanguageUsage implements QualityMetric {
 	
 //	static final String DEFAULT_TAG = "en";
 	
-	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.createFilesystemDB().createHashMap("multi-lingual-map").make();
+	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.getSingletonFileInstance(true).createHashMap(UUID.randomUUID().toString()).make();
 	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private Set<SerialisableQuad> _problemList = MapDbFactory.getSingletonFileInstance(true).createHashSet(UUID.randomUUID().toString()).make();
 
 	@Override
 	public void compute(Quad quad) {
