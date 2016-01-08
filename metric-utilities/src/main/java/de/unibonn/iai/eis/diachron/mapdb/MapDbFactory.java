@@ -87,7 +87,7 @@ public class MapDbFactory {
 		.deleteFilesAfterClose()
 		.transactionDisable()
 		.mmapFileEnable()
-		//.asyncWriteFlushDelay(500)
+		.asyncWriteFlushDelay(2000)
 		.make();
 		
 		return mapDB;
@@ -111,8 +111,8 @@ public class MapDbFactory {
 		.deleteFilesAfterClose()
 		.transactionDisable()
 		.mmapFileEnable()
-		//.asyncWriteFlushDelay(500)
-		//.asyncWriteEnable()
+		.asyncWriteFlushDelay(2000)
+		.asyncWriteEnable()
 		.make();
 		
 		return mapDB;
