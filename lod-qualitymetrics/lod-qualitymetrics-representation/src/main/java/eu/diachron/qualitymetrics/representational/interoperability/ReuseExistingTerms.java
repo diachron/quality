@@ -101,9 +101,10 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 		if (predicate.hasURI(RDF.type.toString())){
 			//it is a class
 			Node object = quad.getObject();
-			logger.info("checking class: {}", object.getURI());
 
 			if (!(object.isBlank())){
+				logger.info("checking class: {}", object.getURI());
+
 				if (!(this.seenSet.contains(object.getURI()))){
 					this.totalClasses++;
 					if ((suggestedVocabs.containsKey(object.getNameSpace())) || (topVocabs.contains(object.getNameSpace()))){
