@@ -46,7 +46,11 @@ public class BasicProvenanceMetric implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (predicate.hasURI(RDF.type.getURI()) && (object.hasURI(VOID.Dataset.getURI()) || object.hasURI(DCAT.Dataset.getURI()))){
-			dataset.put(subject.getURI(), "");
+			if (subject.isURI())
+				dataset.put(subject.getURI(), "");
+			else
+				dataset.put(subject.toString(), "");
+
 		}
 		
 		//are there more basic provenance requirements? see flemmings thesis pg 154
