@@ -103,7 +103,13 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subClassOf	daq:Dimension ;
 		rdfs:comment	"Consistency means that a knowledge base is free of (logical/formal) contradictions with respect to particular knowledge representation and inference mechanisms" ;
 		rdfs:label	"Consistency" .
-	
+
+	dqm:Completeness
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Dimension ;
+		rdfs:comment "**TODO**" ;
+		rdfs:label	"Completeness" .
+			
 	dqm:Conciseness
 		a	rdfs:Class ;
 		rdfs:subClassOf	daq:Dimension ;
@@ -725,8 +731,6 @@ dqm:LuzzuProvenanceAgent
 	dqm:hasHomogeneousDatatypesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with Homogeneous data types Metric" ;
-		rdfs:label	"hasHomogeneousDatatypesMetric" ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:HomogeneousDatatypesMetric .
 				
@@ -734,16 +738,12 @@ dqm:LuzzuProvenanceAgent
 	dqm:hasMisusedOwlDatatypeOrObjectPropertiesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with Misuse Owl- datatype or object properties metric" ;
-		rdfs:label	"hasMisuseOwlDatatypeOrObjectPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:MisusedOwlDatatypeOrObjectPropertiesMetric .
 		
 	dqm:hasMisplacedClassesOrPropertiesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with misplaced classes or properties metric" ;
-		rdfs:label	"hasMisplacedClassesOrPropertiesMetric" ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:MisplacedClassesOrPropertiesMetric .
 		
@@ -752,8 +752,6 @@ dqm:LuzzuProvenanceAgent
 	dqm:hasAmountOfDataDimension
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasDimension ;
-		rdfs:comment	"Links Contextual Category with Amount of Data Dimension" ;
-		rdfs:label	"Contextual has amount of data dimension" ;
 		rdfs:domain	dqm:Contextual ;
 		rdfs:range	dqm:AmountOfData .
 		
@@ -761,24 +759,18 @@ dqm:LuzzuProvenanceAgent
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:comment	"Links Amount of Data Dimension with Amount of Triples Metric (Amount of Triples Metric belongs to the Amount of Data Dimension)" ;
-		rdfs:label	"Amount of Data has amount of triples metric" ;
-		rdfs:domain	dqm:AmountOfData ;
 		rdfs:range	dqm:AmountOfTriplesMetric .	
 
 	#Consistency Dimensions Properties
 	dqm:hasConsistencyDimension
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
-		rdfs:comment "Links Intrinsic Category with Consistency Dimension" ;
-		rdfs:label "Intrinsic has consistency dimension" ;
 		rdfs:domain dqm:Intrinsic ;
 		rdfs:range dqm:Consistency .
 	
 	dqm:hasEntitiesAsMembersOfDisjointClassesMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Consistency Dimension with ‘entities as members of disjoint classes’ Metric (Entities as Members of Disjoint Classes Metric belongs to the Consistency Dimension)" ;
-		rdfs:label	"Consistency has entities as members of disjoint classes metric" ;
 		rdfs:domain	dqm:Consistency ;
 		rdfs:range	dqm:EntitiesAsMembersOfDisjointClassesMetric .	
 		
@@ -786,32 +778,24 @@ dqm:LuzzuProvenanceAgent
 	dqm:hasConcisenessDimension
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
-		rdfs:comment "Links Intrinsic Category with Conciseness Dimension" ;
-		rdfs:label "Intrinsic has conciseness dimension" ;
 		rdfs:domain dqm:Intrinsic ;
 		rdfs:range dqm:Conciseness .
 	
 	dqm:hasIntensionalConcisenessMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Conciseness Dimension with Intensional Conciseness Metric (Intensional Conciseness Metric belongs to the Conciseness Dimension)" ;
-		rdfs:label	"Conciseness has intensional conciseness metric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:IntensionalConcisenessMetric .	
 		
 	dqm:hasExtensionalConcisenessMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Conciseness Dimension with Extensional Conciseness Metric (Extensional Conciseness Metric belongs to the Conciseness Dimension)" ;
-		rdfs:label	"Conciseness has extensional conciseness metric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:ExtensionalConcisenessMetric .	
 		
 	dqm:hasDuplicateInstanceMetric
 		a	rdfs:Property ;
 		rdfs:subPropertyOf	daq:hasMetric ;
-		rdfs:comment	"Links Conciseness Dimension with Duplicate Instance Metric (Duplicate Instance Metric belongs to the Conciseness Dimension)" ;
-		rdfs:label	"Conciseness has duplicate instance metric" ;
 		rdfs:domain	dqm:Conciseness ;
 		rdfs:range	dqm:DuplicateInstanceMetric .
 		
@@ -819,8 +803,6 @@ dqm:LuzzuProvenanceAgent
 	dqm:hasRepresentationalConcisenessDimension
 		a rdfs:Property ;
 		rdfs:subPropertyOf daq:hasDimension ;
-		rdfs:comment "Links Representational Category with Representational-Conciseness Dimension" ;
-		rdfs:label "Representational has representational conciseness dimension" ;
 		rdfs:domain dqm:Representational ;
 		rdfs:range dqm:RepresentationalConciseness .
 		
@@ -1151,7 +1133,6 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subPropertyOf	daq:hasMetric ;
 		rdfs:domain	dqm:Security ;
 		rdfs:range	dqm:dqm:DigitalSignatureUsage .
-				
 
 #############################		
 		
@@ -1192,7 +1173,26 @@ dqm:LuzzuProvenanceAgent
 		rdfs:subPropertyOf daq:hasMetric ;
 		rdfs:domain dqm:SyntacticValidity ;
 		rdfs:range dqm:CorrectLanguageTag .
+		
+	dqm:hasCompletenessDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasDimension ;
+		rdfs:domain dqm:Intrinsic ;
+		rdfs:range dqm:Completeness .
+		
+	dqm:DataCubePopulationCompleteness
+		a	rdfs:Class ;
+		rdfs:subClassOf	daq:Metric ; 
+		daq:expectedDataType xsd:double ;
+		rdfs:comment	"This metric checks if a dataset has observations that cover a gold standard codelist." ;
+		rdfs:label	"RDF Data Cube Population Completeness" .
 
+	dqm:hasCompletenessDimension
+		a rdfs:Property ;
+		rdfs:subPropertyOf daq:hasMetric ;
+		rdfs:domain dqm:Completeness ;
+		rdfs:range dqm:DataCubePopulationCompleteness  .
+		
 			
 ##################################
 #				 				 #
@@ -1316,7 +1316,7 @@ dqm:ObsoleteConceptsInOntologyMetric
 ####################
 #                  #
 # Quality Problems #
-#		   #
+#		           #
 ####################
 
 ## Specific classes and properties
@@ -1785,3 +1785,23 @@ dqm:ObsoleteConceptsInOntologyMetric
 		rdfs:comment "No regular expression in the voID description." ;
 		rdfs:label "No Regular Expression" .	
 	
+	
+### Data Cube Population Completeness
+
+	dqm:MissingPopulationCoverage
+		a	rdfs:Class ;
+		rdfs:subClassOf qpro:Exception ;
+		rdfs:comment "The referred list of objects are not covered in the dataset." ;
+		rdfs:label "Missing Population Coverage" .
+		
+	dqm:forCodedProperty
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain	dqm:MissingPopulationCoverage ;
+		rdfs:range	rdf:Resource .	
+		
+	dqm:missingPopulationCoverageList
+		a rdfs:Property ;
+		rdfs:subPropertyOf qpro:extraExceptionProperty ;
+		rdfs:domain dqm:MissingPopulationCoverage ;
+		rdfs:range rdf:Bag .
