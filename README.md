@@ -30,7 +30,7 @@ The quality metadata will be stored in "/Luzzu/luzzu-communications/qualityMetad
 
 If you want to run your own examples, a cURL command can be done as following:
 
-```curl --data 'Dataset=$fileName&QualityReportRequired=$boolean&MetricsConfiguration=$config&BaseURI=$baseURI&IsSparql=$boolean' http://localhost:8080/luzzu/compute_quality```
+```curl --data 'Dataset=$fileName&QualityReportRequired=$boolean&MetricsConfiguration=$config&BaseURI=$baseURI&IsSparql=$boolean' http://localhost:8080/Luzzu/compute_quality```
 
 … where the individual `$arguments` are placeholders for the following:
 
