@@ -36,14 +36,17 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.SPARQLHelper;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
  * 
- * This metric checks both implicit resource type and their explicit (inferred)
+ * This metric checks both explicit resource type and their implicit (inferred)
  * subclasses for disjointness
  * 
  * @author Jeremy Debattista
+ * 
+ * TODO: fix when having a lot of classes
  */
 public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	/**
@@ -71,13 +74,12 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	/**
 	 * list of problematic nodes
 	 */
-	protected List<Model> problemList = new ArrayList<Model>();
+	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	
 	private boolean metricCalculated = false;
 
 	/**
 	 */
-	
 	public void compute(Quad quad) {
 		logger.debug("Assessing {}", quad.asTriple().toString());
 
@@ -174,7 +176,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			}
 		}
 
-		this.problemList.add(m);
+		this.problemList.add(new SerialisableModel(m));
 	}
 	
 	/**
@@ -185,7 +187,6 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	 */
 	
 	public double metricValue() {
-
 		if (!metricCalculated){
 			this.entitiesAsMembersOfDisjointClasses = countEntitiesAsMembersOfDisjointClasses();
 		}
@@ -219,12 +220,12 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	 */
 	
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Model> tmpProblemList = null;
+		ProblemList<SerialisableModel> tmpProblemList = null;
 		try {
 			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<Model>(this.problemList);
+				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
 			} else {
-				tmpProblemList = new ProblemList<Model>();
+				tmpProblemList = new ProblemList<SerialisableModel>();
 			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}
@@ -240,5 +241,4 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
 	}
-
 }

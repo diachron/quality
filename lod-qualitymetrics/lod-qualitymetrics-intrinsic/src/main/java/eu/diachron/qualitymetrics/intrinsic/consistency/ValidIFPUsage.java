@@ -6,15 +6,18 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.Bag;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
@@ -50,7 +53,13 @@ public class ValidIFPUsage implements QualityMetric{
 	private int totalViolatedIFPs = 0;
 	private Map<IFPTriple,IFPTriple> seenIFPs = MapDbFactory.createAsyncFilesystemDB().createHashMap("seen-ifp-statements").make();
 
-	private Model problemModel = ModelFactory.createDefaultModel();
+	//private Model problemModel = ModelFactory.createDefaultModel();
+	
+	private Dataset ds = TDBFactory.createDataset("/tmp/diachron-tdb/");
+	private Model problemModel = ds.getDefaultModel();
+	{
+		ds.begin(ReadWrite.WRITE);
+	}
 	
 	int counter = 0;
 	@Override
@@ -74,7 +83,7 @@ public class ValidIFPUsage implements QualityMetric{
 	}
 	
 	private void addProblem(IFPTriple t, Quad q){
-		Bag bag;
+		Bag bag = problemModel.createBag(Commons.generateURI().getURI());
 		
 		Resource problemURI = t.getProblemURI();
 		
@@ -97,10 +106,9 @@ public class ValidIFPUsage implements QualityMetric{
 		bag.add(Commons.asRDFNode(q.getSubject()));
 		this.problemModel.add(problemURI, DQM.violatingSubjects, bag);
 	}
-
+	
 	@Override
 	public double metricValue() {
-		System.out.println(counter);
 		logger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};    {}"
 				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs,counter);
 
@@ -115,6 +123,7 @@ public class ValidIFPUsage implements QualityMetric{
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
+		ds.close();
 		ProblemList<Model> tmpProblemList = null;
 		try {
 			if(this.problemModel != null && this.problemModel.size() > 0) {

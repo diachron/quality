@@ -1,7 +1,7 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,13 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -39,7 +41,7 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 
 	private static Logger logger = LoggerFactory.getLogger(MisusedOwlDatatypeOrObjectProperties.class);
 	
-	private List<Model> problemList = new ArrayList<Model>();
+	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 
 	private double misuseDatatypeProperties = 0.0;
 	private double misuseObjectProperties = 0.0;
@@ -94,7 +96,7 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 			m.add(new StatementImpl(subject, DQM.hasMisusedObjectProperty, m.asRDFNode(property)));		
 		
 
-		this.problemList.add(m);
+		this.problemList.add(new SerialisableModel(m));
 	}
 	/**
 	 * This method computes metric value for the object of this class
@@ -133,17 +135,18 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	 */
 	
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Model> tmpProblemList = null;
+		ProblemList<SerialisableModel> tmpProblemList = null;
 		try {
 			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<Model>(this.problemList);
+				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
 			} else {
-				tmpProblemList = new ProblemList<Model>();
+				tmpProblemList = new ProblemList<SerialisableModel>();
 			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}
 		return tmpProblemList;
 	}
+
 
 	@Override
 	public boolean isEstimate() {

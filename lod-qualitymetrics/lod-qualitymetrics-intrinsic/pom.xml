@@ -21,5 +21,12 @@
 	<version>0.9.1</version>
 </dependency>
 
+  
+		<dependency>
+			<groupId>de.unibonn.iai.eis</groupId>
+			<artifactId>luzzu-annotations</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
   </dependencies>
 </project>

@@ -8,11 +8,14 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
@@ -35,7 +38,6 @@ public class ValidIFPUsageTest extends Assert {
 	public void tearDown() throws Exception {
 	}
 	
-
 	@Test
 	public void testValidIFPUsageMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
@@ -52,10 +54,23 @@ public class ValidIFPUsageTest extends Assert {
 		// 1 - (3 / 6)
 		assertEquals(0.5,metric.metricValue(), 0.0001);
 		
-		Model m = ((Model)metric.getQualityProblems().getProblemList().get(0));
-		m.write(System.out, "TURTLE");
-		
 	}	
 	
+	@Ignore
+	@Test
+	public void problemReportTest(){
+		for(Quad q : loader.getStreamingQuads()){
+			metric.compute(q);
+		}
+		metric.metricValue();
+		
+		ProblemList<?> pl = metric.getQualityProblems();
+		QualityReport qr = new QualityReport();
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+		
+		
+		plModel.write(System.out, "TURTLE");
+	}
 	
 }

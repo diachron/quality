@@ -2,6 +2,7 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +16,14 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -41,7 +44,7 @@ public class OntologyHijacking implements QualityMetric{
         private double totalPossibleHijacks = 0; // total number of redefined classes or properties
         private double totalHijacks = 0;
 
-        private List<Model> problemList = new ArrayList<Model>();
+    	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
         
         private List<HijackingRule> hijackingRules = new CustomList<HijackingRule>();
         {
@@ -112,15 +115,15 @@ public class OntologyHijacking implements QualityMetric{
         	Model m = ModelFactory.createDefaultModel();
         	
         	Resource gen = Commons.generateURI();
-        	m.createStatement(gen, RDF.type, DQM.OntologyHijackingException);
+        	m.add(gen, RDF.type, DQM.OntologyHijackingException);
         	
         	Resource anon = m.createResource(AnonId.create());
-        	m.createStatement(gen, DQM.hijackedTripleStatement, anon);
-        	m.createStatement(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
-        	m.createStatement(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
-        	m.createStatement(anon, RDF.object, Commons.asRDFNode(q.getObject()));
+        	m.add(gen, DQM.hijackedTripleStatement, anon);
+        	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
+        	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
+        	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));
         	
-        	this.problemList.add(m);
+        	this.problemList.add(new SerialisableModel(m));
         }
         
         
@@ -163,12 +166,12 @@ public class OntologyHijacking implements QualityMetric{
 
         
     	public ProblemList<?> getQualityProblems() {
-    		ProblemList<Model> tmpProblemList = null;
+    		ProblemList<SerialisableModel> tmpProblemList = null;
     		try {
     			if(this.problemList != null && this.problemList.size() > 0) {
-    				tmpProblemList = new ProblemList<Model>(this.problemList);
+    				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
     			} else {
-    				tmpProblemList = new ProblemList<Model>();
+    				tmpProblemList = new ProblemList<SerialisableModel>();
     			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
     			logger.error(problemListInitialisationException.getMessage());
     		}

@@ -6,7 +6,6 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -22,6 +21,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -29,6 +29,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.intrinsic.consistency.helper.MDC;
+import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -43,7 +44,7 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 	private static Logger logger = LoggerFactory.getLogger(EstimateSimpleEntitiesAsMembersOfDisjointClasses.class);
 	protected long entitiesAsMembersOfDisjointClasses = 0;
 	
-	protected List<Model> problemList = new ArrayList<Model>();
+	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	private boolean metricCalculated = false;
 	
 	//Reservoir Settings
@@ -125,7 +126,7 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 		}
 
 
-		this.problemList.add(m);
+		this.problemList.add(new SerialisableModel(m));
 	}
 
 	public double metricValue() {
@@ -151,12 +152,12 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 	}
 
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Model> tmpProblemList = null;
+		ProblemList<SerialisableModel> tmpProblemList = null;
 		try {
 			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<Model>(this.problemList);
+				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
 			} else {
-				tmpProblemList = new ProblemList<Model>();
+				tmpProblemList = new ProblemList<SerialisableModel>();
 			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}

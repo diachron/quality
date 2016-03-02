@@ -1,7 +1,7 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -47,7 +48,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private double totalClassesCount = 0.0;
 	private double misplacedPropertiesCount = 0.0;
 	private double totalPropertiesCount = 0.0;
-	private List<Model> problemList = new ArrayList<Model>();
+	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	
 
 	public void compute(Quad quad) {
@@ -105,7 +106,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 			m.add(new StatementImpl(subject, DQM.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
 		
 
-		this.problemList.add(m);
+		this.problemList.add(new SerialisableModel(m));
 	}
 
 	/**
@@ -145,12 +146,12 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	 * @return list of problematic quads
 	 */
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Model> tmpProblemList = null;
+		ProblemList<SerialisableModel> tmpProblemList = null;
 		try {
 			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<Model>(this.problemList);
+				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
 			} else {
-				tmpProblemList = new ProblemList<Model>();
+				tmpProblemList = new ProblemList<SerialisableModel>();
 			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}

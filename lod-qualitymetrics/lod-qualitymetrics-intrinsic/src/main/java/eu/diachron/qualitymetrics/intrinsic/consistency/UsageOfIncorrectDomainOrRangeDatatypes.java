@@ -5,10 +5,9 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -34,6 +34,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.SerialisableTriple;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -51,7 +52,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 
 	private static Logger logger = LoggerFactory.getLogger(UsageOfIncorrectDomainOrRangeDatatypes.class);
 	
-    private List<Model> problemList = new ArrayList<Model>();
+	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	
 	private HTreeMap<String, String> mapResourceType = MapDbFactory.createFilesystemDB().createHashMap("resource-type").make();
 	
@@ -90,26 +91,27 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 		}
 	}
 	
-	//TODO: fix
     private void addToProblem(Quad q, char type){
-//    	Model m = ModelFactory.createDefaultModel();
-//    	
-//    	Resource gen = Commons.generateURI();
-//    	if (type == 'd')
-//    		m.createStatement(gen, RDF.type, DQM.IncorrectDomain);
-//    	if (type == 'r')
-//    		m.createStatement(gen, RDF.type, DQM.IncorrectRange);
-//    	if (type == 'u')
-//    		m.createStatement(gen, RDF.type, DQM.IncorrectRange);
-//
-//    	
-//    	Resource anon = m.createResource(AnonId.create());
-//    	m.createStatement(gen, DQM.problematicTriple, anon);
-//    	m.createStatement(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
-//    	m.createStatement(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
-//    	m.createStatement(anon, RDF.object, Commons.asRDFNode(q.getObject()));
-//    	
-//    	this.problemList.add(m);
+    	Model m = ModelFactory.createDefaultModel();
+    	
+    	Resource gen = Commons.generateURI();
+    	if (type == 'd')
+    		m.add(gen, RDF.type, DQM.IncorrectDomain);
+    	if (type == 'r')
+    		m.add(gen, RDF.type, DQM.IncorrectRange);
+    	if (type == 'x')
+    		m.add(gen, RDF.type, DQM.IncorrectDomain);
+    	if (type == 'u')
+    		m.add(gen, RDF.type, DQM.IncorrectRange);
+
+    	
+    	Resource anon = m.createResource(AnonId.create());
+    	m.add(gen, DQM.problematicTriple, anon);
+    	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
+    	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
+    	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));
+    	
+    	this.problemList.add(new SerialisableModel(m));
 
     }
     
@@ -145,7 +147,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 					incorrectDomain++;
 				}
 			} else {
-				addToProblem(new Quad(null, t),'u');
+				addToProblem(new Quad(null, t),'x');
 				incorrectDomain++;
 			}
 			
@@ -205,12 +207,12 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<Model> tmpProblemList = null;
+		ProblemList<SerialisableModel> tmpProblemList = null;
 		try {
 			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<Model>(this.problemList);
+				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
 			} else {
-				tmpProblemList = new ProblemList<Model>();
+				tmpProblemList = new ProblemList<SerialisableModel>();
 			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
 			logger.error(problemListInitialisationException.getMessage());
 		}
@@ -227,17 +229,17 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 		return DQM.LuzzuProvenanceAgent;
 	}
 	
-	private Resource toResource(String uri){
-		return ModelFactory.createDefaultModel().createResource(uri);
-	}
-	
-	private Set<RDFNode> toRDFNodeSet(List<String> objects){
-		Set<RDFNode> lst = new HashSet<RDFNode>();
-		for(String o : objects){
-			lst.add(this.toResource(o));
-		}
-		return lst;
-	}
+//	private Resource toResource(String uri){
+//		return ModelFactory.createDefaultModel().createResource(uri);
+//	}
+
+//	private Set<RDFNode> toRDFNodeSet(List<String> objects){
+//		Set<RDFNode> lst = new HashSet<RDFNode>();
+//		for(String o : objects){
+//			lst.add(this.toResource(o));
+//		}
+//		return lst;
+//	}
 	
 	private Resource getLiteralType(Node lit_obj){
 		RDFNode n = Commons.asRDFNode(lit_obj);

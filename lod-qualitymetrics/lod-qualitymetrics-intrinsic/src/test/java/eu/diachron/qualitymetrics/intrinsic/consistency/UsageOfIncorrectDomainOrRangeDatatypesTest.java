@@ -5,16 +5,17 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.List;
 
-import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
@@ -37,9 +38,9 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 	public void tearDown() throws Exception {
 	}
 	
-@Ignore
+	
 	@Test
-	public void testUsageOfDeprecatedClassesAndPropertiesMinimalExample() {
+	public void testUsageOfIncorrectClassesAndPropertiesMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
 		for(Quad quad : streamingQuads){
@@ -51,6 +52,22 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 		// 3 / 8
 		assertEquals(0.625,metric.metricValue(), 0.0001);
 	}	
+
+	@Ignore
+	@Test
+	public void problemReportTest(){
+		for(Quad q : loader.getStreamingQuads()){
+			metric.compute(q);
+		}
+		metric.metricValue();
+		
+		ProblemList<?> pl = metric.getQualityProblems();
+		QualityReport qr = new QualityReport();
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+		
+		plModel.write(System.out, "TURTLE");
+	}
 	
 	
 }
