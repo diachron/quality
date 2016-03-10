@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
@@ -74,7 +76,8 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	/**
 	 * list of problematic nodes
 	 */
-	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	protected Set<SerialisableModel> problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	private boolean metricCalculated = false;
 

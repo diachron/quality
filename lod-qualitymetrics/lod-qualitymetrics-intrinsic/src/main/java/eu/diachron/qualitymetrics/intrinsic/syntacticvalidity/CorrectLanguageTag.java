@@ -47,7 +47,7 @@ import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
  */
 public class CorrectLanguageTag implements ComplexQualityMetric {
 	
-	private static Logger logger = LoggerFactory.getLogger(CorrectLanguageTag.class);
+//	private static Logger logger = LoggerFactory.getLogger(CorrectLanguageTag.class);
 	
 	private String lexvoDataURI = "http://www.lexvo.org/data/term/{language}/{term}";
 	private String lexvoResourceURI = "http://lexvo.org/id/term/{language}/{term}";

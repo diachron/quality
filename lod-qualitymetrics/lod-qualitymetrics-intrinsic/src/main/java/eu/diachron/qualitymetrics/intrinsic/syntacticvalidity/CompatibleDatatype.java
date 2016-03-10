@@ -71,7 +71,6 @@ public class CompatibleDatatype implements QualityMetric {
 		}
 	}
 	
-	//TODO: Fix
     private void addToProblem(Quad q){
     	Resource anon = problemModel.createResource(AnonId.create());
     	

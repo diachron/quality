@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,13 +54,14 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 
 	private static Logger logger = LoggerFactory.getLogger(UsageOfIncorrectDomainOrRangeDatatypes.class);
 	
-	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 	
-	private HTreeMap<String, String> mapResourceType = MapDbFactory.createFilesystemDB().createHashMap("resource-type").make();
+	private HTreeMap<String, String> mapResourceType =  MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 	
 	//If the boolean is true, then we need to check the domain, else check the range
-	private Set<SerialisableTriple> unknownTriples = MapDbFactory.createFilesystemDB().createHashSet("unknown-triples").make();
+	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
+	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	private long totalPredicates = 0;
 	private long incorrectDomain = 0;
@@ -111,7 +114,11 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
     	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
     	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));
     	
-    	this.problemList.add(new SerialisableModel(m));
+    	try{
+    		this.problemList.add(new SerialisableModel(m));
+    	} catch (Exception e){
+    		logger.error("Error adding to problem list :" + e.getMessage());
+    	}
 
     }
     

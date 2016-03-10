@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +63,8 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	/**
 	 * list of problematic nodes
 	 */
-	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	private boolean metricCalculated = false;
 

@@ -57,7 +57,7 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	private Long totalCreatedInstances = new Long(0);
 	
 	@Override
-	public void before(Object[] args) {
+	public void before(Object ... args) {
 		// Bloom Filters are based on an array of bits, whose size must be defined at creation. Ideally this size should 
 		// match the max. number of items to be put into the filter. If the caller doesn't provide that number, initialize
 		// the filter to default size
@@ -148,7 +148,7 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	}
 		
 	@Override
-	public void after(Object[] arg0) {
+	public void after(Object ... arg0) {
 		// TODO Auto-generated method stub
 	}
 

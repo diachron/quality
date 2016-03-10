@@ -3,7 +3,9 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +46,9 @@ public class OntologyHijacking implements QualityMetric{
         private double totalPossibleHijacks = 0; // total number of redefined classes or properties
         private double totalHijacks = 0;
 
-    	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
-        
+    	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+    	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+    	
         private List<HijackingRule> hijackingRules = new CustomList<HijackingRule>();
         {
         	hijackingRules.add(new HijackingRule(RDFS.subClassOf, TriplePosition.SUBJECT));

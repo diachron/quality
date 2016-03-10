@@ -2,7 +2,9 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +50,9 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private double totalClassesCount = 0.0;
 	private double misplacedPropertiesCount = 0.0;
 	private double totalPropertiesCount = 0.0;
-	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
 	
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 	public void compute(Quad quad) {
 //		logger.debug("Assessing {}", quad.asTriple().toString());

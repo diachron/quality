@@ -2,7 +2,9 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +43,9 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 
 	private static Logger logger = LoggerFactory.getLogger(MisusedOwlDatatypeOrObjectProperties.class);
 	
-	protected Set<SerialisableModel> problemList = MapDbFactory.createFilesystemDB().createHashSet("problem-list").make();
-
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	
 	private double misuseDatatypeProperties = 0.0;
 	private double misuseObjectProperties = 0.0;
 	private double validPredicates = 0.0;
