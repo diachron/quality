@@ -4,7 +4,9 @@
 package eu.diachron.qualitymetrics.contextual.understandability;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -13,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.DC;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -42,6 +46,21 @@ public class HumanReadableLabelling implements QualityMetric{
 	
 	private double value = 0.0d;
 	
+	private Set<String> labelProperties = new HashSet<String>();
+	{
+		labelProperties.add(RDFS.label.getURI());
+		labelProperties.add(RDFS.comment.getURI());
+		labelProperties.add(DC.title.getURI());
+		labelProperties.add(DC.description.getURI());
+		labelProperties.add(DCTerms.title.getURI());
+		labelProperties.add(DCTerms.alternative.getURI());
+		labelProperties.add(DCTerms.description.getURI());
+		labelProperties.add("http://www.w3.org/2004/02/skos/core#altLabel");
+		labelProperties.add("http://www.w3.org/2004/02/skos/core#prefLabel");
+		labelProperties.add("http://www.w3.org/2004/02/skos/core#note");
+		labelProperties.add("http://www.w3.org/2007/05/powder-s#text");
+	}
+	
 	
 	/**
 	 * Each entity is checked for a Human Readable label <rdfs:label>.
@@ -59,7 +78,7 @@ public class HumanReadableLabelling implements QualityMetric{
 			}
 		}
 	
-		if (quad.getSubject().isURI() && (quad.getPredicate().getURI().equals(RDFS.label.getURI()))){
+		if (quad.getSubject().isURI() && (labelProperties.contains(quad.getPredicate().getURI()))){
 			// we'll check if the provider is cheating and is publishing empty string labels and comments
 			if (!(quad.getObject().getLiteralValue().equals(""))) pEntities.put(quad.getSubject().getURI(), 1);
 		}
