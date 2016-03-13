@@ -3,8 +3,8 @@
  */
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class UsageOfDeprecatedClassesOrProperties implements QualityMetric{
 
 	private static Logger logger = LoggerFactory.getLogger(UsageOfDeprecatedClassesOrProperties.class);
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private Set<Quad> _problemList = new HashSet<Quad>();
 
 	private long totalTypes = 0;
 	private long totalProperties = 0;

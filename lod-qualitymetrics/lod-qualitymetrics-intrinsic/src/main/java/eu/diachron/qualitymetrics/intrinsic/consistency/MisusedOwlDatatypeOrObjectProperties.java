@@ -1,10 +1,5 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.UUID;
-
-import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +12,11 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
-import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -43,9 +36,12 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 
 	private static Logger logger = LoggerFactory.getLogger(MisusedOwlDatatypeOrObjectProperties.class);
 	
-	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+//	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
+	// Sampling of problems - testing for LOD Evaluation
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+		
 	private double misuseDatatypeProperties = 0.0;
 	private double misuseObjectProperties = 0.0;
 	private double validPredicates = 0.0;
@@ -87,20 +83,28 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	}
 
 	
+//	private void createProblemModel(Node resource, Node property, Resource type){
+//		Model m = ModelFactory.createDefaultModel();
+//		
+//		Resource subject = m.createResource(resource.toString());
+//		m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
+//		
+//		if (type.equals(DQM.MisusedDatatypeProperty))
+//			m.add(new StatementImpl(subject, DQM.hasMisusedDatatypeProperty, m.asRDFNode(property)));		
+//		else
+//			m.add(new StatementImpl(subject, DQM.hasMisusedObjectProperty, m.asRDFNode(property)));		
+//		
+//
+//		this.problemList.add(new SerialisableModel(m));
+//	}
+	
 	private void createProblemModel(Node resource, Node property, Resource type){
-		Model m = ModelFactory.createDefaultModel();
-		
-		Resource subject = m.createResource(resource.toString());
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
-		
-		if (type.equals(DQM.MisusedDatatypeProperty))
-			m.add(new StatementImpl(subject, DQM.hasMisusedDatatypeProperty, m.asRDFNode(property)));		
-		else
-			m.add(new StatementImpl(subject, DQM.hasMisusedObjectProperty, m.asRDFNode(property)));		
-		
-
-		this.problemList.add(new SerialisableModel(m));
+		ProblemReport pr = new ProblemReport(resource, property, type);
+		Boolean isAdded = this.problemSampler.add(pr);
+		if (!isAdded) pr = null;
 	}
+	
+	
 	/**
 	 * This method computes metric value for the object of this class
 	 * 
@@ -137,19 +141,31 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	 * @return list of problematic quads
 	 */
 	
+//	public ProblemList<?> getQualityProblems() {
+//		ProblemList<SerialisableModel> tmpProblemList = null;
+//		try {
+//			if(this.problemList != null && this.problemList.size() > 0) {
+//				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
+//			} else {
+//				tmpProblemList = new ProblemList<SerialisableModel>();
+//			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+//			logger.error(problemListInitialisationException.getMessage());
+//		}
+//		return tmpProblemList;
+//	}
+
+	
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<SerialisableModel> tmpProblemList = null;
-		try {
-			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
-			} else {
-				tmpProblemList = new ProblemList<SerialisableModel>();
-			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.error(problemListInitialisationException.getMessage());
+		ProblemList<Model> tmpProblemList = new ProblemList<Model>();
+		if(this.problemSampler != null && this.problemSampler.size() > 0) {
+			for(ProblemReport pr : this.problemSampler.getItems()){
+				tmpProblemList.getProblemList().add(pr.createProblemModel());
+			}
+		} else {
+			tmpProblemList = new ProblemList<Model>();
 		}
 		return tmpProblemList;
 	}
-
 
 	@Override
 	public boolean isEstimate() {
@@ -159,5 +175,33 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
+	}
+	
+	private class ProblemReport{
+		
+		private Resource type;
+		private Node resource;
+		private Node property;
+		
+		ProblemReport(Node resource, Node property, Resource type){
+			this.resource = resource;
+			this.property = property;
+			this.type = type;
+		}
+		
+		Model createProblemModel(){
+			Model m = ModelFactory.createDefaultModel();
+			
+			Resource subject = m.createResource(resource.toString());
+			m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
+			
+			if (type.equals(DQM.MisusedDatatypeProperty))
+				m.add(new StatementImpl(subject, DQM.hasMisusedDatatypeProperty, m.asRDFNode(property)));		
+			else
+				m.add(new StatementImpl(subject, DQM.hasMisusedObjectProperty, m.asRDFNode(property)));		
+			
+
+			return m;
+		}
 	}
 }

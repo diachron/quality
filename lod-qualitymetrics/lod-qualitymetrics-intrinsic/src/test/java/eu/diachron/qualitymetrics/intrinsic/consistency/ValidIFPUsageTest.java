@@ -47,15 +47,19 @@ public class ValidIFPUsageTest extends Assert {
 			metric.compute(quad);
 		}
 		
-		//	Total # IFP Statements : 4; # Violated Predicate-Object Statements : 1
+		//	Total # IFP Statements : 6; # Violated Predicate-Object Statements : 2
+		//  In principle, there are 3 triples with the same value for the IFP, but only 2 of them
+		//  are violating the IFP.
+		
 		//  In our minimal example only the predicate object pair foaf:jabberID "I_AM_NOT_A_VALID_IFP" 
 		//  was violated with :bob, :alice and :jack resources having the same jabberID
 		
-		// 1 - (3 / 6)
-		assertEquals(0.5,metric.metricValue(), 0.0001);
+		// 1 - (2 / 6)
+		assertEquals(0.666667,metric.metricValue(), 0.0001);
 		
 	}	
 	
+
 	@Ignore
 	@Test
 	public void problemReportTest(){

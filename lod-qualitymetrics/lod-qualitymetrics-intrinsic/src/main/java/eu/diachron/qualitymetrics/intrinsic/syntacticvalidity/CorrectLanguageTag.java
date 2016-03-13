@@ -47,13 +47,14 @@ import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
  */
 public class CorrectLanguageTag implements ComplexQualityMetric {
 	
-//	private static Logger logger = LoggerFactory.getLogger(CorrectLanguageTag.class);
+	private static Logger logger = LoggerFactory.getLogger(CorrectLanguageTag.class);
 	
 	private String lexvoDataURI = "http://www.lexvo.org/data/term/{language}/{term}";
 	private String lexvoResourceURI = "http://lexvo.org/id/term/{language}/{term}";
 	private String languageTranslatorURI = "https://services.open.xerox.com/bus/op/LanguageIdentifier/GetLanguageForString";
 	
 	private Map<String,String> langMap = new HashMap<String, String>();
+	
 
 	private int totalvalidLangStrings = 0;
 	private int totalCorrectStrings = 0;
@@ -72,7 +73,6 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 				try {
 					if (this.correctLanguageTag(obj)) totalCorrectStrings++;
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -94,8 +94,7 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		//TODO : add quality problem report
-		return null;
+		return new ProblemList<Model>();
 	}
 
 	@Override
@@ -112,6 +111,7 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 	private boolean correctLanguageTag(Node lit_obj) throws UnsupportedEncodingException{
 		RDFNode n = Commons.asRDFNode(lit_obj);
 		Literal lt = (Literal) n;
+		logger.info("Checking for {} :"+lt.toString());
 		String stringValue = lt.getLexicalForm().trim();
 		String language = lt.getLanguage();
 		
@@ -152,7 +152,7 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 		}
 		return false;
 	}
-
+	
 	private String langRestAPI(String content) throws UnsupportedEncodingException, IOException{
 		URL url = new URL(languageTranslatorURI);
 		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -185,20 +185,22 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 	public void before(Object... args) throws BeforeException {
 		String filename = CorrectLanguageTag.class.getClassLoader().getResource("lexvo/language_mapping.tsv").getFile();
 		try {
+			logger.info("Loading language file");
 			CSVReader reader = new CSVReader(new FileReader(filename),'\t');
 			List<String[]> allLanguages = reader.readAll();
 			for(String[] language : allLanguages)
 				langMap.put(language[0], language[1]);
+			reader.close();
+
 		} catch (IOException e) {
+			logger.error("Error Loading language file: {}", e.toString());
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
 	public void after(Object... args) throws AfterException {
 		// Nothing to do here
 	}
-	
 	
 }

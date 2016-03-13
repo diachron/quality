@@ -2,10 +2,6 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,14 +14,12 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
-import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -46,9 +40,12 @@ public class OntologyHijacking implements QualityMetric{
         private double totalPossibleHijacks = 0; // total number of redefined classes or properties
         private double totalHijacks = 0;
 
-    	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-    	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//    	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+//    	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
     	
+    	// Sampling of problems - testing for LOD Evaluation
+    	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+        
         private List<HijackingRule> hijackingRules = new CustomList<HijackingRule>();
         {
         	hijackingRules.add(new HijackingRule(RDFS.subClassOf, TriplePosition.SUBJECT));
@@ -114,21 +111,26 @@ public class OntologyHijacking implements QualityMetric{
         	}
         }
         
-        private void addToProblem(Quad q){
-        	Model m = ModelFactory.createDefaultModel();
-        	
-        	Resource gen = Commons.generateURI();
-        	m.add(gen, RDF.type, DQM.OntologyHijackingException);
-        	
-        	Resource anon = m.createResource(AnonId.create());
-        	m.add(gen, DQM.hijackedTripleStatement, anon);
-        	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
-        	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
-        	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));
-        	
-        	this.problemList.add(new SerialisableModel(m));
-        }
+//        private void addToProblem(Quad q){
+//        	Model m = ModelFactory.createDefaultModel();
+//        	
+//        	Resource gen = Commons.generateURI();
+//        	m.add(gen, RDF.type, DQM.OntologyHijackingException);
+//        	
+//        	Resource anon = m.createResource(AnonId.create());
+//        	m.add(gen, DQM.hijackedTripleStatement, anon);
+//        	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
+//        	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
+//        	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));
+//        	
+//        	this.problemList.add(new SerialisableModel(m));
+//        }
         
+        private void addToProblem(Quad q){
+    		ProblemReport pr = new ProblemReport(q);
+    		Boolean isAdded = this.problemSampler.add(pr);
+    		if (!isAdded) pr = null;
+        }
         
 		/**
 		 * @param Concept being check for authority
@@ -167,16 +169,27 @@ public class OntologyHijacking implements QualityMetric{
                 return this.METRIC_URI;
         }
 
-        
+     
+//    	public ProblemList<?> getQualityProblems() {
+//    		ProblemList<SerialisableModel> tmpProblemList = null;
+//    		try {
+//    			if(this.problemList != null && this.problemList.size() > 0) {
+//    				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
+//    			} else {
+//    				tmpProblemList = new ProblemList<SerialisableModel>();
+//    			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+//    			logger.error(problemListInitialisationException.getMessage());
+//    		}
+//    		return tmpProblemList;
+//    	}
     	public ProblemList<?> getQualityProblems() {
-    		ProblemList<SerialisableModel> tmpProblemList = null;
-    		try {
-    			if(this.problemList != null && this.problemList.size() > 0) {
-    				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
-    			} else {
-    				tmpProblemList = new ProblemList<SerialisableModel>();
-    			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
-    			logger.error(problemListInitialisationException.getMessage());
+    		ProblemList<Model> tmpProblemList = new ProblemList<Model>();
+    		if(this.problemSampler != null && this.problemSampler.size() > 0) {
+    			for(ProblemReport pr : this.problemSampler.getItems()){
+    				tmpProblemList.getProblemList().add(pr.createProblemModel());
+    			}
+    		} else {
+    			tmpProblemList = new ProblemList<Model>();
     		}
     		return tmpProblemList;
     	}
@@ -232,4 +245,30 @@ public class OntologyHijacking implements QualityMetric{
 		        return -1;
 		    }
 		}
+
+		private class ProblemReport{
+			
+			private Quad q;
+			
+			ProblemReport(Quad q){
+				this.q = q;
+			}
+			
+			
+	        Model createProblemModel(){
+	        	Model m = ModelFactory.createDefaultModel();
+	        	
+	        	Resource gen = Commons.generateURI();
+	        	m.add(gen, RDF.type, DQM.OntologyHijackingException);
+	        	
+	        	Resource anon = m.createResource(AnonId.create());
+	        	m.add(gen, DQM.hijackedTripleStatement, anon);
+	        	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
+	        	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
+	        	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));
+	        	
+	        	return m;
+	        }
+		}
+		
 }

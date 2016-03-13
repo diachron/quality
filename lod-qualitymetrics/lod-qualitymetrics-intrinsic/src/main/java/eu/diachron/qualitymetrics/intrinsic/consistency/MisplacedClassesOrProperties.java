@@ -1,7 +1,5 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.util.ArrayList;
-import java.util.Set;
 import java.util.UUID;
 
 import org.mapdb.DB;
@@ -19,11 +17,10 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
-import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -43,8 +40,8 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
 	private static Logger logger = LoggerFactory.getLogger(MisplacedClassesOrProperties.class);
 	
-	private HTreeMap<String, Boolean> seenProperties = MapDbFactory.createFilesystemDB().createHashMap("misplaced-classes-seenProperties").makeOrGet();
-	private HTreeMap<String, Boolean> seenClasses = MapDbFactory.createFilesystemDB().createHashMap("misplaced-classes-seenClasses").makeOrGet();
+	private HTreeMap<String, Boolean> seenProperties = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+	private HTreeMap<String, Boolean> seenClasses = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 
 	private double misplacedClassesCount = 0.0;
 	private double totalClassesCount = 0.0;
@@ -52,8 +49,13 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private double totalPropertiesCount = 0.0;
 	
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
+	// Sampling of problems - testing for LOD Evaluation
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+	
+	
+	
 	public void compute(Quad quad) {
 //		logger.debug("Assessing {}", quad.asTriple().toString());
 
@@ -97,19 +99,25 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 		}
 	}
 	
+//	private void createProblemModel(Node resource, Node classOrProperty, Resource type){
+//		Model m = ModelFactory.createDefaultModel();
+//		
+//		Resource subject = m.createResource(resource.toString());
+//		m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
+//		
+//		if (type.equals(DQM.MisplacedClass))
+//			m.add(new StatementImpl(subject, DQM.hasMisplacedClass, m.asRDFNode(classOrProperty)));		
+//		else
+//			m.add(new StatementImpl(subject, DQM.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
+//		
+//
+//		this.problemList.add(new SerialisableModel(m));
+//	}
+	
 	private void createProblemModel(Node resource, Node classOrProperty, Resource type){
-		Model m = ModelFactory.createDefaultModel();
-		
-		Resource subject = m.createResource(resource.toString());
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
-		
-		if (type.equals(DQM.MisplacedClass))
-			m.add(new StatementImpl(subject, DQM.hasMisplacedClass, m.asRDFNode(classOrProperty)));		
-		else
-			m.add(new StatementImpl(subject, DQM.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
-		
-
-		this.problemList.add(new SerialisableModel(m));
+		ProblemReport pr = new ProblemReport(resource, classOrProperty, type);
+		Boolean isAdded = this.problemSampler.add(pr);
+		if (!isAdded) pr = null;
 	}
 
 	/**
@@ -148,33 +156,70 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	 * 
 	 * @return list of problematic quads
 	 */
+//	public ProblemList<?> getQualityProblems() {
+//		ProblemList<SerialisableModel> tmpProblemList = null;
+//		try {
+//			if(this.problemList != null && this.problemList.size() > 0) {
+//				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
+//			} else {
+//				tmpProblemList = new ProblemList<SerialisableModel>();
+//			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+//			logger.error(problemListInitialisationException.getMessage());
+//		}
+//		return tmpProblemList;
+//	}
+	
+
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<SerialisableModel> tmpProblemList = null;
-		try {
-			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
-			} else {
-				tmpProblemList = new ProblemList<SerialisableModel>();
-			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.error(problemListInitialisationException.getMessage());
+		ProblemList<Model> tmpProblemList = new ProblemList<Model>();
+		if(this.problemSampler != null && this.problemSampler.size() > 0) {
+			for(ProblemReport pr : this.problemSampler.getItems()){
+				tmpProblemList.getProblemList().add(pr.createProblemModel());
+			}
+		} else {
+			tmpProblemList = new ProblemList<Model>();
 		}
 		return tmpProblemList;
 	}
-
-	/* (non-Javadoc)
-	 * @see de.unibonn.iai.eis.luzzu.assessment.QualityMetric#isEstimate()
-	 */
+	
 	@Override
 	public boolean isEstimate() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unibonn.iai.eis.luzzu.assessment.QualityMetric#getAgentURI()
-	 */
 	@Override
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
 	}
+	
+	private class ProblemReport{
+		
+		private Resource type;
+		private Node classOrProperty;
+		private Node resource;
+		
+		ProblemReport(Node resource, Node classOrProperty, Resource type){
+			this.resource = resource;
+			this.classOrProperty = classOrProperty;
+			this.type = type;
+		}
+		
+		Model createProblemModel(){
+			Model m = ModelFactory.createDefaultModel();
+			
+			Resource subject = m.createResource(resource.toString());
+			m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
+			
+			if (type.equals(DQM.MisplacedClass))
+				m.add(new StatementImpl(subject, DQM.hasMisplacedClass, m.asRDFNode(classOrProperty)));		
+			else
+				m.add(new StatementImpl(subject, DQM.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
+			
+
+			return m;
+		}
+		
+
+	}	
 	
 }

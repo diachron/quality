@@ -25,11 +25,10 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
-import eu.diachron.qualitymetrics.utilities.SerialisableModel;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -57,14 +56,18 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	 * the data structure that for each resource collects the classes it's an
 	 * instance of
 	 */
-	protected HTreeMap<String, Set<String>> typesOfResource = MapDbFactory.createFilesystemDB().createHashMap("entities_members_disjoinedclasses").make();
+	protected HTreeMap<String, Set<String>> typesOfResource = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());;
 	
 	
 	/**
 	 * list of problematic nodes
 	 */
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+
+	// Sampling of problems - testing for LOD Evaluation
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+
 	
 	private boolean metricCalculated = false;
 
@@ -141,19 +144,26 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 		return count;
 	}
 	
+//	private void createProblemModel(Node resource, Node _class, Node _otherClass){
+//		Model m = ModelFactory.createDefaultModel();
+//		
+//		Resource subject = m.createResource(resource.toString());
+//		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
+//		
+//		
+//		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));		
+//		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_otherClass)));
+//
+//
+//		this.problemList.add(new SerialisableModel(m));
+//	}
+
 	private void createProblemModel(Node resource, Node _class, Node _otherClass){
-		Model m = ModelFactory.createDefaultModel();
-		
-		Resource subject = m.createResource(resource.toString());
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
-		
-		
-		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));		
-		m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_otherClass)));
-
-
-		this.problemList.add(new SerialisableModel(m));
+		ProblemReport pr = new ProblemReport(resource, _class, _otherClass);
+		Boolean isAdded = this.problemSampler.add(pr);
+		if (!isAdded) pr = null;
 	}
+
 	
 	/**
 	 * Returns metric value for the object of this class
@@ -196,15 +206,27 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	 * @return list of problematic quads
 	 */
 	
+//	public ProblemList<?> getQualityProblems() {
+//		ProblemList<SerialisableModel> tmpProblemList = null;
+//		try {
+//			if(this.problemList != null && this.problemList.size() > 0) {
+//				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
+//			} else {
+//				tmpProblemList = new ProblemList<SerialisableModel>();
+//			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
+//			logger.error(problemListInitialisationException.getMessage());
+//		}
+//		return tmpProblemList;
+//	}
+	
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<SerialisableModel> tmpProblemList = null;
-		try {
-			if(this.problemList != null && this.problemList.size() > 0) {
-				tmpProblemList = new ProblemList<SerialisableModel>(new ArrayList<SerialisableModel>(this.problemList));
-			} else {
-				tmpProblemList = new ProblemList<SerialisableModel>();
-			}		} catch (ProblemListInitialisationException problemListInitialisationException) {
-			logger.error(problemListInitialisationException.getMessage());
+		ProblemList<Model> tmpProblemList = new ProblemList<Model>();
+		if(this.problemSampler != null && this.problemSampler.size() > 0) {
+			for(ProblemReport pr : this.problemSampler.getItems()){
+				tmpProblemList.getProblemList().add(pr.createProblemModel());
+			}
+		} else {
+			tmpProblemList = new ProblemList<Model>();
 		}
 		return tmpProblemList;
 	}
@@ -217,6 +239,33 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
+	}
+	
+	private class ProblemReport{
+		
+		private Node _class;
+		private Node resource;
+		private Node _otherClass;
+		
+		ProblemReport(Node resource, Node _class, Node _otherClass){
+			this.resource = resource;
+			this._otherClass = _otherClass;
+			this._class = _class;
+		}
+		
+		Model createProblemModel(){
+			Model m = ModelFactory.createDefaultModel();
+			
+			Resource subject = m.createResource(resource.toString());
+			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
+			
+			
+			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));		
+			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_otherClass)));
+
+
+			return m;
+		}
 	}
 
 }

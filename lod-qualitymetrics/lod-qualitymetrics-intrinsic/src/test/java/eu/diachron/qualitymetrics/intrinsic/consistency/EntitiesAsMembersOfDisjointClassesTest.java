@@ -18,7 +18,7 @@ import eu.diachron.qualitymetrics.utilities.TestLoader;
 public class EntitiesAsMembersOfDisjointClassesTest extends Assert{
 	
 	protected TestLoader loader = new TestLoader();
-	protected SimpleEntitiesAsMembersOfDisjointClasses metric = new SimpleEntitiesAsMembersOfDisjointClasses();
+	protected AdvancedEntitiesAsMembersOfDisjointClasses metric = new AdvancedEntitiesAsMembersOfDisjointClasses();
 
 	@Before
 	public void setUp() throws Exception {
@@ -58,9 +58,10 @@ public class EntitiesAsMembersOfDisjointClassesTest extends Assert{
 		
 		ProblemList<?> pl = metric.getQualityProblems();
 		QualityReport qr = new QualityReport();
-//		Model plModel = qr.createQualityProblem(metric.getMetricURI(), pl);
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
 		
-//		plModel.write(System.out, "TURTLE");
+		plModel.write(System.out, "TURTLE");
 	
 	}
 }
