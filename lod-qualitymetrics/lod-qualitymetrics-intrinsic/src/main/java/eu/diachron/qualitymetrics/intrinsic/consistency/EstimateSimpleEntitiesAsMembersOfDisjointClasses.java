@@ -148,7 +148,7 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 			return 0.0;
 		}
 
-		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size());
+		statsLogger.info("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size());
 
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.reservoir.size());
 

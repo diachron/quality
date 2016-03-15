@@ -112,7 +112,7 @@ public class ValidIFPUsage implements QualityMetric{
 	
 	@Override
 	public double metricValue() {
-		logger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};  # Total no of triples:  {}"
+		statsLogger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};  # Total no of triples:  {}"
 				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs,counter);
 
 		if (totalIFPs == 0) return 1.0;

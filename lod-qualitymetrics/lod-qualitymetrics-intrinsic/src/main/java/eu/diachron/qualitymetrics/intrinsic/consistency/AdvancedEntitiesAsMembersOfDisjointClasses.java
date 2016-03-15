@@ -213,7 +213,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			return 0.0;
 		}
 
-		logger.debug("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
+		statsLogger.info("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
 
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
 

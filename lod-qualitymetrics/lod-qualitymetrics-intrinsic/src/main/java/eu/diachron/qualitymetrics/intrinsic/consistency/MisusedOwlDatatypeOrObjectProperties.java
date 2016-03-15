@@ -113,16 +113,13 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	
 	public double metricValue() {
 		
-		logger.info("Number of Misused Datatype Properties: {}", this.misuseDatatypeProperties);
-		logger.info("Number of Misused Object Property : {}", this.misuseObjectProperties);
-
 		double metricValue = 1.0;
 		
 		double misused = this.misuseDatatypeProperties + this.misuseObjectProperties;
 		if (misused > 0.0) 
 			metricValue = 1.0 - (misused / this.validPredicates);
 		
-		logger.info("Metric Value: {}", metricValue);
+		statsLogger.info("Number of Misused Datatype Properties: {}, Number of Misused Object Property : {}, Metric Value: {}",this.misuseDatatypeProperties, this.misuseObjectProperties, metricValue);
 		return metricValue;
 	}
 
