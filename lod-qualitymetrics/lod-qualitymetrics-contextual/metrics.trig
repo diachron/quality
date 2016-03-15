@@ -17,3 +17,6 @@ _:FreshnessOfDataset a lmi:LuzzuMetricJavaImplementation ;
 _:TimelinessOfResource a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Timeliness Of Resource" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.timeliness.TimelinessOfResource" .
+	
+_:HumanReadableLabelling a lmi:LuzzuMetricJavaImplementation ;
+		lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.understandability.HumanReadableLabelling" .

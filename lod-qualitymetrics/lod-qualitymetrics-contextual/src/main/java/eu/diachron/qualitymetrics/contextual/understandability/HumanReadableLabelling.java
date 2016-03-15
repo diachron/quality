@@ -3,12 +3,11 @@
  */
 package eu.diachron.qualitymetrics.contextual.understandability;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
-import org.mapdb.HTreeMap;
+import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +21,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -38,11 +38,15 @@ public class HumanReadableLabelling implements QualityMetric{
 	
 	final static Logger logger = LoggerFactory.getLogger(HumanReadableLabelling.class);
 
-	private boolean computed = false;
-			
-	private HTreeMap<String, Integer> pEntities = MapDbFactory.createFilesystemDB().createHashMap("labelled-entities").make();
+
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+
+	private Set<String> entitiesWO = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	private Set<String> entitiesWith = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	private Set<String> entitiesUnknown = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString()); // have human readable label/description but don't know if it is 
+																										   // a described entity in the dataset - ie. with a type definition
 	
-	private List<Quad> _problemList = new ArrayList<Quad>();
+	private ReservoirSampler<Quad> problemSampler = new ReservoirSampler<Quad>(1000, false);
 	
 	private double value = 0.0d;
 	
@@ -63,46 +67,53 @@ public class HumanReadableLabelling implements QualityMetric{
 	
 	
 	/**
-	 * Each entity is checked for a Human Readable label <rdfs:label>.
+	 * Each entity is checked for a Human Readable label.
 	 * In this metric we are assuming that each entity has exactly 1 comment and/or label,
 	 * thus we are not checking for contradicting labeling or commenting of entities.
 	 */
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
-
+		
 		
 		if (quad.getSubject().isURI() && quad.getPredicate().getURI().equals(RDF.type.getURI())){
-			// we've got an instance!
-			if (!(pEntities.containsKey(quad.getSubject().getURI()))) { // an instance might have more than 1 type defined
-				pEntities.put(quad.getSubject().getURI(), 0);
+			String entity = quad.getSubject().getURI();
+			if (!entityInASet(entity)) entitiesWO.add(entity);
+			else {
+				if (entitiesUnknown.contains(entity)){
+					entitiesWith.add(entity);
+					entitiesUnknown.remove(entity);
+				}
 			}
 		}
 	
 		if (quad.getSubject().isURI() && (labelProperties.contains(quad.getPredicate().getURI()))){
-			// we'll check if the provider is cheating and is publishing empty string labels and comments
-			if (!(quad.getObject().getLiteralValue().equals(""))) pEntities.put(quad.getSubject().getURI(), 1);
+			String entity = quad.getSubject().getURI();
+			if (entitiesWO.contains(entity)){
+				entitiesWith.add(entity);
+				entitiesWO.remove(entity);
+			} else {
+				entitiesUnknown.add(entity);
+			}
+			
 		}
+	}
+	
+	
+	private boolean entityInASet(String entity){
+		return ( entitiesWO.contains(entity) || 
+				entitiesWith.contains(entity) ||
+				entitiesUnknown.contains(entity) );
 	}
 
 	
 	public double metricValue() {
-		if (!computed){
-			computed = true;
+		double entities = (entitiesWO.size() + entitiesWith.size());
+		double humanLabels = entitiesWith.size();
 			
-			double entities = 0.0;
-			double humanLabels = 0.0;
-			
-			for (String n : this.pEntities.keySet()){
-				entities+=1;
-				humanLabels += this.pEntities.get(n);
-				if (this.pEntities.get(n) == 0) this.createProblemQuad(n);
-			}
 
-			value = humanLabels/entities; // at most we should have 1 label for each entity
-			logger.info("Dataset: {} - Total # Human Readable Labels : {}; # Violated Entities : {};"
-					, EnvironmentProperties.getInstance().getDatasetURI(), humanLabels, entities); //TODO: these store in a seperate file
-
-		}
+		value = 1 - (humanLabels/entities); 	
+		statsLogger.info("Dataset: {} - Total # Human Readable Labels : {}; # Entities : {};"
+					, EnvironmentProperties.getInstance().getDatasetURI(), humanLabels, entities); 
 
 		return value;
 	}
@@ -113,17 +124,22 @@ public class HumanReadableLabelling implements QualityMetric{
 	}
 
 	
-	private void createProblemQuad(String resource){
-		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoHumanReadableLabel.asNode());
-		this._problemList.add(q);
+	private void createProblemQuads(){
+		for (String entity : entitiesWO){
+			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(entity).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoHumanReadableLabel.asNode());
+			Boolean isAdded = this.problemSampler.add(q);
+			if (!isAdded) q = null;
+		}
 	}
 	
 	public ProblemList<?> getQualityProblems() {
+		createProblemQuads();
 		ProblemList<Quad> pl = null;
 		try {
-			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<Quad>(this._problemList);
-			} else {
+			if(this.problemSampler != null && this.problemSampler.size() > 0) {
+				pl = new ProblemList<Quad>(this.problemSampler.getItems());
+			}
+			else {
 				pl = new ProblemList<Quad>();
 			}
 		} catch (ProblemListInitialisationException e) {
@@ -143,6 +159,7 @@ public class HumanReadableLabelling implements QualityMetric{
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
 	}
+	
 	
 
 }
