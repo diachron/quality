@@ -162,17 +162,6 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 						logger.info("Dereferencable resource {}.", httpResource.getUri());
 						
 						
-//						boolean isValid = ModelParser.snapshotParserForForwardDereference(httpResource, (Lang) null, httpResource.getUri()); 
-//						if (isValid){
-//							//ok
-//							logger.info("A description exists for resource {}.", httpResource.getUri());
-//
-//							totalDerefDataWithSub++;
-//						} else {
-//							//not ok
-//							this.createNotValidForwardLink(httpResource.getUri());
-//						}
-						
 						Model m = RDFDataMgr.loadModel(httpResource.getUri()); //load partial model
 						Resource r = m.createResource(httpResource.getUri());
 						List<Statement> stmtList = m.listStatements(r, (Property) null, (RDFNode) null).toList();

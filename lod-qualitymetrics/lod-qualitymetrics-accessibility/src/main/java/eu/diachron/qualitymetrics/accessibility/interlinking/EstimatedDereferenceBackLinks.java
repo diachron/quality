@@ -8,10 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.http.StatusLine;
-import org.apache.jena.atlas.logging.Log;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +29,10 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -212,113 +206,4 @@ public class EstimatedDereferenceBackLinks implements QualityMetric {
 		
 		this._problemList.add(m);
 	}
-	
-	private void createBackLinkViolation(String subjectURI, String resource){
-		Model m = ModelFactory.createDefaultModel();
-		
-		Resource subject = m.createResource(resource);
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.NoBackLink));
-		
-		RDFNode violatedTriple = Commons.generateRDFBlankNode();
-		m.add(new StatementImpl(violatedTriple.asResource(), RDF.subject, m.createResource(subjectURI)));
-		
-		m.add(new StatementImpl(subject, DQM.hasViolatingTriple, violatedTriple));
-
-		this._problemList.add(m);
-	}
-	
-	
-	// Private Methods for Dereferenceability Process
-		private boolean isDereferenceable(CachedHTTPResource httpResource){
-			if (httpResource.getDereferencabilityStatusCode() == null){
-				List<Integer> statusCode = this.getStatusCodes(httpResource.getStatusLines());
-				
-				if (httpResource.getUri().contains("#") && statusCode.contains(200)) httpResource.setDereferencabilityStatusCode(StatusCode.HASH);
-				else if (statusCode.contains(200)){
-					httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
-					if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
-					else {
-						if (statusCode.contains(301)) httpResource.setDereferencabilityStatusCode(StatusCode.SC301);
-						else if (statusCode.contains(302)) httpResource.setDereferencabilityStatusCode(StatusCode.SC302);
-						else if (statusCode.contains(307)) httpResource.setDereferencabilityStatusCode(StatusCode.SC307);
-					}
-				}
-				
-				if (has4xxCode(statusCode)) {
-					httpResource.setDereferencabilityStatusCode(StatusCode.SC4XX);
-				}
-				if (has5xxCode(statusCode)) {
-					httpResource.setDereferencabilityStatusCode(StatusCode.SC5XX);
-				}
-			} 					
-			
-			StatusCode scode = httpResource.getDereferencabilityStatusCode();
-			return this.mapDerefStatusCode(scode);
-			
-		}
-		
-		private List<Integer> getStatusCodes(List<StatusLine> statusLines){
-			ArrayList<Integer> codes = new ArrayList<Integer>();
-			
-			if(statusLines != null) {
-				synchronized(statusLines) {
-					for(StatusLine s : statusLines){
-						codes.add(s.getStatusCode());
-					}
-				}
-			}
-			
-			return codes;
-		}
-		
-		private boolean mapDerefStatusCode(StatusCode statusCode){
-			if(statusCode == null) {
-				return false;
-			} else {
-				switch(statusCode){
-					case SC303 : case HASH : return true;
-					default : return false;
-				}
-			}
-		}
-		
-		
-		private boolean has4xxCode(List<Integer> statusCode){
-			for (int i : statusCode) {
-				if ((i >= 400) && (i < 499))  return true; else continue;
-			}
-			return false;
-		}
-		
-		private boolean has5xxCode(List<Integer> statusCode){
-			for (int i : statusCode) {
-				if ((i >= 500) && (i < 599))  return true; else continue;
-			}
-			return false;
-		}
-		
-		// Private Method to check content type
-		private Model getMeaningfulData(CachedHTTPResource resource){
-			Model m = null;
-			if(resource != null && resource.getResponses() != null) {
-				for (SerialisableHttpResponse response : resource.getResponses()) {
-					if(response != null && response.getHeaders("Content-Type") != null) {
-						if (CommonDataStructures.ldContentTypes.contains(response.getHeaders("Content-Type"))) { 
-							m = this.tryRead(resource.getUri());
-						}
-					}
-				}
-			}
-			return m;
-		}
-		
-		private Model tryRead(String uri) {
-			Model m = ModelFactory.createDefaultModel();
-			try{
-				m = RDFDataMgr.loadModel(uri);
-			} catch (RiotException r) {
-				Log.debug("Resource could not be parsed:", r.getMessage());
-			}
-			return m;
-		}
 }

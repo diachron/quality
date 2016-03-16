@@ -6,25 +6,13 @@ package eu.diachron.qualitymetrics.accessibility.interlinking;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.apache.jena.atlas.logging.Log;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotException;
-import org.apache.jena.riot.WebContent;
 import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
-
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
@@ -32,13 +20,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
-import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
  * @author Jeremy Debattista
