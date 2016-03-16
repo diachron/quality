@@ -42,6 +42,7 @@ public class GenerateLODCategories {
 		while (it.hasNext()){
 			String[] arr = it.next();
 			m.add(m.createStatement(m.createResource(arr[0]), m.createProperty(":hasDomain"), m.createTypedLiteral(arr[1])));
+			m.add(m.createStatement(m.createResource(arr[0]), m.createProperty(":getFromLOV"), m.createTypedLiteral(true)));
 		}
 		System.out.println("Writing dump...");
 		File f = new File("categories.ttl");

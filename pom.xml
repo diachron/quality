@@ -307,5 +307,6 @@
 		<module>quality-vocabulary</module>
 		<module>lod-qualitymetrics</module>
 		<module>lod-utilities</module>
+		
 	</modules>
 </project>
