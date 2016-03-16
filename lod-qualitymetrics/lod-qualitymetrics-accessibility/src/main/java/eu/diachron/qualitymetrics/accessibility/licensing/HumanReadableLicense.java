@@ -20,6 +20,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.knownvocabs.DCAT;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -97,7 +98,7 @@ public class HumanReadableLicense implements QualityMetric {
 		Node predicate = quad.getPredicate();
 		Node object = quad.getObject();
 		
-		if (object.matches(VOID.Dataset.asNode())){
+		if ((object.matches(VOID.Dataset.asNode())) || (object.matches(DCAT.Dataset.asNode()))){
 			if (subject.isURI()){
 				if (subject.getURI().startsWith(this.baseURI)){
 					Node licence = ModelFactory.createDefaultModel().createResource().asNode();
