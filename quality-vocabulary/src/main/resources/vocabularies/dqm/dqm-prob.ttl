@@ -1,0 +1,494 @@
+@prefix daq:     <http://purl.org/eis/vocab/daq#> .
+@prefix dqm-prob:     <http://www.diachron-fp7.eu/dqm-prob#> .
+@prefix owl:	 <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfg:	 <http://www.w3.org/2004/03/trix/rdfg-1> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix qpro:     <http://purl.org/eis/vocab/qpro#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+
+### Dereferenceability	
+dqm-prob:SC200WithRDF
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 200 but returns an semantic content type" ;
+	rdfs:label "200 OK Status Code with meaningful content type" .
+
+dqm-prob:SC200WithoutRDF
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 200 but does not return a semantic content type" ;
+	rdfs:label "200 OK Status Code without meaningful content type" .
+
+dqm-prob:SC301MovedPermanently
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 301 Moved Permanently " ;
+	rdfs:label "301 Moved Permanently" .
+
+dqm-prob:SC302Found
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 302 Found" ;
+	rdfs:label "302 Found" .
+
+dqm-prob:SC307TemporaryRedirectory
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 307 Temporary Redirected" ;
+	rdfs:label "307 Temporary Redirected" .
+
+dqm-prob:SC3XXRedirection
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of a 3XX Redirection but not the recommended 303 See Other" ;
+	rdfs:label "3XX Redirection" .
+
+
+dqm-prob:SC4XXClientError
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 4XX Client Error" ;
+	rdfs:label "4XX Client Error" .
+
+
+dqm-prob:SC5XXServerError
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceability Status Code of 5XX Server Error" ;
+	rdfs:label "5XX Server Error" .
+
+dqm-prob:NotMeaningful
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a dereferenceable code as recommended by the LOD Principles (i.e. 303 See Other or Hash URI), but no meaningful data" ;
+	rdfs:label "No Meaningful Data Returned" .
+
+### RDF Accessibility
+
+dqm-prob:NoRDFAccessibility
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The dataset has no valid RDF Dump defined with the void:dataDump predicate" ;
+	rdfs:label "RDF Dump Availablility" .
+
+dqm-prob:InvalidDataDumpURI
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described URI is not a valid RDF data dump" ;
+	rdfs:label "Invalid RDF Dump" .
+
+
+### SPARQL EndPoint Accessibility
+dqm-prob:NoEndPointAccessibility
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The dataset has no valid SPARQL Endpoints defined with the void:sparqlEndpoint predicate" ;
+	rdfs:label "SPARQL EndPoint Availablility" .
+
+dqm-prob:InvalidSPARQLEndPoint
+	a	rdfs:Class;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described SPARQL endpoint is either invalid or not responding" ;
+	rdfs:label "RDF Dump Availablility" .
+
+### Misreported Content Type
+dqm-prob:MisreportedTypeException
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described Resource has a misreported content type"; 
+	rdfs:label "Misreported Content Type" .
+
+dqm-prob:expectedContentType
+	a	rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource ;
+	rdfs:range	rdfs:Resource .
+
+dqm-prob:actualContentType 
+	a	rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource ;
+	rdfs:range	rdfs:Resource .
+
+### Dereferenced Forward Links
+dqm-prob:NotValidForwardLink
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource do not resolve in a valid Dereferenced Forward-Link" ;
+	rdfs:label "Not Valid Deferenceable Forward-Link" .
+
+dqm-prob:ViolatingTriple
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource has a violating forward link dereferencable triple" ;
+	rdfs:label "Violating Triple" .
+
+dqm-prob:hasViolatingTriple
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource ;
+	rdfs:range	rdfs:Resource .
+
+
+### Machine Readable Licence
+
+dqm-prob:NoValidLicenceInDataset
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described RDF Document/Dataset has no valid licence in the voID description or in its metadata" ;
+	rdfs:label "No valid machine-readable licence" .
+
+
+dqm-prob:NotRecommendedLicenceInDataset
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described RDF Document/Dataset has a valid licence that is not recommended according to the voID W3C Standards" ;
+	rdfs:label "Not Recommended machine-readable licence" .
+
+### Machine Readable Licence
+
+dqm-prob:NoValidLicenceInDatasetForHumans
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described RDF Document/Dataset has no valid licence in the in its descriptive metadata" ;
+	rdfs:label "No valid human-readable licence" .
+
+
+dqm-prob:NotRecommendedLicenceInDatasetForHumans
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described RDF Document/Dataset has a valid licence that is not recommended according to the voID W3C Standards" ;
+	rdfs:label "Not Recommended human-readable licence" .
+
+## Correct URI Usage
+
+dqm-prob:IncorrectCoolURIUsage
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "An Incorrect URI style used for dataset. For datasets with more than 500K triples Slash URIs are suggested, whilst for less than 500K triples Hash URIs should be used" ;
+	rdfs:label "Incorrect Usage of URIs" .
+
+
+### Dereferenced Back Links
+dqm-prob:NotValidDereferenceableBackLink
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource do not resolve in a valid Dereferenced Link" ;
+	rdfs:label "Not Valid Deferenceable Backlink" .
+
+dqm-prob:NoBackLink
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The described resource does not provide a valid back link" ;
+	rdfs:label "No Backlink" .
+
+dqm-prob:hasNoBackLink
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource ;
+	rdfs:range	rdfs:Resource .
+
+
+### Links To External Data Providers
+
+dqm-prob:NoValidRDFDataForExternalLink
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The External Link provided does not give valid RDF" ;
+	rdfs:label "No valid RDF for External Link" .
+
+dqm-prob:LowPercentageOfValidPLDResources
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The External Link provide a low number of resources that provide RDF" ;
+	rdfs:label "Low Percentage of valid RDF resources in PLD" .
+
+
+### Short URIs
+
+dqm-prob:ParametarisedURI
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The resource URI includes a parameterised string." ;
+	rdfs:label "Parametarised URI" .
+
+dqm-prob:LongURI
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "According to W3C URI standards, a URI should not be longer than 80 characters including the schema. Long URIs are not recommended. Refer to CoolURIs (http://www.linkeddata.org/how-to-publish)" ;
+	rdfs:label "Long URI Exception" .
+
+
+### No Prolix RDF
+dqm-prob:UsageOfReification
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The resource is using RDF reification feature (type - rdf:Statement). The use of rdf:Statement or any other prolix feature is strongly discouraged." ;
+	rdfs:label "Usage of Reification in Dataset" .
+
+dqm-prob:UsageOfContainers
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The resource is using RDF containers feature (type - rdf:Container). The use of rdf:Container or any other prolix feature is strongly discouraged." ;
+	rdfs:label "Usage of Containers in Dataset" .
+
+
+dqm-prob:UsageOfCollections
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The resource is using RDF collections feature. The use of rdf:Alt, rdf:Bag, rdf:List, or any other prolix feature is strongly discouraged." ;
+	rdfs:label "Usage of Collections" .
+
+
+### DifferentSerialisationsMetric
+dqm-prob:NoMultipleFormatDefined
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The dataset must have more than one serialisation format defined using the void:feature predicate." ;
+	rdfs:label "No format defined for a dataset" .
+
+dqm-prob:IncorrectFormatDefined
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The defined format using the void:feature predicate is unknown. Check http://www.w3.org/ns/formats/." ;
+	rdfs:label "Incorrect defined format/feature" .
+
+### Undefined Classes and Properties
+
+dqm-prob:UndefinedClass
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The class used is undefined in the respective schema" ;
+	rdfs:label "Undefined Class" .
+
+dqm-prob:UndefinedProperty
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The property used is undefined in its respective schema." ;
+	rdfs:label "Undefined Property" .
+
+
+### Reuse of Terms and Vocabularies
+
+dqm-prob:UnusedSuggestedVocabulary
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The dataset did not use terms from the suggested vocabulary." ;
+	rdfs:label "Unused suggested vocabulary" .
+
+
+### Entities members of disjoint classes
+
+dqm-prob:MultiTypedResourceWithDisjointedClasses
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource is multi-typed with disjoined classes." ;
+	rdfs:label "Disjoined Classes Typing" .
+
+dqm-prob:violatingDisjoinedClass
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource;
+	rdfs:range	rdfs:Resource .
+
+
+### Entities members of disjoint classes
+
+dqm-prob:MisplacedClass
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource, used a defined class instead of a property, in the property's position." ;
+	rdfs:label "Misplaced Class" .
+
+dqm-prob:hasMisplacedClass
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource;
+	rdfs:range	rdfs:Resource .
+
+
+dqm-prob:MisplacedProperty
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource, used a defined property instead of a class, in an rdf:type statement object's position." ;
+	rdfs:label "Misplaced Property" .
+
+dqm-prob:hasMisplacedProperty
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource;
+	rdfs:range	rdfs:Resource .
+
+
+### Misuse of owl:DatatypeProperty or owl:ObjectProprty	
+dqm-prob:MisusedDatatypeProperty
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource used a datatype property instead of an Object Property." ;
+	rdfs:label "Misused Datatype Property" .
+
+dqm-prob:hasMisusedDatatypeProperty
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource;
+	rdfs:range	rdfs:Resource .
+
+
+dqm-prob:MisusedObjectProperty
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource used an object property instead of a datatype property." ;
+	rdfs:label "Misplaced Property" .
+
+dqm-prob:hasMisusedObjectProperty
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	rdfs:Resource;
+	rdfs:range	rdfs:Resource .
+
+
+### CurrencyOfDataset
+dqm-prob:MissingMetadataForCurrency
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate currency." ;
+	rdfs:label "Missing Metadata for Currency Calculation" .
+
+dqm-prob:MissingMetadataForFreshness
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate data freshness." ;
+	rdfs:label "Missing Metadata for Freshness Calculation" .
+
+dqm-prob:MissingMetadataForTimelinessOfResource
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred dataset have missing metadata properties thus cannot calculate data timeliness." ;
+	rdfs:label "Missing Metadata for  Calculation" .
+
+### Extensional Conciseness
+dqm-prob:ResourceReplica
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource has a replica resource with a different id." ;
+	rdfs:label "Resource Replica" .
+	
+### Deprecated Classes and Properties
+dqm-prob:DeprecatedClass
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The class used is deprecated in the respective schema" ;
+	rdfs:label "Deprecated Class" .
+
+dqm-prob:DeprecatedProperty
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The property used is deprecated in its respective schema." ;
+	rdfs:label "Deprecated Property" .
+	
+### Ontology Hijacking
+
+dqm-prob:OntologyHijackingException
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred resource hijacked an external authorative concept." ;
+	rdfs:label "Misplaced Property" .
+
+dqm-prob:hijackedTripleStatement
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	dqm-prob:OntologyHijackingException;
+	rdfs:range	rdf:Statement .
+
+### IncorrectDomainOrRange	
+dqm-prob:IncorrectRange
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The property's value has an incorrect data type" ;
+	rdfs:label "Undefined Class" .
+
+dqm-prob:IncorrectDomain
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The property should not be used within a resource of this type." ;
+	rdfs:label "Undefined Property" .
+	
+dqm-prob:UnknownType
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The resource type is unknown." ;
+	rdfs:label "Undefined Property" .
+	
+dqm-prob:problematicTriple
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	qpro:Exception;
+	rdfs:range	rdf:Statement .
+
+### IFP metric
+dqm-prob:InverseFunctionalPropertyViolation
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred predicate and objects are used in multiple subject resources which violates the IFP metric." ;
+	rdfs:label "Inverse Functional Property Violation" .
+	
+dqm-prob:violatedPredicate
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	dqm-prob:InverseFunctionalPropertyViolation;
+	rdfs:range	rdf:Resource .		
+
+dqm-prob:violatedObject
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	dqm-prob:InverseFunctionalPropertyViolation;
+	rdfs:range	rdf:Resource .
+	
+dqm-prob:violatingSubjects
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	dqm-prob:InverseFunctionalPropertyViolation;
+	rdfs:range	rdf:Bag .		
+
+### Understandability
+dqm-prob:NoHumanReadableLabel
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "Entities in this list have no Human Readable Label." ;
+	rdfs:label "No Human Readable Label" .	
+	
+dqm-prob:NoVocabularyIndication
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "Vocabularies in this list are not indicated by a respective voID description." ;
+	rdfs:label "No Vocabulary Indication" .	
+	
+dqm-prob:NoURIRegExPresence
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "No regular expression in the voID description." ;
+	rdfs:label "No Regular Expression" .	
+
+
+### Data Cube Population Completeness
+
+dqm-prob:MissingPopulationCoverage
+	a	rdfs:Class ;
+	rdfs:subClassOf qpro:Exception ;
+	rdfs:comment "The referred list of objects are not covered in the dataset." ;
+	rdfs:label "Missing Population Coverage" .
+	
+dqm-prob:forCodedProperty
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain	dqm-prob:MissingPopulationCoverage ;
+	rdfs:range	rdf:Resource .	
+	
+dqm-prob:missingPopulationCoverageList
+	a rdfs:Property ;
+	rdfs:subPropertyOf qpro:extraExceptionProperty ;
+	rdfs:domain dqm-prob:MissingPopulationCoverage ;
+	rdfs:range rdf:Bag .
