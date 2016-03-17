@@ -10,6 +10,7 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.EBIQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 
@@ -26,7 +27,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  */
 public class ObsoleteConceptsInOntology implements QualityMetric {
 	
-	private final Resource METRIC_URI = DQM.ObsoleteConceptsInOntologyMetric;
+	private final Resource METRIC_URI = EBIQM.ObsoleteConceptsInOntologyMetric;
 
 	private Set<Node> concepts = new HashSet<Node>();
 	private int deprConcept = 0;

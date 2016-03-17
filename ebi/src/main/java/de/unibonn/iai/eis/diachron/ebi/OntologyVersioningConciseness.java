@@ -8,6 +8,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.EBIQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 
@@ -21,7 +22,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  */
 public class OntologyVersioningConciseness implements QualityMetric {
 
-	private final Resource METRIC_URI = de.unibonn.iai.eis.diachron.semantics.DQM.OntologyVersionConcisenessMetric;
+	private final Resource METRIC_URI = EBIQM.OntologyVersionConcisenessMetric;
 	private HashMap<Node, Integer> ontologyInstances = new HashMap<Node, Integer>();
 	
 	private final String ONTOLOGY_VERSION = OWL.versionInfo.getURI();

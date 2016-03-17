@@ -9,6 +9,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.EBIQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -36,7 +37,7 @@ public class OBOFoundry implements QualityMetric{
         /**
          * Metric URI
          */
-        private final Resource METRIC_URI = DQM.OBOFoundryMetric;
+        private final Resource METRIC_URI = EBIQM.OBOFoundryMetric;
         /**
          * logger static object
          */

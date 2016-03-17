@@ -11,6 +11,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.OWL;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.EBIQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 
@@ -24,7 +25,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  */
 public class POBODefinitionUsage implements QualityMetric{
 
-	private final Resource METRIC_URI = DQM.POBODefinitionUsageMetric;
+	private final Resource METRIC_URI = EBIQM.POBODefinitionUsageMetric;
 	
 	private int entities = 0;
 	private Map<Node, Set<String>> defMap = new HashMap<Node, Set<String>>();
