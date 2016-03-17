@@ -577,6 +577,13 @@ dqm:TimelinessOfResourceMetric
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Assesses the difference between the last modified time of the original data source and the last modified time of the semantic web source, thereby indicating if the resource is outdated" ;
 	rdfs:label	"Timeliness of the resource metric" .
+	
+dqm:CurrencyOfDatasetMetric
+	a	rdfs:Class ;
+	rdfs:subClassOf	daq:Metric ; 
+	daq:expectedDataType xsd:double ;
+	rdfs:comment	"Assesses the freshness (currency) of the data, i.e. how fresh is the data when delivered to the user (or how old is the data). " ;
+	rdfs:label	"Currency of a Dataset" .
 
 dqm:hasTimelinessDimension
 	a rdfs:Property ;
@@ -595,6 +602,12 @@ dqm:hasTimelinessOfResourceMetric
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:TimelinessOfResourceMetric .
+	
+dqm:hasCurrencyOfDatasetMetric
+	a	rdfs:Property ;
+	rdfs:subPropertyOf	daq:hasMetric ;
+	rdfs:domain	dqm:Timeliness ;
+	rdfs:range	dqm:CurrencyOfDatasetMetric .
 			
 ### Representational Category	
 dqm:Representational
