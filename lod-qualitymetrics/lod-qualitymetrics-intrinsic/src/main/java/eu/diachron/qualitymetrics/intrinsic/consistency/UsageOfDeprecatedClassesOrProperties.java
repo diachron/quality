@@ -15,6 +15,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -49,14 +50,14 @@ public class UsageOfDeprecatedClassesOrProperties implements QualityMetric{
 		if (property.getURI().equals(RDF.type.getURI())){
 			if (VocabularyLoader.isDeprecatedTerm(object)) {
 				deprecatedTypes++;
-				Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.DeprecatedClass.asNode());
+				Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedClass.asNode());
 				this._problemList.add(q);
 			}
 			totalTypes++;
 		} else {
 			if (VocabularyLoader.isDeprecatedTerm(property)) {
 				deprecatedProperties++;
-				Quad q = new Quad(null, property, QPRO.exceptionDescription.asNode(), DQM.DeprecatedProperty.asNode());
+				Quad q = new Quad(null, property, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedProperty.asNode());
 				this._problemList.add(q);
 			}
 		}

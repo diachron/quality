@@ -20,6 +20,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.DCAT;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -151,7 +152,7 @@ public class HumanReadableLicense implements QualityMetric {
 			if (licence != null){
 				if (hasValidLicence(dataset,licence)) voidValidLicences++;
 			} else {
-				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
 				this._problemList.add(q);
 			}
 		}
@@ -187,12 +188,12 @@ public class HumanReadableLicense implements QualityMetric {
 	private boolean hasValidLicence(Node dataset, Node literalObject){
 		if (licenseModClassifier.isLicenseStatement(literalObject)) return true;
 		else if (licenseModClassifier.isNotRecommendedLicenseStatement(literalObject)){
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NotRecommendedLicenceInDatasetForHumans.asNode());
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDatasetForHumans.asNode());
 			this._problemList.add(q);
 			return true;
 		} 
 		else {
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDatasetForHumans.asNode());
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
 			this._problemList.add(q);
 			return false;
 		}

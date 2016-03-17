@@ -21,6 +21,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -133,7 +134,7 @@ public class Dereferenceability implements QualityMetric {
 						this.dereferencedURI++;
 						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());
 					} else {
-						this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
+						this.createProblemQuad(httpResource.getUri(), DQMPROB.NotMeaningful);
 						logger.trace("URI was dereferenced but response was not valid: {}", httpResource.getUri());
 					}
 				} else {
@@ -151,15 +152,15 @@ public class Dereferenceability implements QualityMetric {
 		StatusCode sc = httpResource.getDereferencabilityStatusCode();
 		
 		switch (sc){
-			case SC200 : if (ModelParser.hasRDFContent(httpResource)) this.createProblemQuad(httpResource.getUri(), DQM.SC200WithRDF); 
-						 else this.createProblemQuad(httpResource.getUri(), DQM.SC200WithoutRDF);
+			case SC200 : if (ModelParser.hasRDFContent(httpResource)) this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithRDF); 
+						 else this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithoutRDF);
 						 break;
-			case SC301 : this.createProblemQuad(httpResource.getUri(), DQM.SC301MovedPermanently); break;
-			case SC302 : this.createProblemQuad(httpResource.getUri(), DQM.SC302Found); break;
-			case SC307 : this.createProblemQuad(httpResource.getUri(), DQM.SC307TemporaryRedirectory); break;
-			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQM.SC3XXRedirection); break;
-			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQM.SC4XXClientError); break;
-			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQM.SC5XXServerError); break;
+			case SC301 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC301MovedPermanently); break;
+			case SC302 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC302Found); break;
+			case SC307 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC307TemporaryRedirectory); break;
+			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC3XXRedirection); break;
+			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC4XXClientError); break;
+			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC5XXServerError); break;
 			default	   : break;
 		}
 	}

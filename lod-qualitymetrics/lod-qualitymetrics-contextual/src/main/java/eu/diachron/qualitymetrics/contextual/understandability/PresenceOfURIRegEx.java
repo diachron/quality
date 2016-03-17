@@ -5,6 +5,7 @@ package eu.diachron.qualitymetrics.contextual.understandability;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -59,7 +61,7 @@ public class PresenceOfURIRegEx implements QualityMetric {
 
 	private void createProblemQuad(){
 		String baseURI = EnvironmentProperties.getInstance().getBaseURI();
-		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(baseURI).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoVocabularyIndication.asNode());
+		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(baseURI).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.NoVocabularyIndication.asNode());
 		this._problemList.add(q);
 	}
 	

@@ -39,7 +39,7 @@ public class DifferentSerialisationFormatsTest extends Assert {
 	
 	@Before
 	public void setUp(){
-		loader.loadDataSet("testdumps/eis.ttl");
+		loader.loadDataSet("/Users/jeremy/luzzu/quality-metadata/bfs.270a.info.nt.gz");
 		PropertyManager.getInstance().addToEnvironmentVars("baseURI", "http://eis.iai.uni-bonn.de/");
 		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "http://eis.iai.uni-bonn.de/");
 	}

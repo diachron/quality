@@ -18,6 +18,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -185,9 +186,9 @@ public class MisreportedContentType implements QualityMetric {
 		Model m = ModelFactory.createDefaultModel();
 		
 		Resource subject = m.createResource(resource);
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MisreportedTypeException));
-		m.add(new StatementImpl(subject, DQM.expectedContentType, m.createLiteral(expectedContentType)));
-		m.add(new StatementImpl(subject, DQM.actualContentType, m.createLiteral(actualContentType)));
+		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.MisreportedTypeException));
+		m.add(new StatementImpl(subject, DQMPROB.expectedContentType, m.createLiteral(expectedContentType)));
+		m.add(new StatementImpl(subject, DQMPROB.actualContentType, m.createLiteral(actualContentType)));
 		
 		this._problemList.add(m);
 	}

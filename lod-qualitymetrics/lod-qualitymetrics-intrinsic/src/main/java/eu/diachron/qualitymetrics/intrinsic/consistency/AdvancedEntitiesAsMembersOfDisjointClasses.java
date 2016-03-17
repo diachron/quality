@@ -33,6 +33,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -285,7 +286,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			Model m = ModelFactory.createDefaultModel();
 			
 			Resource subject = m.createResource(resource.toString());
-			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
+			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.MultiTypedResourceWithDisjointedClasses));
 			
 			while (rs.hasNext()){
 				QuerySolution qs = rs.next();
@@ -293,7 +294,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 				while(vars.hasNext()){
 					String s = vars.next();
 					RDFNode node = qs.get(s);
-					m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass,node));
+					m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass,node));
 				}
 			}
 

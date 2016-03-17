@@ -13,6 +13,7 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -69,13 +70,13 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 					// predicate should not be an owl:ObjectProperty
 					if (m.contains((m.asRDFNode(predicate)).asResource(), RDF.type, OWL.ObjectProperty)){
 						this.misuseObjectProperties++;
-						this.createProblemModel(subject, predicate, DQM.MisusedObjectProperty);
+						this.createProblemModel(subject, predicate, DQMPROB.MisusedObjectProperty);
 					}
 				} else if(object.isURI()){
 					// predicate should not be an owl:DataProperty
 					if (m.contains((m.asRDFNode(predicate)).asResource(), RDF.type, OWL.DatatypeProperty)){
 						this.misuseDatatypeProperties++;
-						this.createProblemModel(subject, predicate, DQM.MisusedDatatypeProperty);
+						this.createProblemModel(subject, predicate, DQMPROB.MisusedDatatypeProperty);
 					}
 				}
 			}
@@ -192,10 +193,10 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 			Resource subject = m.createResource(resource.toString());
 			m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
 			
-			if (type.equals(DQM.MisusedDatatypeProperty))
-				m.add(new StatementImpl(subject, DQM.hasMisusedDatatypeProperty, m.asRDFNode(property)));		
+			if (type.equals(DQMPROB.MisusedDatatypeProperty))
+				m.add(new StatementImpl(subject, DQMPROB.hasMisusedDatatypeProperty, m.asRDFNode(property)));		
 			else
-				m.add(new StatementImpl(subject, DQM.hasMisusedObjectProperty, m.asRDFNode(property)));		
+				m.add(new StatementImpl(subject, DQMPROB.hasMisusedObjectProperty, m.asRDFNode(property)));		
 			
 
 			return m;

@@ -6,6 +6,7 @@ import java.util.List;
 
 
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.SD;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -77,13 +79,13 @@ public class SPARQLAccessibility implements QualityMetric {
 					sparqlEndPoints++;
 				else
 				{
-					Quad q = new Quad(null, quad.getSubject() , QPRO.exceptionDescription.asNode(), DQM.InvalidSPARQLEndPoint.asNode());
+					Quad q = new Quad(null, quad.getSubject() , QPRO.exceptionDescription.asNode(), DQMPROB.InvalidSPARQLEndPoint.asNode());
 					problemList.add(q);
 				}
 				qexec.close();
 			} catch (QueryException e){
 				logger.error("Endpoint " + quad.getObject().toString() + " responded with : " + e.getMessage());
-				Quad q = new Quad(null, quad.getSubject() , QPRO.exceptionDescription.asNode(), DQM.InvalidSPARQLEndPoint.asNode());
+				Quad q = new Quad(null, quad.getSubject() , QPRO.exceptionDescription.asNode(), DQMPROB.InvalidSPARQLEndPoint.asNode());
 				problemList.add(q);
 			}
 			
@@ -109,7 +111,7 @@ public class SPARQLAccessibility implements QualityMetric {
 		if (this.metricValue() == 0){
 			String resource = EnvironmentProperties.getInstance().getBaseURI();
 			Resource subject = ModelFactory.createDefaultModel().createResource(resource);
-			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQM.NoEndPointAccessibility.asNode());
+			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQMPROB.NoEndPointAccessibility.asNode());
 			this.problemList.add(q);
 		}
 		

@@ -15,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -73,7 +74,7 @@ public class FreshnessOfDataset implements QualityMetric {
 			if ((currency > -1.0) && (volatility > -1.0)) {
 				maxFreshness = Math.max(0, (1 - (currency / volatility)));
 			} else {
-				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(key).asNode(), QPRO.exceptionDescription.asNode(), DQM.MissingMetadataForFreshness.asNode());
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(key).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.MissingMetadataForFreshness.asNode());
 				this._problemList.add(q);
 			}
 		}

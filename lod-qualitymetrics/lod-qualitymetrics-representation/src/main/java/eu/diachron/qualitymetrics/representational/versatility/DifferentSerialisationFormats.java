@@ -20,6 +20,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -105,7 +106,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 					this.datasetFeatures.put(datasetURI, features);
 				}
 				else {
-					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.IncorrectFormatDefined.asNode());
+					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.IncorrectFormatDefined.asNode());
 					this._problemList.add(new SerialisableQuad(q));
 				}
 			}
@@ -145,7 +146,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 		for(String dataset : this.datasetFeatures.keySet()){
 			List<String> features = this.datasetFeatures.get(dataset);
 			if (features.size() <= 1){
-				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(dataset).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoMultipleFormatDefined.asNode());
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(dataset).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.NoMultipleFormatDefined.asNode());
 				this._problemList.add(new SerialisableQuad(q));
 			}
 		}

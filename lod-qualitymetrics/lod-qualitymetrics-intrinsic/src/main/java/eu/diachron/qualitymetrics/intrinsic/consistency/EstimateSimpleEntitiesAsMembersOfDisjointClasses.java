@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -208,12 +210,12 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 			Model m = ModelFactory.createDefaultModel();
 			
 			Resource subject = m.createResource(resource.toString());
-			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
+			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.MultiTypedResourceWithDisjointedClasses));
 			
 			
-			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));	
+			m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass, m.asRDFNode(_class)));	
 			for(RDFNode s : _otherClasses){
-				m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, s));
+				m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass, s));
 			}
 
 

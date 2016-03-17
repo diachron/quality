@@ -15,6 +15,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -70,10 +71,10 @@ public class ShortURIs implements QualityMetric {
 						
 						String uri = subject.getURI();
 						if (uri.contains("?")){
-							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
+							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQMPROB.ParametarisedURI.asNode());
 							this._problemList.add(new SerialisableQuad(q));
 						} else if (uri.length() > 80){
-							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
+							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQMPROB.LongURI.asNode());
 							this._problemList.add(new SerialisableQuad(q));
 						} else {
 							shortURICount++;
@@ -91,10 +92,10 @@ public class ShortURIs implements QualityMetric {
 						
 						String uri = object.getURI();
 						if (uri.contains("?")){
-							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.ParametarisedURI.asNode());
+							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.ParametarisedURI.asNode());
 							this._problemList.add(new SerialisableQuad(q));
 						} else if (uri.length() > 80){
-							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.LongURI.asNode());
+							Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.LongURI.asNode());
 							this._problemList.add(new SerialisableQuad(q));
 						} else {
 							shortURICount++;

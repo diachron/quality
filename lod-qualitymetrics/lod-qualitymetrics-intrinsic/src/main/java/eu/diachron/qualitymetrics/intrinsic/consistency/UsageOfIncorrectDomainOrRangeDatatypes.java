@@ -30,6 +30,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -293,17 +294,17 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 	    	
 	    	Resource gen = Commons.generateURI();
 	    	if (type == 'd')
-	    		m.add(gen, RDF.type, DQM.IncorrectDomain);
+	    		m.add(gen, RDF.type, DQMPROB.IncorrectDomain);
 	    	if (type == 'r')
-	    		m.add(gen, RDF.type, DQM.IncorrectRange);
+	    		m.add(gen, RDF.type, DQMPROB.IncorrectRange);
 	    	if (type == 'x')
-	    		m.add(gen, RDF.type, DQM.IncorrectDomain);
+	    		m.add(gen, RDF.type, DQMPROB.IncorrectDomain);
 	    	if (type == 'u')
-	    		m.add(gen, RDF.type, DQM.IncorrectRange);
+	    		m.add(gen, RDF.type, DQMPROB.IncorrectRange);
 
 	    	
 	    	Resource anon = m.createResource(AnonId.create());
-	    	m.add(gen, DQM.problematicTriple, anon);
+	    	m.add(gen, DQMPROB.problematicTriple, anon);
 	    	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
 	    	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
 	    	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));

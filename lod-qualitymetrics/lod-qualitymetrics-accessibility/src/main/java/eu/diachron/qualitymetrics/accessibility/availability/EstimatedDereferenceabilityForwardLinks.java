@@ -25,6 +25,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -189,7 +190,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		Model m = ModelFactory.createDefaultModel();
 		
 		Resource subject = m.createResource(resource);
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.NotValidForwardLink));
+		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.NotValidForwardLink));
 		
 		this._problemList.add(m);
 	}
@@ -198,7 +199,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		Model m = ModelFactory.createDefaultModel();
 		
 		Resource subject = m.createResource(resource);
-		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.ViolatingTriple));
+		m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.ViolatingTriple));
 		
 		RDFNode violatedTriple = Commons.generateRDFBlankNode();
 		m.add(new StatementImpl(violatedTriple.asResource(), RDF.type, RDF.Statement));
@@ -206,7 +207,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 		m.add(new StatementImpl(violatedTriple.asResource(), RDF.predicate, stmt.getPredicate()));
 		m.add(new StatementImpl(violatedTriple.asResource(), RDF.object, stmt.getObject()));
 		
-		m.add(new StatementImpl(subject, DQM.hasViolatingTriple, violatedTriple));
+		m.add(new StatementImpl(subject, DQMPROB.hasViolatingTriple, violatedTriple));
 
 		this._problemList.add(m);
 	}

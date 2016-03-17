@@ -21,6 +21,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -29,7 +30,6 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.CommonDataStructures;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
@@ -234,7 +234,7 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 					curUrlResult.isDeref = true;
 					if(this.is200AnRDF(httpResource)) { 
 						curUrlResult.isRdfXml = true;
-					} else this.createProblemQuad(httpResource.getUri(), DQM.NotMeaningful);
+					} else this.createProblemQuad(httpResource.getUri(), DQMPROB.NotMeaningful);
 				} else if (httpResource.getDereferencabilityStatusCode() == StatusCode.SC200) {
 					curUrlResult.isDeref = true;
 					// Check if the resource contains RDF on XML
@@ -260,29 +260,29 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 				else {
 					if (statusCode.contains(301)) { 
 						httpResource.setDereferencabilityStatusCode(StatusCode.SC301);
-						this.createProblemQuad(httpResource.getUri(), DQM.SC301MovedPermanently);
+						this.createProblemQuad(httpResource.getUri(), DQMPROB.SC301MovedPermanently);
 					}
 					else if (statusCode.contains(302)){
 						httpResource.setDereferencabilityStatusCode(StatusCode.SC302);
-						this.createProblemQuad(httpResource.getUri(), DQM.SC302Found);
+						this.createProblemQuad(httpResource.getUri(), DQMPROB.SC302Found);
 					}
 					else if (statusCode.contains(307)) {
 						httpResource.setDereferencabilityStatusCode(StatusCode.SC307);
-						this.createProblemQuad(httpResource.getUri(), DQM.SC307TemporaryRedirectory);
+						this.createProblemQuad(httpResource.getUri(), DQMPROB.SC307TemporaryRedirectory);
 					}
 					else {
-						if (hasBad3xxCode(statusCode)) this.createProblemQuad(httpResource.getUri(), DQM.SC3XXRedirection);
+						if (hasBad3xxCode(statusCode)) this.createProblemQuad(httpResource.getUri(), DQMPROB.SC3XXRedirection);
 					}
 				}
 			}
 			
 			if (has4xxCode(statusCode)) {
 				httpResource.setDereferencabilityStatusCode(StatusCode.SC4XX);
-				this.createProblemQuad(httpResource.getUri(), DQM.SC4XXClientError);
+				this.createProblemQuad(httpResource.getUri(), DQMPROB.SC4XXClientError);
 			}
 			if (has5xxCode(statusCode)) {
 				httpResource.setDereferencabilityStatusCode(StatusCode.SC5XX);
-				this.createProblemQuad(httpResource.getUri(), DQM.SC5XXServerError);
+				this.createProblemQuad(httpResource.getUri(), DQMPROB.SC5XXServerError);
 			}
 		} 					
 		
@@ -325,19 +325,19 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 						if (response.getHeaders("Content-Type").equals(WebContent.contentTypeTextPlain)){
 							Model m = this.tryRead(resource.getUri());
 							if (m != null && m.size() == 0){
-								this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
+								this.createProblemQuad(resource.getUri(), DQMPROB.SC200WithoutRDF);
 								resource.setContainsRDF(false);
 								return false;
 							}
 						}
-						this.createProblemQuad(resource.getUri(), DQM.SC200WithRDF);
+						this.createProblemQuad(resource.getUri(), DQMPROB.SC200WithRDF);
 						resource.setContainsRDF(true);
 						return true;
 					}
 				}
 			}
 		}
-		this.createProblemQuad(resource.getUri(), DQM.SC200WithoutRDF);
+		this.createProblemQuad(resource.getUri(), DQMPROB.SC200WithoutRDF);
 		resource.setContainsRDF(false);
 		return false;
 	}

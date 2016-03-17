@@ -21,6 +21,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -126,7 +127,7 @@ public class HumanReadableLabelling implements QualityMetric{
 	
 	private void createProblemQuads(){
 		for (String entity : entitiesWO){
-			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(entity).asNode(), QPRO.exceptionDescription.asNode(), DQM.NoHumanReadableLabel.asNode());
+			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(entity).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.NoHumanReadableLabel.asNode());
 			Boolean isAdded = this.problemSampler.add(q);
 			if (!isAdded) q = null;
 		}

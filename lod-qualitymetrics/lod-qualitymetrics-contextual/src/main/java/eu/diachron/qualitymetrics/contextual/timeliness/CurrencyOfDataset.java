@@ -15,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -70,7 +71,7 @@ public class CurrencyOfDataset implements QualityMetric{
 				totalOk++;
 			} else {
 				avgSum = 0.0;
-				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(key).asNode(), QPRO.exceptionDescription.asNode(), DQM.MissingMetadataForCurrency.asNode());
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(key).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.MissingMetadataForCurrency.asNode());
 				this._problemList.add(q);
 			}
 		}

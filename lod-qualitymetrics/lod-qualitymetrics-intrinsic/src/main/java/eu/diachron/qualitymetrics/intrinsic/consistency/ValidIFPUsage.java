@@ -17,6 +17,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -182,21 +183,21 @@ public class ValidIFPUsage implements QualityMetric{
 			
 			Resource problemURI = t.getProblemURI();
 			
-			if (!(m.contains(problemURI, RDF.type, DQM.InverseFunctionalPropertyViolation))){
-				m.add(problemURI, RDF.type, DQM.InverseFunctionalPropertyViolation);
-				m.add(problemURI, DQM.violatedPredicate, Commons.asRDFNode(q.getPredicate()));
-				m.add(problemURI, DQM.violatedObject, Commons.asRDFNode(q.getObject()));
+			if (!(m.contains(problemURI, RDF.type, DQMPROB.InverseFunctionalPropertyViolation))){
+				m.add(problemURI, RDF.type, DQMPROB.InverseFunctionalPropertyViolation);
+				m.add(problemURI, DQMPROB.violatedPredicate, Commons.asRDFNode(q.getPredicate()));
+				m.add(problemURI, DQMPROB.violatedObject, Commons.asRDFNode(q.getObject()));
 				
 				bag = m.createBag();
 				bag.add(t.getSubject());
-				m.add(problemURI, DQM.violatingSubjects, bag);
+				m.add(problemURI, DQMPROB.violatingSubjects, bag);
 			}
-			Resource bagURI = m.listObjectsOfProperty(problemURI, DQM.violatingSubjects).next().asResource();
+			Resource bagURI = m.listObjectsOfProperty(problemURI, DQMPROB.violatingSubjects).next().asResource();
 			bag = m.getBag(bagURI);
-			m.remove(problemURI, DQM.violatingSubjects, bag);
+			m.remove(problemURI, DQMPROB.violatingSubjects, bag);
 				
 			bag.add(Commons.asRDFNode(q.getSubject()));
-			m.add(problemURI, DQM.violatingSubjects, bag);
+			m.add(problemURI, DQMPROB.violatingSubjects, bag);
 			
 			return m;
 		}

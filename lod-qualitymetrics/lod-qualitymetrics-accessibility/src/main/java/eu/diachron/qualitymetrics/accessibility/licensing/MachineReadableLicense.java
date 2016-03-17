@@ -18,6 +18,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.Pair;
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -137,7 +138,7 @@ public class MachineReadableLicense implements QualityMetric {
 			if (licence != null){
 				if (hasValidLicence(dataset,licence)) voidValidLicences++;
 			} else {
-				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
+				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDataset.asNode());
 				this._problemList.add(q);
 			}
 		}
@@ -174,11 +175,11 @@ public class MachineReadableLicense implements QualityMetric {
 	private boolean hasValidLicence(Node dataset, Node licence){
 		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return true;
 		else if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(licence)){
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NotRecommendedLicenceInDataset.asNode());
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDataset.asNode());
 			this._problemList.add(q);
 			return true;
 		} else {
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQM.NoValidLicenceInDataset.asNode());
+			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDataset.asNode());
 			this._problemList.add(q);
 		}
 		return false;

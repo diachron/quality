@@ -25,6 +25,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -257,11 +258,11 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 			Model m = ModelFactory.createDefaultModel();
 			
 			Resource subject = m.createResource(resource.toString());
-			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQM.MultiTypedResourceWithDisjointedClasses));
+			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.MultiTypedResourceWithDisjointedClasses));
 			
 			
-			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_class)));		
-			m.add(new StatementImpl(subject, DQM.violatingDisjoinedClass, m.asRDFNode(_otherClass)));
+			m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass, m.asRDFNode(_class)));		
+			m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass, m.asRDFNode(_otherClass)));
 
 
 			return m;

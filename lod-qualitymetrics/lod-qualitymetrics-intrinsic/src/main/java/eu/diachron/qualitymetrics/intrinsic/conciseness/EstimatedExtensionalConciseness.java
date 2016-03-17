@@ -13,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.RLBSBloomFilter;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -97,7 +98,7 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 					this.estimatedDuplInstances++;
 					logger.debug("Duplicate instance definition detected, subject URI: {}", this.currentSubjectURI);
 					
-					Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(this.currentSubjectURI).asNode(), QPRO.exceptionDescription.asNode(), DQM.ResourceReplica.asNode());
+					Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(this.currentSubjectURI).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.ResourceReplica.asNode());
 					this.problemList.add(q);
 				}
 			}

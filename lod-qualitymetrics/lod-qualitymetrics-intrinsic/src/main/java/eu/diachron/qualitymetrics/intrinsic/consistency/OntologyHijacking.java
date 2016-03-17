@@ -2,6 +2,7 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -260,10 +262,10 @@ public class OntologyHijacking implements QualityMetric{
 	        	Model m = ModelFactory.createDefaultModel();
 	        	
 	        	Resource gen = Commons.generateURI();
-	        	m.add(gen, RDF.type, DQM.OntologyHijackingException);
+	        	m.add(gen, RDF.type, DQMPROB.OntologyHijackingException);
 	        	
 	        	Resource anon = m.createResource(AnonId.create());
-	        	m.add(gen, DQM.hijackedTripleStatement, anon);
+	        	m.add(gen, DQMPROB.hijackedTripleStatement, anon);
 	        	m.add(anon, RDF.subject, Commons.asRDFNode(q.getSubject()));
 	        	m.add(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate()));
 	        	m.add(anon, RDF.object, Commons.asRDFNode(q.getObject()));

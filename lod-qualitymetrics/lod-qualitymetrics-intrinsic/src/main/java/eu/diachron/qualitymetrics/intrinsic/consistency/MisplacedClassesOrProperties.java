@@ -17,6 +17,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -68,12 +69,12 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 		if (seenProperties.containsKey(predicate.toString())){
 			if (!(seenProperties.get(predicate.toString()))){
 				this.misplacedPropertiesCount++;
-				this.createProblemModel(quad.getSubject(), predicate, DQM.MisplacedClass);
+				this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
 			}
 		} else {
 			if ((VocabularyLoader.isClass(predicate)) && (VocabularyLoader.checkTerm(predicate))){
 				this.misplacedPropertiesCount++;
-				this.createProblemModel(quad.getSubject(), predicate, DQM.MisplacedClass);
+				this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
 				seenProperties.put(predicate.toString(), false);
 			}
 			seenProperties.put(predicate.toString(), true);
@@ -86,12 +87,12 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 			if (seenClasses.containsKey(object.toString())){
 				if (!(seenClasses.get(object.toString()))){
 					this.misplacedClassesCount++;
-					this.createProblemModel(quad.getSubject(), object, DQM.MisplacedProperty);
+					this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
 				}
 			} else {
 				if (VocabularyLoader.isProperty(object)){
 					this.misplacedClassesCount++;
-					this.createProblemModel(quad.getSubject(), object, DQM.MisplacedProperty);
+					this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
 					seenClasses.put(object.toString(), false);
 				}
 				seenClasses.put(object.toString(), true);
@@ -209,10 +210,10 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 			Resource subject = m.createResource(resource.toString());
 			m.add(new StatementImpl(subject, QPRO.exceptionDescription, type));
 			
-			if (type.equals(DQM.MisplacedClass))
-				m.add(new StatementImpl(subject, DQM.hasMisplacedClass, m.asRDFNode(classOrProperty)));		
+			if (type.equals(DQMPROB.MisplacedClass))
+				m.add(new StatementImpl(subject, DQMPROB.hasMisplacedClass, m.asRDFNode(classOrProperty)));		
 			else
-				m.add(new StatementImpl(subject, DQM.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
+				m.add(new StatementImpl(subject, DQMPROB.hasMisplacedProperty, m.asRDFNode(classOrProperty)));		
 			
 
 			return m;

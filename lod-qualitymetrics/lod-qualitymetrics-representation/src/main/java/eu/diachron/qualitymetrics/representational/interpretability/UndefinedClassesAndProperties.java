@@ -17,6 +17,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -69,7 +70,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 					
 					if (!defined){
 						this.undefinedClasses++;
-						Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQM.UndefinedClass.asNode());
+						Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.UndefinedClass.asNode());
 						this._problemList.add(new SerialisableQuad(q));
 					}
 				}
@@ -94,7 +95,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 
 				if (!defined){
 					this.undefinedProperties++;
-					Quad q = new Quad(null, predicate, QPRO.exceptionDescription.asNode(), DQM.UndefinedProperty.asNode());
+					Quad q = new Quad(null, predicate, QPRO.exceptionDescription.asNode(), DQMPROB.UndefinedProperty.asNode());
 					this._problemList.add(new SerialisableQuad(q));
 				}
 			}

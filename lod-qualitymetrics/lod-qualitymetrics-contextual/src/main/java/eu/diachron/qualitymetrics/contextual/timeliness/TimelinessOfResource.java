@@ -13,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
@@ -113,7 +114,7 @@ public class TimelinessOfResource implements QualityMetric {
 			return (((double)accuValidTimeDiffs)/((double)countTotalAccountedSubjects));
 		} else {
 			logger.trace("Timeliness of the Resource could not be calculated. Insufficient information");
-			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), QPRO.exceptionDescription.asNode(), DQM.MissingMetadataForTimelinessOfResource.asNode());
+			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.MissingMetadataForTimelinessOfResource.asNode());
 			this._problemList.add(q);
 			return 0; //If insufficient information, return 0 - lowest possible
 		}
