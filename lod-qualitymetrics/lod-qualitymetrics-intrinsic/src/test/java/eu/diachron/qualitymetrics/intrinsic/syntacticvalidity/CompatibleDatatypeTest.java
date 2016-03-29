@@ -3,6 +3,9 @@
  */
 package eu.diachron.qualitymetrics.intrinsic.syntacticvalidity;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.After;
@@ -10,8 +13,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -27,6 +33,8 @@ public class CompatibleDatatypeTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 		loader.loadDataSet("testdumps/SampleInput_CompatibleDatatype.ttl");
+		//		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/21-chronik.ttl");
+
 	}
 	
 	@After
@@ -52,4 +60,19 @@ public class CompatibleDatatypeTest extends Assert {
 		// 11 / 16
 		assertEquals(0.6875,metric.metricValue(), 0.0001);
 	}	
+	
+	@Test
+	public void problemReportTest() throws IOException{
+		for(Quad q : loader.getStreamingQuads()){
+			metric.compute(q);
+		}
+		metric.metricValue();
+		
+		ProblemList<?> pl = metric.getQualityProblems();
+		QualityReport qr = new QualityReport();
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+		
+		plModel.write(new FileWriter(new File("/Users/jeremy/Desktop/pr.ttl")), "TURTLE");
+	}
 }

@@ -58,7 +58,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	
 	
 	public void compute(Quad quad) {
-//		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Assessing {}", quad.asTriple());
 
 		Node predicate = quad.getPredicate(); // retrieve predicate
 		Node object = quad.getObject(); // retrieve object
@@ -72,30 +72,34 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 				this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
 			}
 		} else {
-			if ((VocabularyLoader.isClass(predicate)) && (VocabularyLoader.checkTerm(predicate))){
-				this.misplacedPropertiesCount++;
-				this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
-				seenProperties.put(predicate.toString(), false);
+			if(VocabularyLoader.checkTerm(predicate)){ //if the predicate does not exist, then do not count it as misplaced
+				if ((VocabularyLoader.isClass(predicate))){
+					this.misplacedPropertiesCount++;
+					this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
+					seenProperties.put(predicate.toString(), false);
+				}
+				seenProperties.put(predicate.toString(), true);
 			}
-			seenProperties.put(predicate.toString(), true);
 		}
 		
 		//checking if properties are found in the object position
-		if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI())) && (VocabularyLoader.checkTerm(object))){
-//			logger.info("Checking {} for misplaced class", object.getURI());
-			this.totalClassesCount++;
-			if (seenClasses.containsKey(object.toString())){
-				if (!(seenClasses.get(object.toString()))){
-					this.misplacedClassesCount++;
-					this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
+		if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI()))){
+			if (VocabularyLoader.checkTerm(object)){
+				logger.info("Checking {} for misplaced class", object.getURI());
+				this.totalClassesCount++;
+				if (seenClasses.containsKey(object.toString())){
+					if (!(seenClasses.get(object.toString()))){
+						this.misplacedClassesCount++;
+						this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
+					}
+				} else {
+					if (VocabularyLoader.isProperty(object)){
+						this.misplacedClassesCount++;
+						this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
+						seenClasses.put(object.toString(), false);
+					}
+					seenClasses.put(object.toString(), true);
 				}
-			} else {
-				if (VocabularyLoader.isProperty(object)){
-					this.misplacedClassesCount++;
-					this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
-					seenClasses.put(object.toString(), false);
-				}
-				seenClasses.put(object.toString(), true);
 			}
 		}
 	}
@@ -132,11 +136,11 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 
 		double metricValue = 1.0;
 		
-		double misplaced = this.misplacedPropertiesCount + this.misplacedPropertiesCount;
+		double misplaced = this.misplacedClassesCount + this.misplacedPropertiesCount;
 		if (misplaced > 0.0) 
 			metricValue = 1.0 - (misplaced / (this.totalPropertiesCount + this.totalClassesCount));
 		
-		statsLogger.info("Number of Misplaced Classes: {}; Number of Misplaced Properties: {}", this.misplacedClassesCount , this.misplacedPropertiesCount);
+		statsLogger.info("Number of Misplaced Classes: {}; Number of Misplaced Properties: {}; Metric Value: {}", this.misplacedClassesCount , this.misplacedPropertiesCount, metricValue);
 
 		return metricValue;
 	}

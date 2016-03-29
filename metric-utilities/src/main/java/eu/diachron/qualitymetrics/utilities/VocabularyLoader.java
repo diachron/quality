@@ -3,13 +3,14 @@
  */
 package eu.diachron.qualitymetrics.utilities;
 
- import java.io.StringReader;
+import java.io.StringReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -18,17 +19,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.collections4.map.LRUMap;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.mapdb.DB;
-import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
-
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.ontology.OntClass;
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntProperty;
+import com.hp.hpl.jena.ontology.OntResource;
+import com.hp.hpl.jena.ontology.UnionClass;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -45,7 +47,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.vocabulary.XSD;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -126,8 +127,9 @@ public class VocabularyLoader {
 		knownDatasets.put("http://www.w3.org/2004/03/trix/rdfg-1/","rdfg.rdf");
 		knownDatasets.put("http://schema.org/", "schema.rdf"); //added schema.org since it does not allow content negotiation
 	}
-
 	
+//	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+
 	/**
 	 * Checks if a term (Class or Property) exists in a vocabulary
 	 * 
@@ -148,7 +150,8 @@ public class VocabularyLoader {
 	private static void loadNStoDataset(String ns){
 		if (knownDatasets.containsKey(ns)){
 			//String filepath = VocabularyLoader.class.getClassLoader().getResource("vocabs/"+knownDatasets.get(ns)).getPath();
-			Model m = RDFDataMgr.loadModel("vocabs/" + knownDatasets.get(ns));
+			Model m = ModelFactory.createOntologyModel().read("vocabs/" + knownDatasets.get(ns));
+			//Model m = RDFDataMgr.loadModel("vocabs/" + knownDatasets.get(ns));
 			dataset.addNamedModel(ns, m);
 		} else {
 			//download and store in cache
@@ -156,7 +159,7 @@ public class VocabularyLoader {
 				try{
 					CachedVocabulary cv = (CachedVocabulary) dcm.getFromCache(DiachronCacheManager.VOCABULARY_CACHE, ns);
 					StringReader reader = new StringReader(cv.getTextualContent());
-					Model m = ModelFactory.createDefaultModel();
+					Model m = ModelFactory.createOntologyModel();
 					m.read(reader, ns, cv.getLanguage());
 					dataset.addNamedModel(ns, m);
 				}catch (ClassCastException cce){
@@ -177,7 +180,8 @@ public class VocabularyLoader {
 			final Future<Model> handler = executor.submit(new Callable<Model>() {
 			    @Override
 			    public Model call() throws Exception {
-			    	Model m = RDFDataMgr.loadModel(ns,Lang.RDFXML);
+			    	logger.info("Loading {}", ns);
+			    	Model m = ModelFactory.createOntologyModel().read(ns, Lang.RDFXML.getName());
 			    	return m;
 			    }
 			});
@@ -195,27 +199,36 @@ public class VocabularyLoader {
 				cv.setTextualContent(writer.toString());
 				
 				dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
-			} catch (TimeoutException e) {
+			} catch (Exception e)  {
+				logger.error("Vocabulary {} could not be accessed.",ns);
 				handler.cancel(true);
-			}
+			} 
 		} catch (Exception e){
 			logger.error("Vocabulary {} could not be accessed.",ns);
 //			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
 		}
 	}
 	
-	private static Boolean termExists(String ns, Node term){
-		Model m = dataset.getNamedModel(ns);
-		
-		if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
-			return true;
-		}
-		
-		if (term.isURI()) {
-			Resource r = m.createResource(term.getURI());
-			return m.containsResource(r);
-		}
-		return null;
+	
+    private static Map<String, Boolean> termsExists = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Boolean termExists(String ns, Node term){
+    	if (termsExists.containsKey(term.getURI())){
+    		return termsExists.get(term.getURI());
+    	} else {
+			Model m = dataset.getNamedModel(ns);
+			
+			if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
+				termsExists.put(term.getURI(),true);
+				return true;
+			}
+			
+			if (term.isURI()) {
+				Resource r = m.createResource(term.getURI());
+				termsExists.put(term.getURI(), m.containsResource(r));
+				return termsExists.get(term.getURI());
+			}
+			return null;
+    	}
 	}
 	
 	public static void clearDataset(){
@@ -235,22 +248,56 @@ public class VocabularyLoader {
 		return dataset.getNamedModel(ns);
 	}
 	
+    private static Map<String, Boolean> isPropertyMap = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
 	public static boolean isProperty(Node term){
 		String ns = term.getNameSpace();
-		Model m = getModelForVocabulary(ns);
 		
-		return (m.contains(m.createResource(term.getURI()), RDF.type, RDF.Property) 
-				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.DatatypeProperty)
-				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.ObjectProperty)
-				|| m.contains(m.createResource(term.getURI()), RDF.type, OWL.OntologyProperty));
+		
+		if (!isPropertyMap.containsKey(term.getURI())){
+			OntModel m = (OntModel) getModelForVocabulary(ns);
+			isPropertyMap.put(term.getURI(),  
+					((m.getDatatypeProperty(term.getURI()) != null) ||
+					(m.getObjectProperty(term.getURI()) != null) ||
+					(m.getOntProperty(term.getURI()) != null)));
+		}
+		
+		return isPropertyMap.get(term.getURI());
 	}
 	
+    private static Map<String, Boolean> objectProperties = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+	public static boolean isObjectProperty(Node term){
+		String ns = term.getNameSpace();
+		
+		if (!objectProperties.containsKey(term.getURI())){
+			OntModel m = (OntModel) getModelForVocabulary(ns);
+			objectProperties.put(term.getURI(), (m.getObjectProperty(term.getURI()) != null));
+		}
+		
+		return objectProperties.get(term.getURI());
+	}
+	
+    private static Map<String, Boolean> datatypeProperties = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+	public static boolean isDatatypeProperty(Node term){
+		String ns = term.getNameSpace();
+		
+		if (!datatypeProperties.containsKey(term.getURI())){
+			OntModel m = (OntModel) getModelForVocabulary(ns);
+			datatypeProperties.put(term.getURI(), (m.getDatatypeProperty(term.getURI()) != null));
+		}
+		
+		return datatypeProperties.get(term.getURI());
+	}
+	
+    private static Map<String, Boolean> isClassMap = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
 	public static boolean isClass(Node term){
 		String ns = term.getNameSpace();
 		
-		Model m = getModelForVocabulary(ns);
+		if (!isClassMap.containsKey(term.getURI())){
+			OntModel m = (OntModel) getModelForVocabulary(ns);
+			isClassMap.put(term.getURI(),  (m.getOntClass(term.getURI()) != null));
+		}
 		
-		return (m.contains(m.createResource(term.getURI()), RDF.type, RDFS.Class) || m.contains(m.createResource(term.getURI()), RDF.type, OWL.Class)) ;
+		return isClassMap.get(term.getURI());
 	}
 	
 	
@@ -261,17 +308,15 @@ public class VocabularyLoader {
         }
 	};
 	
-	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-	private static HTreeMap<String, Boolean> checkedDeprecatedTerm = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
-			
+	//private static HTreeMap<String, Boolean> checkedDeprecatedTerm = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+    private static Map<String, Boolean> checkedDeprecatedTerm = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
 	public static boolean isDeprecatedTerm(Node term){
 		if (checkedDeprecatedTerm.containsKey(term.getURI())) return checkedDeprecatedTerm.get(term.getURI());
 		
 		String ns = term.getNameSpace();
 		
 		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		Model m = dataset.getNamedModel(ns);
-		
+		Model m = (OntModel) dataset.getNamedModel(ns);
 		Resource r = Commons.asRDFNode(term).asResource();
 		
 		boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
@@ -283,12 +328,21 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		Model m = dataset.getNamedModel(ns);
+		OntModel m = (OntModel) dataset.getNamedModel(ns);
 		
-		Resource s = Commons.asRDFNode(term).asResource();
+		Set<RDFNode> set = new HashSet<RDFNode>();
+		OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
+		if (op != null){
+			List<? extends OntResource> domains = op.listDomain().toList();
+			for (OntResource d : domains){
+				if (d.asClass().isUnionClass()){
+					UnionClass uc = d.asClass().asUnionClass();
+					set.addAll(uc.getOperands().asJavaList());
+				}
+				else set.add(d.asResource());
+			}
+		}
 		
-		Set<RDFNode> set = m.listObjectsOfProperty(s, RDFS.domain).toSet();
-//		set.addAll(inferParent(term,m,true));
 		return set;
 	}
 	
@@ -296,12 +350,21 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		Model m = dataset.getNamedModel(ns);
+		OntModel m = (OntModel) dataset.getNamedModel(ns);
 		
-		Resource s = Commons.asRDFNode(term).asResource();
+		Set<RDFNode> set = new HashSet<RDFNode>();
+		OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
 		
-		Set<RDFNode> set = m.listObjectsOfProperty(s, RDFS.range).toSet();
-//		set.addAll(inferParent(term,m,false));
+		if (op != null){
+			List<? extends OntResource> domains = op.listRange().toList();
+			for (OntResource d : domains){
+				if (d.asClass().isUnionClass()){
+					UnionClass uc = d.asClass().asUnionClass();
+					set.addAll(uc.getOperands().asJavaList());
+				}
+				else set.add(d.asResource());
+			}
+		}
 		
 		if (set.contains(RDFS.Literal)){
 			set.add(XSD.xfloat);
@@ -323,13 +386,24 @@ public class VocabularyLoader {
 			set.add(XSD.positiveInteger);
 			set.add(XSD.negativeInteger);
 			set.add(XSD.normalizedString);
+			set.add(XSD.date);
+			set.add(XSD.dateTime);
+			set.add(XSD.gDay);
+			set.add(XSD.gMonth);
+			set.add(XSD.gYear);
+			set.add(XSD.gMonthDay);
+			set.add(XSD.gYearMonth);
+			set.add(XSD.hexBinary);
+			set.add(XSD.language);
+			set.add(XSD.time);
 		}
 		
 		return set;
 	}
 	
 	
-	private static Map<Node, Set<RDFNode>> infParent = new HashMap<Node,Set<RDFNode>>(); //TODO: Fix
+	private static Map<Node, Set<RDFNode>> infParent = new HashMap<Node,Set<RDFNode>>();
+	@Deprecated
 	public static Set<RDFNode> inferParent(Node term, Model m, boolean isSuperClass){
 		
 		if (infParent.containsKey(term)) return infParent.get(term);
@@ -360,6 +434,85 @@ public class VocabularyLoader {
 		return set;
 	}
 	
+    private static Map<String, Set<RDFNode>> parentNodes = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+	public static Set<RDFNode> inferParentClass(Node term){
+		if (parentNodes.containsKey(term.getURI())){
+			return parentNodes.get(term.getURI());
+		} else {
+			String ns = term.getNameSpace();
+
+			OntModel m; 
+			if (getModelForVocabulary(ns).size() == 0) m = null; 
+			else m = (OntModel) getModelForVocabulary(ns);
+			
+			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
+			if (m != null){
+				OntClass oc = m.getOntClass(term.getURI());
+				if (oc != null)
+					set.addAll(m.getOntClass(term.getURI()).listSuperClasses().toList());
+			}
+			
+			set.add(OWL.Thing);
+			parentNodes.put(term.getURI(), set);
+			
+			return set;
+		}
+	}
+	
+	public static Set<RDFNode> inferParentProperty(Node term){
+		if (parentNodes.containsKey(term.getURI())){
+			return parentNodes.get(term.getURI());
+		} else {
+			String ns = term.getNameSpace();
+	
+			OntModel m;
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			m = (OntModel) dataset.getNamedModel(ns);
+			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
+					m.getOntProperty(term.getURI()).listSuperProperties().toList());
+			parentNodes.put(term.getURI(), set);
+
+			return set;
+		}
+	}
+	
+    private static Map<String, Set<RDFNode>> childNodes = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+	public static Set<RDFNode> inferChildClass(Node term){
+		if (childNodes.containsKey(term.getURI())){
+			return childNodes.get(term.getURI());
+		} else {
+			String ns = term.getNameSpace();
+
+			OntModel m;
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			m = (OntModel) dataset.getNamedModel(ns);
+			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
+					m.getOntClass(term.getURI()).listSubClasses().toList());
+			
+			childNodes.put(term.getURI(), set);
+			return set;	
+		}
+	}
+	
+	
+	public static Set<RDFNode> inferChildProperty(Node term){
+		if (childNodes.containsKey(term.getURI())){
+			return childNodes.get(term.getURI());
+		} else {
+			String ns = term.getNameSpace();
+	
+			OntModel m;
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			m = (OntModel) dataset.getNamedModel(ns);
+			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
+					m.getOntProperty(term.getURI()).listSubProperties().toList());
+			
+			childNodes.put(term.getURI(), set);
+			return set;
+		}
+	}
+	
+	@Deprecated
 	public static Set<RDFNode> inferChildren(Node term, Model m, boolean isSuperClass){
 		String query;
 		Model _mdl = m;
@@ -383,24 +536,17 @@ public class VocabularyLoader {
 		return set;
 	}
 
-
+    private static Map<String, Boolean> isIFPMap = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
 	public static boolean isInverseFunctionalProperty(Node term){
 		
 		String ns = term.getNameSpace();
 		
-		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		Model m = dataset.getNamedModel(ns);
+		if (!isIFPMap.containsKey(term.getURI())){
+			OntModel m = (OntModel) getModelForVocabulary(ns);
+			isIFPMap.put(term.getURI(), (m.getInverseFunctionalProperty(term.getURI()) != null));
+		}
 		
-		Resource r = Commons.asRDFNode(term).asResource();
-		
-		Filter<RDFNode> filter = new Filter<RDFNode>() {
-	            @Override
-	            public boolean accept(RDFNode node) {
-	            	return ((node.equals(OWL.InverseFunctionalProperty)));
-	            }
-		};
-
-		return m.listObjectsOfProperty(r, RDF.type).filterKeep(filter).hasNext();
+		return isIFPMap.get(term.getURI());
 	}
 
 	public static Model getClassModelNoLiterals(Node term, Model m){
@@ -432,6 +578,7 @@ public class VocabularyLoader {
 		return _ret;
 	}
 	
+	@Deprecated
 	public static Model inferAncDec(Node term, Model m){
 		Model _mdl = m;
 		Model _ret = ModelFactory.createDefaultModel();
@@ -463,5 +610,28 @@ public class VocabularyLoader {
 		}
 		
 		return _ret;
+	}
+	
+    private static Map<String, Set<RDFNode>> disjointWith = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+	public static Set<RDFNode> getDisjointWith(Node term){
+		if (disjointWith.containsKey(term.getURI())){
+			return disjointWith.get(term.getURI());
+		} else {
+			String ns = term.getNameSpace();
+
+			OntModel m = (OntModel) getModelForVocabulary(ns);
+			
+			Set<RDFNode> set = new LinkedHashSet<RDFNode>(m.getOntClass(term.getURI()).listDisjointWith().toList());
+			
+			Set<RDFNode> parent = inferParentClass(term);
+			parent.remove(OWL.Thing);
+			for(RDFNode n : parent){
+				if (n.isAnon()) continue;
+				set.addAll(getDisjointWith(n.asNode()));
+			}
+			
+			disjointWith.put(term.getURI(), set);
+			return set;	
+		}
 	}
 }

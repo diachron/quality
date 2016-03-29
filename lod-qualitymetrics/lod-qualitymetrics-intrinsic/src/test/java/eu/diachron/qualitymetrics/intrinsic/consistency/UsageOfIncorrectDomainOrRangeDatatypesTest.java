@@ -3,6 +3,9 @@
  */
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.After;
@@ -32,13 +35,14 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 	public void setUp() throws Exception {
 		EnvironmentProperties.getInstance().setDatasetURI("http://www.example.org");
 		loader.loadDataSet("testdumps/SampleInput_UsageOfIncorrectDomainOrRangeDatatypes_Minimal.ttl");
+//		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/social.mercedes-benz.com.full.ttl");
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 	
-	
+//	@Ignore
 	@Test
 	public void testUsageOfIncorrectClassesAndPropertiesMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
@@ -47,15 +51,15 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
-//		 # Incorrect Domains : 1; # Incorrect Ranges : 2; # Predicates Assessed : 4; # Undereferenceable Predicate : 0
+//		 # Incorrect Domains : 1; # Incorrect Ranges : 1; # Predicates Assessed : 4; # Undereferenceable Predicate : 0
 		
-		// 3 / 8
-		assertEquals(0.625,metric.metricValue(), 0.0001);
+		// 2 / 8
+		assertEquals(0.75,metric.metricValue(), 0.0001);
 	}	
 
 	@Ignore
 	@Test
-	public void problemReportTest(){
+	public void problemReportTest() throws IOException{
 		for(Quad q : loader.getStreamingQuads()){
 			metric.compute(q);
 		}
@@ -66,7 +70,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
 		Model plModel = qr.getProblemReportFromTBD(plModelURI);
 		
-		plModel.write(System.out, "TURTLE");
+		plModel.write(new FileWriter(new File("/Users/jeremy/Desktop/pr.ttl")), "TURTLE");
 	}
 	
 	

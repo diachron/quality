@@ -45,6 +45,10 @@ _:UsageOfIncorrectDomainOrRangeDatatypes a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Usage Of Deprecated Classes Or Properties" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.UsageOfIncorrectDomainOrRangeDatatypes" .
 
+_:EstimatedUsageOfIncorrectDomainOrRangeDatatypes a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Usage Of Deprecated Classes Or Properties" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.consistency.EstimatedUsageOfIncorrectDomainOrRangeDatatypes" .
+
 
 _:ValidIFPUsage a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Valid IFP Usage" ;
@@ -57,4 +61,8 @@ _:CompatibleDatatype a lmi:LuzzuMetricJavaImplementation ;
 _:CorrectLanguageTag a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Correct Language Tag" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.syntacticvalidity.CorrectLanguageTag" .
+
+_:UntypedLiterals a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Untyped Literals" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.intrinsic.syntacticvalidity.UntypedLiterals" .
 	

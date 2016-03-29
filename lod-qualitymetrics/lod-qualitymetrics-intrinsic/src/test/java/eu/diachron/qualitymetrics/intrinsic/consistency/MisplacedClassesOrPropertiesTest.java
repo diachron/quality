@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -49,7 +48,7 @@ public class MisplacedClassesOrPropertiesTest extends Assert{
 		assertEquals(0.66666666666,metric.metricValue(), 0.0001);
 	}	
 	
-	@Ignore
+
 	@Test
 	public void problemReportTest(){
 		for(Quad q : loader.getStreamingQuads()){

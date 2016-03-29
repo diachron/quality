@@ -125,8 +125,9 @@ public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
 	 */
 	@Override
 	public double metricValue() {
-		statsLogger.debug("Values: Total Created Instances {}, Estimated Duplicates {}", this.totalCreatedInstances, this.estimatedDuplInstances);
-		return ((double)(this.totalCreatedInstances - this.estimatedDuplInstances))/((double)this.totalCreatedInstances);
+		double metricValue = ((double)(this.totalCreatedInstances - this.estimatedDuplInstances))/((double)this.totalCreatedInstances);;
+		statsLogger.debug("Total Created Instances: {}, Estimated Duplicates: {}, Metric Value: {}", this.totalCreatedInstances, this.estimatedDuplInstances, metricValue);
+		return metricValue;
 	}
 	
 	@Override

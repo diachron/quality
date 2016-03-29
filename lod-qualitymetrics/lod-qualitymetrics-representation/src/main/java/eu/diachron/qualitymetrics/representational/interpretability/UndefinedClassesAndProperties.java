@@ -84,14 +84,10 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 			logger.info("checking predicate: " + predicate.getURI());
 			
 			if (!(this.isContainerPredicate(predicate))){
-//				Boolean seen = shared.classOrPropertyDefined(predicate.getURI());
-//				Boolean defined = null;
-//				if (seen == null) {
-//					defined = VocabularyLoader.isProperty(predicate);
-//					shared.addClassOrProperty(predicate.getURI(), defined);
-//				}
-//				else defined = seen;
-				Boolean defined = VocabularyLoader.isProperty(predicate);
+				Boolean defined = false;
+				if (VocabularyLoader.checkTerm(predicate)){
+					defined = VocabularyLoader.isProperty(predicate);
+				}
 
 				if (!defined){
 					this.undefinedProperties++;

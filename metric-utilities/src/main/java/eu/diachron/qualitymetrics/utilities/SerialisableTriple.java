@@ -5,12 +5,15 @@ package eu.diachron.qualitymetrics.utilities;
 
 import java.io.Serializable;
 
+import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.AnonId;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.impl.LiteralImpl;
 
 import de.unibonn.iai.eis.luzzu.cache.JenaCacheObject;
 
@@ -31,6 +34,9 @@ public class SerialisableTriple  implements Serializable, JenaCacheObject<Triple
 	private boolean isObjectBlank = false;
 	private boolean isObjectLiteral = false;
 	private String object = "";
+	private String objectDT = "";
+	private transient RDFDatatype objectDataType = null;
+	private String objectLang = "";
 	
 	public SerialisableTriple(){}
 	
@@ -45,8 +51,15 @@ public class SerialisableTriple  implements Serializable, JenaCacheObject<Triple
 		
 		Node _obj = this.triple.getObject();
 		if (_obj.isBlank()) isObjectBlank = true;
-		if (_obj.isLiteral()) isObjectLiteral = true;
 		this.object = _obj.toString();
+		
+		if (_obj.isLiteral()) {
+			isObjectLiteral = true;
+			objectDataType = _obj.getLiteralDatatype();
+			objectDT = _obj.getLiteralDatatypeURI();
+			objectLang = _obj.getLiteralLanguage();
+			object = _obj.getLiteralLexicalForm();
+		}
 	}
 	
 	public Triple getTriple(){
@@ -59,7 +72,10 @@ public class SerialisableTriple  implements Serializable, JenaCacheObject<Triple
 		_prd = ModelFactory.createDefaultModel().createProperty(predicate);
 		
 		if (isObjectBlank) _obj = ModelFactory.createDefaultModel().createResource(new AnonId(this.object));
-		else if (isObjectLiteral) _obj = ModelFactory.createDefaultModel().createLiteral(object);
+		else if (isObjectLiteral){
+			_obj = ModelFactory.createDefaultModel().createTypedLiteral(this.object, this.objectDataType);
+			
+		}
 		else _obj = ModelFactory.createDefaultModel().createResource(object);
 		
 		return new Triple(_sbj.asNode(), _prd.asNode(), _obj.asNode());

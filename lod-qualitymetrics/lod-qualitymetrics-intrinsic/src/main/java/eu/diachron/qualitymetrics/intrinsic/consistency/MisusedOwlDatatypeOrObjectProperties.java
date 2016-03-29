@@ -9,7 +9,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
@@ -55,7 +54,7 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 	 */
 	
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+		logger.debug("Assessing {}", quad.asTriple());
 
 		Node subject = quad.getSubject();
 		Node predicate = quad.getPredicate();
@@ -64,17 +63,16 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 		if (!(predicate.getURI().equals(RDF.type.getURI()))){
 			if (VocabularyLoader.checkTerm(predicate)){
 				this.validPredicates++;
-				Model m = VocabularyLoader.getModelForVocabulary(predicate.getNameSpace());
 				
 				if (object.isLiteral()){
 					// predicate should not be an owl:ObjectProperty
-					if (m.contains((m.asRDFNode(predicate)).asResource(), RDF.type, OWL.ObjectProperty)){
+					if (VocabularyLoader.isObjectProperty(predicate)){
 						this.misuseObjectProperties++;
 						this.createProblemModel(subject, predicate, DQMPROB.MisusedObjectProperty);
 					}
 				} else if(object.isURI()){
 					// predicate should not be an owl:DataProperty
-					if (m.contains((m.asRDFNode(predicate)).asResource(), RDF.type, OWL.DatatypeProperty)){
+					if (VocabularyLoader.isDatatypeProperty(predicate)){
 						this.misuseDatatypeProperties++;
 						this.createProblemModel(subject, predicate, DQMPROB.MisusedDatatypeProperty);
 					}

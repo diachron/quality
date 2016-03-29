@@ -48,26 +48,35 @@ public class UsageOfDeprecatedClassesOrProperties implements QualityMetric{
 		Node object = quad.getObject();
 		
 		if (property.getURI().equals(RDF.type.getURI())){
-			if (VocabularyLoader.isDeprecatedTerm(object)) {
-				deprecatedTypes++;
-				Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedClass.asNode());
-				this._problemList.add(q);
+			if (VocabularyLoader.checkTerm(object)){
+				if (VocabularyLoader.isDeprecatedTerm(object)) {
+					deprecatedTypes++;
+					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedClass.asNode());
+					this._problemList.add(q);
+				}
+				totalTypes++;
 			}
-			totalTypes++;
 		} else {
-			if (VocabularyLoader.isDeprecatedTerm(property)) {
-				deprecatedProperties++;
-				Quad q = new Quad(null, property, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedProperty.asNode());
-				this._problemList.add(q);
+			if (VocabularyLoader.checkTerm(property)){
+				if (VocabularyLoader.isDeprecatedTerm(property)) {
+					deprecatedProperties++;
+					Quad q = new Quad(null, property, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedProperty.asNode());
+					this._problemList.add(q);
+				}
 			}
+			totalProperties++;
 		}
-		totalProperties++;
 	}
 
 	@Override
 	public double metricValue() {
 		double value = 1 - (((double) deprecatedTypes + (double) deprecatedProperties) /  
 				((double) totalTypes + (double) totalProperties));
+		
+		statsLogger.info("Values: Deprecated Types {}, Deprecated Properties {}, Total Types: {}, Total Properties: {}, Metric Value: {}", 
+				deprecatedTypes, deprecatedProperties, totalTypes, totalProperties, value);
+
+		
 		return value;
 	}
 

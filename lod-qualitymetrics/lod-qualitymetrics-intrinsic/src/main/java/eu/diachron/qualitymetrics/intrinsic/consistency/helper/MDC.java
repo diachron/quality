@@ -10,7 +10,6 @@ import java.util.Set;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-import de.unibonn.iai.eis.diachron.datatypes.Tld;
 
 /**
  * @author Jeremy Debattista

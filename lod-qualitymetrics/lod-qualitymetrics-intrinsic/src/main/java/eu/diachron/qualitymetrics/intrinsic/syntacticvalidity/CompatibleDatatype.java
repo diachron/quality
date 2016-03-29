@@ -6,9 +6,6 @@ package eu.diachron.qualitymetrics.intrinsic.syntacticvalidity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.AnonId;
@@ -31,16 +28,26 @@ import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 
 /**
+ * This metric checks the compatability of the literal datatype
+ * against the lexical form of the said literal.
+ * This metric only catches literals with a datatype
+ * whilst untyped literals are not checked in this metric
+ * as their lexical form cannot be validated.
+ * 
+ * Therefore, in order to check for untyped literals,
+ * the metric UntypedLiterals in the same dimension
+ * checks for such quality problems.
+ * 
  * @author Jeremy Debattista
  * 
  */
 public class CompatibleDatatype implements QualityMetric {
 
-	private static Logger logger = LoggerFactory.getLogger(CompatibleDatatype.class);
+//	private static Logger logger = LoggerFactory.getLogger(CompatibleDatatype.class);
 	
 	
 	// Sampling of problems - testing for LOD Evaluation
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(250000, false);
 
 	private Model problemModel = ModelFactory.createDefaultModel();
 	private  Resource bagURI = Commons.generateURI();
@@ -52,29 +59,23 @@ public class CompatibleDatatype implements QualityMetric {
 	
 	private int numberCorrectLiterals = 0;
 	private int numberIncorrectLiterals = 0;
-	private int numberUnknownLiterals = 0;
 
 	@Override
 	public void compute(Quad quad) {
 		Node obj = quad.getObject();
 		
 		if (obj.isLiteral()){
-			
 			if (obj.getLiteralDatatype() != null){
+				// unknown datatypes cannot be checked for their correctness,
+				// but in the UsageOfIncorrectDomainOrRangeDatatypes metric
+				// we check if these literals are used correctly against their
+				// defined property. We also check for untyped literals in another metric
 				if (this.compatibleDatatype(obj)) 
 					numberCorrectLiterals++; 
 				else {
 					this.addToProblem(quad);
 					numberIncorrectLiterals++;
 				}
-
-			} else {
-				// unknown datatypes cannot be checked for their correctness,
-				// but in the UsageOfIncorrectDomainOrRangeDatatypes metric
-				// we check if these literals are used correctly against their
-				// defined property.
-				logger.debug("Literal: {} has an unknown datatype", obj.getLiteralValue().toString());
-				numberUnknownLiterals++; 
 			}
 		}
 	}
@@ -98,10 +99,11 @@ public class CompatibleDatatype implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		statsLogger.info("CompatibleDatatype. Dataset: {} - Total # Correct Literals : {}; # Incorrect Literals : {}; # Unknown Literals : {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), numberCorrectLiterals, numberIncorrectLiterals, numberUnknownLiterals);
+		double metricValue = (double) numberCorrectLiterals / ((double)numberIncorrectLiterals + (double)numberCorrectLiterals);
+		statsLogger.info("CompatibleDatatype. Dataset: {} - Total # Correct Literals : {}; # Incorrect Literals : {}; # Metric Value: {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), numberCorrectLiterals, numberIncorrectLiterals, metricValue);
 
-		return (double) numberCorrectLiterals / ((double)numberIncorrectLiterals + (double)numberCorrectLiterals + (double)numberUnknownLiterals);
+		return metricValue;
 	}
 
 	@Override
@@ -179,8 +181,5 @@ public class CompatibleDatatype implements QualityMetric {
 	    	
 	    	return lst;
 		}
-		
-		
-	    
 	}
 }

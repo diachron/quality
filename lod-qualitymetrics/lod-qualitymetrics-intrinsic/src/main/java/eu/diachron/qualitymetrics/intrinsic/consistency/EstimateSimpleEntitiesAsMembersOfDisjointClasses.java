@@ -26,6 +26,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.intrinsic.consistency.helper.MDC;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -42,8 +43,6 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 	private static Logger logger = LoggerFactory.getLogger(EstimateSimpleEntitiesAsMembersOfDisjointClasses.class);
 	protected long entitiesAsMembersOfDisjointClasses = 0;
 	
-//	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-//	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	// Sampling of problems - testing for LOD Evaluation
 	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
@@ -61,12 +60,13 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 	
 	
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+//		logger.debug("Assessing {}", quad.asTriple().toString());
 
 		try {
-			RDFNode subject = ModelFactory.createDefaultModel().asRDFNode(quad.getSubject());
+			
+			RDFNode subject = Commons.asRDFNode(quad.getSubject());
 			Node predicate = quad.getPredicate();
-			RDFNode object = ModelFactory.createDefaultModel().asRDFNode(quad.getObject());
+			RDFNode object = Commons.asRDFNode(quad.getObject());
 
 			if (RDF.type.asNode().equals(predicate)) {
 				MDC mdc = new MDC(subject.asResource());
@@ -150,9 +150,9 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 			return 0.0;
 		}
 
-		statsLogger.info("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size());
-
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.reservoir.size());
+
+		statsLogger.info("Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size(), metricValue);
 
 		return metricValue;
 	}

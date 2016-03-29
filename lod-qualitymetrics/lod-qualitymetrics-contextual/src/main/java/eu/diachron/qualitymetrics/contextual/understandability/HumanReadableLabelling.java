@@ -64,6 +64,9 @@ public class HumanReadableLabelling implements QualityMetric{
 		labelProperties.add("http://www.w3.org/2004/02/skos/core#prefLabel");
 		labelProperties.add("http://www.w3.org/2004/02/skos/core#note");
 		labelProperties.add("http://www.w3.org/2007/05/powder-s#text");
+		labelProperties.add("http://www.w3.org/2008/05/skos-xl#altLabel");
+		labelProperties.add("http://www.w3.org/2008/05/skos-xl#hiddenLabel");
+		labelProperties.add("http://www.w3.org/2008/05/skos-xl#prefLabel");
 	}
 	
 	

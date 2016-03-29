@@ -183,10 +183,9 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 			logger.warn("Total number of entities in given dataset is found to be zero.");
 			return 0.0;
 		}
-
-		statsLogger.info("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
-
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
+
+		statsLogger.info("Values: Members of Disjoined Classes {}, Types of resource {}, Metric Value {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
 
 		return metricValue;
 	}

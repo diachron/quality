@@ -1,43 +1,31 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;
-import org.paukov.combinatorics.Factory;
-import org.paukov.combinatorics.Generator;
-import org.paukov.combinatorics.ICombinatoricsVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.semantics.utilities.SPARQLHelper;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -130,40 +118,27 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			String entity = entry.getKey();
 			// … and the classes it's an instance of
 			Set<String> classes = entry.getValue();
-
+			
 			if (classes.size() >= 2) {
 				// we only need to check disjointness when there are at least 2 classes
-				Model vocabs = ModelFactory.createDefaultModel();
-				
-				StringBuilder askQuery = new StringBuilder();
-				askQuery.append("SELECT DISTINCT * {");
-				int counter = 0;
-				List<String> lst = new ArrayList<String>();
-				Set<String> nsSet = new HashSet<String>();
+				boolean isDisjoint = false;
 				for (String s : classes){
-					String ns = ModelFactory.createDefaultModel().createResource(s).getNameSpace();
-					if (nsSet.add(ns)) vocabs.add(VocabularyLoader.getModelForVocabulary(ns));
-					askQuery.append("<"+s+"> " + SPARQLHelper.toSPARQL(RDFS.subClassOf) + "* ?s"+counter+" . ");
-					lst.add("?s"+counter);
-					counter++;
+					if (VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(s).asNode())){
+						Set<String> _set = this.rdfNodeSetToString(VocabularyLoader.getDisjointWith(ModelFactory.createDefaultModel().createResource(s).asNode()));
+						
+						SetView<String> setView = Sets.intersection(classes, _set);
+						if (setView.size() > 0){
+							isDisjoint = true;
+							createProblemModel(ModelFactory.createDefaultModel().createResource(entity).asNode(), setView);
+						}
+					}
 				}
-				ICombinatoricsVector<String> originalVector = Factory.createVector(lst);
-				Generator<String> gen = Factory.createPermutationGenerator(originalVector);
-				for (ICombinatoricsVector<String> permutaion : gen) {
-					askQuery.append(permutaion.getValue(0) + " <"+OWL.disjointWith+"> " +  permutaion.getValue(1) + " . ");
-				}
-
-				askQuery.append("}");
-				
-				logger.debug("Ask Query : {}",askQuery.toString());
-				
-				QueryExecution exec = QueryExecutionFactory.create(askQuery.toString(), vocabs);
-				ResultSet rs = exec.execSelect();
-				if (rs.hasNext()){
-					count++;
-					createProblemModel(ModelFactory.createDefaultModel().createResource(entity).asNode(), rs);
-				}
-				
+				if (isDisjoint) count++;
+//				SELECT DISTINCT * {
+//					<http://social.mercedes-benz.com/mars/schema/InternalModelName> <http://www.w3.org/2000/01/rdf-schema#subClassOf>* ?s0 . 
+//					<http://www.w3.org/2008/05/skos-xl#Label> <http://www.w3.org/2000/01/rdf-schema#subClassOf>* ?s1 . 
+//					?s0 <http://www.w3.org/2002/07/owl#disjointWith> ?s1 . 
+//					?s1 <http://www.w3.org/2002/07/owl#disjointWith> ?s0 . }
 			}
 		}
 		metricCalculated = true;
@@ -191,8 +166,8 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 //	}
 	
 	
-	private void createProblemModel(Node resource, ResultSet rs){
-		ProblemReport pr = new ProblemReport(resource, rs);
+	private void createProblemModel(Node resource, SetView<String> sv){
+		ProblemReport pr = new ProblemReport(resource, sv);
 		Boolean isAdded = this.problemSampler.add(pr);
 		if (!isAdded) pr = null;
 	}
@@ -214,9 +189,9 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			return 0.0;
 		}
 
-		statsLogger.info("Values: Members of Disjoined Classes {}, Types of resource {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size());
-
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
+
+		statsLogger.info("Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
 
 		return metricValue;
 	}
@@ -274,12 +249,13 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	// problems private class for sampling
 	private class ProblemReport{
 		
-		private ResultSet rs;
 		private Node resource;
+		private SetView<String> setView;
 		
-		ProblemReport(Node resource, ResultSet rs){
+		
+		ProblemReport(Node resource, SetView<String> setView){
 			this.resource = resource;
-			this.rs = rs;
+			this.setView = setView;
 		}
 		
 		Model createProblemModel(){
@@ -288,17 +264,17 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			Resource subject = m.createResource(resource.toString());
 			m.add(new StatementImpl(subject, QPRO.exceptionDescription, DQMPROB.MultiTypedResourceWithDisjointedClasses));
 			
-			while (rs.hasNext()){
-				QuerySolution qs = rs.next();
-				Iterator<String> vars = qs.varNames();
-				while(vars.hasNext()){
-					String s = vars.next();
-					RDFNode node = qs.get(s);
-					m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass,node));
-				}
+			for(String s : setView){
+				m.add(new StatementImpl(subject, DQMPROB.violatingDisjoinedClass, m.createResource(s)));
 			}
 
 			return m;
 		}
+	}
+	
+	private Set<String> rdfNodeSetToString(Set<RDFNode> set){
+		Set<String> hSet = new HashSet<String>();
+		for(RDFNode n : set) hSet.add(n.asResource().getURI());
+		return hSet;
 	}
 }

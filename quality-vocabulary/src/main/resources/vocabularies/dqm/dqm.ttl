@@ -479,6 +479,12 @@ dqm:CorrectLanguageTag
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"** TODO **" ;
 	rdfs:label	"Correct Language Tag" .
+	
+dqm:UntypedLiteralsMetric
+	a	rdfs:Class ;
+	rdfs:subClassOf	daq:Metric ;
+	rdfs:comment	"** TODO **" ;
+	rdfs:label	"Untyped Literals" .
 
 dqm:hasCorrectLanguageTag
 	a rdfs:Property ;
@@ -498,6 +504,13 @@ dqm:hasCompatibleDatatype
 	rdfs:domain dqm:SyntacticValidity ;
 	rdfs:range dqm:CompatibleDatatype .
 				
+dqm:hasUntypedLiteral
+	a rdfs:Property ;
+	rdfs:subPropertyOf daq:hasMetric ;
+	rdfs:domain dqm:SyntacticValidity ;
+	rdfs:range dqm:UntypedLiteralsMetric .
+
+
 ### Contextual Category
 dqm:Contextual
 	a	rdfs:Class ;

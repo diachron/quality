@@ -81,10 +81,13 @@ public class CorrectLanguageTag implements ComplexQualityMetric {
 
 	@Override
 	public double metricValue() {
-		statsLogger.info("Correct Language Tag. Dataset: {} - Total # Correct Strings : {}; # Total Valid Language Strings : {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), totalCorrectStrings, totalvalidLangStrings);
+		
+		double metricValue = (double) totalCorrectStrings / (double) totalvalidLangStrings;
+		
+		statsLogger.info("Correct Language Tag. Dataset: {} - Total # Correct Strings : {}; # Total Valid Language Strings : {}, Metric Value: {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(), totalCorrectStrings, totalvalidLangStrings,metricValue);
 
-		return (double) totalCorrectStrings / (double) totalvalidLangStrings;
+		return metricValue;
 	}
 
 	@Override

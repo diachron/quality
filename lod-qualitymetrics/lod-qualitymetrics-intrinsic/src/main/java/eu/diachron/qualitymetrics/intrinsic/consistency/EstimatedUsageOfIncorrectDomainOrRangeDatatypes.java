@@ -36,7 +36,6 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
-import eu.diachron.qualitymetrics.utilities.SerialisableTriple;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -47,25 +46,25 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * schema.
  * 
  */
-public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
+public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 
 	private final Resource METRIC_URI = DQM.UsageOfIncorrectDomainOrRangeDatatypesMetric;
 
-	private static Logger logger = LoggerFactory.getLogger(UsageOfIncorrectDomainOrRangeDatatypes.class);
+	private static Logger logger = LoggerFactory.getLogger(EstimatedUsageOfIncorrectDomainOrRangeDatatypes.class);
 	
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 	
 	private HTreeMap<String, String> mapResourceType =  MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 	
-	//If the boolean is true, then we need to check the domain, else check the range
-	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
+	private ReservoirSampler<Triple> unknownTriples = new ReservoirSampler<Triple>(100000, false);
+	
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	//Sampling of Problems
 	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
 
-	private long totalPredicates = 0;
 	private long incorrectDomain = 0;
 	private long incorrectRange = 0;
 	private long undereferenceablePredicates = 0;
@@ -87,8 +86,8 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 			mapResourceType.put(s,o);
 		}
 		else {
-			totalPredicates++; 
-			this.unknownTriples.add(new SerialisableTriple(quad.asTriple()));
+			this.unknownTriples.add(quad.asTriple());
+			//this.unknownTriples.add(new SerialisableTriple(quad.asTriple()));
 		}
 	}
 	
@@ -131,8 +130,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 	@Override
 	public double metricValue() {
 		
-		for (SerialisableTriple trip : this.unknownTriples){
-			Triple t = trip.getTriple();
+		for (Triple t : this.unknownTriples.getItems()){
 			if (VocabularyLoader.checkTerm(t.getPredicate())){
 				checkDomain(t);
 				checkRange(t);
@@ -141,13 +139,12 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 			}
 		}
 		
-		this.unknownTriples.clear();
 
-		double value = 1 - ((double) incorrectDomain + (double) incorrectRange + (double) undereferenceablePredicates + (double) unknownDomainAndRange) / ((double) totalPredicates * 2);
+		double value = 1 - ((double) incorrectDomain + (double) incorrectRange + (double) undereferenceablePredicates + (double) unknownDomainAndRange) / ((double) this.unknownTriples.size() * 2);
 
 		
-		statsLogger.info("Dataset: {} - # Incorrect Domains : {}; # Incorrect Ranges : {}; # Predicates Assessed : {}; # Undereferenceable Predicates : {}; # Unknown Domain and Range : {}; Metric Value: {} "
-				, EnvironmentProperties.getInstance().getDatasetURI(), incorrectDomain, incorrectRange, totalPredicates, undereferenceablePredicates, unknownDomainAndRange, value);
+		statsLogger.info("Dataset: {} - # Incorrect Domains : {}; # Incorrect Ranges : {}; # Items in Reservoir : {}; # Undereferenceable Predicates : {}; # Unknown Domain and Range : {}; Metric Value: {} "
+				, EnvironmentProperties.getInstance().getDatasetURI(), incorrectDomain, incorrectRange, this.unknownTriples.size(), undereferenceablePredicates, unknownDomainAndRange, value);
 		
 		return value;
 	}
@@ -241,7 +238,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
 
 	@Override
 	public boolean isEstimate() {
-		return false;
+		return true;
 	}
 
 	@Override

@@ -65,17 +65,19 @@ public class ValidIFPUsage implements QualityMetric{
 		counter++;
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		if (VocabularyLoader.isInverseFunctionalProperty(quad.getPredicate())){
-			logger.debug("{} is an IFP", quad.asTriple().toString());
-			totalIFPs++;
-			
-			IFPTriple t = new IFPTriple(quad.asTriple());
-			if (seenIFPs.containsKey(t)){
-				totalViolatedIFPs++;
-				t = seenIFPs.get(t);
-				this.addProblem(t, quad);
-			} else {
-				seenIFPs.put(t,t);
+		if (VocabularyLoader.checkTerm(quad.getPredicate())){ // if we do not know the predicate, then we assume that it is not an IFP
+			if (VocabularyLoader.isInverseFunctionalProperty(quad.getPredicate())){
+				logger.debug("{} is an IFP", quad.asTriple().toString());
+				totalIFPs++;
+				
+				IFPTriple t = new IFPTriple(quad.asTriple());
+				if (seenIFPs.containsKey(t)){
+					totalViolatedIFPs++;
+					t = seenIFPs.get(t);
+					this.addProblem(t, quad);
+				} else {
+					seenIFPs.put(t,t);
+				}
 			}
 		}
 	}
@@ -113,11 +115,16 @@ public class ValidIFPUsage implements QualityMetric{
 	
 	@Override
 	public double metricValue() {
-		statsLogger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};  # Total no of triples:  {}"
-				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs,counter);
+		
+		double metricValue = 1.0;
+		
+		if (totalIFPs == 0) metricValue = 1.0;
+		else metricValue = 1.0 - ((double)totalViolatedIFPs/(double)totalIFPs);
+		
+		statsLogger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};  # Total no of triples:  {}; Metric Value: {}"
+				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs,counter, metricValue);
 
-		if (totalIFPs == 0) return 1.0;
-		return 1.0 - ((double)totalViolatedIFPs/(double)totalIFPs);
+		return metricValue;
 	}
 
 	@Override

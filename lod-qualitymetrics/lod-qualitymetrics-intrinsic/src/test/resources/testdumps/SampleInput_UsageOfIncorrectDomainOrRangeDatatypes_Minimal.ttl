@@ -5,9 +5,10 @@
 :Alice a foaf:Person ;
 	<http://purl.org/net/provenance/ns#containedBy> :Bob ;
 	foaf:name "Alice" ;
-	foaf:gender "female"^^xsd:string .
+	foaf:gender "female"^^xsd:string . 
 
 
 :DOW a foaf:Document ;
-	foaf:name "Description of Work"^^xsd:string .
+	foaf:name "Description of Work"^^xsd:string . 
 	
+:Bob a foaf:Person .
