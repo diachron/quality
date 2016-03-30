@@ -4,7 +4,6 @@
 package eu.diachron.qualitymetrics.utilities;
 
 import java.io.StringReader;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -19,12 +18,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.collections4.map.LRUMap;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.jena.riot.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
@@ -210,7 +209,7 @@ public class VocabularyLoader {
 	}
 	
 	
-    private static Map<String, Boolean> termsExists = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Map<String, Boolean> termsExists = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
     private static Boolean termExists(String ns, Node term){
     	if (termsExists.containsKey(term.getURI())){
     		return termsExists.get(term.getURI());
@@ -252,7 +251,7 @@ public class VocabularyLoader {
 		return dataset.getNamedModel(ns);
 	}
 	
-    private static Map<String, Boolean> isPropertyMap = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Map<String, Boolean> isPropertyMap = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
 	public static boolean isProperty(Node term){
 		String ns = term.getNameSpace();
 		
@@ -271,7 +270,7 @@ public class VocabularyLoader {
 		return isPropertyMap.get(term.getURI());
 	}
 	
-    private static Map<String, Boolean> objectProperties = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Map<String, Boolean> objectProperties = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
 	public static boolean isObjectProperty(Node term){
 		String ns = term.getNameSpace();
 		
@@ -286,7 +285,7 @@ public class VocabularyLoader {
 		return objectProperties.get(term.getURI());
 	}
 	
-    private static Map<String, Boolean> datatypeProperties = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Map<String, Boolean> datatypeProperties = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
 	public static boolean isDatatypeProperty(Node term){
 		String ns = term.getNameSpace();
 		
@@ -301,7 +300,9 @@ public class VocabularyLoader {
 		return datatypeProperties.get(term.getURI());
 	}
 	
-    private static Map<String, Boolean> isClassMap = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+	
+    private static Map<String, Boolean> isClassMap =  new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
+    //(Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
 	public static boolean isClass(Node term){
 		String ns = term.getNameSpace();
 		
@@ -325,7 +326,7 @@ public class VocabularyLoader {
 	};
 	
 	//private static HTreeMap<String, Boolean> checkedDeprecatedTerm = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
-    private static Map<String, Boolean> checkedDeprecatedTerm = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Map<String, Boolean> checkedDeprecatedTerm = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
 	public static boolean isDeprecatedTerm(Node term){
 		if (checkedDeprecatedTerm.containsKey(term.getURI())) return checkedDeprecatedTerm.get(term.getURI());
 		
@@ -344,7 +345,7 @@ public class VocabularyLoader {
 		return isDeprecated;
 	}
 
-    private static Map<String, Set<RDFNode>> propertyDomains = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+    private static Map<String, Set<RDFNode>> propertyDomains = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
     
 	public static Set<RDFNode> getPropertyDomain(Node term){
 		if (propertyDomains.containsKey(term.getURI())) return propertyDomains.get(term.getURI());
@@ -376,7 +377,7 @@ public class VocabularyLoader {
 		return set;
 	}
 	
-    private static Map<String, Set<RDFNode>> propertyRanges = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+    private static Map<String, Set<RDFNode>> propertyRanges = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
 
 	public static Set<RDFNode> getPropertyRange(Node term){
 		if (propertyRanges.containsKey(term.getURI())) return propertyRanges.get(term.getURI());
@@ -476,7 +477,7 @@ public class VocabularyLoader {
 		return set;
 	}
 	
-    private static Map<String, Set<RDFNode>> parentNodes = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+    private static Map<String, Set<RDFNode>> parentNodes = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
 	public static Set<RDFNode> inferParentClass(Node term){
 		if (parentNodes.containsKey(term.getURI())){
 			return parentNodes.get(term.getURI());
@@ -527,7 +528,7 @@ public class VocabularyLoader {
 		}
 	}
 	
-    private static Map<String, Set<RDFNode>> childNodes = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+    private static Map<String, Set<RDFNode>> childNodes = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
 	public static Set<RDFNode> inferChildClass(Node term){
 		if (childNodes.containsKey(term.getURI())){
 			return childNodes.get(term.getURI());
@@ -596,7 +597,7 @@ public class VocabularyLoader {
 		return set;
 	}
 
-    private static Map<String, Boolean> isIFPMap = (Map<String, Boolean>) Collections.synchronizedMap(new LRUMap<String, Boolean>(10000));
+    private static Map<String, Boolean> isIFPMap = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
 	public static boolean isInverseFunctionalProperty(Node term){
 		
 		String ns = term.getNameSpace();
@@ -676,7 +677,7 @@ public class VocabularyLoader {
 		return _ret;
 	}
 	
-    private static Map<String, Set<RDFNode>> disjointWith = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+    private static Map<String, Set<RDFNode>> disjointWith = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
 	public static Set<RDFNode> getDisjointWith(Node term){
 		if (disjointWith.containsKey(term.getURI())){
 			return disjointWith.get(term.getURI());
