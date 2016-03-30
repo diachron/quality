@@ -218,13 +218,17 @@ public class VocabularyLoader {
 			Model m = dataset.getNamedModel(ns);
 			
 			if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
-				termsExists.put(term.getURI(),true);
+				synchronized(termsExists) {
+					termsExists.put(term.getURI(),true);
+				}
 				return true;
 			}
 			
 			if (term.isURI()) {
 				Resource r = m.createResource(term.getURI());
-				termsExists.put(term.getURI(), m.containsResource(r));
+				synchronized(termsExists) {
+					termsExists.put(term.getURI(), m.containsResource(r));
+				}
 				return termsExists.get(term.getURI());
 			}
 			return null;
@@ -255,10 +259,12 @@ public class VocabularyLoader {
 		
 		if (!isPropertyMap.containsKey(term.getURI())){
 			OntModel m = (OntModel) getModelForVocabulary(ns);
-			isPropertyMap.put(term.getURI(),  
+			synchronized(isPropertyMap) {
+				isPropertyMap.put(term.getURI(),  
 					((m.getDatatypeProperty(term.getURI()) != null) ||
 					(m.getObjectProperty(term.getURI()) != null) ||
 					(m.getOntProperty(term.getURI()) != null)));
+			}
 		}
 		
 		return isPropertyMap.get(term.getURI());
@@ -270,7 +276,9 @@ public class VocabularyLoader {
 		
 		if (!objectProperties.containsKey(term.getURI())){
 			OntModel m = (OntModel) getModelForVocabulary(ns);
-			objectProperties.put(term.getURI(), (m.getObjectProperty(term.getURI()) != null));
+			synchronized(objectProperties) {
+				objectProperties.put(term.getURI(), (m.getObjectProperty(term.getURI()) != null));
+			}
 		}
 		
 		return objectProperties.get(term.getURI());
@@ -282,7 +290,9 @@ public class VocabularyLoader {
 		
 		if (!datatypeProperties.containsKey(term.getURI())){
 			OntModel m = (OntModel) getModelForVocabulary(ns);
-			datatypeProperties.put(term.getURI(), (m.getDatatypeProperty(term.getURI()) != null));
+			synchronized(datatypeProperties) {
+				datatypeProperties.put(term.getURI(), (m.getDatatypeProperty(term.getURI()) != null));
+			}
 		}
 		
 		return datatypeProperties.get(term.getURI());
@@ -294,7 +304,9 @@ public class VocabularyLoader {
 		
 		if (!isClassMap.containsKey(term.getURI())){
 			OntModel m = (OntModel) getModelForVocabulary(ns);
-			isClassMap.put(term.getURI(),  (m.getOntClass(term.getURI()) != null));
+			synchronized(isClassMap) {
+				isClassMap.put(term.getURI(),  (m.getOntClass(term.getURI()) != null));
+			}
 		}
 		
 		return isClassMap.get(term.getURI());
@@ -320,11 +332,17 @@ public class VocabularyLoader {
 		Resource r = Commons.asRDFNode(term).asResource();
 		
 		boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
-		checkedDeprecatedTerm.put(term.getURI(), isDeprecated);
+		synchronized(checkedDeprecatedTerm) {
+			checkedDeprecatedTerm.put(term.getURI(), isDeprecated);
+		}
 		return isDeprecated;
 	}
 
+    private static Map<String, Set<RDFNode>> propertyDomains = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+    
 	public static Set<RDFNode> getPropertyDomain(Node term){
+		if (propertyDomains.containsKey(term.getURI())) return propertyDomains.get(term.getURI());
+		
 		String ns = term.getNameSpace();
 		
 		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
@@ -343,10 +361,19 @@ public class VocabularyLoader {
 			}
 		}
 		
+		synchronized(propertyDomains) {
+			propertyDomains.put(term.getURI(), set);
+		}
+		
 		return set;
 	}
 	
+    private static Map<String, Set<RDFNode>> propertyRanges = (Map<String, Set<RDFNode>>) Collections.synchronizedMap(new LRUMap<String, Set<RDFNode>>(10000));
+
 	public static Set<RDFNode> getPropertyRange(Node term){
+		if (propertyRanges.containsKey(term.getURI())) return propertyRanges.get(term.getURI());
+
+		
 		String ns = term.getNameSpace();
 		
 		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
@@ -398,6 +425,10 @@ public class VocabularyLoader {
 			set.add(XSD.time);
 		}
 		
+		synchronized(propertyRanges) {
+			propertyRanges.put(term.getURI(), set);
+		}
+		
 		return set;
 	}
 	
@@ -429,8 +460,9 @@ public class VocabularyLoader {
 		Set<RDFNode> set = new LinkedHashSet<RDFNode>();
 		while(rs.hasNext()) set.add(rs.next().get("super"));
 		set.add(OWL.Thing);
-		
+				
 		infParent.put(term, set);
+		
 		return set;
 	}
 	
@@ -453,7 +485,10 @@ public class VocabularyLoader {
 			}
 			
 			set.add(OWL.Thing);
-			parentNodes.put(term.getURI(), set);
+			
+			synchronized(parentNodes) {
+				parentNodes.put(term.getURI(), set);
+			}
 			
 			return set;
 		}
@@ -470,7 +505,10 @@ public class VocabularyLoader {
 			m = (OntModel) dataset.getNamedModel(ns);
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
 					m.getOntProperty(term.getURI()).listSuperProperties().toList());
-			parentNodes.put(term.getURI(), set);
+			
+			synchronized(parentNodes) {
+				parentNodes.put(term.getURI(), set);
+			}
 
 			return set;
 		}
@@ -489,7 +527,11 @@ public class VocabularyLoader {
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
 					m.getOntClass(term.getURI()).listSubClasses().toList());
 			
-			childNodes.put(term.getURI(), set);
+			
+			synchronized(childNodes) {
+				childNodes.put(term.getURI(), set);
+			}
+			
 			return set;	
 		}
 	}
@@ -507,7 +549,9 @@ public class VocabularyLoader {
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
 					m.getOntProperty(term.getURI()).listSubProperties().toList());
 			
-			childNodes.put(term.getURI(), set);
+			synchronized(childNodes) {
+				childNodes.put(term.getURI(), set);
+			}
 			return set;
 		}
 	}
@@ -543,7 +587,9 @@ public class VocabularyLoader {
 		
 		if (!isIFPMap.containsKey(term.getURI())){
 			OntModel m = (OntModel) getModelForVocabulary(ns);
-			isIFPMap.put(term.getURI(), (m.getInverseFunctionalProperty(term.getURI()) != null));
+			synchronized(isIFPMap) {
+				isIFPMap.put(term.getURI(), (m.getInverseFunctionalProperty(term.getURI()) != null));
+			}
 		}
 		
 		return isIFPMap.get(term.getURI());
@@ -630,7 +676,10 @@ public class VocabularyLoader {
 				set.addAll(getDisjointWith(n.asNode()));
 			}
 			
-			disjointWith.put(term.getURI(), set);
+			synchronized(disjointWith) {
+				disjointWith.put(term.getURI(), set);
+			}
+			
 			return set;	
 		}
 	}
