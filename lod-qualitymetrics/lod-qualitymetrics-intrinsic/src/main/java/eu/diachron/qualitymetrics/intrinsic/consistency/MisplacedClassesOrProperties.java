@@ -93,12 +93,14 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 						this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
 					}
 				} else {
-					if (VocabularyLoader.isProperty(object)){
-						this.misplacedClassesCount++;
-						this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
-						seenClasses.put(object.toString(), false);
+					if(VocabularyLoader.checkTerm(object)){ //if the object does not exist, then do not count it as misplaced
+						if (VocabularyLoader.isProperty(object)){
+							this.misplacedClassesCount++;
+							this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
+							seenClasses.put(object.toString(), false);
+						}
+						seenClasses.put(object.toString(), true);
 					}
-					seenClasses.put(object.toString(), true);
 				}
 			}
 		}

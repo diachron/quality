@@ -231,7 +231,7 @@ public class VocabularyLoader {
 				}
 				return termsExists.get(term.getURI());
 			}
-			return null;
+			return false;
     	}
 	}
 	
@@ -258,7 +258,8 @@ public class VocabularyLoader {
 		
 		
 		if (!isPropertyMap.containsKey(term.getURI())){
-			OntModel m = (OntModel) getModelForVocabulary(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return false;
 			synchronized(isPropertyMap) {
 				isPropertyMap.put(term.getURI(),  
 					((m.getDatatypeProperty(term.getURI()) != null) ||
@@ -275,7 +276,8 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!objectProperties.containsKey(term.getURI())){
-			OntModel m = (OntModel) getModelForVocabulary(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return false;
 			synchronized(objectProperties) {
 				objectProperties.put(term.getURI(), (m.getObjectProperty(term.getURI()) != null));
 			}
@@ -289,7 +291,8 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!datatypeProperties.containsKey(term.getURI())){
-			OntModel m = (OntModel) getModelForVocabulary(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return false;
 			synchronized(datatypeProperties) {
 				datatypeProperties.put(term.getURI(), (m.getDatatypeProperty(term.getURI()) != null));
 			}
@@ -303,7 +306,8 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!isClassMap.containsKey(term.getURI())){
-			OntModel m = (OntModel) getModelForVocabulary(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return false;
 			synchronized(isClassMap) {
 				isClassMap.put(term.getURI(),  (m.getOntClass(term.getURI()) != null));
 			}
@@ -328,7 +332,9 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		Model m = (OntModel) dataset.getNamedModel(ns);
+		
+		OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+		if (m == null) return false;
 		Resource r = Commons.asRDFNode(term).asResource();
 		
 		boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
@@ -345,10 +351,12 @@ public class VocabularyLoader {
 		
 		String ns = term.getNameSpace();
 		
-		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		OntModel m = (OntModel) dataset.getNamedModel(ns);
-		
 		Set<RDFNode> set = new HashSet<RDFNode>();
+
+		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+		OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+		if (m == null) return set;
+		
 		OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
 		if (op != null){
 			List<? extends OntResource> domains = op.listDomain().toList();
@@ -376,10 +384,12 @@ public class VocabularyLoader {
 		
 		String ns = term.getNameSpace();
 		
-		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		OntModel m = (OntModel) dataset.getNamedModel(ns);
-		
 		Set<RDFNode> set = new HashSet<RDFNode>();
+
+		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+		OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+		if (m == null) return set;
+		
 		OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
 		
 		if (op != null){
@@ -473,11 +483,13 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 
-			OntModel m; 
-			if (getModelForVocabulary(ns).size() == 0) m = null; 
-			else m = (OntModel) getModelForVocabulary(ns);
 			
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
+			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
+			
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return set;
+			
 			if (m != null){
 				OntClass oc = m.getOntClass(term.getURI());
 				if (oc != null)
@@ -500,9 +512,10 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 	
-			OntModel m;
 			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-			m = (OntModel) dataset.getNamedModel(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return new LinkedHashSet<RDFNode>();
+			
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
 					m.getOntProperty(term.getURI()).listSuperProperties().toList());
 			
@@ -521,9 +534,11 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 
-			OntModel m;
 			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-			m = (OntModel) dataset.getNamedModel(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return new LinkedHashSet<RDFNode>();
+						
+			
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
 					m.getOntClass(term.getURI()).listSubClasses().toList());
 			
@@ -543,9 +558,10 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 	
-			OntModel m;
 			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-			m = (OntModel) dataset.getNamedModel(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return new LinkedHashSet<RDFNode>();
+
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(
 					m.getOntProperty(term.getURI()).listSubProperties().toList());
 			
@@ -586,7 +602,9 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!isIFPMap.containsKey(term.getURI())){
-			OntModel m = (OntModel) getModelForVocabulary(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return false;
+
 			synchronized(isIFPMap) {
 				isIFPMap.put(term.getURI(), (m.getInverseFunctionalProperty(term.getURI()) != null));
 			}
@@ -665,7 +683,8 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 
-			OntModel m = (OntModel) getModelForVocabulary(ns);
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return new LinkedHashSet<RDFNode>();
 			
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>(m.getOntClass(term.getURI()).listDisjointWith().toList());
 			
