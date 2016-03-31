@@ -142,7 +142,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 		if (misplaced > 0.0) 
 			metricValue = 1.0 - (misplaced / (this.totalPropertiesCount + this.totalClassesCount));
 		
-		statsLogger.info("Number of Misplaced Classes: {}; Number of Misplaced Properties: {}; Metric Value: {}", this.misplacedClassesCount , this.misplacedPropertiesCount, metricValue);
+		statsLogger.info("Number of Misplaced Classes: {}; Number of Misplaced Properties: {}; Total Properties Count: {}; Metric Value: {}", this.misplacedClassesCount , this.misplacedPropertiesCount, this.totalPropertiesCount, metricValue);
 
 		return metricValue;
 	}
