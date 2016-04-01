@@ -69,9 +69,10 @@ public class VocabularyLoader {
 	private static Logger logger = LoggerFactory.getLogger(VocabularyLoader.class);
 
 	private static DiachronCacheManager dcm = DiachronCacheManager.getInstance();
+	
+	//private static String TDB_DIRECTORY = PropertyManager.getInstance().getProperties("directories.properties").getProperty("TDB_TEMP_BASE_DIR")+"tdb_"+UUID.randomUUID().toString()+"/";
 	private static Dataset dataset = DatasetFactory.createMem();
 	private static ConcurrentMap<String, String> knownDatasets = new ConcurrentHashMap<String,String>();
-	
 	static {
 		TDB.sync(dataset);
 
@@ -132,8 +133,6 @@ public class VocabularyLoader {
 		knownDatasets.put("http://schema.org/", "schema.rdf"); //added schema.org since it does not allow content negotiation
 	}
 	
-//	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-
 	/**
 	 * Checks if a term (Class or Property) exists in a vocabulary
 	 * 
@@ -212,25 +211,25 @@ public class VocabularyLoader {
 		}
 	}
 	
-	
     private static ConcurrentMap<String, Boolean> termsExists = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
     private static Boolean termExists(String ns, Node term){
     	if (termsExists.containsKey(term.getURI())){
     		return termsExists.get(term.getURI());
     	} else {
-			Model m = dataset.getNamedModel(ns);
-			
-			m.enterCriticalSection(Lock.READ);
-			try{
-				if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
-					termsExists.putIfAbsent(term.getURI(),true);
-				} else if (term.isURI()) {
-					Resource r = m.createResource(term.getURI());
-					termsExists.putIfAbsent(term.getURI(), m.containsResource(r));
-				}
-			} finally {
-				m.leaveCriticalSection();
-			}
+    		synchronized (dataset){
+    			Model m = dataset.getNamedModel(ns);
+    			
+    			m.enterCriticalSection(Lock.READ);
+    			try{
+    				if ((term.getNameSpace().startsWith(RDF.getURI())) && (term.getURI().matches(RDF.getURI()+"_[0-9]+"))){
+    					termsExists.putIfAbsent(term.getURI(),true);
+    				} else if (term.isURI()) {
+    					termsExists.putIfAbsent(term.getURI(), m.containsResource(Commons.asRDFNode(term)));
+    				}
+    			} finally {
+    				m.leaveCriticalSection();
+    			}
+    		}
 			return (termsExists.get(term.getURI()) == null) ? false : termsExists.get(term.getURI());
     	}
 	}
@@ -244,7 +243,6 @@ public class VocabularyLoader {
 		return (knownDatasets.containsKey(uri) || dataset.containsNamedModel(uri));
 	}
 	
-	
 	public static Model getModelForVocabulary(String ns){
 		if(!(dataset.containsNamedModel(ns))) 
 			loadNStoDataset(ns);
@@ -256,18 +254,19 @@ public class VocabularyLoader {
 	public  static boolean isProperty(Node term){
 		String ns = term.getNameSpace();
 		
-		
 		if (!isPropertyMap.containsKey(term.getURI())){
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return false;
-			m.enterCriticalSection(Lock.READ);
-			try{
-				isPropertyMap.putIfAbsent(term.getURI(),  
-						((m.getDatatypeProperty(term.getURI()) != null) ||
-								(m.getObjectProperty(term.getURI()) != null) ||
-								(m.getOntProperty(term.getURI()) != null)));
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return false;
+				m.enterCriticalSection(Lock.READ);
+				try{
+					isPropertyMap.putIfAbsent(term.getURI(),  
+							((m.getDatatypeProperty(term.getURI()) != null) ||
+									(m.getObjectProperty(term.getURI()) != null) ||
+									(m.getOntProperty(term.getURI()) != null)));
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 		}
 		
@@ -279,13 +278,15 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!objectProperties.containsKey(term.getURI())){
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return false;
-			m.enterCriticalSection(Lock.READ);
-			try{
-				objectProperties.putIfAbsent(term.getURI(), (m.getObjectProperty(term.getURI()) != null));
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return false;
+				m.enterCriticalSection(Lock.READ);
+				try{
+					objectProperties.putIfAbsent(term.getURI(), (m.getObjectProperty(term.getURI()) != null));
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 		}
 		
@@ -297,14 +298,16 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!datatypeProperties.containsKey(term.getURI())){
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return false;
-			
-			m.enterCriticalSection(Lock.READ);
-			try{
-				datatypeProperties.putIfAbsent(term.getURI(), (m.getDatatypeProperty(term.getURI()) != null));
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return false;
+				
+				m.enterCriticalSection(Lock.READ);
+				try{
+					datatypeProperties.putIfAbsent(term.getURI(), (m.getDatatypeProperty(term.getURI()) != null));
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 		}
 		
@@ -316,20 +319,21 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!isClassMap.containsKey(term.getURI())){
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return false;
-			
-			m.enterCriticalSection(Lock.READ);
-			try{
-				isClassMap.putIfAbsent(term.getURI(),  (m.getOntClass(term.getURI()) != null));
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return false;
+				
+				m.enterCriticalSection(Lock.READ);
+				try{
+					isClassMap.putIfAbsent(term.getURI(),  (m.getOntClass(term.getURI()) != null));
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 		}
 		
 		return isClassMap.get(term.getURI());
 	}
-	
 	
 	public static Filter<RDFNode> deprecatedfilter = new Filter<RDFNode>() {
         @Override
@@ -345,19 +349,18 @@ public class VocabularyLoader {
 		
 		String ns = term.getNameSpace();
 		
-		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		
-		OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-		if (m == null) return false;
-		m.enterCriticalSection(Lock.READ);
-		try{ 
-			Resource r = Commons.asRDFNode(term).asResource();
-			boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
-			checkedDeprecatedTerm.putIfAbsent(term.getURI(), isDeprecated);
-		} finally {
-			m.leaveCriticalSection();
+		synchronized (dataset){
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return false;
+			m.enterCriticalSection(Lock.READ);
+			try{ 
+				Resource r = Commons.asRDFNode(term).asResource();
+				boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
+				checkedDeprecatedTerm.putIfAbsent(term.getURI(), isDeprecated);
+			} finally {
+				m.leaveCriticalSection();
+			}
 		}
-		
 		return checkedDeprecatedTerm.get(term.getURI());
 	}
 
@@ -369,29 +372,29 @@ public class VocabularyLoader {
 		
 		Set<RDFNode> set = new HashSet<RDFNode>();
 
-		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-		if (m == null) return set;
-		
-		m.enterCriticalSection(Lock.READ);
-		try{ 
-			OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
-			if (op != null){
-				List<? extends OntResource> domains = op.listDomain().toList();
-				for (OntResource d : domains){
-					if (d.asClass().isUnionClass()){
-						UnionClass uc = d.asClass().asUnionClass();
-						set.addAll(uc.getOperands().asJavaList());
-					}
-					else set.add(d.asResource());
-				}
-			}
+		synchronized (dataset){
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return set;
 			
-			propertyDomains.putIfAbsent(term.getURI(), set);
-		} finally {
-			m.leaveCriticalSection();
+			m.enterCriticalSection(Lock.READ);
+			try{ 
+				OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
+				if (op != null){
+					List<? extends OntResource> domains = op.listDomain().toList();
+					for (OntResource d : domains){
+						if (d.asClass().isUnionClass()){
+							UnionClass uc = d.asClass().asUnionClass();
+							set.addAll(uc.getOperands().asJavaList());
+						}
+						else set.add(d.asResource());
+					}
+				}
+				
+				propertyDomains.putIfAbsent(term.getURI(), set);
+			} finally {
+				m.leaveCriticalSection();
+			}
 		}
-		
 		return propertyDomains.get(term.getURI());
 	}
 	
@@ -404,65 +407,64 @@ public class VocabularyLoader {
 		
 		Set<RDFNode> set = new HashSet<RDFNode>();
 
-		if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-		OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-		if (m == null) return set;
-		
-		m.enterCriticalSection(Lock.READ);
-		try{ 
-			OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
+		synchronized (dataset){
+			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+			if (m == null) return set;
 			
-			if (op != null){
-				List<? extends OntResource> domains = op.listRange().toList();
-				for (OntResource d : domains){
-					if (d.asClass().isUnionClass()){
-						UnionClass uc = d.asClass().asUnionClass();
-						set.addAll(uc.getOperands().asJavaList());
+			m.enterCriticalSection(Lock.READ);
+			try{ 
+				OntProperty op = ((OntModel) m).getOntProperty(term.getURI());
+				
+				if (op != null){
+					List<? extends OntResource> domains = op.listRange().toList();
+					for (OntResource d : domains){
+						if (d.asClass().isUnionClass()){
+							UnionClass uc = d.asClass().asUnionClass();
+							set.addAll(uc.getOperands().asJavaList());
+						}
+						else set.add(d.asResource());
 					}
-					else set.add(d.asResource());
 				}
+				
+				if (set.contains(RDFS.Literal)){
+					set.add(XSD.xfloat);
+					set.add(XSD.xdouble);
+					set.add(XSD.xint);
+					set.add(XSD.xlong);
+					set.add(XSD.xshort);
+					set.add(XSD.xbyte);
+					set.add(XSD.xboolean);
+					set.add(XSD.xstring);
+					set.add(XSD.unsignedByte);
+					set.add(XSD.unsignedShort);
+					set.add(XSD.unsignedInt);
+					set.add(XSD.unsignedLong);
+					set.add(XSD.decimal);
+					set.add(XSD.integer);
+					set.add(XSD.nonPositiveInteger);
+					set.add(XSD.nonNegativeInteger);
+					set.add(XSD.positiveInteger);
+					set.add(XSD.negativeInteger);
+					set.add(XSD.normalizedString);
+					set.add(XSD.date);
+					set.add(XSD.dateTime);
+					set.add(XSD.gDay);
+					set.add(XSD.gMonth);
+					set.add(XSD.gYear);
+					set.add(XSD.gMonthDay);
+					set.add(XSD.gYearMonth);
+					set.add(XSD.hexBinary);
+					set.add(XSD.language);
+					set.add(XSD.time);
+				}
+				
+				propertyRanges.putIfAbsent(term.getURI(), set);
+			} finally {
+				m.leaveCriticalSection();
 			}
-			
-			if (set.contains(RDFS.Literal)){
-				set.add(XSD.xfloat);
-				set.add(XSD.xdouble);
-				set.add(XSD.xint);
-				set.add(XSD.xlong);
-				set.add(XSD.xshort);
-				set.add(XSD.xbyte);
-				set.add(XSD.xboolean);
-				set.add(XSD.xstring);
-				set.add(XSD.unsignedByte);
-				set.add(XSD.unsignedShort);
-				set.add(XSD.unsignedInt);
-				set.add(XSD.unsignedLong);
-				set.add(XSD.decimal);
-				set.add(XSD.integer);
-				set.add(XSD.nonPositiveInteger);
-				set.add(XSD.nonNegativeInteger);
-				set.add(XSD.positiveInteger);
-				set.add(XSD.negativeInteger);
-				set.add(XSD.normalizedString);
-				set.add(XSD.date);
-				set.add(XSD.dateTime);
-				set.add(XSD.gDay);
-				set.add(XSD.gMonth);
-				set.add(XSD.gYear);
-				set.add(XSD.gMonthDay);
-				set.add(XSD.gYearMonth);
-				set.add(XSD.hexBinary);
-				set.add(XSD.language);
-				set.add(XSD.time);
-			}
-			
-			propertyRanges.putIfAbsent(term.getURI(), set);
-		} finally {
-			m.leaveCriticalSection();
 		}
-		
 		return propertyRanges.get(term.getURI());
 	}
-	
 	
 	private static Map<Node, Set<RDFNode>> infParent = new HashMap<Node,Set<RDFNode>>();
 	@Deprecated
@@ -504,26 +506,26 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 
-			
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
-			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
 			
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return set;
-			
-			m.enterCriticalSection(Lock.READ);
-			try{ 
-				if (m != null){
-					OntClass oc = m.getOntClass(term.getURI());
-					if (oc != null)
-						set.addAll(m.getOntClass(term.getURI()).listSuperClasses().toList());
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return set;
+				
+				m.enterCriticalSection(Lock.READ);
+				try{ 
+					if (m != null){
+						OntClass oc = m.getOntClass(term.getURI());
+						if (oc != null)
+							set.addAll(m.getOntClass(term.getURI()).listSuperClasses().toList());
+					}
+					
+					set.add(OWL.Thing);
+					
+					parentNodes.putIfAbsent(term.getURI(), set);
+				} finally {
+					m.leaveCriticalSection();
 				}
-				
-				set.add(OWL.Thing);
-				
-				parentNodes.putIfAbsent(term.getURI(), set);
-			} finally {
-				m.leaveCriticalSection();
 			}
 			
 			return parentNodes.get(term.getURI());
@@ -561,17 +563,18 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 
-			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return new LinkedHashSet<RDFNode>();
-						
-			m.enterCriticalSection(Lock.READ);
-			try{ 
-				Set<RDFNode> set = new LinkedHashSet<RDFNode>(
-						m.getOntClass(term.getURI()).listSubClasses().toList());
-				childNodes.putIfAbsent(term.getURI(), set);
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return new LinkedHashSet<RDFNode>();
+							
+				m.enterCriticalSection(Lock.READ);
+				try{ 
+					Set<RDFNode> set = new LinkedHashSet<RDFNode>(
+							m.getOntClass(term.getURI()).listSubClasses().toList());
+					childNodes.putIfAbsent(term.getURI(), set);
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 			return childNodes.get(term.getURI());
 		}
@@ -584,18 +587,19 @@ public class VocabularyLoader {
 		} else {
 			String ns = term.getNameSpace();
 	
-			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return new LinkedHashSet<RDFNode>();
-
-			m.enterCriticalSection(Lock.READ);
-			try{ 
-				Set<RDFNode> set = new LinkedHashSet<RDFNode>(
-						m.getOntProperty(term.getURI()).listSubProperties().toList());
-				
-				childNodes.putIfAbsent(term.getURI(), set);
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return new LinkedHashSet<RDFNode>();
+	
+				m.enterCriticalSection(Lock.READ);
+				try{ 
+					Set<RDFNode> set = new LinkedHashSet<RDFNode>(
+							m.getOntProperty(term.getURI()).listSubProperties().toList());
+					
+					childNodes.putIfAbsent(term.getURI(), set);
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 			return childNodes.get(term.getURI());
 		}
@@ -631,13 +635,15 @@ public class VocabularyLoader {
 		String ns = term.getNameSpace();
 		
 		if (!isIFPMap.containsKey(term.getURI())){
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return false;
-			m.enterCriticalSection(Lock.READ);
-			try{ 
-				isIFPMap.putIfAbsent(term.getURI(), (m.getInverseFunctionalProperty(term.getURI()) != null));
-			} finally {
-				m.leaveCriticalSection();
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return false;
+				m.enterCriticalSection(Lock.READ);
+				try{ 
+					isIFPMap.putIfAbsent(term.getURI(), (m.getInverseFunctionalProperty(term.getURI()) != null));
+				} finally {
+					m.leaveCriticalSection();
+				}
 			}
 		}
 		
@@ -713,23 +719,24 @@ public class VocabularyLoader {
 			return disjointWith.get(term.getURI());
 		} else {
 			String ns = term.getNameSpace();
-
-			OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
-			if (m == null) return new LinkedHashSet<RDFNode>();
-			m.enterCriticalSection(Lock.READ);
-			try{ 
-				Set<RDFNode> set = new LinkedHashSet<RDFNode>(m.getOntClass(term.getURI()).listDisjointWith().toList());
-				
-				Set<RDFNode> parent = inferParentClass(term);
-				parent.remove(OWL.Thing);
-				for(RDFNode n : parent){
-					if (n.isAnon()) continue;
-					set.addAll(getDisjointWith(n.asNode()));
+			synchronized (dataset){
+				OntModel m = (getModelForVocabulary(ns).size() > 0) ? (OntModel) getModelForVocabulary(ns) : null;
+				if (m == null) return new LinkedHashSet<RDFNode>();
+				m.enterCriticalSection(Lock.READ);
+				try{ 
+					Set<RDFNode> set = new LinkedHashSet<RDFNode>(m.getOntClass(term.getURI()).listDisjointWith().toList());
+					
+					Set<RDFNode> parent = inferParentClass(term);
+					parent.remove(OWL.Thing);
+					for(RDFNode n : parent){
+						if (n.isAnon()) continue;
+						set.addAll(getDisjointWith(n.asNode()));
+					}
+					
+					disjointWith.putIfAbsent(term.getURI(), set);
+				} finally {
+					m.leaveCriticalSection();
 				}
-				
-				disjointWith.putIfAbsent(term.getURI(), set);
-			} finally {
-				m.leaveCriticalSection();
 			}
 			return disjointWith.get(term.getURI());
 		}
