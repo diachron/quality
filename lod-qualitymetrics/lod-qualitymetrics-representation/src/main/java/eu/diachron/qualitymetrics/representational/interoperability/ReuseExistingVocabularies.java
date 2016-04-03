@@ -88,11 +88,11 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 //						Boolean seen = shared.classOrPropertyDefined(object.getURI());
 //						Boolean defined = null;
 //						if (seen == null) {
-//							defined = VocabularyLoader.checkTerm(object);
+//							defined = VocabularyLoader.getInstance().checkTerm(object);
 //							shared.addClassOrProperty(object.getURI(), defined);
 //						}
 //						else defined = seen;
-						Boolean defined = VocabularyLoader.checkTerm(object);
+						Boolean defined = VocabularyLoader.getInstance().checkTerm(object);
 						
 						if (defined){
 							seenSuggested.add(object.getNameSpace());
@@ -105,7 +105,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 		
 		if (!(this.seenSet.contains(predicate.getURI()))){
 			if (suggestedVocabs.contains(predicate.getNameSpace())){
-				Boolean defined = VocabularyLoader.checkTerm(predicate);				
+				Boolean defined = VocabularyLoader.getInstance().checkTerm(predicate);				
 				if (defined){
 					seenSuggested.add(predicate.getNameSpace());
 				}
@@ -199,7 +199,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 		logger.info("Found {} vocabularies", lst.size());
 		for(RDFNode n : lst){
 			logger.info("Loading {}", n.toString());
-			VocabularyLoader.loadVocabulary(n.toString());
+			VocabularyLoader.getInstance().loadVocabulary(n.toString());
 			suggestedVocabs.add(n.toString());
 		}
 		

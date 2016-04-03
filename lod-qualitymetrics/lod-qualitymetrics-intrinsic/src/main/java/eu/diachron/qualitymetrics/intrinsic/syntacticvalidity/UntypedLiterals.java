@@ -68,6 +68,8 @@ public class UntypedLiterals implements QualityMetric {
 	@Override
 	public double metricValue() {
 		statsLogger.info("# Typed Literals: {}, # Untyped Literals: {}", numberTypedLiterals, numberUntypedLiterals);
+		if (((double)numberTypedLiterals + (double) numberUntypedLiterals) == 0.0) return 1.0;
+		
 		return 1.0 - (double)numberUntypedLiterals / ((double)numberTypedLiterals + (double) numberUntypedLiterals);
 	}
 

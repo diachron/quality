@@ -59,8 +59,8 @@ public class LOVInterface {
 			String uri = source.get("uri").getTextValue();
 			//TODO: some sort of blacklist
 			if (!(uri.contains("vocab.deri.ie"))){
-				VocabularyLoader.loadVocabulary(uri);
-				if (VocabularyLoader.getModelForVocabulary(uri) != null) vocabs.add(uri);
+				VocabularyLoader.getInstance().loadVocabulary(uri);
+				if (VocabularyLoader.getInstance().getModelForVocabulary(uri) != null) vocabs.add(uri);
 			}
 		}
 		return vocabs;

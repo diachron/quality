@@ -123,8 +123,8 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 				// we only need to check disjointness when there are at least 2 classes
 				boolean isDisjoint = false;
 				for (String s : classes){
-					if (VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(s).asNode())){
-						Set<String> _set = this.rdfNodeSetToString(VocabularyLoader.getDisjointWith(ModelFactory.createDefaultModel().createResource(s).asNode()));
+					if (VocabularyLoader.getInstance().checkTerm(ModelFactory.createDefaultModel().createResource(s).asNode())){
+						Set<String> _set = this.rdfNodeSetToString(VocabularyLoader.getInstance().getDisjointWith(ModelFactory.createDefaultModel().createResource(s).asNode()));
 						
 						SetView<String> setView = Sets.intersection(classes, _set);
 						if (setView.size() > 0){

@@ -48,17 +48,18 @@ public class UsageOfDeprecatedClassesOrProperties implements QualityMetric{
 		Node object = quad.getObject();
 		
 		if (property.getURI().equals(RDF.type.getURI())){
-			if (VocabularyLoader.checkTerm(object)){
-				if (VocabularyLoader.isDeprecatedTerm(object)) {
+			if (VocabularyLoader.getInstance().checkTerm(object)){
+				if (VocabularyLoader.getInstance().isDeprecatedTerm(object)) {
 					deprecatedTypes++;
 					Quad q = new Quad(null, object, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedClass.asNode());
 					this._problemList.add(q);
 				}
 				totalTypes++;
 			}
+			totalProperties++;
 		} else {
-			if (VocabularyLoader.checkTerm(property)){
-				if (VocabularyLoader.isDeprecatedTerm(property)) {
+			if (VocabularyLoader.getInstance().checkTerm(property)){
+				if (VocabularyLoader.getInstance().isDeprecatedTerm(property)) {
 					deprecatedProperties++;
 					Quad q = new Quad(null, property, QPRO.exceptionDescription.asNode(), DQMPROB.DeprecatedProperty.asNode());
 					this._problemList.add(q);

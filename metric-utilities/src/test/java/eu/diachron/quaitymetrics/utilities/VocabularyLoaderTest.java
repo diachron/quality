@@ -27,7 +27,7 @@ public class VocabularyLoaderTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		VocabularyLoader.clearDataset();
+		VocabularyLoader.getInstance().clearDataset();
 	}
 
 	@After
@@ -36,28 +36,28 @@ public class VocabularyLoaderTest extends Assert {
 	
 	@Test
 	public void knownVocabularyPropertiesTest() throws IOException, URISyntaxException {
-		assertTrue(VocabularyLoader.checkTerm(FOAF.page.asNode()));
-		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"false").asNode()));
-		assertTrue(VocabularyLoader.checkTerm(RDF.li(1).asNode()));
-		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"_1").asNode()));
+		assertTrue(VocabularyLoader.getInstance().checkTerm(FOAF.page.asNode()));
+		assertFalse(VocabularyLoader.getInstance().checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"false").asNode()));
+		assertTrue(VocabularyLoader.getInstance().checkTerm(RDF.li(1).asNode()));
+		assertFalse(VocabularyLoader.getInstance().checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"_1").asNode()));
 	}
 
 	@Test
 	public void unknownVocabularyPropertiesTest() throws IOException, URISyntaxException {
-		assertTrue(VocabularyLoader.checkTerm(DAQ.computedOn.asNode()));
-		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(DAQ.NS+"false").asNode()));
+		assertTrue(VocabularyLoader.getInstance().checkTerm(DAQ.computedOn.asNode()));
+		assertFalse(VocabularyLoader.getInstance().checkTerm(ModelFactory.createDefaultModel().createResource(DAQ.NS+"false").asNode()));
 	}
 	
 	@Test
 	public void knownVocabularyClassTest() throws IOException, URISyntaxException {
-		assertTrue(VocabularyLoader.checkTerm(FOAF.Agent.asNode()));
-		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"False").asNode()));
+		assertTrue(VocabularyLoader.getInstance().checkTerm(FOAF.Agent.asNode()));
+		assertFalse(VocabularyLoader.getInstance().checkTerm(ModelFactory.createDefaultModel().createResource(FOAF.NS+"False").asNode()));
 	}
 
 	@Test
 	public void unknownVocabularyClassTest() throws IOException, URISyntaxException {
-		assertTrue(VocabularyLoader.checkTerm(DAQ.Category.asNode()));
-		assertFalse(VocabularyLoader.checkTerm(ModelFactory.createDefaultModel().createResource(DAQ.NS+"False").asNode()));
+		assertTrue(VocabularyLoader.getInstance().checkTerm(DAQ.Category.asNode()));
+		assertFalse(VocabularyLoader.getInstance().checkTerm(ModelFactory.createDefaultModel().createResource(DAQ.NS+"False").asNode()));
 	}
 
 }

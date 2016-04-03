@@ -126,7 +126,7 @@ public class SimilarityComparator {
 
         
 		for (String ns : namespaces){
-			Model m = VocabularyLoader.getModelForVocabulary(ns);
+			Model m = VocabularyLoader.getInstance().getModelForVocabulary(ns);
 			if (m.size() == 0){
 				throw new VocabularyUnreachableException("Vocabulary " + ns + "could not be accessed");
 			}
@@ -151,7 +151,7 @@ public class SimilarityComparator {
         G graph = new GraphMemory(graph_uri);
 
         
-		Model m = VocabularyLoader.getModelForVocabulary(namespace);
+		Model m = VocabularyLoader.getInstance().getModelForVocabulary(namespace);
 		if (m.size() == 0){
 			throw new VocabularyUnreachableException("Vocabulary " + namespace + "could not be accessed");
 		}
@@ -180,27 +180,27 @@ public class SimilarityComparator {
         graph.addV(r2_uri);
 
         
-        addNodes(graph, r1_uri, this.r1_type.getURI(), VocabularyLoader.inferParent(j_r1.asNode(), null, true), true); // ancestors
-        addNodes(graph, r2_uri, this.r2_type.getURI(), VocabularyLoader.inferParent(j_r2.asNode(), null, true), true); // ancestors
-        addNodes(graph, r1_uri, this.r1_type.getURI(), VocabularyLoader.inferChildren(j_r1.asNode(), null, true), false); // descendants
-        addNodes(graph, r2_uri, this.r2_type.getURI(), VocabularyLoader.inferChildren(j_r2.asNode(), null, true), false); // descendants
+        addNodes(graph, r1_uri, this.r1_type.getURI(), VocabularyLoader.getInstance().inferParent(j_r1.asNode(), null, true), true); // ancestors
+        addNodes(graph, r2_uri, this.r2_type.getURI(), VocabularyLoader.getInstance().inferParent(j_r2.asNode(), null, true), true); // ancestors
+        addNodes(graph, r1_uri, this.r1_type.getURI(), VocabularyLoader.getInstance().inferChildren(j_r1.asNode(), null, true), false); // descendants
+        addNodes(graph, r2_uri, this.r2_type.getURI(), VocabularyLoader.getInstance().inferChildren(j_r2.asNode(), null, true), false); // descendants
         
         addOtherNodes(graph, this.r1_type);
         addOtherNodes(graph, this.r2_type);
         
-        Set<RDFNode> ancs = VocabularyLoader.inferParent(j_r1.asNode(), null, true);
-        ancs.addAll(VocabularyLoader.inferParent(j_r2.asNode(), null, true));
+        Set<RDFNode> ancs = VocabularyLoader.getInstance().inferParent(j_r1.asNode(), null, true);
+        ancs.addAll(VocabularyLoader.getInstance().inferParent(j_r2.asNode(), null, true));
         
         for(RDFNode n : ancs) {
-        	addNodes(graph, FACTORY.getURI(n.toString()), n.toString(), VocabularyLoader.inferParent(n.asNode(), null, true), true);
+        	addNodes(graph, FACTORY.getURI(n.toString()), n.toString(), VocabularyLoader.getInstance().inferParent(n.asNode(), null, true), true);
         	addOtherNodes(graph, n.asResource());
         }
 
-        Set<RDFNode> decs = VocabularyLoader.inferChildren(j_r1.asNode(), null, true);
-        decs.addAll(VocabularyLoader.inferChildren(j_r2.asNode(), null, true));
+        Set<RDFNode> decs = VocabularyLoader.getInstance().inferChildren(j_r1.asNode(), null, true);
+        decs.addAll(VocabularyLoader.getInstance().inferChildren(j_r2.asNode(), null, true));
         
         for(RDFNode n : decs){
-        	addNodes(graph, FACTORY.getURI(n.toString()), n.toString(), VocabularyLoader.inferChildren(n.asNode(), null, true), false);
+        	addNodes(graph, FACTORY.getURI(n.toString()), n.toString(), VocabularyLoader.getInstance().inferChildren(n.asNode(), null, true), false);
         	addOtherNodes(graph, n.asResource());
         }
 
@@ -222,7 +222,7 @@ public class SimilarityComparator {
     }
     
     private void addOtherNodes(G graph, Resource observed){
-    	Model m = VocabularyLoader.getClassModelNoLiterals(observed.asNode(), null);
+    	Model m = VocabularyLoader.getInstance().getClassModelNoLiterals(observed.asNode(), null);
     	
     	for(Statement stmt : m.listStatements().toList()){
     		if (stmt.getPredicate().equals(com.hp.hpl.jena.vocabulary.RDFS.subClassOf)) continue;

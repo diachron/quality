@@ -131,7 +131,7 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 	public double metricValue() {
 		
 		for (Triple t : this.unknownTriples.getItems()){
-			if (VocabularyLoader.checkTerm(t.getPredicate())){
+			if (VocabularyLoader.getInstance().checkTerm(t.getPredicate())){
 				checkDomain(t);
 				checkRange(t);
 			} else {
@@ -158,9 +158,9 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 			
 			Set<RDFNode> types = new LinkedHashSet<RDFNode>();
 			types.add(mc.createResource(type));
-			types.addAll(VocabularyLoader.inferParentClass(mc.createResource(type).asNode()));
+			types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
 
-			Set<RDFNode> _dom = VocabularyLoader.getPropertyDomain(t.getPredicate());
+			Set<RDFNode> _dom = VocabularyLoader.getInstance().getPropertyDomain(t.getPredicate());
 
 			if(Sets.intersection(_dom, types).size() == 0){
 				addToProblem(new Quad(null, t),'d');
@@ -173,7 +173,7 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 	}
 	
 	private void checkRange(Triple t){
-		Set<RDFNode> _ran = VocabularyLoader.getPropertyRange(t.getPredicate());
+		Set<RDFNode> _ran = VocabularyLoader.getInstance().getPropertyRange(t.getPredicate());
 		
 		if (t.getObject().isLiteral()){
 			Resource litRes = this.getLiteralType(t.getObject());
@@ -189,7 +189,7 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 				
 				Set<RDFNode> types = new LinkedHashSet<RDFNode>();;
 				types.add(mc.createResource(type));
-				types.addAll(VocabularyLoader.inferParentClass(mc.createResource(type).asNode()));
+				types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
 				
 				
 				if(Sets.intersection(_ran, types).size() == 0){

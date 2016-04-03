@@ -109,7 +109,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 				if (!(this.seenSet.contains(object.getURI()))){
 					this.totalClasses++;
 					if ((suggestedVocabs.containsKey(object.getNameSpace())) || (topVocabs.contains(object.getNameSpace()))){
-						Boolean defined = VocabularyLoader.checkTerm(object);
+						Boolean defined = VocabularyLoader.getInstance().checkTerm(object);
 						
 						if (defined){
 							this.overlapClasses++;
@@ -128,7 +128,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 				// its a property from a suggested or top vocabulary
 				logger.info("checking predicate: {}", predicate.getURI());
 	
-				Boolean defined = VocabularyLoader.checkTerm(predicate);
+				Boolean defined = VocabularyLoader.getInstance().checkTerm(predicate);
 				
 				if (defined){
 					this.overlapProperties++;
@@ -225,7 +225,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 		logger.info("Found {} vocabularies", lst.size());
 		for(RDFNode n : lst){
 			logger.info("Loading {}", n.toString());
-			VocabularyLoader.loadVocabulary(n.toString());
+			VocabularyLoader.getInstance().loadVocabulary(n.toString());
 			suggestedVocabs.put(n.toString(),0.0);
 		}
 		

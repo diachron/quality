@@ -149,7 +149,7 @@ public class OntologyHijacking implements QualityMetric{
 			if (node.getNameSpace().equals(EnvironmentProperties.getInstance().getBaseURI())) 
 				return true;
 			else 
-				return !(VocabularyLoader.checkTerm(node.asNode()));
+				return !(VocabularyLoader.getInstance().checkTerm(node.asNode()));
 		}
 		
         

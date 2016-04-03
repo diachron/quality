@@ -61,18 +61,18 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (!(predicate.getURI().equals(RDF.type.getURI()))){
-			if (VocabularyLoader.checkTerm(predicate)){
+			if (VocabularyLoader.getInstance().checkTerm(predicate)){
 				this.validPredicates++;
 				
 				if (object.isLiteral()){
 					// predicate should not be an owl:ObjectProperty
-					if (VocabularyLoader.isObjectProperty(predicate)){
+					if (VocabularyLoader.getInstance().isObjectProperty(predicate)){
 						this.misuseObjectProperties++;
 						this.createProblemModel(subject, predicate, DQMPROB.MisusedObjectProperty);
 					}
 				} else if(object.isURI()){
 					// predicate should not be an owl:DataProperty
-					if (VocabularyLoader.isDatatypeProperty(predicate)){
+					if (VocabularyLoader.getInstance().isDatatypeProperty(predicate)){
 						this.misuseDatatypeProperties++;
 						this.createProblemModel(subject, predicate, DQMPROB.MisusedDatatypeProperty);
 					}

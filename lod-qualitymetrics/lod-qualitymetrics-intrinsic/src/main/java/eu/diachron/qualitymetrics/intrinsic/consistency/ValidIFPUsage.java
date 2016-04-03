@@ -65,8 +65,8 @@ public class ValidIFPUsage implements QualityMetric{
 		counter++;
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		if (VocabularyLoader.checkTerm(quad.getPredicate())){ // if we do not know the predicate, then we assume that it is not an IFP
-			if (VocabularyLoader.isInverseFunctionalProperty(quad.getPredicate())){
+		if (VocabularyLoader.getInstance().checkTerm(quad.getPredicate())){ // if we do not know the predicate, then we assume that it is not an IFP
+			if (VocabularyLoader.getInstance().isInverseFunctionalProperty(quad.getPredicate())){
 				logger.debug("{} is an IFP", quad.asTriple().toString());
 				totalIFPs++;
 				

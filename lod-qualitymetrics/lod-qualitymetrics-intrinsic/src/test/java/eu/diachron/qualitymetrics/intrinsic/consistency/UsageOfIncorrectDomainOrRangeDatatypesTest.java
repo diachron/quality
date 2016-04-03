@@ -28,21 +28,20 @@ import eu.diachron.qualitymetrics.utilities.TestLoader;
  */
 public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 	protected TestLoader loader = new TestLoader();
-	protected UsageOfIncorrectDomainOrRangeDatatypes metric = new UsageOfIncorrectDomainOrRangeDatatypes();
+	protected EstimatedUsageOfIncorrectDomainOrRangeDatatypes metric = new EstimatedUsageOfIncorrectDomainOrRangeDatatypes();
 
 
 	@Before
 	public void setUp() throws Exception {
 		EnvironmentProperties.getInstance().setDatasetURI("http://www.example.org");
-		loader.loadDataSet("testdumps/SampleInput_UsageOfIncorrectDomainOrRangeDatatypes_Minimal.ttl");
-//		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/social.mercedes-benz.com.full.ttl");
+//		loader.loadDataSet("testdumps/SampleInput_UsageOfIncorrectDomainOrRangeDatatypes_Minimal.ttl");
+		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/social.mercedes-benz.com.full.ttl");
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 	
-//	@Ignore
 	@Test
 	public void testUsageOfIncorrectClassesAndPropertiesMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
@@ -63,7 +62,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 		for(Quad q : loader.getStreamingQuads()){
 			metric.compute(q);
 		}
-		metric.metricValue();
+		System.out.println(metric.metricValue());
 		
 		ProblemList<?> pl = metric.getQualityProblems();
 		QualityReport qr = new QualityReport();

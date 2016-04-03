@@ -90,7 +90,7 @@ public class SimilarityComparatorStatic {
 
         G graph = new GraphMemory(graph_uri);
 
-		Model m = VocabularyLoader.getModelForVocabulary(namespace);
+		Model m = VocabularyLoader.getInstance().getModelForVocabulary(namespace);
 		if (m.size() == 0){
 			throw new VocabularyUnreachableException("Vocabulary " + namespace + "could not be accessed");
 		}
@@ -122,7 +122,7 @@ public class SimilarityComparatorStatic {
     
     @SuppressWarnings("unused")
 	private void addOtherNodes(G graph, Resource observed){
-    	Model m = VocabularyLoader.getClassModelNoLiterals(observed.asNode(), null);
+    	Model m = VocabularyLoader.getInstance().getClassModelNoLiterals(observed.asNode(), null);
     	
     	for(Statement stmt : m.listStatements().toList()){
     		if (stmt.getPredicate().equals(com.hp.hpl.jena.vocabulary.RDFS.subClassOf)) continue;

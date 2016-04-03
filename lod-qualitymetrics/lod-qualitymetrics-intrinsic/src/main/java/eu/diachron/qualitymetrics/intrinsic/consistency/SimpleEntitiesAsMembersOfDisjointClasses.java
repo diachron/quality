@@ -125,7 +125,7 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 					String _class = iter.next();
 					checked.add(_class);
 					Resource classAsResource = ModelFactory.createDefaultModel().createResource(_class);
-					Model model = VocabularyLoader.getModelForVocabulary(classAsResource.getNameSpace());
+					Model model = VocabularyLoader.getInstance().getModelForVocabulary(classAsResource.getNameSpace());
 					
 					// wrap the class under consideration into something that we can use to query the model
 					

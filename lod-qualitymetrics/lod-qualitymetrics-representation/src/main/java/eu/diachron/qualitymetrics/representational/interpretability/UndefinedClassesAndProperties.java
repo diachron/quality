@@ -66,7 +66,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 				if (!(object.isBlank())){
 					this.totalClasses++;
 					
-					Boolean defined = VocabularyLoader.checkTerm(object);
+					Boolean defined = VocabularyLoader.getInstance().checkTerm(object);
 					
 					if (!defined){
 						this.undefinedClasses++;
@@ -85,8 +85,8 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 			
 			if (!(this.isContainerPredicate(predicate))){
 				Boolean defined = false;
-				if (VocabularyLoader.checkTerm(predicate)){
-					defined = VocabularyLoader.isProperty(predicate);
+				if (VocabularyLoader.getInstance().checkTerm(predicate)){
+					defined = VocabularyLoader.getInstance().isProperty(predicate);
 				}
 
 				if (!defined){

@@ -99,7 +99,7 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 				while (iter.hasNext()){
 					RDFNode _class = iter.next();
 					checked.add(_class);
-					Model model = VocabularyLoader.getModelForVocabulary(_class.asResource().getNameSpace());
+					Model model = VocabularyLoader.getInstance().getModelForVocabulary(_class.asResource().getNameSpace());
 					Set<RDFNode> disjoinedClasses = model.listObjectsOfProperty(_class.asResource(), OWL.disjointWith).toSet();
 					disjoinedClasses.retainAll(mdc.objects);
 					disjoinedClasses.removeAll(checked);

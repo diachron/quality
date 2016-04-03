@@ -72,8 +72,8 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 				this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
 			}
 		} else {
-			if(VocabularyLoader.checkTerm(predicate)){ //if the predicate does not exist, then do not count it as misplaced
-				if ((VocabularyLoader.isClass(predicate))){
+			if(VocabularyLoader.getInstance().checkTerm(predicate)){ //if the predicate does not exist, then do not count it as misplaced
+				if ((VocabularyLoader.getInstance().isClass(predicate))){
 					this.misplacedPropertiesCount++;
 					this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
 					seenProperties.put(predicate.toString(), false);
@@ -84,7 +84,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 		
 		//checking if properties are found in the object position
 		if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI()))){
-			if (VocabularyLoader.checkTerm(object)){
+			if (VocabularyLoader.getInstance().checkTerm(object)){
 				logger.info("Checking {} for misplaced class", object.getURI());
 				this.totalClassesCount++;
 				if (seenClasses.containsKey(object.toString())){
@@ -93,8 +93,8 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 						this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
 					}
 				} else {
-					if(VocabularyLoader.checkTerm(object)){ //if the object does not exist, then do not count it as misplaced
-						if (VocabularyLoader.isProperty(object)){
+					if(VocabularyLoader.getInstance().checkTerm(object)){ //if the object does not exist, then do not count it as misplaced
+						if (VocabularyLoader.getInstance().isProperty(object)){
 							this.misplacedClassesCount++;
 							this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
 							seenClasses.put(object.toString(), false);
