@@ -6,7 +6,6 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
-
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -55,11 +54,9 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 	
 	private HTreeMap<String, String> mapResourceType =  MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
-	
-//	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
+//	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private ReservoirSampler<Triple> unknownTriples = new ReservoirSampler<Triple>(100000, false);
-	
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	//Sampling of Problems

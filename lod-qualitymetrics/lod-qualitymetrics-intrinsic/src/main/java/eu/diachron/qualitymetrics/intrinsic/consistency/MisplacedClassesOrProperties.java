@@ -1,12 +1,11 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
-import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
 
-import org.mapdb.DB;
-import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -15,7 +14,6 @@ import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
@@ -41,15 +39,18 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
 	private static Logger logger = LoggerFactory.getLogger(MisplacedClassesOrProperties.class);
 	
-	private HTreeMap<String, Boolean> seenProperties = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
-	private HTreeMap<String, Boolean> seenClasses = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+//	private HTreeMap<String, Boolean> seenProperties = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+    private ConcurrentMap<String, Boolean> seenProperties = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(100000).build();
+
+//	private HTreeMap<String, Boolean> seenClasses = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+    private ConcurrentMap<String, Boolean> seenClasses = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(100000).build();
 
 	private double misplacedClassesCount = 0.0;
 	private double totalClassesCount = 0.0;
 	private double misplacedPropertiesCount = 0.0;
 	private double totalPropertiesCount = 0.0;
 	
-	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+//	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 	// Sampling of problems - testing for LOD Evaluation
