@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 
 /**
@@ -67,7 +68,7 @@ public class UntypedLiterals implements QualityMetric {
 
 	@Override
 	public double metricValue() {
-		statsLogger.info("# Typed Literals: {}, # Untyped Literals: {}", numberTypedLiterals, numberUntypedLiterals);
+		statsLogger.info("Dataset: {};# Typed Literals: {}, # Untyped Literals: {}",EnvironmentProperties.getInstance().getDatasetURI(), numberTypedLiterals, numberUntypedLiterals);
 		if (((double)numberTypedLiterals + (double) numberUntypedLiterals) == 0.0) return 1.0;
 		
 		return 1.0 - (double)numberUntypedLiterals / ((double)numberTypedLiterals + (double) numberUntypedLiterals);

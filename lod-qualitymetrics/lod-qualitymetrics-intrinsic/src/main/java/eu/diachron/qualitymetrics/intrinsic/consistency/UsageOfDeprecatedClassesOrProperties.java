@@ -19,6 +19,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -74,8 +75,8 @@ public class UsageOfDeprecatedClassesOrProperties implements QualityMetric{
 		double value = 1 - (((double) deprecatedTypes + (double) deprecatedProperties) /  
 				((double) totalTypes + (double) totalProperties));
 		
-		statsLogger.info("Values: Deprecated Types {}, Deprecated Properties {}, Total Types: {}, Total Properties: {}, Metric Value: {}", 
-				deprecatedTypes, deprecatedProperties, totalTypes, totalProperties, value);
+		statsLogger.info("Dataset: {}; Values: Deprecated Types {}, Deprecated Properties {}, Total Types: {}, Total Properties: {}, Metric Value: {}", 
+				EnvironmentProperties.getInstance().getDatasetURI(),deprecatedTypes, deprecatedProperties, totalTypes, totalProperties, value);
 
 		
 		return value;

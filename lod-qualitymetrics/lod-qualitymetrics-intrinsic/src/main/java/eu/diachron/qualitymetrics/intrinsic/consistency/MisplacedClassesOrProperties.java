@@ -19,6 +19,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -143,7 +144,7 @@ public class MisplacedClassesOrProperties implements QualityMetric {
 		if (misplaced > 0.0) 
 			metricValue = 1.0 - (misplaced / (this.totalPropertiesCount + this.totalClassesCount));
 		
-		statsLogger.info("Number of Misplaced Classes: {}; Number of Misplaced Properties: {}; Total Properties Count: {}; Metric Value: {}", this.misplacedClassesCount , this.misplacedPropertiesCount, this.totalPropertiesCount, metricValue);
+		statsLogger.info("Dataset: {};Number of Misplaced Classes: {}; Number of Misplaced Properties: {}; Total Properties Count: {}; Metric Value: {}",EnvironmentProperties.getInstance().getDatasetURI(), this.misplacedClassesCount , this.misplacedPropertiesCount, this.totalPropertiesCount, metricValue);
 
 		return metricValue;
 	}

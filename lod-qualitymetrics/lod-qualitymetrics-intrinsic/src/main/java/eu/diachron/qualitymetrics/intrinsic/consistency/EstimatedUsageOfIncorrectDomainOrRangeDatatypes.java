@@ -80,7 +80,7 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 			else s = quad.getSubject().getURI();
 			String o = quad.getObject().getURI();
 			
-			mapResourceType.put(s,o);
+			mapResourceType.putIfAbsent(s,o);
 		}
 		else {
 			this.unknownTriples.add(quad.asTriple());

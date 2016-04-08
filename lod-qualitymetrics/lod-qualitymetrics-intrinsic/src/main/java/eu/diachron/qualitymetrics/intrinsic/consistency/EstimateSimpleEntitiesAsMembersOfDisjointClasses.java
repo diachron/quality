@@ -26,6 +26,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.intrinsic.consistency.helper.MDC;
@@ -152,7 +153,7 @@ public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements Quality
 
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.reservoir.size());
 
-		statsLogger.info("Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size(), metricValue);
+		statsLogger.info("Dataset: {}; Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}",EnvironmentProperties.getInstance().getDatasetURI(), this.entitiesAsMembersOfDisjointClasses, this.reservoir.getItems().size(), metricValue);
 
 		return metricValue;
 	}

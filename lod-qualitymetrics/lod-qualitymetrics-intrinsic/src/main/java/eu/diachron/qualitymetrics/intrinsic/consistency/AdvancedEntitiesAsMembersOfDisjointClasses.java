@@ -20,12 +20,14 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
+
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
@@ -90,7 +92,6 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 			if (RDF.type.asNode().equals(predicate)) {
 				// If we have a triple ?s rdf:type ?o, we add ?o to the list of
 				// types of ?s
-
 				Set<String> tmpTypes = typesOfResource.get(subject);
 
 				if (tmpTypes == null) {
@@ -191,7 +192,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
 
-		statsLogger.info("Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
+		statsLogger.info("Dataset: {}; Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", EnvironmentProperties.getInstance().getDatasetURI(), this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
 
 		return metricValue;
 	}

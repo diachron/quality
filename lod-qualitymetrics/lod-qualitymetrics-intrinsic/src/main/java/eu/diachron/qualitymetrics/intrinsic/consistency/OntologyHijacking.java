@@ -162,7 +162,7 @@ public class OntologyHijacking implements QualityMetric{
         	if (this.totalPossibleHijacks == 0) return 1.0;
         	
         	double value = 1.0 - (this.totalHijacks / this.totalPossibleHijacks);
-        	statsLogger.info("Total Hijacks: {}; Total Possible: {}; Metric Value: {}", this.totalHijacks, this.totalPossibleHijacks, value); 
+        	statsLogger.info("Dataset: {}; Total Hijacks: {}; Total Possible: {}; Metric Value: {}",EnvironmentProperties.getInstance().getDatasetURI(), this.totalHijacks, this.totalPossibleHijacks, value); 
 
             return value;
         }

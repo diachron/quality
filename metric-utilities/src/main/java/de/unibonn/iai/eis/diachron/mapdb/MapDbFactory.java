@@ -83,11 +83,12 @@ public class MapDbFactory {
 		}
 		
 		DB mapDB = DBMaker.newFileDB(new File(mapDbDir + "mapdb-" + timestamp))
+		.mmapFileEnableIfSupported()
 		.closeOnJvmShutdown()
 		.deleteFilesAfterClose()
 		.transactionDisable()
-		.mmapFileEnable()
 		.asyncWriteFlushDelay(2000)
+		.cacheDisable()
 		.make();
 		
 		return mapDB;
@@ -107,12 +108,13 @@ public class MapDbFactory {
 		}
 		
 		DB mapDB = DBMaker.newFileDB(new File(mapDbDir + "mapasyncdb-" + timestamp))
+		.mmapFileEnableIfSupported()
 		.closeOnJvmShutdown()
 		.deleteFilesAfterClose()
 		.transactionDisable()
-		.mmapFileEnable()
 		.asyncWriteFlushDelay(2000)
-		.asyncWriteEnable()
+//		.asyncWriteEnable()
+		.cacheDisable()
 		.make();
 		
 		return mapDB;
