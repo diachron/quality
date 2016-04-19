@@ -3,6 +3,8 @@
  */
 package eu.diachron.qualitymetrics.representational.interpretability;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -11,17 +13,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.AnonId;
+import com.hp.hpl.jena.rdf.model.Bag;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
+import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 
 /**
  * @author Jeremy Debattista
@@ -38,8 +46,12 @@ public class NoBlankNodeUsage implements QualityMetric {
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 	private Set<String> uniqueDLC = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private Set<String> uniqueBN = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(250000, false);
+	private Model problemModel = ModelFactory.createDefaultModel();
+	private  Resource bagURI = Commons.generateURI();
+	private Bag problemBag = problemModel.createBag(bagURI.getURI());
 	
 	@Override
 	public void compute(Quad quad) {
@@ -53,14 +65,16 @@ public class NoBlankNodeUsage implements QualityMetric {
 		if (!(predicate.hasURI(RDF.type.getURI()))){
 			if (subject.isBlank()) {
 				uniqueBN.add(subject.getBlankNodeLabel());
-				_problemList.add(new SerialisableQuad(quad));
+				ProblemReport pr = new ProblemReport(quad);
+				problemSampler.add(pr);
 			}
 			else uniqueDLC.add(subject.getURI());
 			
 			if (!(object.isLiteral())){
 				if (object.isBlank()){
 					uniqueBN.add(object.getBlankNodeLabel());
-					_problemList.add(new SerialisableQuad(quad));
+					ProblemReport pr = new ProblemReport(quad);
+					problemSampler.add(pr);
 				}
 				else uniqueDLC.add(object.getURI());
 			}
@@ -82,18 +96,36 @@ public class NoBlankNodeUsage implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<SerialisableQuad> pl = null;
-		try {
-			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<SerialisableQuad>(this._problemList);	
-			} else {
-				pl = new ProblemList<SerialisableQuad>();
+		ProblemList<Model> tmpProblemList = new ProblemList<Model>();
+		if(this.problemSampler != null && this.problemSampler.size() > 0) {
+			for(ProblemReport pr : this.problemSampler.getItems()){
+				List<Statement> stmt = pr.createProblemModel();
+				this.problemBag.add(stmt.get(0).getSubject());
+				this.problemModel.add(stmt);
 			}
-		} catch (ProblemListInitialisationException e) {
-			logger.error(e.getMessage());
+			tmpProblemList.getProblemList().add(this.problemModel);
+
+		} else {
+			tmpProblemList = new ProblemList<Model>();
 		}
-		return pl;
+		return tmpProblemList;
 	}
+	
+	
+//	public ProblemList<?> getQualityProblems() {
+//		ProblemList<SerialisableQuad> pl = null;
+//		try {
+//			if(this._problemList != null && this._problemList.size() > 0) {
+//				pl = new ProblemList<SerialisableQuad>(this._problemList);	
+//			} else {
+//				pl = new ProblemList<SerialisableQuad>();
+//			}
+//		} catch (ProblemListInitialisationException e) {
+//			logger.error(e.getMessage());
+//		}
+//		return pl;
+//	}
+	
 
 	@Override
 	public boolean isEstimate() {
@@ -103,5 +135,26 @@ public class NoBlankNodeUsage implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
+	}
+	
+	private class ProblemReport{
+		
+		private Quad q;
+
+		ProblemReport(Quad q){
+			this.q = q;
+		}
+		
+		
+		List<Statement> createProblemModel(){
+			List<Statement> lst = new ArrayList<Statement>();
+	    	Resource anon = ModelFactory.createDefaultModel().createResource(AnonId.create());
+	    	
+	    	lst.add(new StatementImpl(anon, RDF.subject, Commons.asRDFNode(q.getSubject())));
+	    	lst.add(new StatementImpl(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate())));
+	    	lst.add(new StatementImpl(anon, RDF.object, Commons.asRDFNode(q.getObject())));
+	    	
+	    	return lst;
+		}
 	}
 }

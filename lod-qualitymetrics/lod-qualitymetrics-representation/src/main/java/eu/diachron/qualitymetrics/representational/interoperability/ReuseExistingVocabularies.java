@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
@@ -15,6 +16,7 @@ import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -67,7 +69,9 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 //	private SharedResources shared = SharedResources.getInstance();
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 
-	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+    private ConcurrentMap<String, Boolean> seenSet = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(100000).build();
+
+//	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	private static Logger logger = LoggerFactory.getLogger(ReuseExistingVocabularies.class);
@@ -83,7 +87,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 			if (!(object.isBlank())){
 				logger.info("checking class: {}", object.getURI());
 
-				if (!(this.seenSet.contains(object.getURI()))){
+				if (!(this.seenSet.get(object.getURI()))){
 					if (suggestedVocabs.contains(object.getNameSpace())){
 //						Boolean seen = shared.classOrPropertyDefined(object.getURI());
 //						Boolean defined = null;
@@ -97,20 +101,20 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 						if (defined){
 							seenSuggested.add(object.getNameSpace());
 						}
-						this.seenSet.add(object.getURI());
+						this.seenSet.put(object.getURI(),true);
 					}
 				}
 			}
 		}
 		
-		if (!(this.seenSet.contains(predicate.getURI()))){
+		if (!(this.seenSet.get(predicate.getURI()))){
 			if (suggestedVocabs.contains(predicate.getNameSpace())){
 				Boolean defined = VocabularyLoader.getInstance().checkTerm(predicate);				
 				if (defined){
 					seenSuggested.add(predicate.getNameSpace());
 				}
 			}
-			this.seenSet.add(predicate.getURI());
+			this.seenSet.put(predicate.getURI(),true);
 		}
 	}
 

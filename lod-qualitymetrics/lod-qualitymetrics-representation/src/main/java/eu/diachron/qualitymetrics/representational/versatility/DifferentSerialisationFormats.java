@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.mapdb.DB;
-import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +57,7 @@ public class DifferentSerialisationFormats implements QualityMetric{
 	
 	ResourceBaseURIOracle oracle = new ResourceBaseURIOracle();
 	
-	private HTreeMap<String, List<String>> datasetFeatures = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+	private ConcurrentHashMap<String, List<String>> datasetFeatures = new ConcurrentHashMap<String, List<String>>();
 	
 	boolean flag = false;
 	

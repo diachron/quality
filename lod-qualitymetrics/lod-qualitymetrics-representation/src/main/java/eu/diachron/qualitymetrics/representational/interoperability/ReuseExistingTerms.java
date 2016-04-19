@@ -17,6 +17,7 @@ import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -84,9 +85,11 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	private static Logger logger = LoggerFactory.getLogger(ReuseExistingTerms.class);
 //	private SharedResources shared = SharedResources.getInstance();
 	
+    private ConcurrentMap<String, Boolean> seenSet = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(100000).build();
+	
+//	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
-	private Set<String> seenSet = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+    private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 
 	private int overlapClasses = 0;
@@ -106,7 +109,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 			if (!(object.isBlank())){
 				logger.info("checking class: {}", object.getURI());
 
-				if (!(this.seenSet.contains(object.getURI()))){
+				if (!(this.seenSet.get(object.getURI()))){
 					this.totalClasses++;
 					if ((suggestedVocabs.containsKey(object.getNameSpace())) || (topVocabs.contains(object.getNameSpace()))){
 						Boolean defined = VocabularyLoader.getInstance().checkTerm(object);
@@ -117,12 +120,12 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 							suggestedVocabs.put(object.getNameSpace(), newVal);
 						}
 					}
-					this.seenSet.add(object.getURI());
+					this.seenSet.put(object.getURI(),true);
 				}
 			}
 		}
 		
-		if (!(this.seenSet.contains(predicate.getURI()))){
+		if (!(this.seenSet.get(predicate.getURI()))){
 			this.totalProperties++;
 			if ((suggestedVocabs.containsKey(predicate.getNameSpace())) || (topVocabs.contains(predicate.getNameSpace()))){
 				// its a property from a suggested or top vocabulary
@@ -136,7 +139,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 					suggestedVocabs.put(predicate.getNameSpace(), newVal);
 				}
 			}
-			this.seenSet.add(predicate.getURI());
+			this.seenSet.put(predicate.getURI(),true);
 		}
 	}
 
@@ -250,5 +253,4 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 	public void after(Object... args) throws AfterException {
 		// nothing to do
 	}
-
 }

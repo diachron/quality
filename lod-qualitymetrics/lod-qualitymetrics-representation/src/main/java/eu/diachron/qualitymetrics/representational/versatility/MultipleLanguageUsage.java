@@ -5,10 +5,8 @@ package eu.diachron.qualitymetrics.representational.versatility;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.mapdb.DB;
-import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +14,10 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
  * @author Jeremy Debattista
@@ -51,11 +46,11 @@ public class MultipleLanguageUsage implements QualityMetric {
 	
 //	static final String DEFAULT_TAG = "en";
 	
-	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+//	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 
-	private HTreeMap<String, Set<String>> multipleLanguage = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+	private ConcurrentHashMap<String, Set<String>> multipleLanguage = new ConcurrentHashMap<String, Set<String>>();
 	
-	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+//	private Set<Quad> _problemList = new HashSet<Quad>();
 
 	@Override
 	public void compute(Quad quad) {
@@ -94,17 +89,17 @@ public class MultipleLanguageUsage implements QualityMetric {
 
 	@Override
 	public ProblemList<?> getQualityProblems() {
-		ProblemList<SerialisableQuad> pl = null;
-		try {
-			if(this._problemList != null && this._problemList.size() > 0) {
-				pl = new ProblemList<SerialisableQuad>(this._problemList);
-			} else {
-				pl = new ProblemList<SerialisableQuad>();
-			}
-		} catch (ProblemListInitialisationException e) {
-			logger.error(e.getMessage());
-		}
-		return pl;
+//		ProblemList<SerialisableQuad> pl = null;
+//		try {
+//			if(this._problemList != null && this._problemList.size() > 0) {
+//				pl = new ProblemList<SerialisableQuad>(this._problemList);
+//			} else {
+//				pl = new ProblemList<SerialisableQuad>();
+//			}
+//		} catch (ProblemListInitialisationException e) {
+//			logger.error(e.getMessage());
+//		}
+		return new ProblemList<Quad>();
 	}
 
 	@Override
