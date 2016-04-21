@@ -66,7 +66,7 @@ public class ShortURIs implements QualityMetric {
 
 		if (!(quad.getPredicate().hasURI(RDF.type.getURI()))){
 			Node subject = quad.getSubject();
-			if ((!(subject.isBlank())) && (!(this.seenSet.get(subject.getURI())))){
+			if ((!(subject.isBlank())) && (!(this.seenSet.containsKey(subject.getURI())))){
 				if (subject.isURI()){
 					if (possibleDereferenceableURI(subject.getURI())){
 						countLocalDefURIs++;
@@ -88,7 +88,7 @@ public class ShortURIs implements QualityMetric {
 			
 			Node object = quad.getObject();
 			if (object.isURI()){
-				if ((!(object.isBlank())) &&  (!(this.seenSet.get(object.getURI())))){
+				if ((!(object.isBlank())) &&  (!(this.seenSet.containsKey(object.getURI())))){
 					if (possibleDereferenceableURI(object.getURI())){
 						countLocalDefURIs++;
 						

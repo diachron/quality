@@ -66,7 +66,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 		if (predicate.hasURI(RDF.type.getURI())){
 			// Checking for classes
 			Node object = quad.getObject();
-			if ((!(object.isBlank())) &&  (!(this.seenSet.get(object.getURI())))){
+			if ((!(object.isBlank())) &&  (!(this.seenSet.containsKey(object.getURI())))){
 				logger.info("checking class: " + object.getURI());
 	
 				if (!(object.isBlank())){
@@ -88,7 +88,7 @@ public class UndefinedClassesAndProperties implements QualityMetric {
 			}
 			
 		} 
-		if (!(this.seenSet.get(predicate.getURI()))){
+		if (!(this.seenSet.containsKey(predicate.getURI()))){
 			// Checking for properties
 			this.totalProperties++;
 			logger.info("checking predicate: " + predicate.getURI());

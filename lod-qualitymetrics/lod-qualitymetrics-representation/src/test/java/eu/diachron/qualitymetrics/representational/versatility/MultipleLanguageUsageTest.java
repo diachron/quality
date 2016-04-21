@@ -28,33 +28,32 @@ public class MultipleLanguageUsageTest  extends Assert {
 	
 	@Before
 	public void setUp(){
-		loader.loadDataSet("testdumps/eis.ttl");
+		loader.loadDataSet("testdumps/language.ttl");
 	}
 	
-	@Ignore
 	@Test
 	public void noBlankNodesTest(){
 		for(Quad q : loader.getStreamingQuads()){
 			metric.compute(q);
 		}
 		
-		assertEquals(1.0, metric.metricValue(), 0.00001);
+		assertEquals(5.0, metric.metricValue(), 0.00001);
 	}
 	
 	
-	@Test
-	public void problemReportTest(){
-		for(Quad q : loader.getStreamingQuads()){
-			metric.compute(q);
-		}
-		
-		metric.metricValue();
-		
-		ProblemList<?> pl = metric.getQualityProblems();
-		QualityReport qr = new QualityReport();
-		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
-		Model plModel = qr.getProblemReportFromTBD(plModelURI);
-		
-		plModel.write(System.out, "TURTLE");
-	}
+//	@Test
+//	public void problemReportTest(){
+//		for(Quad q : loader.getStreamingQuads()){
+//			metric.compute(q);
+//		}
+//		
+//		metric.metricValue();
+//		
+//		ProblemList<?> pl = metric.getQualityProblems();
+//		QualityReport qr = new QualityReport();
+//		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+//		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+//		
+//		plModel.write(System.out, "TURTLE");
+//	}
 }

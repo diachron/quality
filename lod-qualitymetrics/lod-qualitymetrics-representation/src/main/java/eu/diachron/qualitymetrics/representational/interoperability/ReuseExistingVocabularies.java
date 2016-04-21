@@ -87,7 +87,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 			if (!(object.isBlank())){
 				logger.info("checking class: {}", object.getURI());
 
-				if (!(this.seenSet.get(object.getURI()))){
+				if (!(this.seenSet.containsKey(object.getURI()))){
 					if (suggestedVocabs.contains(object.getNameSpace())){
 //						Boolean seen = shared.classOrPropertyDefined(object.getURI());
 //						Boolean defined = null;
@@ -107,7 +107,7 @@ public class ReuseExistingVocabularies implements ComplexQualityMetric {
 			}
 		}
 		
-		if (!(this.seenSet.get(predicate.getURI()))){
+		if (!(this.seenSet.containsKey(predicate.getURI()))){
 			if (suggestedVocabs.contains(predicate.getNameSpace())){
 				Boolean defined = VocabularyLoader.getInstance().checkTerm(predicate);				
 				if (defined){

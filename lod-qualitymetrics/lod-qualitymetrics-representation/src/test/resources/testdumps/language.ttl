@@ -1,0 +1,5 @@
+_:a <urn:b> "english"@en .
+_:a <urn:b> "maltese"@mt .
+_:a <urn:b> "italian"@it .
+_:a <urn:b> "portugese"@pt .
+_:a <urn:b> "spanish"@es .

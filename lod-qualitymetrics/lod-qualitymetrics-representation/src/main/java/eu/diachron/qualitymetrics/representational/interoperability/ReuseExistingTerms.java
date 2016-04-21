@@ -109,7 +109,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 			if (!(object.isBlank())){
 				logger.info("checking class: {}", object.getURI());
 
-				if (!(this.seenSet.get(object.getURI()))){
+				if (!(this.seenSet.containsKey(object.getURI()))){
 					this.totalClasses++;
 					if ((suggestedVocabs.containsKey(object.getNameSpace())) || (topVocabs.contains(object.getNameSpace()))){
 						Boolean defined = VocabularyLoader.getInstance().checkTerm(object);
@@ -125,7 +125,7 @@ public class ReuseExistingTerms implements ComplexQualityMetric {
 			}
 		}
 		
-		if (!(this.seenSet.get(predicate.getURI()))){
+		if (!(this.seenSet.containsKey(predicate.getURI()))){
 			this.totalProperties++;
 			if ((suggestedVocabs.containsKey(predicate.getNameSpace())) || (topVocabs.contains(predicate.getNameSpace()))){
 				// its a property from a suggested or top vocabulary
