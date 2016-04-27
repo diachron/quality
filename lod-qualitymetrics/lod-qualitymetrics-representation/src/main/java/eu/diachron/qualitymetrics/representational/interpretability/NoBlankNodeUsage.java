@@ -50,8 +50,8 @@ public class NoBlankNodeUsage implements QualityMetric {
 	
 	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(250000, false);
 	private Model problemModel = ModelFactory.createDefaultModel();
-	private  Resource bagURI = Commons.generateURI();
-	private Bag problemBag = problemModel.createBag(bagURI.getURI());
+//	private  Resource bagURI = Commons.generateURI();
+//	private Bag problemBag = problemModel.createBag(bagURI.getURI());
 	
 	@Override
 	public void compute(Quad quad) {
@@ -94,16 +94,17 @@ public class NoBlankNodeUsage implements QualityMetric {
 		return DQM.NoBlankNodeMetric;
 	}
 
-	@Override
+	//TODO: fix problem report
+	@Override 
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Model> tmpProblemList = new ProblemList<Model>();
 		if(this.problemSampler != null && this.problemSampler.size() > 0) {
-			for(ProblemReport pr : this.problemSampler.getItems()){
-				List<Statement> stmt = pr.createProblemModel();
-				this.problemBag.add(stmt.get(0).getSubject());
-				this.problemModel.add(stmt);
-			}
-			tmpProblemList.getProblemList().add(this.problemModel);
+//			for(ProblemReport pr : this.problemSampler.getItems()){
+//				List<Statement> stmt = pr.createProblemModel();
+//				this.problemBag.add(stmt.get(0).getSubject());
+//				this.problemModel.add(stmt);
+//			}
+//			tmpProblemList.getProblemList().add(this.problemModel);
 
 		} else {
 			tmpProblemList = new ProblemList<Model>();
@@ -148,7 +149,7 @@ public class NoBlankNodeUsage implements QualityMetric {
 		
 		List<Statement> createProblemModel(){
 			List<Statement> lst = new ArrayList<Statement>();
-	    	Resource anon = ModelFactory.createDefaultModel().createResource(AnonId.create());
+	    	Resource anon = ModelFactory.createDefaultModel().createResource(Commons.generateURI());
 	    	
 	    	lst.add(new StatementImpl(anon, RDF.subject, Commons.asRDFNode(q.getSubject())));
 	    	lst.add(new StatementImpl(anon, RDF.predicate, Commons.asRDFNode(q.getPredicate())));
