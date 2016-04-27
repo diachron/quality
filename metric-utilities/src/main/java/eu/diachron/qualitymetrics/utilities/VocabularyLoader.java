@@ -184,6 +184,28 @@ public class VocabularyLoader {
 		}
 	}
 	
+	private synchronized void loadNStoDataset(String ns, Node term){
+		if (this.knownDatasets.containsKey(ns)){
+			Model m = RDFDataMgr.loadModel("vocabs/" + this.knownDatasets.get(ns));
+			this.dataset.addNamedModel(ns, m);
+		} else {
+			//download and store in cache
+			if (this.dcm.existsInCache(DiachronCacheManager.VOCABULARY_CACHE, ns)){
+				try{
+					CachedVocabulary cv = (CachedVocabulary) this.dcm.getFromCache(DiachronCacheManager.VOCABULARY_CACHE, ns);
+					StringReader reader = new StringReader(cv.getTextualContent());
+					Model m = ModelFactory.createOntologyModel();
+					m.read(reader, ns, cv.getLanguage());
+					this.dataset.addNamedModel(ns, m);
+				}catch (ClassCastException cce){
+					logger.error("Cannot cast {} " + ns);
+				}
+			} else {
+				downloadAndLoadVocab(ns, term);
+			}
+		}
+	}
+	
 	private synchronized void downloadAndLoadVocab(final String ns) {
 		try{
 			
@@ -195,6 +217,44 @@ public class VocabularyLoader {
 			    public Model call() throws Exception {
 			    	logger.info("Loading {}", ns);
 			    	Model m = RDFDataMgr.loadModel(ns, Lang.RDFXML);
+			    	return m;
+			    }
+			});
+			
+			try {
+				m = handler.get(5, TimeUnit.SECONDS);
+				dataset.addNamedModel(ns, m);
+				
+				StringBuilderWriter writer = new StringBuilderWriter();
+				m.write(writer, "TURTLE");
+				
+				CachedVocabulary cv = new CachedVocabulary();
+				cv.setLanguage("TURTLE");
+				cv.setNs(ns);
+				cv.setTextualContent(writer.toString());
+				
+				dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
+			} catch (Exception e)  {
+				logger.error("Vocabulary {} could not be accessed.",ns);
+				handler.cancel(true);
+			} 
+		} catch (Exception e){
+			logger.error("Vocabulary {} could not be accessed.",ns);
+//			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+		}
+	}
+	
+	private synchronized void downloadAndLoadVocab(final String ns, final Node term) {
+		try{
+			
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			Model m = null;
+			
+			final Future<Model> handler = executor.submit(new Callable<Model>() {
+			    @Override
+			    public Model call() throws Exception {
+			    	logger.info("Loading {}", ns);
+			    	Model m = RDFDataMgr.loadModel(term.getURI(), Lang.RDFXML);
 			    	return m;
 			    }
 			});
@@ -240,7 +300,7 @@ public class VocabularyLoader {
     	if (termsExists.containsKey(term.getURI())){
     		return termsExists.get(term.getURI());
     	} else {
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -268,11 +328,21 @@ public class VocabularyLoader {
 		return dataset.getNamedModel(ns);
 	}
 	
-	public boolean isProperty(Node term){
+	public Model getModelForVocabulary(Node term){
 		String ns = term.getNameSpace();
+		if(!(dataset.containsNamedModel(ns))) 
+			loadNStoDataset(ns, term);
+		
+		return dataset.getNamedModel(ns);
+	}
+	
+	
+	
+	public boolean isProperty(Node term){
+//		String ns = term.getNameSpace();
 		
 		if (!isPropertyMap.containsKey(term.getURI())){
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -290,10 +360,10 @@ public class VocabularyLoader {
 	}
 	
 	public Boolean isObjectProperty(Node term){
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
 		if (!objectProperties.containsKey(term.getURI())){
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -308,10 +378,10 @@ public class VocabularyLoader {
 	}
 	
 	public Boolean isDatatypeProperty(Node term){
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
 		if (!datatypeProperties.containsKey(term.getURI())){
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -326,10 +396,10 @@ public class VocabularyLoader {
 	}
 	
 	public Boolean isClass(Node term){
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
 		if (!isClassMap.containsKey(term.getURI())){
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -353,9 +423,9 @@ public class VocabularyLoader {
 	public boolean isDeprecatedTerm(Node term){
 		if (checkedDeprecatedTerm.containsKey(term.getURI())) return checkedDeprecatedTerm.get(term.getURI());
 		
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
-		Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+		Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 		if (m == null) return false;
 		
 		m.enterCriticalSection(Lock.READ);
@@ -372,11 +442,11 @@ public class VocabularyLoader {
 	public Set<RDFNode> getPropertyDomain(Node term){
 		if (propertyDomains.containsKey(term.getURI())) return propertyDomains.get(term.getURI());
 		
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
 		Set<RDFNode> set = new HashSet<RDFNode>();
 
-		Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+		Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 		if (m == null) return set;
 		
 		m.enterCriticalSection(Lock.READ);
@@ -399,11 +469,11 @@ public class VocabularyLoader {
 	
 	public Set<RDFNode> getPropertyRange(Node term){
 		if (propertyRanges.containsKey(term.getURI())) return propertyRanges.get(term.getURI());
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
 		Set<RDFNode> set = new HashSet<RDFNode>();
 
-		Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+		Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 		if (m == null) return set;
 		
 		m.enterCriticalSection(Lock.READ);
@@ -461,11 +531,11 @@ public class VocabularyLoader {
 		if (parentNodes.containsKey(term.getURI())){
 			return parentNodes.get(term.getURI());
 		} else {
-			String ns = term.getNameSpace();
+//			String ns = term.getNameSpace();
 
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
 			
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return set;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -494,11 +564,11 @@ public class VocabularyLoader {
 		if (parentNodes.containsKey(term.getURI())){
 			return parentNodes.get(term.getURI());
 		} else {
-			String ns = term.getNameSpace();
+//			String ns = term.getNameSpace();
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
 
 	
-			Model m = (getModelForVocabulary(ns).size() > 0) ?  getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ?  getModelForVocabulary(term) : null;
 			if (m == null) return set;
 			
 			m.enterCriticalSection(Lock.READ);
@@ -524,10 +594,10 @@ public class VocabularyLoader {
 		if (childNodes.containsKey(term.getURI())){
 			return childNodes.get(term.getURI());
 		} else {
-			String ns = term.getNameSpace();
+//			String ns = term.getNameSpace();
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
 
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return new LinkedHashSet<RDFNode>();
 						
 			m.enterCriticalSection(Lock.READ);
@@ -550,10 +620,10 @@ public class VocabularyLoader {
 		if (childNodes.containsKey(term.getURI())){
 			return childNodes.get(term.getURI());
 		} else {
-			String ns = term.getNameSpace();
+//			String ns = term.getNameSpace();
 			Set<RDFNode> set = new LinkedHashSet<RDFNode>();
 
-			Model m = (getModelForVocabulary(ns).size() > 0) ?  getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ?  getModelForVocabulary(term) : null;
 			if (m == null) return new LinkedHashSet<RDFNode>();
 
 			m.enterCriticalSection(Lock.READ);
@@ -574,10 +644,10 @@ public class VocabularyLoader {
 	
 	public boolean isInverseFunctionalProperty(Node term){
 		
-		String ns = term.getNameSpace();
+//		String ns = term.getNameSpace();
 		
 		if (!isIFPMap.containsKey(term.getURI())){
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
 			m.enterCriticalSection(Lock.READ);
 			try{ 
@@ -594,8 +664,8 @@ public class VocabularyLoader {
 		if (disjointWith.containsKey(term.getURI())){
 			return disjointWith.get(term.getURI());
 		} else {
-			String ns = term.getNameSpace();
-			Model m = (getModelForVocabulary(ns).size() > 0) ? getModelForVocabulary(ns) : null;
+//			String ns = term.getNameSpace();
+			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return new LinkedHashSet<RDFNode>();
 			m.enterCriticalSection(Lock.READ);
 			try{ 
@@ -735,5 +805,10 @@ public class VocabularyLoader {
 		}
 		
 		return _ret;
+	}
+	
+	public static void main (String [] args){
+		Node n = ModelFactory.createDefaultModel().createResource("http://dbpedia.org/property/city").asNode();
+		System.out.println(VocabularyLoader.getInstance().isProperty(n));
 	}
 }
