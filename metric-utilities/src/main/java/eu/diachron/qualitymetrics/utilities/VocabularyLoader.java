@@ -347,11 +347,22 @@ public class VocabularyLoader {
 			
 			m.enterCriticalSection(Lock.READ);
 			try{
-				isPropertyMap.putIfAbsent(term.getURI(), 
-						(m.contains(Commons.asRDFNode(term).asResource(), RDF.type, RDF.Property) ||
-								m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.DatatypeProperty) ||
-								m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.OntologyProperty) ||
-								m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.ObjectProperty)));
+				boolean isProperty = (m.contains(Commons.asRDFNode(term).asResource(), RDF.type, RDF.Property) ||
+						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.DatatypeProperty) ||
+						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.OntologyProperty) ||
+						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.ObjectProperty));
+				
+				if (!isProperty){
+					//try inferring
+					try{
+						logger.debug("Trying to infer class");
+						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+						isProperty = isProperty(inferred);
+					} catch (Exception e){}
+				}
+				
+				
+				isPropertyMap.putIfAbsent(term.getURI(), isProperty);
 			} finally {
 				m.leaveCriticalSection();
 			}
@@ -366,10 +377,21 @@ public class VocabularyLoader {
 		if (!objectProperties.containsKey(term.getURI())){
 			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
-			
+						
 			m.enterCriticalSection(Lock.READ);
 			try{
-				objectProperties.putIfAbsent(term.getURI(), m.contains(Commons.asRDFNode(term).asResource(),  RDF.type, OWL.ObjectProperty));
+				boolean isProperty = m.contains(Commons.asRDFNode(term).asResource(),  RDF.type, OWL.ObjectProperty);
+				
+				if (!isProperty){
+					try{
+						logger.debug("Trying to infer class");
+						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+						isProperty = isProperty(inferred);
+					} catch (Exception e){}
+				}
+				
+				
+				objectProperties.putIfAbsent(term.getURI(), isProperty);
 			} finally {
 				m.leaveCriticalSection();
 			}
@@ -387,7 +409,17 @@ public class VocabularyLoader {
 			
 			m.enterCriticalSection(Lock.READ);
 			try{
-				datatypeProperties.putIfAbsent(term.getURI(), m.contains(Commons.asRDFNode(term).asResource(), RDF.type,  OWL.DatatypeProperty));
+				boolean isProperty = m.contains(Commons.asRDFNode(term).asResource(),  RDF.type, OWL.DatatypeProperty);
+				
+				if (!isProperty){
+					try{
+						logger.debug("Trying to infer class");
+						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+						isProperty = isProperty(inferred);
+					} catch (Exception e){}
+				}
+				
+				datatypeProperties.putIfAbsent(term.getURI(), isProperty);
 			} finally {
 				m.leaveCriticalSection();
 			}
@@ -405,8 +437,18 @@ public class VocabularyLoader {
 			
 			m.enterCriticalSection(Lock.READ);
 			try{
-				isClassMap.putIfAbsent(term.getURI(),  (m.contains(Commons.asRDFNode(term).asResource(), RDF.type,  OWL.Class) ||
-						m.contains(Commons.asRDFNode(term).asResource(), RDF.type,  RDFS.Class)));
+				boolean isClass = (m.contains(Commons.asRDFNode(term).asResource(), RDF.type,  OWL.Class) || m.contains(Commons.asRDFNode(term).asResource(), RDF.type,  RDFS.Class));
+				
+				if (!isClass){
+					//try inferring
+					try{
+						logger.debug("Trying to infer class");
+						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+						isClass = isClass(inferred);
+					} catch (Exception e){}
+				}
+				
+				isClassMap.putIfAbsent(term.getURI(), isClass);
 			} finally {
 				m.leaveCriticalSection();
 			}
@@ -809,7 +851,7 @@ public class VocabularyLoader {
 	}
 	
 	public static void main (String [] args){
-		Node n = ModelFactory.createDefaultModel().createResource("http://www.pokepedia.fr/Sp%C3%A9cial:URIResolver/Cat-C3-A9gorie-3AImage_Pok-C3-A9mon_repr-C3-A9sentant_Poissir-C3-A8ne").asNode();
+		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
 		System.out.println(VocabularyLoader.getInstance().isClass(n));
 	}
 }
