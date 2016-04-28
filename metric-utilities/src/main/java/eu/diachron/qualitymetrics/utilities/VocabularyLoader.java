@@ -350,6 +350,7 @@ public class VocabularyLoader {
 				isPropertyMap.putIfAbsent(term.getURI(), 
 						(m.contains(Commons.asRDFNode(term).asResource(), RDF.type, RDF.Property) ||
 								m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.DatatypeProperty) ||
+								m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.OntologyProperty) ||
 								m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.ObjectProperty)));
 			} finally {
 				m.leaveCriticalSection();
@@ -808,7 +809,7 @@ public class VocabularyLoader {
 	}
 	
 	public static void main (String [] args){
-		Node n = ModelFactory.createDefaultModel().createResource("http://dbpedia.org/property/city").asNode();
-		System.out.println(VocabularyLoader.getInstance().isProperty(n));
+		Node n = ModelFactory.createDefaultModel().createResource("http://www.pokepedia.fr/Sp%C3%A9cial:URIResolver/Cat-C3-A9gorie-3AImage_Pok-C3-A9mon_repr-C3-A9sentant_Poissir-C3-A8ne").asNode();
+		System.out.println(VocabularyLoader.getInstance().isClass(n));
 	}
 }
