@@ -336,7 +336,12 @@ public class VocabularyLoader {
 	}
 	
 	public Model getModelForVocabulary(Node term){
-		String ns = term.getNameSpace();
+		String ns = term.getURI();
+		if (term.getURI().contains("#")){
+			//it is a hash URI then we can use the namespace to download the vocabulary
+			ns = term.getNameSpace();
+		}
+		
 		if(!(dataset.containsNamedModel(ns))) 
 			loadNStoDataset(ns, term);
 		
@@ -876,7 +881,7 @@ public class VocabularyLoader {
 	
 	public static void main (String [] args){
 //		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
-		Node n = ModelFactory.createDefaultModel().createResource("http://sw.opencyc.org/concept/Mx4rvVjTApwpEbGdrcN5Y29ycA").asNode();
+		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/VillainByDefault").asNode();
 
 		System.out.println(VocabularyLoader.getInstance().isClass(n));
 	}
