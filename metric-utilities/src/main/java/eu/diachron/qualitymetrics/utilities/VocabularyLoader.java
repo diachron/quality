@@ -254,7 +254,14 @@ public class VocabularyLoader {
 			    @Override
 			    public Model call() throws Exception {
 			    	logger.info("Loading {}", ns);
-			    	Model m = RDFDataMgr.loadModel(term.getURI(), Lang.RDFXML);
+			    	Model m = null;
+			    	try{ m = RDFDataMgr.loadModel(term.getURI(), Lang.RDFXML); } catch (Exception e)
+			    	{
+			    		try{ m = RDFDataMgr.loadModel(term.getURI(), Lang.TURTLE); } catch (Exception e2)
+			    		{
+			    			m = RDFDataMgr.loadModel(term.getURI(), Lang.NTRIPLES);
+			    		}
+			    	}
 			    	return m;
 			    }
 			});
@@ -349,6 +356,7 @@ public class VocabularyLoader {
 				boolean isProperty = (m.contains(Commons.asRDFNode(term).asResource(), RDF.type, RDF.Property) ||
 						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.DatatypeProperty) ||
 						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.OntologyProperty) ||
+						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.AnnotationProperty) ||
 						m.contains(Commons.asRDFNode(term).asResource(), RDF.type, OWL.ObjectProperty));
 				
 				if (!isProperty){
@@ -868,8 +876,8 @@ public class VocabularyLoader {
 	
 	public static void main (String [] args){
 //		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
-		Node n = ModelFactory.createDefaultModel().createResource("http://dbpedia.org/property/city").asNode();
+		Node n = ModelFactory.createDefaultModel().createResource("http://sw.opencyc.org/concept/Mx4rvVjTApwpEbGdrcN5Y29ycA").asNode();
 
-		System.out.println(VocabularyLoader.getInstance().isProperty(n));
+		System.out.println(VocabularyLoader.getInstance().isClass(n));
 	}
 }
