@@ -337,10 +337,9 @@ public class VocabularyLoader {
 	}
 	
 	
-	
-	public boolean isProperty(Node term){
+	public boolean isProperty(Node term, boolean first){
 //		String ns = term.getNameSpace();
-		
+
 		if (!isPropertyMap.containsKey(term.getURI())){
 			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
@@ -355,9 +354,10 @@ public class VocabularyLoader {
 				if (!isProperty){
 					//try inferring
 					try{
-						logger.debug("Trying to infer class");
-						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-						isProperty = isProperty(inferred);
+						if (first){
+							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+							isProperty = isProperty(inferred, false);
+						}
 					} catch (Exception e){}
 				}
 				
@@ -371,9 +371,12 @@ public class VocabularyLoader {
 		return isPropertyMap.get(term.getURI());
 	}
 	
-	public Boolean isObjectProperty(Node term){
+	public boolean isProperty(Node term){
+		return isProperty(term, true);
+	}
+	
+	public Boolean isObjectProperty(Node term, Boolean first){
 //		String ns = term.getNameSpace();
-		
 		if (!objectProperties.containsKey(term.getURI())){
 			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
@@ -384,13 +387,13 @@ public class VocabularyLoader {
 				
 				if (!isProperty){
 					try{
-						logger.debug("Trying to infer class");
-						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-						isProperty = isProperty(inferred);
+						if (first){
+							logger.debug("Trying to infer class");
+							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+							isProperty = isObjectProperty(inferred,false);
+						}
 					} catch (Exception e){}
 				}
-				
-				
 				objectProperties.putIfAbsent(term.getURI(), isProperty);
 			} finally {
 				m.leaveCriticalSection();
@@ -400,9 +403,12 @@ public class VocabularyLoader {
 		return objectProperties.get(term.getURI());
 	}
 	
-	public Boolean isDatatypeProperty(Node term){
+	public Boolean isObjectProperty(Node term){
+		return isObjectProperty(term,true);
+	}
+	
+	public Boolean isDatatypeProperty(Node term, boolean first){
 //		String ns = term.getNameSpace();
-		
 		if (!datatypeProperties.containsKey(term.getURI())){
 			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
@@ -413,9 +419,11 @@ public class VocabularyLoader {
 				
 				if (!isProperty){
 					try{
-						logger.debug("Trying to infer class");
-						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-						isProperty = isProperty(inferred);
+						if (first){
+							logger.debug("Trying to infer class");
+							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+							isProperty = isDatatypeProperty(inferred,false);
+						}
 					} catch (Exception e){}
 				}
 				
@@ -424,13 +432,15 @@ public class VocabularyLoader {
 				m.leaveCriticalSection();
 			}
 		}
-		
 		return datatypeProperties.get(term.getURI());
 	}
 	
-	public Boolean isClass(Node term){
+	public Boolean isDatatypeProperty(Node term){
+		return isDatatypeProperty(term,true);
+	}
+	
+	public Boolean isClass(Node term, boolean first){
 //		String ns = term.getNameSpace();
-		
 		if (!isClassMap.containsKey(term.getURI())){
 			Model m = (getModelForVocabulary(term).size() > 0) ? getModelForVocabulary(term) : null;
 			if (m == null) return false;
@@ -442,9 +452,11 @@ public class VocabularyLoader {
 				if (!isClass){
 					//try inferring
 					try{
-						logger.debug("Trying to infer class");
-						Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-						isClass = isClass(inferred);
+						if (first){
+							logger.debug("Trying to infer class");
+							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
+							isClass = isClass(inferred,true);
+						}
 					} catch (Exception e){}
 				}
 				
@@ -454,6 +466,10 @@ public class VocabularyLoader {
 			}
 		}
 		return isClassMap.get(term.getURI());
+	}
+	
+	public Boolean isClass(Node term){
+		return isClass(term,true);
 	}
 	
 	private Filter<RDFNode> deprecatedfilter = new Filter<RDFNode>() {
@@ -798,7 +814,7 @@ public class VocabularyLoader {
 			if(!(dataset.containsNamedModel(ns))) loadNStoDataset(ns);
 			_mdl = dataset.getNamedModel(ns);
 		}
-		
+		 
 		
 		QueryExecution q = QueryExecutionFactory.create(query,_mdl);
 		ResultSet rs = q.execSelect();
@@ -851,7 +867,9 @@ public class VocabularyLoader {
 	}
 	
 	public static void main (String [] args){
-		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
-		System.out.println(VocabularyLoader.getInstance().isClass(n));
+//		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
+		Node n = ModelFactory.createDefaultModel().createResource("http://dbpedia.org/property/city").asNode();
+
+		System.out.println(VocabularyLoader.getInstance().isProperty(n));
 	}
 }
