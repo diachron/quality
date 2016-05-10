@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.diachron.qualitymetrics.representational.provenance;
+package eu.diachron.qualitymetrics.contextual.provenance;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import eu.diachron.qualitymetrics.representational.provenance.ExtendedProvenanceMetric;
+import eu.diachron.qualitymetrics.contextual.provenance.ExtendedProvenanceMetric;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**

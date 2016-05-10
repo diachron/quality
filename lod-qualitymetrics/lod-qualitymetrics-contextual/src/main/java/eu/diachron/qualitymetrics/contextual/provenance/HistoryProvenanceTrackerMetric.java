@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.diachron.qualitymetrics.representational.provenance;
+package eu.diachron.qualitymetrics.contextual.provenance;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;

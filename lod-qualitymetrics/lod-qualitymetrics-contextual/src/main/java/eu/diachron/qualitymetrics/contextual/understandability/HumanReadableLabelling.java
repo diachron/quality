@@ -47,7 +47,7 @@ public class HumanReadableLabelling implements QualityMetric{
 	private Set<String> entitiesUnknown = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString()); // have human readable label/description but don't know if it is 
 																										   // a described entity in the dataset - ie. with a type definition
 	
-	private ReservoirSampler<Quad> problemSampler = new ReservoirSampler<Quad>(1000, false);
+	private ReservoirSampler<Quad> problemSampler = new ReservoirSampler<Quad>(100000, false);
 	
 	private double value = 0.0d;
 	
@@ -67,8 +67,11 @@ public class HumanReadableLabelling implements QualityMetric{
 		labelProperties.add("http://www.w3.org/2008/05/skos-xl#altLabel");
 		labelProperties.add("http://www.w3.org/2008/05/skos-xl#hiddenLabel");
 		labelProperties.add("http://www.w3.org/2008/05/skos-xl#prefLabel");
+		labelProperties.add("http://www.w3.org/2008/05/skos-xl#literalForm");
+		labelProperties.add("http://schema.org/name");
+		labelProperties.add("http://schema.org/description");
+		labelProperties.add("http://schema.org/alternateName");
 	}
-	
 	
 	/**
 	 * Each entity is checked for a Human Readable label.
@@ -77,7 +80,6 @@ public class HumanReadableLabelling implements QualityMetric{
 	 */
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
-		
 		
 		if (quad.getSubject().isURI() && quad.getPredicate().getURI().equals(RDF.type.getURI())){
 			String entity = quad.getSubject().getURI();
@@ -102,19 +104,16 @@ public class HumanReadableLabelling implements QualityMetric{
 		}
 	}
 	
-	
 	private boolean entityInASet(String entity){
 		return ( entitiesWO.contains(entity) || 
 				entitiesWith.contains(entity) ||
 				entitiesUnknown.contains(entity) );
 	}
-
 	
 	public double metricValue() {
 		double entities = (entitiesWO.size() + entitiesWith.size());
 		double humanLabels = entitiesWith.size();
 			
-
 		value = 1 - (humanLabels/entities); 	
 		statsLogger.info("Dataset: {} - Total # Human Readable Labels : {}; # Entities : {};"
 					, EnvironmentProperties.getInstance().getDatasetURI(), humanLabels, entities); 
@@ -122,11 +121,9 @@ public class HumanReadableLabelling implements QualityMetric{
 		return value;
 	}
 
-	
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
 	}
-
 	
 	private void createProblemQuads(){
 		for (String entity : entitiesWO){
@@ -152,18 +149,13 @@ public class HumanReadableLabelling implements QualityMetric{
 		return pl;
 	}
 
-
 	@Override
 	public boolean isEstimate() {
 		return false;
 	}
 
-
 	@Override
 	public Resource getAgentURI() {
 		return DQM.LuzzuProvenanceAgent;
 	}
-	
-	
-
 }

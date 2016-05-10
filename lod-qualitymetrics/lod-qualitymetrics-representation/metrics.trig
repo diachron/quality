@@ -50,12 +50,3 @@ _:MultipleLanguageUsage a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Usage of Multiple Languages" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.versatility.MultipleLanguageUsage" .
 	
-#--- Provenance --------------------------------------------------------------------------------------------------------------- 
-
-_:ExtendedProvenanceMetric a lmi:LuzzuMetricJavaImplementation ;
-	rdfs:label "Extended Provenance Metric" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.provenance.ExtendedProvenanceMetric" .
-
-_:BasicProvenanceMetric a lmi:LuzzuMetricJavaImplementation ;
-	rdfs:label "Basic Provenance Metric" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.representational.provenance.BasicProvenanceMetric" .	

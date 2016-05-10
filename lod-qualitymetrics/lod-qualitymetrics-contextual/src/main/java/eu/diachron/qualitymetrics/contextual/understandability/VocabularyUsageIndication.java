@@ -16,7 +16,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -34,8 +33,8 @@ public class VocabularyUsageIndication implements QualityMetric {
 
 	final static Logger logger = LoggerFactory.getLogger(VocabularyUsageIndication.class);
 
-	private Set<String> differentNamespacesUsed = MapDbFactory.createFilesystemDB().createHashSet("used-namespaces").make();
-	private Set<String> namespacesIndicated = MapDbFactory.createFilesystemDB().createHashSet("indicated-namespaces").make();
+	private Set<String> differentNamespacesUsed = new HashSet<String>();
+	private Set<String> namespacesIndicated = new HashSet<String>();
 
 	private boolean calculated = false;
 	private double value  = 0.0d;
@@ -72,7 +71,7 @@ public class VocabularyUsageIndication implements QualityMetric {
 			
 			double totalIndicated = totalNsInd - _ns.size() ; //making sure that if a NS was indicated but never used, is not part of the value
 			
-			logger.info("Dataset: {} - Total # NS used : {}; # NS indicated by void : {} # NS indicated : {};"
+			statsLogger.info("Dataset: {} - Total # NS used : {}; # NS indicated by void : {} # NS indicated : {};"
 					, EnvironmentProperties.getInstance().getDatasetURI(), totalDiffNs, totalNsInd, totalIndicated); //TODO: these store in a seperate file
 
 		

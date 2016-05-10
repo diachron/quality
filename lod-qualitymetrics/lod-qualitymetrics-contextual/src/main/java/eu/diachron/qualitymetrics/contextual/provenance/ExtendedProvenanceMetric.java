@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.diachron.qualitymetrics.representational.provenance;
+package eu.diachron.qualitymetrics.contextual.provenance;
 
 import java.util.ArrayList;
 import java.util.List;

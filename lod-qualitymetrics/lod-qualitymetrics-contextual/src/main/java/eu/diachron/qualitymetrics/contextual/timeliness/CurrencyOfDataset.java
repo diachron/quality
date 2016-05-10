@@ -76,7 +76,7 @@ public class CurrencyOfDataset implements QualityMetric{
 			}
 		}
 		
-		return avgSum / totalOk;
+		return (totalOk == 0.0) ? 0.0 : (avgSum / totalOk);
 	}
 
 	@Override

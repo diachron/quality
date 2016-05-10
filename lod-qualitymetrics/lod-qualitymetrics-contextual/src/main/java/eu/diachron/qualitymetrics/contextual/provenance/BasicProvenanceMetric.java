@@ -1,8 +1,10 @@
 /**
  * 
  */
-package eu.diachron.qualitymetrics.representational.provenance;
+package eu.diachron.qualitymetrics.contextual.provenance;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -33,6 +35,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 public class BasicProvenanceMetric implements QualityMetric {
 	
 	protected ConcurrentHashMap<String, String> dataset = new ConcurrentHashMap<String,String>();
+	protected Set<String> isMetadata = new HashSet<String>();
 
 	private static Logger logger = LoggerFactory.getLogger(BasicProvenanceMetric.class);
 
@@ -46,18 +49,24 @@ public class BasicProvenanceMetric implements QualityMetric {
 		Node object = quad.getObject();
 		
 		if (predicate.hasURI(RDF.type.getURI()) && (object.hasURI(VOID.Dataset.getURI()) || object.hasURI(DCAT.Dataset.getURI()))){
-			if (subject.isURI())
+			if (subject.isURI()){
 				dataset.put(subject.getURI(), "");
-			else
+				isMetadata.add(subject.getURI());
+			}
+			else {
 				dataset.put(subject.toString(), "");
-
+				isMetadata.add(subject.toString());
+			}
 		}
 		
 		//are there more basic provenance requirements? see flemmings thesis pg 154
 		if (predicate.hasURI(DCTerms.creator.getURI()) || predicate.hasURI(DCTerms.publisher.getURI())){
-			if (subject.hasURI(EnvironmentProperties.getInstance().getBaseURI())){
-				if (object.isURI())
-					dataset.put(EnvironmentProperties.getInstance().getBaseURI(), object.getURI());
+			if (object.isURI()){
+				if (subject.isURI()) {
+					dataset.put(subject.getURI(), object.getURI());
+				} else {
+					dataset.put(subject.toString(), object.getURI());
+				}
 			}
 		}
 	}

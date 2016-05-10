@@ -17,10 +17,10 @@ dqm:
 	a owl:Ontology ;
     dct:title "Linked Data Quality Metrics (dqm)"@en ;
     dc:description "The Linked Data Quality Metrics (dqm) vocabulary describes a set of quality indicators based on the daQ vocabulary"@en ;
-    dct:creator [ 
-    		foaf:name "Jeremy Debattista"; 
-    		foaf:homepage <http://www.jeremydebattista.info> ; 
-    		foaf:mbox <mailto:debattis@cs.uni-bonn.de> 
+    dct:creator [
+    		foaf:name "Jeremy Debattista";
+    		foaf:homepage <http://www.jeremydebattista.info> ;
+    		foaf:mbox <mailto:debattis@cs.uni-bonn.de>
     	] ;
     dct:modified "2016-03-17"^^xsd:date ;
     dct:language "en"^^xsd:language ;
@@ -42,48 +42,48 @@ dqm:Availability
 	rdfs:subClassOf	daq:Dimension ;
 	rdfs:comment	"Metrics in this dimension measure the extent to which information (or some portion of it) is present, obtainable and ready for use" ;
 	rdfs:label	"Availability" .
-	
+
 dqm:EndPointAvailabilityMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Checks whether the server (endpoint) is reachable and responds to a SPARQL query" ;
-	rdfs:label	"Availability of the SPARQL end-point metric" .		
+	rdfs:label	"Availability of the SPARQL end-point metric" .
 
 dqm:RDFAvailabilityMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Upon request of an RDF dump, checks whether it is provided as result" ;
-	rdfs:label	"Availability of the RDF dumps metric" .	
+	rdfs:label	"Availability of the RDF dumps metric" .
 
 dqm:DereferenceabilityMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Determines whether requesting a resource, identified by a URI, results in an error code being returned (e.g. 4xx: client error or 5xx: server error), or in a broken link" ;
-	rdfs:label	"Dereferenceability metric" .	
+	rdfs:label	"Dereferenceability metric" .
 
 dqm:DereferenceabilityForwardLinksMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects all forward links (locally known triples where the local URI is mentioned in the subject)" ;
-	rdfs:label	"Dereferenceability of forward-links metric" .	
+	rdfs:label	"Dereferenceability of forward-links metric" .
 
 dqm:MisreportedContentTypesMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Checks whether the content is suitable for consumption and if such content should be accessed" ;
-	rdfs:label	"Misreported content types metric" .	
+	rdfs:label	"Misreported content types metric" .
 
 dqm:hasAvailabilityDimension
-	a	rdfs:Property ;	
+	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Availability .
-		
+
 dqm:hasEndPointAvailabilityMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -100,8 +100,8 @@ dqm:hasDereferenceabilityMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Availability ;
-	rdfs:range	dqm:DereferenceabilityMetric .		
-		
+	rdfs:range	dqm:DereferenceabilityMetric .
+
 dqm:hasDereferenceabilityForwardLinksMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -114,7 +114,7 @@ dqm:hasMisreportedContentTypesMetric
 	rdfs:domain	dqm:Availability ;
 	rdfs:range	dqm:MisreportedContentTypesMetric .
 
-#### Licensing Dimension			
+#### Licensing Dimension
 dqm:Licensing
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Dimension ;
@@ -123,37 +123,37 @@ dqm:Licensing
 
 dqm:MachineReadableLicenseMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Verifies that the resource is annotated with a machine-readable indication of the license (e.g. a VoID description or dcterms:license property)" ;
 	rdfs:label	"Machine-readable indication of a license metric" .
-	
+
 dqm:HumanReadableLicenseMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Verifies whether a human-readable text, stating the licensing model attributed to the resource, has been provided as part of the dataset" ;
 	rdfs:label	"Human-readable indication of a license metric" .
 
 dqm:hasLicensingDimension
-	a	rdfs:Property ;	
+	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Licensing .
-	
+
 dqm:hasMachineReadableLicenseMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Licensing ;
 	rdfs:range	dqm:MachineReadableLicenseMetric .
-	
+
 dqm:hasHumanReadableLicenseMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Licensing ;
 	rdfs:range	dqm:HumanReadableLicenseMetric .
-		
-#### Security Dimension	
+
+#### Security Dimension
 dqm:Security
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Dimension ;
@@ -162,24 +162,24 @@ dqm:Security
 
 dqm:DigitalSignatureUsage
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric checks foaf documents have a digital signature with them." ;
 	rdfs:label	"Digital Signature Usage" .
 
 dqm:hasSecurityDimension
-	a	rdfs:Property ;	
+	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Security .
-		
+
 dqm:hasDigitalSignatureUsage
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Security ;
 	rdfs:range	dqm:DigitalSignatureUsage .
-		
-#### Performance Dimension		
+
+#### Performance Dimension
 dqm:Performance
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Dimension ;
@@ -188,50 +188,50 @@ dqm:Performance
 
 dqm:LowLatencyMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Measures the delay between the submission of a request to the data source and the reception of the respective response (or the first part of it)" ;
 	rdfs:label	"Low latency metric" .
-	
+
 dqm:HighThroughputMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Measures the number of answered HTTP requests responsed by the source of the dataset, per second" ;
 	rdfs:label	"High throughput metric" .
-	
+
 dqm:ScalabilityOfDataSourceMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Determines whether the time required to answer a set of N requests divided by N, is not longer than the time it takes to answer a single request" ;
 	rdfs:label	"Scalability of a data source metric" .
 
 dqm:CorrectURIUsage
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Determines whether URIs in a dataset are represented as Slash URIs if dataset is large, or Hash URIs otherwise" ;
 	rdfs:label	"Correct Usage of Cool URIs" .
-	
+
 dqm:hasPerformanceDimension
-	a	rdfs:Property ;	
+	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Performance .
-	
+
 dqm:hasLowLatencyMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:LowLatencyMetric .
-	
+
 dqm:hasHighThroughputMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:HighThroughputMetric .
-	
+
 dqm:hasScalabilityOfDataSourceMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -243,8 +243,8 @@ dqm:hasCorrectURIUsage
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:CorrectURIUsage .
-	
-#### Interlinking Dimension	
+
+#### Interlinking Dimension
 dqm:Interlinking
 	a rdfs:Class;
 	rdfs:subClassOf	daq:Dimension ;
@@ -254,43 +254,43 @@ dqm:Interlinking
 
 dqm:DereferenceabilityBackLinksMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects all local in-links or back-links (locally available triples with the resource URI appearing as object, in the dereferenced document returned for the resource)" ;
-	rdfs:label	"Dereferenceability of back-links metric" .	
+	rdfs:label	"Dereferenceability of back-links metric" .
 
 dqm:InterlinkDetectionMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
-	rdfs:comment "This is a complex metric that detects good quality interlinks by measuring the (i) interlink degree; (ii) clustering coefficient; (iii) centrality; (iv) open sameAs chains; (v) sameAs description richness" ; 
+	rdfs:comment "This is a complex metric that detects good quality interlinks by measuring the (i) interlink degree; (ii) clustering coefficient; (iii) centrality; (iv) open sameAs chains; (v) sameAs description richness" ;
 	rdfs:label "Interlink Detection Metric" .
-	
+
 dqm:LinksToExternalDataProvidersMetric
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
-	rdfs:comment "Measures the degree to which the resource is linked to external data providers, that is, refers to the detection of links that connect the resource to external data provided by another data sources" ; 
+	rdfs:comment "Measures the degree to which the resource is linked to external data providers, that is, refers to the detection of links that connect the resource to external data provided by another data sources" ;
 	rdfs:label "Existence of links to external data providers" .
 
 dqm:hasInterlinkDimension
-	a	rdfs:Property ;	
+	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Interlinking .
-	
+
 dqm:hasDereferenceabilityBackLinksMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interlinking ;
 	rdfs:range	dqm:DereferenceabilityBackLinksMetric .
-	
+
 dqm:hasInterlinkDetectionMetricMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interlinking ;
 	rdfs:range	dqm:InterlinkDetectionMetric .
-	
+
 dqm:hasLinkToExternalDataProvidersMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -313,21 +313,21 @@ dqm:Consistency
 
 dqm:EntitiesAsMembersOfDisjointClassesMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"The ratio of entities described as members of disjoint classes (here: classes explicitly known as disjoint) to the total number of entities described in the dataset" ;
 	rdfs:label	"Entities as members of disjoint classes metric" .
 
 dqm:MisplacedClassesOrPropertiesMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Find resources that are - defined as a property but also appear on subject or object positions in other triples (except cases like ex:prop rdf:type rdfs:Property, ex:prop rds:subPropetyOf) - defined as a class but also appear on predicate position in other triples. The metric is computed as a ratio of misplaced classes and properties" ;
 	rdfs:label	"Misplaced classes or properties metric" .
 
 dqm:MisusedOwlDatatypeOrObjectPropertiesMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detect properties that are defined as a owl:datatypeProperty but is used as objectProperty and properties defined as a owl:object property and used as datatype property The metric is computed as a ratio of misused properties" ;
 	rdfs:label	"Misuse Owl datatype or object properties metric" .
@@ -337,25 +337,25 @@ dqm:OntologyHijackingMetric
 	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects the redefinition by third parties of external classes/properties such that reasoning over data using those external terms is affected" ;
-	rdfs:label	"Ontology hijacking metric" .	
+	rdfs:label	"Ontology hijacking metric" .
 
 dqm:UsageOfDeprecatedClassesOrProperties
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric checks if a dataset makes use of Deprecated Classes as resource types (defined as owl:DeprecatedClass) or Properties (defined as owl:DeprecatedProperty) in a resource property" ;
-	rdfs:label	"Usage of Deprecated Classesor Deprecated Properties" .			
+	rdfs:label	"Usage of Deprecated Classesor Deprecated Properties" .
 
 dqm:UsageOfIncorrectDomainOrRangeDatatypesMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric tests if a property's domain and range are of the same type as declared in the corresponding schema" ;
-	rdfs:label	"Misuse Owl datatype or object properties metric" .		
-	
+	rdfs:label	"Misuse Owl datatype or object properties metric" .
+
 dqm:ValidIFPUsageMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric checks if the Inverse Functional Properties (IFP) is used correctly, i.e. if we have S P O and P is set to be an owl:InverseFunctionalProperty, then S is the one and only resource connected to O. If there is a triple S1 P O, then the IFP is not used correctly and thus since S1 will be 'reasoned' to be the same as S." ;
 	rdfs:label	"Valid Usage of the owl:InverseFunctionalProperty" .
@@ -365,49 +365,49 @@ dqm:hasConsistencyDimension
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Intrinsic ;
 	rdfs:range dqm:Consistency .
-	
+
 dqm:hasEntitiesAsMembersOfDisjointClassesMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
-	rdfs:range	dqm:EntitiesAsMembersOfDisjointClassesMetric .	
+	rdfs:range	dqm:EntitiesAsMembersOfDisjointClassesMetric .
 
 dqm:hasMisusedOwlDatatypeOrObjectPropertiesMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:MisusedOwlDatatypeOrObjectPropertiesMetric .
-	
+
 dqm:hasMisplacedClassesOrPropertiesMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:MisplacedClassesOrPropertiesMetric .
-		
+
 dqm:hasOntologyHijackingMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:OntologyHijackingMetric .
-	
+
 dqm:hasUsageOfDeprecatedClassesOrProperties
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:UsageOfDeprecatedClassesOrProperties .
-	
+
 dqm:hasUsageOfIncorrectDomainOrRangeDatatypesMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:UsageOfIncorrectDomainOrRangeDatatypesMetric .
-	
+
 dqm:hasValidIFPUsageMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:ValidIFPUsageMetric .
-			
+
 #### Completeness Dimension
 dqm:Completeness
 	a	rdfs:Class ;
@@ -417,11 +417,11 @@ dqm:Completeness
 
 dqm:DataCubePopulationCompleteness
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric checks if a dataset has observations that cover a gold standard codelist." ;
 	rdfs:label	"RDF Data Cube Population Completeness" .
-		
+
 dqm:hasCompletenessDimension
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
@@ -433,7 +433,7 @@ dqm:hasDataCubePopulationCompletenessDimension
 	rdfs:subPropertyOf daq:hasMetric ;
 	rdfs:domain dqm:Completeness ;
 	rdfs:range dqm:DataCubePopulationCompleteness  .
-		
+
 #### Conciseness Dimension
 dqm:Conciseness
 	a	rdfs:Class ;
@@ -443,7 +443,7 @@ dqm:Conciseness
 
 dqm:ExtensionalConcisenessMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a measure of the redundancy of the dataset at the data level, computed as the ratio of the Number of Unique Subjects to the Total Number of Subjects" ;
 	rdfs:label	"Extensional conciseness metric" .
@@ -458,28 +458,28 @@ dqm:hasExtensionalConcisenessMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Conciseness ;
-	rdfs:range	dqm:ExtensionalConcisenessMetric .	
-		
-	
+	rdfs:range	dqm:ExtensionalConcisenessMetric .
+
+
 #### Syntactic Validity Dimension
 dqm:SyntacticValidity
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Dimension ;
 	rdfs:comment	"The Degree to which an RDF Document conforms to the specification of the serialisation formation" ;
 	rdfs:label	"Syntactic Validity" .
-	
+
 dqm:CompatibleDatatype
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"** TODO **" ;
 	rdfs:label	"Compatible Datatype" .
-	
+
 dqm:CorrectLanguageTag
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"** TODO **" ;
 	rdfs:label	"Correct Language Tag" .
-	
+
 dqm:UntypedLiteralsMetric
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
@@ -496,14 +496,14 @@ dqm:hasSyntacticValidityDimension
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Intrinsic ;
-	rdfs:range dqm:SyntacticValidity .		
+	rdfs:range dqm:SyntacticValidity .
 
 dqm:hasCompatibleDatatype
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasMetric ;
 	rdfs:domain dqm:SyntacticValidity ;
 	rdfs:range dqm:CompatibleDatatype .
-				
+
 dqm:hasUntypedLiteral
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasMetric ;
@@ -524,24 +524,24 @@ dqm:Understandability
 	rdfs:subClassOf	daq:Dimension ;
 	rdfs:comment	"Refers to the easy with which data can be comprehended without ambiguity and used by a human data consumer" ;
 	rdfs:label	"Understandability" .
-		
+
 dqm:VocabularyUsageIndication
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric checks the number of valid vocabularies indicated by the voID metadata against the number of different vocabularies used." ;
 	rdfs:label	"Vocabulary Usage Indication" .
 
 dqm:HumanReadableLabellingMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Assesses the percentage of entities having an rdfs:label or rdfs:comment" ;
 	rdfs:label	"Human-readable labelling metric" .
-		
+
 dqm:PresenceOfURIRegEx
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"This metric checks if the dataset has a regular expression defined." ;
 	rdfs:label	"Vocabulary Usage Indication" .
@@ -550,8 +550,8 @@ dqm:hasUnderstandabilityDimension
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Contextual ;
-	rdfs:range dqm:Understandability .	
-	
+	rdfs:range dqm:Understandability .
+
 dqm:hasPresenceOfURIRegEx
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -576,24 +576,24 @@ dqm:Timeliness
 	rdfs:subClassOf	daq:Dimension ;
 	rdfs:comment	"Indicates how up-to-date the data is, relative to the specific task at hand" ;
 	rdfs:label	"Timeliness" .
-	
+
 dqm:FreshnessOfDatasetMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Checks if the data in the dataset is being updated with the original data" ;
 	rdfs:label	"Freshness of Dataset Metric" .
 
 dqm:TimelinessOfResourceMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Assesses the difference between the last modified time of the original data source and the last modified time of the semantic web source, thereby indicating if the resource is outdated" ;
 	rdfs:label	"Timeliness of the resource metric" .
-	
+
 dqm:CurrencyOfDatasetMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Assesses the freshness (currency) of the data, i.e. how fresh is the data when delivered to the user (or how old is the data). " ;
 	rdfs:label	"Currency of a Dataset" .
@@ -603,26 +603,66 @@ dqm:hasTimelinessDimension
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Contextual ;
 	rdfs:range dqm:Timeliness .
-	
+
 dqm:hasFreshnessOfDatasetMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:FreshnessOfDatasetMetric .
-	
+
 dqm:hasTimelinessOfResourceMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:TimelinessOfResourceMetric .
-	
+
 dqm:hasCurrencyOfDatasetMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:CurrencyOfDatasetMetric .
-			
-### Representational Category	
+
+
+#### Provenance Dimension
+dqm:Provenance
+	a	rdfs:Class ;
+	rdfs:subClassOf daq:Dimension ;
+	rdfs:comment "Refers to the dataset's representation of provenance information" ;
+	rdfs:label "Provenance" .
+
+dqm:ExtendedProvenanceMetric
+	a	rdfs:Class ;
+	rdfs:subClassOf	daq:Metric ;
+	daq:expectedDataType xsd:double ;
+	rdfs:comment "Measures the degree of the available provenance information (Agent and Datasource for Entities and Activities) that is available in a dataset for a consumer to get to know the origin of the datasource using the standard W3C Prov-O" ;
+	rdfs:label "Extended Provenance Metric" .
+
+dqm:BasicProvenanceMetric
+	a	rdfs:Class ;
+	rdfs:subClassOf	daq:Metric ;
+	daq:expectedDataType xsd:double ;
+	rdfs:comment "Measures the degree of the basic provenance information, i.e. the creator or publisher, of a datasource" ;
+	rdfs:label "Basic Provenance Metric" .
+
+dqm:hasProvenanceDimension
+	a rdfs:Property ;
+	rdfs:subPropertyOf daq:hasDimension ;
+	rdfs:domain dqm:Contextual ;
+	rdfs:range dqm:Provenance .
+
+dqm:hasBasicProvenanceMetric
+	a	rdfs:Property ;
+	rdfs:subPropertyOf	daq:hasMetric ;
+	rdfs:domain	dqm:Provenance ;
+	rdfs:range	dqm:BasicProvenanceMetric .
+
+dqm:hasExtendedProvenanceMetric
+	a	rdfs:Property ;
+	rdfs:subPropertyOf	daq:hasMetric ;
+	rdfs:domain	dqm:Provenance ;
+	rdfs:range	dqm:ExtendedProvenanceMetric .
+
+### Representational Category
 dqm:Representational
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Category ;
@@ -635,17 +675,17 @@ dqm:RepresentationalConciseness
 	rdfs:subClassOf	daq:Dimension ;
 	rdfs:comment	"Measures the extent to which the representation of data is compact, clear and well formatted" ;
 	rdfs:label	"Representational conciseness" .
-	
+
 dqm:ShortURIsMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects the use of short URIs (and the avoidance of query parameters), which suggests that information is compactly represented and favors readability" ;
 	rdfs:label	"Short URIs metric" .
 
 dqm:NoProlixRDFMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects the use of prolix RDF features, i.e reification statements, containers and collections" ;
 	rdfs:label	"No Use of Prolix RDF features metric" .
@@ -667,7 +707,7 @@ dqm:hasRepresentationalConcisenessDimension
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Representational ;
 	rdfs:range dqm:RepresentationalConciseness .
-	
+
 #### Versatility Dimension
 dqm:Versatility
 	a	rdfs:Class ;
@@ -677,18 +717,18 @@ dqm:Versatility
 
 dqm:DifferentSerialisationsMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects if a dataset has more than one serialisation format" ;
 	rdfs:label	"Different Serialisation Metric" .
 
 dqm:MultipleLanguageUsageMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects if a dataset has more than one language" ;
 	rdfs:label	"Multiple Language Usage Metric" .
-	
+
 dqm:hasVersatilityDimension
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
@@ -716,24 +756,24 @@ dqm:Interpretability
 
 dqm:UndefinedClassesAndPropertiesMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Detects undefined classes and properties" ;
 	rdfs:label	"Undefined classes and properties metric" .
-	
+
 dqm:NoBlankNodeMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a measure for the usage of blank nodes in a dataset" ;
 	rdfs:label	"No blank node metric" .
-		
+
 dqm:hasInterpretabilityDimension
 	a rdfs:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Representational ;
 	rdfs:range dqm:Interpretability .
-	
+
 dqm:hasNoBlankNodeMetric
 	a	rdfs:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
@@ -755,17 +795,17 @@ dqm:Interoperability
 
 dqm:ReuseExistingTermsMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a qualitative measure for detecting the overlap of terms used in a dataset with existing terms." ;
 	rdfs:label	"Reuse existing terms metric" .
 
 dqm:ReuseExistingVocabularyMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a qualitative measure for detecting the overlap of vocabularies used in a dataset." ;
-	rdfs:label	"Reuse existing vocabularies metric" .	
+	rdfs:label	"Reuse existing vocabularies metric" .
 
 dqm:hasInteroperabilityDimension
 	a rdfs:Property ;
@@ -785,47 +825,10 @@ dqm:hasReuseExistingVocabularyMetric
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interoperability ;
 	rdfs:range	dqm:ReuseExistingVocabularyMetric .
-		
-#### Provenance Dimension
-dqm:Provenance
-	a	rdfs:Class ;
-	rdfs:subClassOf daq:Dimension ;
-	rdfs:comment "Refers to the dataset's representation of provenance information" ;
-	rdfs:label "Provenance" .
 
-dqm:ExtendedProvenanceMetric
-	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ;
-	daq:expectedDataType xsd:double ;
-	rdfs:comment "Measures the degree of the available provenance information (Agent and Datasource for Entities and Activities) that is available in a dataset for a consumer to get to know the origin of the datasource using the standard W3C Prov-O" ; 
-	rdfs:label "Extended Provenance Metric" .
-	
-dqm:BasicProvenanceMetric
-	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ;
-	daq:expectedDataType xsd:double ;
-	rdfs:comment "Measures the degree of the basic provenance information, i.e. the creator or publisher, of a datasource" ; 
-	rdfs:label "Basic Provenance Metric" .
-		
-dqm:hasProvenanceDimension
-	a rdfs:Property ;
-	rdfs:subPropertyOf daq:hasDimension ;
-	rdfs:domain dqm:Representational ;
-	rdfs:range dqm:Provenance .
-	
-dqm:hasBasicProvenanceMetric
-	a	rdfs:Property ;
-	rdfs:subPropertyOf	daq:hasMetric ;
-	rdfs:domain	dqm:Provenance ;
-	rdfs:range	dqm:BasicProvenanceMetric .
-	
-dqm:hasExtendedProvenanceMetric
-	a	rdfs:Property ;
-	rdfs:subPropertyOf	daq:hasMetric ;
-	rdfs:domain	dqm:Provenance ;
-	rdfs:range	dqm:ExtendedProvenanceMetric .
 
-### Provenance Agent Information 
+
+### Provenance Agent Information
 dqm:LuzzuProvenanceAgent
 	a		prov:SoftwareAgent ;
 	rdfs:label	"Luzzu Quality Assessment Framework"^^xsd:string .

@@ -67,7 +67,7 @@ public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 	// Sampling of problems - testing for LOD Evaluation
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(10000, false);
 
 	
 	private boolean metricCalculated = false;
