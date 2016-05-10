@@ -14,9 +14,9 @@ _:FreshnessOfDataset a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability of Forward-links" ;
 	lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.timeliness.FreshnessOfDataset" .
 	
-_:TimelinessOfResource a lmi:LuzzuMetricJavaImplementation ;
-	rdfs:label "Timeliness Of Resource" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.timeliness.TimelinessOfResource" .
+#_:TimelinessOfResource a lmi:LuzzuMetricJavaImplementation ;
+#	rdfs:label "Timeliness Of Resource" ;
+#	lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.timeliness.TimelinessOfResource" .
 
 #--- Understandability Dimension ------------------------------------------------------------------------------------------------- 
 
@@ -32,4 +32,12 @@ _:VocabularyUsageIndication a lmi:LuzzuMetricJavaImplementation ;
 		rdfs:label "Vocabulary Usage Indication" ;
 		lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.understandability.VocabularyUsageIndication" .
 		
-				
+#--- Provenance --------------------------------------------------------------------------------------------------------------- 
+
+_:ExtendedProvenanceMetric a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Extended Provenance Metric" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.provenance.ExtendedProvenanceMetric" .
+
+_:BasicProvenanceMetric a lmi:LuzzuMetricJavaImplementation ;
+	rdfs:label "Basic Provenance Metric" ;
+	lmi:javaPackageName "eu.diachron.qualitymetrics.contextual.provenance.BasicProvenanceMetric" .	
