@@ -229,6 +229,14 @@ public class VocabularyLoader {
 		}
 	}
 	
+	private synchronized void updateFailSafeCache(String domainAuthority){
+		if (this.failSafeCounter.containsKey(domainAuthority)){
+				this.failSafeCounter.remove(domainAuthority);
+		}	
+	}
+	
+	
+	
 	private synchronized void downloadAndLoadVocab(final String ns) {
 		String domAuth = "";
 		try {
@@ -265,6 +273,7 @@ public class VocabularyLoader {
 					cv.setTextualContent(writer.toString());
 					
 					dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
+					updateFailSafeCache(domAuth); // if we manage to access a vocabulary, then we have to reset the cache counter
 				} catch (Exception e)  {
 					logger.error("Vocabulary {} could not be accessed.",ns);
 					handler.cancel(true);
@@ -326,6 +335,7 @@ public class VocabularyLoader {
 					cv.setTextualContent(writer.toString());
 					
 					dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
+					updateFailSafeCache(domAuth);
 				} catch (Exception e)  {
 					logger.error("Vocabulary {} could not be accessed.",ns);
 					handler.cancel(true);

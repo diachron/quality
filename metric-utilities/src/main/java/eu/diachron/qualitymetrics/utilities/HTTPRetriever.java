@@ -145,19 +145,26 @@ public class HTTPRetriever {
 	}
 	
 	
-	private synchronized void addToFailSafeDecision(String domainAuthority){
-		if (this.failSafeCounter.containsKey(domainAuthority)){
-			Integer current = this.failSafeCounter.get(domainAuthority) + 1;
+	private synchronized void addToFailSafeDecision(String domainTLD){
+		if (this.failSafeCounter.containsKey(domainTLD)){
+			Integer current = this.failSafeCounter.get(domainTLD) + 1;
 			if (current == NS_MAX_RETRIES){
-				this.failSafeMap.put(domainAuthority, true);
-				this.failSafeCounter.put(domainAuthority, 0);
+				this.failSafeMap.put(domainTLD, true);
+				this.failSafeCounter.put(domainTLD, 0);
 			} else {
-				this.failSafeCounter.put(domainAuthority, current);
+				this.failSafeCounter.put(domainTLD, current);
 			}
 		} else {
-			this.failSafeCounter.putIfAbsent(domainAuthority, 0);
+			this.failSafeCounter.putIfAbsent(domainTLD, 0);
 
 		}
+	}
+	
+	
+	private synchronized void updateFailSafeCache(String domainTLD){
+		if (this.failSafeCounter.containsKey(domainTLD)){
+				this.failSafeCounter.remove(domainTLD);
+		}	
 	}
 	
 	
@@ -263,6 +270,7 @@ public class HTTPRetriever {
 										logger.trace("Adding resource to cache URI: {}", queuePeek);
 										DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 										mainHTTPRetreiverLatch.countDown();
+										updateFailSafeCache(peekTLD);
 									}
 								}
 		
