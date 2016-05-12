@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,6 +45,8 @@ import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
@@ -66,10 +69,8 @@ public class HTTPRetriever {
 	private static final int MAX_PARALLEL_REQS = 15;
 	
 	private static final int TIMEOUT = 10000;
-	
-	//private static final String ACCEPT_TYPE = "application/rdf+xml, text/turtle, text/rdf+n3, application/n3, text/n3, application/turtle, application/rdf+json, application/n-triples, text/trig, application/n-quads, text/nquads" ;
 
-	private static final String ACCEPT_TYPE = "application/rdf+xml, text/n3, text/turtle, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig" ;
+	private static final String ACCEPT_TYPE = "application/rdf+xml, text/n3, text/turtle, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig, text/rdf+n3, application/n3, text/trig" ;
 	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
@@ -84,7 +85,15 @@ public class HTTPRetriever {
 	 */
 	private static boolean followRedirections = true;
 
-	//private Set<String> httpQueue = Collections.synchronizedSet(new HashSet<String>());
+
+	/**
+	 * A fail-safe mechanism in order to ensure that web URLs are not visited again if they are not responding after a number of maximum retries
+	 */
+	private ConcurrentMap<String, Boolean> failSafeMap = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build(); // A small fail-safe map that checks whether a domain retrieves vocabs.
+    private ConcurrentMap<String, Integer> failSafeCounter = new ConcurrentLinkedHashMap.Builder<String, Integer>().maximumWeightedCapacity(10000).build(); // keeps a counter of the number of times an NS was accessed before putting the NS to the fail-safe map
+    private final Integer NS_MAX_RETRIES = 3;
+
+	
 	private Queue<String> httpQueue = new ConcurrentLinkedQueue<String>();
 	private ExecutorService executor = null;
 				
@@ -111,7 +120,7 @@ public class HTTPRetriever {
 		// Dereference all the URIs stored in the queue, asynchronously. Wait until all have been resolved
 		if(!httpQueue.isEmpty()) {
 			executor = Executors.newSingleThreadExecutor();
-			
+
 			Runnable retreiver = new Runnable() {
 				public void run() {
 					try {
@@ -123,7 +132,6 @@ public class HTTPRetriever {
 					}
 				}
 			};
-			
 			executor.submit(retreiver);
 			executor.shutdown();
 		}
@@ -134,6 +142,22 @@ public class HTTPRetriever {
 	 */
 	public void stop() {
 		executor.shutdown();
+	}
+	
+	
+	private synchronized void addToFailSafeDecision(String domainAuthority){
+		if (this.failSafeCounter.containsKey(domainAuthority)){
+			Integer current = this.failSafeCounter.get(domainAuthority) + 1;
+			if (current == NS_MAX_RETRIES){
+				this.failSafeMap.put(domainAuthority, true);
+				this.failSafeCounter.put(domainAuthority, 0);
+			} else {
+				this.failSafeCounter.put(domainAuthority, current);
+			}
+		} else {
+			this.failSafeCounter.putIfAbsent(domainAuthority, 0);
+
+		}
 	}
 	
 	
@@ -157,8 +181,16 @@ public class HTTPRetriever {
 //			for(final String queuePeek : this.httpQueue) {
 			while(!this.httpQueue.isEmpty()){
 				final String queuePeek = this.httpQueue.poll();
+				final String peekTLD = this.extractTopLevelDomainURI(queuePeek);
+				
 				// TODO: Remove artificial delay!!!! There must be a way to get rid of this
 				logger.debug("Retrieving "+queuePeek);
+				
+				if (this.failSafeMap.containsKey(queuePeek)){
+					this.failSafeMap.get(peekTLD);
+					continue;
+				}
+				
 				Thread.sleep(50);
 				
 				if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek)) {
@@ -166,10 +198,6 @@ public class HTTPRetriever {
 					mainHTTPRetreiverLatch.countDown();
 					continue;
 				}
-				
-//				if (mainHTTPRetreiverLatch.getCount() == 5000){
-//					Thread.sleep(1000);
-//				}
 				
 				
 				final CachedHTTPResource newResource = new CachedHTTPResource();
@@ -260,6 +288,7 @@ public class HTTPRetriever {
 
 									logger.debug("Failed in retreiving request : {}, with the following exception : {}. {} pending requests", request.getURI().toString(), ex, mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
+									addToFailSafeDecision(peekTLD);
 								}
 		
 								public void cancelled() {
@@ -280,6 +309,7 @@ public class HTTPRetriever {
 									DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 									logger.debug("The retreival for {} was cancelled. {} pending requests",request.getURI().toString(), mainHTTPRetreiverLatch.getCount());
 									mainHTTPRetreiverLatch.countDown();
+									addToFailSafeDecision(peekTLD);
 								}
 							});
 					logger.trace("Request launched: {}", queuePeek);
@@ -297,6 +327,8 @@ public class HTTPRetriever {
 					if(response != null) {
 						newResource.addResponse(response);
 					}
+					
+					this.addToFailSafeDecision(peekTLD);
 					
 					DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
 
@@ -478,11 +510,11 @@ public class HTTPRetriever {
 	public static void main(String [] args) throws InterruptedException{
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
-		//String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
 //		String uri = "http://pleiades.stoa.org/places/55500001010#this";
 //		String uri = "http://rdfs.org/ns/void#Dataset";
 //		String uri = "http://pleiades.stoa.org/places/903083";
-		String uri = "http://imf.270a.info/dataset/void";
+		//String uri = "http://imf.270a.info/dataset/void";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start();
 		Thread.sleep(5000);

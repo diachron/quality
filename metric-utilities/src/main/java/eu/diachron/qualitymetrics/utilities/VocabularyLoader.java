@@ -4,6 +4,8 @@
 package eu.diachron.qualitymetrics.utilities;
 
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -84,6 +86,12 @@ public class VocabularyLoader {
     private ConcurrentMap<String, Set<RDFNode>> childNodes = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
     private ConcurrentMap<String, Boolean> isIFPMap = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build();
     private ConcurrentMap<String, Set<RDFNode>> disjointWith = new ConcurrentLinkedHashMap.Builder<String, Set<RDFNode>>().maximumWeightedCapacity(10000).build();
+    
+    private ConcurrentMap<String, Boolean> failSafeMap = new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(10000).build(); // A small fail-safe map that checks whether a domain retrieves vocabs.
+    private ConcurrentMap<String, Integer> failSafeCounter = new ConcurrentLinkedHashMap.Builder<String, Integer>().maximumWeightedCapacity(10000).build(); // keeps a counter of the number of times an NS was accessed before putting the NS to the fail-safe map
+    private final Integer NS_MAX_RETRIES = 3;
+
+    
 
 	// --- Constructor and Instance --- //
 	private VocabularyLoader(){
@@ -206,86 +214,131 @@ public class VocabularyLoader {
 		}
 	}
 	
+	private synchronized void addToFailSafeDecision(String domainAuthority){
+		if (this.failSafeCounter.containsKey(domainAuthority)){
+			Integer current = this.failSafeCounter.get(domainAuthority) + 1;
+			if (current == NS_MAX_RETRIES){
+				this.failSafeMap.put(domainAuthority, true);
+				this.failSafeCounter.put(domainAuthority, 0);
+			} else {
+				this.failSafeCounter.put(domainAuthority, current);
+			}
+		} else {
+			this.failSafeCounter.putIfAbsent(domainAuthority, 0);
+
+		}
+	}
+	
 	private synchronized void downloadAndLoadVocab(final String ns) {
-		try{
-			
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-			Model m = null;
-			
-			final Future<Model> handler = executor.submit(new Callable<Model>() {
-			    @Override
-			    public Model call() throws Exception {
-			    	logger.info("Loading {}", ns);
-			    	Model m = RDFDataMgr.loadModel(ns, Lang.RDFXML);
-			    	return m;
-			    }
-			});
-			
-			try {
-				m = handler.get(5, TimeUnit.SECONDS);
-				dataset.addNamedModel(ns, m);
+		String domAuth = "";
+		try {
+			URL domURL = new URL(ns);
+			domAuth = domURL.getAuthority();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (!(this.failSafeMap.containsKey(domAuth))){
+			try{
+				ExecutorService executor = Executors.newSingleThreadExecutor();
+				Model m = null;
 				
-				StringBuilderWriter writer = new StringBuilderWriter();
-				m.write(writer, "TURTLE");
+				final Future<Model> handler = executor.submit(new Callable<Model>() {
+				    @Override
+				    public Model call() throws Exception {
+				    	logger.info("Loading {}", ns);
+				    	Model m = RDFDataMgr.loadModel(ns, Lang.RDFXML);
+				    	return m;
+				    }
+				});
 				
-				CachedVocabulary cv = new CachedVocabulary();
-				cv.setLanguage("TURTLE");
-				cv.setNs(ns);
-				cv.setTextualContent(writer.toString());
-				
-				dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
-			} catch (Exception e)  {
+				try {
+					m = handler.get(5, TimeUnit.SECONDS);
+					dataset.addNamedModel(ns, m);
+					
+					StringBuilderWriter writer = new StringBuilderWriter();
+					m.write(writer, "TURTLE");
+					
+					CachedVocabulary cv = new CachedVocabulary();
+					cv.setLanguage("TURTLE");
+					cv.setNs(ns);
+					cv.setTextualContent(writer.toString());
+					
+					dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
+				} catch (Exception e)  {
+					logger.error("Vocabulary {} could not be accessed.",ns);
+					handler.cancel(true);
+					addToFailSafeDecision(domAuth);
+				} 
+			} catch (Exception e){
 				logger.error("Vocabulary {} could not be accessed.",ns);
-				handler.cancel(true);
-			} 
-		} catch (Exception e){
-			logger.error("Vocabulary {} could not be accessed.",ns);
-//			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+				addToFailSafeDecision(domAuth);
+	//			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+			}
+		} else {
+			this.failSafeMap.get(domAuth);
 		}
 	}
 	
 	private synchronized void downloadAndLoadVocab(final String ns, final Node term) {
-		try{
-			
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-			Model m = null;
-			
-			final Future<Model> handler = executor.submit(new Callable<Model>() {
-			    @Override
-			    public Model call() throws Exception {
-			    	logger.info("Loading {}", ns);
-			    	Model m = null;
-			    	try{ m = RDFDataMgr.loadModel(term.getURI(), Lang.RDFXML); } catch (Exception e)
-			    	{
-			    		try{ m = RDFDataMgr.loadModel(term.getURI(), Lang.TURTLE); } catch (Exception e2)
-			    		{
-			    			m = RDFDataMgr.loadModel(term.getURI(), Lang.NTRIPLES);
-			    		}
-			    	}
-			    	return m;
-			    }
-			});
-			
-			try {
-				m = handler.get(5, TimeUnit.SECONDS);
-				dataset.addNamedModel(ns, m);
+		String domAuth = "";
+		try {
+			URL domURL = new URL(ns);
+			domAuth = domURL.getAuthority();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (!(this.failSafeMap.containsKey(domAuth))){
+			try{
+				ExecutorService executor = Executors.newSingleThreadExecutor();
+				Model m = null;
 				
-				StringBuilderWriter writer = new StringBuilderWriter();
-				m.write(writer, "TURTLE");
+				final Future<Model> handler = executor.submit(new Callable<Model>() {
+				    @Override
+				    public Model call() throws Exception {
+				    	logger.info("Loading {}", ns);
+				    	Model m = null;
+				    	try{ m = RDFDataMgr.loadModel(term.getURI(), Lang.RDFXML); } catch (Exception e)
+				    	{
+				    		try{ m = RDFDataMgr.loadModel(term.getURI(), Lang.TURTLE); } catch (Exception e2)
+				    		{
+				    			try { m = RDFDataMgr.loadModel(term.getURI(), Lang.NTRIPLES); }
+				    			catch (Exception e3){
+				    				logger.error("Vocabulary {} could not be accessed after 3 attempts. " +  ns);
+					    		}
+				    		} 
+				    	}
+				    	return m;
+				    }
+				});
 				
-				CachedVocabulary cv = new CachedVocabulary();
-				cv.setLanguage("TURTLE");
-				cv.setNs(ns);
-				cv.setTextualContent(writer.toString());
-				
-				dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
-			} catch (Exception e)  {
+				try {
+					m = handler.get(5, TimeUnit.SECONDS);
+					dataset.addNamedModel(ns, m);
+					
+					StringBuilderWriter writer = new StringBuilderWriter();
+					m.write(writer, "TURTLE");
+					
+					CachedVocabulary cv = new CachedVocabulary();
+					cv.setLanguage("TURTLE");
+					cv.setNs(ns);
+					cv.setTextualContent(writer.toString());
+					
+					dcm.addToCache(DiachronCacheManager.VOCABULARY_CACHE, ns, cv);
+				} catch (Exception e)  {
+					logger.error("Vocabulary {} could not be accessed.",ns);
+					handler.cancel(true);
+					addToFailSafeDecision(domAuth);
+
+				} 
+			} catch (Exception e){
 				logger.error("Vocabulary {} could not be accessed.",ns);
-				handler.cancel(true);
-			} 
-		} catch (Exception e){
-			logger.error("Vocabulary {} could not be accessed.",ns);
-//			throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+//				throw new VocabularyUnreachableException("The vocabulary <"+ns+"> cannot be accessed. Error thrown: "+e.getMessage());
+				addToFailSafeDecision(domAuth);
+			}
+		} else {
+			this.failSafeMap.get(domAuth);
 		}
 	}
 	
@@ -343,7 +396,12 @@ public class VocabularyLoader {
 		}
 		
 		if(!(dataset.containsNamedModel(ns))) 
-			loadNStoDataset(ns, term);
+			if (ns.contains("#")){
+				//if it is a hash URI then we just need to download the schema in the namespace
+				loadNStoDataset(ns);
+			} else {
+				loadNStoDataset(ns, term);
+			}
 		
 		return dataset.getNamedModel(ns);
 	}
@@ -369,11 +427,14 @@ public class VocabularyLoader {
 					try{
 						if (first){
 							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-							isProperty = isProperty(inferred, false);
+							
+							if ((inferred.getURI().equals(OWL.Class.getURI())) || (inferred.getURI().equals(RDFS.Class.getURI())))
+								isProperty = false;
+							else
+								isProperty = isProperty(inferred, false);
 						}
 					} catch (Exception e){}
 				}
-				
 				
 				isPropertyMap.putIfAbsent(term.getURI(), isProperty);
 			} finally {
@@ -403,7 +464,11 @@ public class VocabularyLoader {
 						if (first){
 							logger.debug("Trying to infer class");
 							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-							isProperty = isObjectProperty(inferred,false);
+							
+							if ((inferred.getURI().equals(OWL.Class.getURI())) || (inferred.getURI().equals(RDFS.Class.getURI())))
+								isProperty = false;
+							else
+								isProperty = isObjectProperty(inferred,false);
 						}
 					} catch (Exception e){}
 				}
@@ -435,7 +500,11 @@ public class VocabularyLoader {
 						if (first){
 							logger.debug("Trying to infer class");
 							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-							isProperty = isDatatypeProperty(inferred,false);
+							
+							if ((inferred.getURI().equals(OWL.Class.getURI())) || (inferred.getURI().equals(RDFS.Class.getURI())))
+								isProperty = false;
+							else
+								isProperty = isDatatypeProperty(inferred,false);
 						}
 					} catch (Exception e){}
 				}
@@ -468,7 +537,17 @@ public class VocabularyLoader {
 						if (first){
 							logger.debug("Trying to infer class");
 							Node inferred = m.listObjectsOfProperty(Commons.asRDFNode(term).asResource(), RDF.type).next().asNode();
-							isClass = isClass(inferred,true);
+							
+							if ( (inferred.getURI().equals(RDF.Property.getURI())) ||
+							(inferred.getURI().equals(OWL.DatatypeProperty.getURI())) ||
+							(inferred.getURI().equals(OWL.OntologyProperty.getURI())) ||
+							(inferred.getURI().equals(OWL.AnnotationProperty.getURI())) ||
+							(inferred.getURI().equals(OWL.ObjectProperty.getURI())) ) {
+								// if the inferred class is one of the properties, then it is a property
+								isClass = false;
+							} else {
+								isClass = isClass(inferred,true);
+							}
 						}
 					} catch (Exception e){}
 				}
