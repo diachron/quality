@@ -30,7 +30,6 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -235,8 +234,7 @@ public class HTTPRetriever {
 				newResource.setUri(queuePeek);
 				
 				try {
-					final HttpHead request = new HttpHead(queuePeek);
-					//final HttpGet request = new HttpGet(queuePeek);		
+					final HttpGet request = new HttpGet(queuePeek);		
 					if (requiresContentType || this.useContentType)
 					{
 						Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
