@@ -64,7 +64,7 @@ public class EstimatedDereferenceabilityForwardLinks implements QualityMetric {
 	
 	/**
 	 * Constants controlling the maximum number of elements in the reservoir 	 */
-	private static int MAX_FQURIS = 5000;
+	private static int MAX_FQURIS = 200000;
 	private ReservoirSampler<String> fqurisReservoir = new ReservoirSampler<String>(MAX_FQURIS, true);
 	
 

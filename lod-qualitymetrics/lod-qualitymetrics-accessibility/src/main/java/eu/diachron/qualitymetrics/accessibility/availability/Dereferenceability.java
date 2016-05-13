@@ -31,7 +31,9 @@ import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -130,7 +132,7 @@ public class Dereferenceability implements QualityMetric {
 			} else {
 				this.totalURI++;
 				if (Dereferencer.hasValidDereferencability(httpResource)){
-					if(ModelParser.hasRDFContent(httpResource)){
+					if(this.hasLinkedDataContentType(httpResource)){
 						this.dereferencedURI++;
 						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());
 					} else {
@@ -178,6 +180,21 @@ public class Dereferenceability implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
+	}
+	
+	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
+		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
+		if(resource != null && resource.getResponses() != null) {
+			for (SerialisableHttpResponse response : resource.getResponses()) {
+				if(response != null && response.getHeaders("Content-Type") != null) {
+					String ct = response.getHeaders("Content-Type").split(";")[0];
+					if (LinkedDataContent.contentTypes.contains(ct)) { 
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 }

@@ -30,6 +30,7 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -66,7 +67,7 @@ public class HTTPRetriever {
 	 * Maximum number of simultaneous HTTP request that can be sent in separate threads, configuration parameter
 	 * of the performance utilitarian methods for measurement of performance (namely measurement of parallel reqs.)
 	 */
-	private static final int MAX_PARALLEL_REQS = 15;
+	private static final int MAX_PARALLEL_REQS = 100;
 	
 	private static final int TIMEOUT = 10000;
 
@@ -185,6 +186,28 @@ public class HTTPRetriever {
 		try {
 			httpclient.start();
 			
+            AsyncCharConsumer<HttpResponse> consumer = new AsyncCharConsumer<HttpResponse>() {
+            	HttpResponse response = null;
+            	
+				@Override
+				protected void onCharReceived(CharBuffer buf, IOControl ioctrl) throws IOException {
+					while (buf.hasRemaining()) {
+						buf.get();
+		            }
+				}
+
+				@Override
+				protected void onResponseReceived(HttpResponse response) throws HttpException, IOException {
+					this.response = response;
+					logger.debug("Response received!", response.getStatusLine());
+				}
+
+				@Override
+				protected HttpResponse buildResult(HttpContext context) throws Exception {
+					return response;
+				}
+            };
+			
 //			for(final String queuePeek : this.httpQueue) {
 			while(!this.httpQueue.isEmpty()){
 				final String queuePeek = this.httpQueue.poll();
@@ -212,7 +235,8 @@ public class HTTPRetriever {
 				newResource.setUri(queuePeek);
 				
 				try {
-					final HttpGet request = new HttpGet(queuePeek);		
+					final HttpHead request = new HttpHead(queuePeek);
+					//final HttpGet request = new HttpGet(queuePeek);		
 					if (requiresContentType || this.useContentType)
 					{
 						Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
@@ -220,27 +244,6 @@ public class HTTPRetriever {
 					}
 					HttpAsyncRequestProducer httpProd = HttpAsyncMethods.create(request);
 		            
-		            AsyncCharConsumer<HttpResponse> consumer = new AsyncCharConsumer<HttpResponse>() {
-		            	HttpResponse response = null;
-		            	
-						@Override
-						protected void onCharReceived(CharBuffer buf, IOControl ioctrl) throws IOException {
-							while (buf.hasRemaining()) {
-								buf.get();
-				            }
-						}
-
-						@Override
-						protected void onResponseReceived(HttpResponse response) throws HttpException, IOException {
-							this.response = response;
-							logger.debug("Response received!", response.getStatusLine());
-						}
-
-						@Override
-						protected HttpResponse buildResult(HttpContext context) throws Exception {
-							return response;
-						}
-		            };
 					
 					httpclient.execute(httpProd, consumer, localContext, 
 							new FutureCallback<HttpResponse>() {
@@ -518,11 +521,11 @@ public class HTTPRetriever {
 	public static void main(String [] args) throws InterruptedException{
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
-		String uri = "http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml";
+//		String uri = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
 //		String uri = "http://pleiades.stoa.org/places/55500001010#this";
 //		String uri = "http://rdfs.org/ns/void#Dataset";
 //		String uri = "http://pleiades.stoa.org/places/903083";
-		//String uri = "http://imf.270a.info/dataset/void";
+		String uri = "http://imf.270a.info/dataset/void";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start();
 		Thread.sleep(5000);

@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Files;
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;

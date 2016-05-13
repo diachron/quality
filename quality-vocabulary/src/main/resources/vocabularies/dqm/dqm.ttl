@@ -471,17 +471,20 @@ dqm:SyntacticValidity
 dqm:CompatibleDatatype
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
+	daq:expectedDataType xsd:double
 	rdfs:comment	"** TODO **" ;
 	rdfs:label	"Compatible Datatype" .
 
 dqm:CorrectLanguageTag
 	a	rdfs:Class ;
+	daq:expectedDataType xsd:double
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"** TODO **" ;
 	rdfs:label	"Correct Language Tag" .
 
 dqm:UntypedLiteralsMetric
 	a	rdfs:Class ;
+	daq:expectedDataType xsd:double
 	rdfs:subClassOf	daq:Metric ;
 	rdfs:comment	"** TODO **" ;
 	rdfs:label	"Untyped Literals" .

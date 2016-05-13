@@ -2,6 +2,8 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
@@ -20,9 +23,10 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
+import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
@@ -31,15 +35,24 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  * 
  * This metric calculates an estimation of the number of valid redirects (303) or 
  * hashed links according to LOD Principles. Makes use of statistical sampling 
- * techniques to remain scalable to datasets of big-data proportions
+ * techniques to remain scalable to datasets of big-data proportions. 
  * 
- * Based on: <a href="http://www.hyperthing.org/">Hyperthing - A linked data Validator</a>
+ * In this metric we use the Stratified technique, where the reservior size
+ * of each TLD is based on a fair representative ratio, rather than equal for all TLDs.
+ * Imagine we have 50000 URIs in a dataset and the reservior size (for each TLD) is 1000;
+ * If we have 7500 URIs with a TLD of <http://example.org> and 25000 URIs with a TLD
+ * of <http://notanexample.com>, without having a fair representative sample, then
+ * in the final assessment both TLDs will be assessed on 1000 URIs, whilst with the
+ * fair representation (imagine a population ratio of 20%), the first TLD will be represented
+ * by 150 URIs whilst the second one with 500 URIs.
+ * 
+ * The deferencing mechanism Based on: <a href="http://www.hyperthing.org/">Hyperthing - A linked data Validator</a>
  * 
  * @see <a href="http://dl.dropboxusercontent.com/u/4138729/paper/dereference_iswc2011.pdf">
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
  */
-public class EstimatedDereferenceabilityByTld implements QualityMetric {
+public class EstimatedDereferenceabilityByStratified implements QualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityMetric;
 
@@ -51,6 +64,15 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 	 */
 	public int MAX_TLDS = 100;
 	public int MAX_FQURIS_PER_TLD = 1000;
+	
+	private long totalDerefUris = 0;
+	
+	/**
+	 * Stratified Sampling parameters
+	 */
+	private static double POPULATION_PERCENTAGE = 0.2d;
+	private Map<String,Long> tldCount = new ConcurrentHashMap<String,Long>(); 
+	private Long totalURIs = 0l;
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -89,12 +111,28 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 			if (httpRetriever.isPossibleURL(subject)) {
 				logger.trace("URI found on subject: {}", subject);
 				addUriToDereference(subject);
+				String uriTLD = httpRetriever.extractTopLevelDomainURI(subject);
+				totalURIs++;
+				if (tldCount.containsKey(uriTLD)){
+					Long cur = tldCount.get(uriTLD) + 1;
+					tldCount.put(uriTLD, cur);
+				} else {
+					tldCount.put(uriTLD, 0l);
+				}
 			}
 
 			String object = quad.getObject().toString();
 			if (httpRetriever.isPossibleURL(object)) {
 				logger.trace("URI found on object: {}", object);
 				addUriToDereference(object);
+				String uriTLD = httpRetriever.extractTopLevelDomainURI(object);
+				totalURIs++;
+				if (tldCount.containsKey(uriTLD)){
+					Long cur = tldCount.get(uriTLD) + 1;
+					tldCount.put(uriTLD, cur);
+				} else {
+					tldCount.put(uriTLD, 0l);
+				}
 			}
 		}
 	}
@@ -108,43 +146,28 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 		
 		if(!this.metricCalculated) {
 			// Collect the list of URIs of the TLDs, to be dereferenced
-			List<String> lstUrisToDeref = new ArrayList<String>(this.tldsReservoir.size());			
-			for(Tld tld : this.tldsReservoir.getItems()) {
-				lstUrisToDeref.add(tld.getUri());
-			}
+			List<String> lstUrisToDeref = new ArrayList<String>(MAX_FQURIS_PER_TLD);			
 			
-			// Dereference all TLD URIs
-			List<DerefResult> lstDeRefTlds = this.deReferenceUris(lstUrisToDeref);
-			
-			long totalDerefUris = 0;
-			long totalUris = 0;
-			
-			for(DerefResult curTldDeRefRes : lstDeRefTlds) {
-				// Obtain the TLD corresponding to the URI whose result currently is being examined
-				Tld derefTld = this.tldsReservoir.findItem(new Tld(curTldDeRefRes.uri, MAX_FQURIS_PER_TLD));
-				totalUris += ((derefTld.getfqUris() != null)?(derefTld.getfqUris().size()):(0));
+			for(Tld tld : this.tldsReservoir.getItems()){
+				//Work out ratio for the number of maximum TLDs in Reservior
+				double totalRatio = ((double) tldCount.get(tld.getUri())) * POPULATION_PERCENTAGE;  // ratio between the total number of URIs of a TLD in a dataset against the overall total number of URIs
+				double representativeRatio = totalRatio / ((double) totalURIs * POPULATION_PERCENTAGE); // the ratio of the URIs of a TLD against the population sample for all URIs in a dataset
+				long maxRepresentativeSample = Math.round(representativeRatio * (double) MAX_FQURIS_PER_TLD); // how big should the final reservior for a TLD be wrt the representative ratio
 				
-				// Only URIs comprised by dereferenceable TLDs are subject to be counted as successfully dereferenced
-				if(curTldDeRefRes.isDeref && derefTld.getfqUris() != null) {
-					// Dereference all URIs part of the TLD
-					List<DerefResult> lstDeRefUris = this.deReferenceUris(derefTld.getfqUris().getItems());
-					
-					// Count those successfully dereferenced
-					for(DerefResult curUriDeRefRes : lstDeRefUris) {						
-						if(curUriDeRefRes.isDeref && curUriDeRefRes.isRdfXml) {
-							logger.debug("-- URI successfully dereferenced: {}", curUriDeRefRes.uri);
-							totalDerefUris += 1;
-						} else {
-							logger.debug("-- URI: {} failed to be dereferenced", curUriDeRefRes.uri);							
-						}
+				// Re-sample the sample to have the final representative sample
+				if (maxRepresentativeSample > 0){
+					ReservoirSampler<String> _tmpRes = new ReservoirSampler<String>((int)maxRepresentativeSample, true);
+				
+					for(String uri : tld.getfqUris().getItems()){
+						_tmpRes.add(uri);
 					}
-					logger.debug("TLD: {} successfully dereferenced, sampling from: {} URIs", curTldDeRefRes.uri, derefTld.countFqUris());
-				} else {
-					logger.debug("TLD: {} non-dereferenced", curTldDeRefRes.uri);
+					
+					lstUrisToDeref.addAll(_tmpRes.getItems());
 				}
 			}
 			
-			this.metricValue = (double)totalDerefUris / (double)totalUris;
+			this.totalDerefUris = this.deReferenceUris(lstUrisToDeref);
+			this.metricValue = (double)totalDerefUris / (double)lstUrisToDeref.size();
 		}
 		
 		return this.metricValue;
@@ -199,13 +222,13 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 	 * @param uriSet Set of URIs to be dereferenced
 	 * @return list with the results of the dereferenceability operations, for those URIs that were found in the cache 
 	 */
-	private List<DerefResult> deReferenceUris(List<String> uriSet) {
-		// Start the dereferencing process, which will be run in parallel
+	private long deReferenceUris(List<String> uriSet) {
+		// Start the dereferenciation process, which will be run in parallel
 		httpRetriever.addListOfResourceToQueue(uriSet);
 		httpRetriever.start(true);
 		
-		List<DerefResult> lstDerefUris = new ArrayList<DerefResult>();
 		List<String> lstToDerefUris = new ArrayList<String>(uriSet);
+		long totalDerefUris = 0;
 				
 		// Dereference each and every one of the URIs contained in the specified set
 		while(lstToDerefUris.size() > 0) {
@@ -220,68 +243,46 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 				lstToDerefUris.add(headUri);
 			} else {
 				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
-				DerefResult curUrlResult = new DerefResult(headUri, false, false);
-				lstDerefUris.add(curUrlResult);
-				
 				if (Dereferencer.hasValidDereferencability(httpResource)) {
 					if(this.hasLinkedDataContentType(httpResource)) {
-						curUrlResult.isRdfXml = true;
+						totalDerefUris++;
 						logger.debug("URI successfully dereferenced and response OK and RDF: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
 					} else {
 						this.createProblemQuad(httpResource.getUri(), DQMPROB.NotMeaningful);
 						logger.debug("URI was dereferenced but response was not valid: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
 					}
 				}
-				logger.trace("Resource fetched: {}. Deref. status: {}. Is RDF: {}", headUri, httpResource.getDereferencabilityStatusCode(), curUrlResult.isRdfXml);
+				
+				createProblemReport(httpResource);
+				logger.trace("{} - {} - {}", headUri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
 		
-		return lstDerefUris;
+		return totalDerefUris;
 	}
 	
-	
-	/**
-	 * Inner class, with the purpose of coupling an URI with the result of its dereferencing process
-	 * It's basically a pair establishing a relation between an URI and its dereferenceability
-	 * @author slondono
-	 */
-	private class DerefResult {
+	private void createProblemReport(CachedHTTPResource httpResource){
+		StatusCode sc = httpResource.getDereferencabilityStatusCode();
 		
-		private String uri;
-		private boolean isDeref;
-		private boolean isRdfXml;
-		
-		private DerefResult(String uri, boolean isDeref, boolean isRdfXml) {
-			this.uri = uri;
-			this.isDeref = isDeref;
-			this.isRdfXml = isRdfXml;
+		switch (sc){
+			case SC200 : if (ModelParser.hasRDFContent(httpResource)) this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithRDF); 
+						 else this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithoutRDF);
+						 break;
+			case SC301 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC301MovedPermanently); break;
+			case SC302 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC302Found); break;
+			case SC307 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC307TemporaryRedirectory); break;
+			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC3XXRedirection); break;
+			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC4XXClientError); break;
+			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC5XXServerError); break;
+			default	   : break;
 		}
 	}
-			
-//	public static int getMAX_TLDS() {
-//		return MAX_TLDS;
-//	}
-//
-//	public static void setMAX_TLDS(int mAX_TLDS) {
-//		MAX_TLDS = mAX_TLDS;
-//	}
-//
-//	public static int getMAX_FQURIS_PER_TLD() {
-//		return MAX_FQURIS_PER_TLD;
-//	}
-//
-//	public static void setMAX_FQURIS_PER_TLD(int mAX_FQURIS_PER_TLD) {
-//		MAX_FQURIS_PER_TLD = mAX_FQURIS_PER_TLD;
-//	}
 	
 	private void createProblemQuad(String resource, Resource problem){
 		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), problem.asNode());
 		this._problemList.add(q);
 	}
-	
-
-
-	
+			
 	@Override
 	public boolean isEstimate() {
 		return true;
@@ -290,7 +291,7 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
-	}
+	}	
 	
 	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
 		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
@@ -306,5 +307,4 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 		}
 		return false;
 	}
-	
 }

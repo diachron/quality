@@ -38,7 +38,7 @@
 	</appender>
 
 	<root>
-		<priority value="DEBUG" />
+		<priority value="error" />
 		<appender-ref ref="debugAppender" />
 	</root>
 

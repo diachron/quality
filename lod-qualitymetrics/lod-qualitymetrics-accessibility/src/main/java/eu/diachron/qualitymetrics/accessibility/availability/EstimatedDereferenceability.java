@@ -24,7 +24,9 @@ import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -48,7 +50,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 	/**
 	 * Constants controlling the maximum number of elements in the reservoir of URIs, i.e. sample size
 	 */
-	private static int MAX_FQURIS = 6000;
+	public int MAX_FQURIS = 6000; //static
 	
 	/**
 	 * Performs HTTP requests, used to try to fetch identified URIs
@@ -150,7 +152,6 @@ public class EstimatedDereferenceability implements QualityMetric {
 		return pl;
 	}
 	
-	/* ------------------------------------ Private Methods ------------------------------------------------ */
 	
 	/**
 	 * Tries to dereference all the URIs contained in the parameter, by retrieving them from the cache. URIs
@@ -180,7 +181,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 			} else {
 				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
 				if (Dereferencer.hasValidDereferencability(httpResource)) {
-					if(ModelParser.hasRDFContent(httpResource)) {
+					if(this.hasLinkedDataContentType(httpResource)) {
 						totalDerefUris++;
 						logger.debug("URI successfully dereferenced and response OK and RDF: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
 					} else {
@@ -219,11 +220,11 @@ public class EstimatedDereferenceability implements QualityMetric {
 		this._problemList.add(q);
 	}
 	
-	public static int getMAX_FQURIS() {
+	public int getMAX_FQURIS() {
 		return MAX_FQURIS;
 	}
 
-	public static void setMAX_FQURIS(int mAX_FQURIS) {
+	public void setMAX_FQURIS(int mAX_FQURIS) {
 		MAX_FQURIS = mAX_FQURIS;
 	}
 		
@@ -235,6 +236,21 @@ public class EstimatedDereferenceability implements QualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
+	}
+	
+	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
+		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
+		if(resource != null && resource.getResponses() != null) {
+			for (SerialisableHttpResponse response : resource.getResponses()) {
+				if(response != null && response.getHeaders("Content-Type") != null) {
+					String ct = response.getHeaders("Content-Type").split(";")[0];
+					if (LinkedDataContent.contentTypes.contains(ct)) { 
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 }

@@ -15,6 +15,7 @@ import org.apache.jena.riot.RDFLanguages;
 
 import com.hp.hpl.jena.util.FileUtils;
 
+
 /**
  * @author Jeremy Debattista
  * 
@@ -32,6 +33,8 @@ public class LinkedDataContent {
     public static final String contentTypeRDFJSON           = "application/rdf+json" ;
     public static final String contentTypeNTriples          = "application/n-triples" ;
     public static final String contentTypeJSONLD         	= "application/ld+json" ;
+    public static final String contentTypeNTriplesPlain		= "text/plain";
+    public static final String contentTypeRDFTurtle			= "text/rdf+n3";
 
     //MIME Types not registered at IANA but found in their specific W3C Specs
     public static final String contentTypeNQuads	       	= "application/n-quads" ;
@@ -63,14 +66,16 @@ public class LinkedDataContent {
     
     private static Map<String, Lang> mapContentTypeToLang = new HashMap<String, Lang>() ;
     static {
-        mapContentTypeToLang.put(contentTypeN3,			RDFLanguages.N3) ;
-        mapContentTypeToLang.put(contentTypeTurtle,		RDFLanguages.TURTLE);
-        mapContentTypeToLang.put(contentTypeRDFXML,		RDFLanguages.RDFXML);
-        mapContentTypeToLang.put(contentTypeRDFJSON,	RDFLanguages.RDFJSON);
-        mapContentTypeToLang.put(contentTypeNTriples,	RDFLanguages.NTRIPLES);
-        mapContentTypeToLang.put(contentTypeJSONLD,		JSONLD);
-        mapContentTypeToLang.put(contentTypeNQuads,		RDFLanguages.NQUADS);
-        mapContentTypeToLang.put(contentTypeTriG,		RDFLanguages.TRIG);
+        mapContentTypeToLang.put(contentTypeN3,				RDFLanguages.N3) ;
+        mapContentTypeToLang.put(contentTypeTurtle,			RDFLanguages.TURTLE);
+        mapContentTypeToLang.put(contentTypeRDFXML,			RDFLanguages.RDFXML);
+        mapContentTypeToLang.put(contentTypeRDFJSON,		RDFLanguages.RDFJSON);
+        mapContentTypeToLang.put(contentTypeNTriples,		RDFLanguages.NTRIPLES);
+        mapContentTypeToLang.put(contentTypeJSONLD,			JSONLD);
+        mapContentTypeToLang.put(contentTypeNQuads,			RDFLanguages.NQUADS);
+        mapContentTypeToLang.put(contentTypeTriG,			RDFLanguages.TRIG);
+        mapContentTypeToLang.put(contentTypeNTriplesPlain,	RDFLanguages.NTRIPLES);
+        mapContentTypeToLang.put(contentTypeRDFTurtle,		RDFLanguages.TURTLE);
     }
     
     private static Map<Lang, String> mapLangToContentType =  new HashMap<Lang, String>() ;
@@ -96,6 +101,8 @@ public class LinkedDataContent {
     	mapContentTypeToFileExt.put(contentTypeJSONLD,		fileExtensionJSONLD);
     	mapContentTypeToFileExt.put(contentTypeNQuads,		fileExtensionNQ);
     	mapContentTypeToFileExt.put(contentTypeTriG,		fileExtensionTRIG);
+    	mapContentTypeToFileExt.put(contentTypeNTriplesPlain,	fileExtensionN3);
+    	mapContentTypeToFileExt.put(contentTypeRDFTurtle,		fileExtensionTurtle);
     }
     
     private static Map<String, String> mapFileExtToContentType =  new HashMap<String, String>() ;
@@ -153,6 +160,8 @@ public class LinkedDataContent {
 		contentTypes.add(contentTypeJSONLD);
 		contentTypes.add(contentTypeNQuads);
 		contentTypes.add(contentTypeTriG);
+		contentTypes.add(contentTypeNTriplesPlain);
+		contentTypes.add(contentTypeRDFTurtle);
 	}
 	
 	public static Set<String> fileExtension = new HashSet<String>();
@@ -166,7 +175,5 @@ public class LinkedDataContent {
 		fileExtension.add(fileExtensionNQ);
 		fileExtension.add(fileExtensionTRIG);
 	}
-	
-	
 	
 }
