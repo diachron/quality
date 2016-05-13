@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.StatusLine;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
+
+import com.hp.hpl.jena.rdf.model.Model;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
@@ -20,6 +24,14 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 public class Dereferencer {
 
 	public static boolean hasValidDereferencability(CachedHTTPResource httpResource){
+		dereferencabilityCode(httpResource);
+		parsable(httpResource);
+		
+		StatusCode scode = httpResource.getDereferencabilityStatusCode();
+		return (mapDerefStatusCode(scode) && httpResource.isContentParsable());
+	}
+	
+	private static void dereferencabilityCode(CachedHTTPResource httpResource){
 		if (httpResource.getDereferencabilityStatusCode() == null){
 			List<Integer> statusCode = getStatusCodes(httpResource.getStatusLines());
 			
@@ -46,9 +58,6 @@ public class Dereferencer {
 			
 			if (has5xxCode(statusCode)) httpResource.setDereferencabilityStatusCode(StatusCode.SC5XX);
 		} 			
-		
-		StatusCode scode = httpResource.getDereferencabilityStatusCode();
-		return mapDerefStatusCode(scode);
 	}
 	
 	private static boolean mapDerefStatusCode(StatusCode statusCode){
@@ -110,17 +119,40 @@ public class Dereferencer {
 		return false;
 	}
 	
-	public static void main (String [] args){
+	private static void parsable(CachedHTTPResource resource){
+		try{
+			Model m = RDFDataMgr.loadModel(resource.getUri());
+			if (m.size() > 0){
+				resource.setParsableContent(true);
+			} else {
+				resource.setParsableContent(false);
+			}
+		} catch (RiotException re){
+			resource.setParsableContent(false);
+		} catch (Exception e){
+			System.out.println(resource.getUri());
+			resource.setParsableContent(false);
+		}
+	}
+	
+	public static void main (String [] args) throws InterruptedException{
 		HTTPRetriever httpRetriever = new HTTPRetriever();
-		httpRetriever.addResourceToQueue("http://data.europeana.eu/item/00718/4E1E6748FC9804FFF2CA853462A6FD2112ADD3E4");
+		String url = "http://mlode.nlp2rdf.org/resource/wals/datapoint/prs-f136B";
+		httpRetriever.addResourceToQueue(url);
 		httpRetriever.start();
-		
-		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+		Thread.sleep(1000);
+		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
 		while (res == null){
-			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, "http://dbpedia.org/resource/11th_Bengal_Native_Infantry");
+			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
 		}
 		
 		System.out.println(hasValidDereferencability(res));
+//		parsable(res);
+//		System.out.println(res.isContentParsable());
+		
+		StatusCode sc = res.getDereferencabilityStatusCode();
+		System.out.println(sc);
+
 	}
 
 }

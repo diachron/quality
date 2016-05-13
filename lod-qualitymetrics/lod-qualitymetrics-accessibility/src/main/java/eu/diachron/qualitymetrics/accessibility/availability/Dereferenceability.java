@@ -131,18 +131,11 @@ public class Dereferenceability implements QualityMetric {
 				this.notFetchedQueue.add(uri);
 			} else {
 				this.totalURI++;
-				if (Dereferencer.hasValidDereferencability(httpResource)){
-					if(this.hasLinkedDataContentType(httpResource)){
-						this.dereferencedURI++;
-						logger.trace("URI successfully dereferenced and response OK and RDF: {}", httpResource.getUri());
-					} else {
-						this.createProblemQuad(httpResource.getUri(), DQMPROB.NotMeaningful);
-						logger.trace("URI was dereferenced but response was not valid: {}", httpResource.getUri());
-					}
-				} else {
-					logger.trace("URI failed to be dereferenced: {}", httpResource.getUri());
+				
+				if (Dereferencer.hasValidDereferencability(httpResource)) {
+					dereferencedURI++;
 				}
-
+				
 				createProblemReport(httpResource);
 				
 				logger.trace("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
@@ -154,15 +147,14 @@ public class Dereferenceability implements QualityMetric {
 		StatusCode sc = httpResource.getDereferencabilityStatusCode();
 		
 		switch (sc){
-			case SC200 : if (ModelParser.hasRDFContent(httpResource)) this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithRDF); 
-						 else this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithoutRDF);
-						 break;
+			case SC200 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200OK); break;
 			case SC301 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC301MovedPermanently); break;
 			case SC302 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC302Found); break;
 			case SC307 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC307TemporaryRedirectory); break;
 			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC3XXRedirection); break;
 			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC4XXClientError); break;
 			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC5XXServerError); break;
+			case SC303 : if (!httpResource.isContentParsable())  this.createProblemQuad(httpResource.getUri(), DQMPROB.SC303WithoutParsableContent); break;
 			default	   : break;
 		}
 	}
@@ -183,7 +175,7 @@ public class Dereferenceability implements QualityMetric {
 	}
 	
 	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
-		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
+		if (resource.isContentParsable() != null) return resource.isContentParsable();
 		if(resource != null && resource.getResponses() != null) {
 			for (SerialisableHttpResponse response : resource.getResponses()) {
 				if(response != null && response.getHeaders("Content-Type") != null) {

@@ -21,10 +21,8 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -224,13 +222,8 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 				lstDerefUris.add(curUrlResult);
 				
 				if (Dereferencer.hasValidDereferencability(httpResource)) {
-					if(this.hasLinkedDataContentType(httpResource)) {
-						curUrlResult.isRdfXml = true;
-						logger.debug("URI successfully dereferenced and response OK and RDF: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
-					} else {
-						this.createProblemQuad(httpResource.getUri(), DQMPROB.NotMeaningful);
-						logger.debug("URI was dereferenced but response was not valid: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
-					}
+				} else {
+					this.createProblemQuad(httpResource.getUri(), DQMPROB.SC303WithoutParsableContent);
 				}
 				logger.trace("Resource fetched: {}. Deref. status: {}. Is RDF: {}", headUri, httpResource.getDereferencabilityStatusCode(), curUrlResult.isRdfXml);
 			}
@@ -291,20 +284,4 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
 	}
-	
-	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
-		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
-		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					String ct = response.getHeaders("Content-Type").split(";")[0];
-					if (LinkedDataContent.contentTypes.contains(ct)) { 
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 }

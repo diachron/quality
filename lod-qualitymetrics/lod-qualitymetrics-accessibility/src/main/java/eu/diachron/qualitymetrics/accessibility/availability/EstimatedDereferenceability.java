@@ -21,12 +21,9 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
-import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -181,13 +178,7 @@ public class EstimatedDereferenceability implements QualityMetric {
 			} else {
 				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
 				if (Dereferencer.hasValidDereferencability(httpResource)) {
-					if(this.hasLinkedDataContentType(httpResource)) {
-						totalDerefUris++;
-						logger.debug("URI successfully dereferenced and response OK and RDF: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
-					} else {
-						this.createProblemQuad(httpResource.getUri(), DQMPROB.NotMeaningful);
-						logger.debug("URI was dereferenced but response was not valid: {}. To go: {}", httpResource.getUri(), lstToDerefUris.size());
-					}
+					totalDerefUris++;
 				}
 				
 				createProblemReport(httpResource);
@@ -202,15 +193,14 @@ public class EstimatedDereferenceability implements QualityMetric {
 		StatusCode sc = httpResource.getDereferencabilityStatusCode();
 		
 		switch (sc){
-			case SC200 : if (ModelParser.hasRDFContent(httpResource)) this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithRDF); 
-						 else this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200WithoutRDF);
-						 break;
+			case SC200 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200OK); break;
 			case SC301 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC301MovedPermanently); break;
 			case SC302 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC302Found); break;
 			case SC307 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC307TemporaryRedirectory); break;
 			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC3XXRedirection); break;
 			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC4XXClientError); break;
 			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC5XXServerError); break;
+			case SC303 : if (!httpResource.isContentParsable())  this.createProblemQuad(httpResource.getUri(), DQMPROB.SC303WithoutParsableContent); break;
 			default	   : break;
 		}
 	}
@@ -237,20 +227,4 @@ public class EstimatedDereferenceability implements QualityMetric {
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
 	}
-	
-	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
-		if (resource.isContainsRDF() != null) return resource.isContainsRDF();
-		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					String ct = response.getHeaders("Content-Type").split(";")[0];
-					if (LinkedDataContent.contentTypes.contains(ct)) { 
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 }

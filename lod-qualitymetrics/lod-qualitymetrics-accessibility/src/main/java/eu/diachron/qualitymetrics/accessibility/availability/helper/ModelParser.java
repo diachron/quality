@@ -3,9 +3,7 @@
  */
 package eu.diachron.qualitymetrics.accessibility.availability.helper;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +20,6 @@ import org.apache.jena.riot.lang.PipedTriplesStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Files;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -103,8 +100,8 @@ public class ModelParser {
 	@SuppressWarnings("unchecked")
 	private static boolean snapshotParser(final CachedHTTPResource httpResource, final Lang givenLang){
 		// First, check if the resource is already known to contain RDF
-		if (httpResource.isContainsRDF() != null) {
-			return httpResource.isContainsRDF();
+		if (httpResource.isContentParsable() != null) {
+			return httpResource.isContentParsable();
 		}
 		
 		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.TURTLE;
@@ -168,8 +165,8 @@ public class ModelParser {
 	@SuppressWarnings("unchecked")
 	public static boolean snapshotParserForForwardDereference(final CachedHTTPResource httpResource, final Lang givenLang, final String subjectURI){
 		// First, check if the resource is already known to contain RDF
-		if (httpResource.isContainsRDF() != null) {
-			return httpResource.isContainsRDF();
+		if (httpResource.isContentParsable() != null) {
+			return httpResource.isContentParsable();
 		}
 		
 		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.TURTLE;
@@ -239,7 +236,6 @@ public class ModelParser {
 				for(String s : s1){
 					String[] p = s.split(";");
 					lang = LinkedDataContent.contentTypeToLang(p[0]);
-					if (lang == Lang.NTRIPLES) lang = Lang.TURTLE;
 				}
 			} else {
 				return null;
@@ -254,15 +250,16 @@ public class ModelParser {
 
 	public static boolean hasRDFContent(CachedHTTPResource httpResource, Lang lang){
 		boolean returnRes = snapshotParser(httpResource, lang);
-		httpResource.setContainsRDF(returnRes);
+		httpResource.setParsableContent(returnRes);
 		return returnRes;
 	}
 	
 	
 	
-	public static void main1(String[]args) throws IOException{
+	public static void main(String[]args) throws IOException{
 		HTTPRetriever ret = new HTTPRetriever();
-		String uris = Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
+//		String uris = Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
+		String uris = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
 		ret.addListOfResourceToQueue(Arrays.asList(uris.split(",")));
 		ret.start();
 		int counter = 0;
