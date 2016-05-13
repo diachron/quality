@@ -28,12 +28,9 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
-import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debatista
@@ -173,20 +170,4 @@ public class Dereferenceability implements QualityMetric {
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
 	}
-	
-	private boolean hasLinkedDataContentType(CachedHTTPResource resource) {
-		if (resource.isContentParsable() != null) return resource.isContentParsable();
-		if(resource != null && resource.getResponses() != null) {
-			for (SerialisableHttpResponse response : resource.getResponses()) {
-				if(response != null && response.getHeaders("Content-Type") != null) {
-					String ct = response.getHeaders("Content-Type").split(";")[0];
-					if (LinkedDataContent.contentTypes.contains(ct)) { 
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 }

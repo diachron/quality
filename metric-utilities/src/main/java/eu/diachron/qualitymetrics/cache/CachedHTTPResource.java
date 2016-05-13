@@ -27,7 +27,7 @@ public class CachedHTTPResource implements CacheObject {
 	private List<SerialisableHttpResponse> responses = null;
 	private List<StatusLine> statusLines = null;
 	private StatusCode dereferencabilityStatusCode = null;
-	private Boolean containsRDF = null;
+	private Boolean parsableContent = null;
 	
 	public List<SerialisableHttpResponse> getResponses() {
 		return responses;
@@ -74,11 +74,11 @@ public class CachedHTTPResource implements CacheObject {
 		this.dereferencabilityStatusCode = dereferencabilityStatusCode;
 	}
 	
-	public Boolean isContainsRDF() {
-		return containsRDF;
+	public Boolean isContentParsable() {
+		return parsableContent;
 	}
-	public void setContainsRDF(boolean containsRDF) {
-		this.containsRDF = containsRDF;
+	public void setParsableContent(boolean containsRDF) {
+		this.parsableContent = containsRDF;
 	}
 
 	public class SerialisableHttpResponse implements Serializable{

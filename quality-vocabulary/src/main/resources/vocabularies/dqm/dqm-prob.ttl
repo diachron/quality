@@ -10,17 +10,17 @@
 
 
 ### Dereferenceability	
-dqm-prob:SC200WithRDF
+dqm-prob:SC200OK
 	a	rdfs:Class;
 	rdfs:subClassOf qpro:Exception ;
-	rdfs:comment "The described resource has a dereferenceability Status Code of 200 but returns an semantic content type" ;
-	rdfs:label "200 OK Status Code with meaningful content type" .
+	rdfs:comment "The described resource has a dereferenceability Status Code of 200 instead of the required Status Code 303" ;
+	rdfs:label "200 OK Status Code" .
 
-dqm-prob:SC200WithoutRDF
+dqm-prob:SC303WithoutParsableContent
 	a	rdfs:Class;
 	rdfs:subClassOf qpro:Exception ;
-	rdfs:comment "The described resource has a dereferenceability Status Code of 200 but does not return a semantic content type" ;
-	rdfs:label "200 OK Status Code without meaningful content type" .
+	rdfs:comment "The described resource has a dereferenceability Status Code of 303 but the content is not parsable due to incorrect content-type" ;
+	rdfs:label "303 See Other without parsable content" .
 
 dqm-prob:SC301MovedPermanently
 	a	rdfs:Class;
