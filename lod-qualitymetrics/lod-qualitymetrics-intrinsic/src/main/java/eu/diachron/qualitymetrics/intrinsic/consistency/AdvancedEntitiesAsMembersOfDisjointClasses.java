@@ -96,10 +96,12 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 
 				if (tmpTypes == null) {
 					tmpTypes = new HashSet<String>();
+					tmpTypes.add(object);
+					typesOfResource.put(subject, tmpTypes);
+				} else {
+					tmpTypes.add(object);
 					typesOfResource.put(subject, tmpTypes);
 				}
-
-				tmpTypes.add(object);
 			}
 		} catch (Exception exception) {
 			logger.error(exception.getMessage());
