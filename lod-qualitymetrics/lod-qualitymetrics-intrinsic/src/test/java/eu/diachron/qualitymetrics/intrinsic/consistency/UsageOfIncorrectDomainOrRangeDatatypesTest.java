@@ -34,8 +34,8 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 		EnvironmentProperties.getInstance().setDatasetURI("http://www.example.org");
-//		loader.loadDataSet("testdumps/SampleInput_UsageOfIncorrectDomainOrRangeDatatypes_Minimal.ttl");
-		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/social.mercedes-benz.com.full.ttl");
+		loader.loadDataSet("testdumps/SampleInput_UsageOfIncorrectDomainOrRangeDatatypes_Minimal.ttl");
+//		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/social.mercedes-benz.com.full.ttl");
 	}
 
 	@After

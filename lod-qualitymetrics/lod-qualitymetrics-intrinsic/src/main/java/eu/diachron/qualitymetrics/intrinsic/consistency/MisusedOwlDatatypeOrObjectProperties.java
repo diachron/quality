@@ -41,7 +41,7 @@ public class MisusedOwlDatatypeOrObjectProperties implements QualityMetric {
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	// Sampling of problems - testing for LOD Evaluation
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(50000, false);
 		
 	private double misuseDatatypeProperties = 0.0;
 	private double misuseObjectProperties = 0.0;

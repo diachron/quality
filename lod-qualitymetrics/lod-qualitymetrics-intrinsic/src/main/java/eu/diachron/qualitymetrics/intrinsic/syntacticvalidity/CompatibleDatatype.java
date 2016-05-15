@@ -76,7 +76,7 @@ public class CompatibleDatatype implements QualityMetric {
 					this.addToProblem(quad);
 					numberIncorrectLiterals++;
 				}
-			}
+			} 
 		}
 	}
 	

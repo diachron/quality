@@ -47,7 +47,7 @@ public class CompatibleDatatypeTest extends Assert {
 	 * Note that the FOAF vocabulary has been published as LOD, and that foaf:Person is explicitly declared disjoint with foaf:Document.
 	 */
 	@Test
-	public void testEntitiesAsMembersOfDisjointClassesMinimalExample() {
+	public void testCompatibleDatatypeMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		
 		for(Quad quad : streamingQuads){
@@ -55,10 +55,10 @@ public class CompatibleDatatypeTest extends Assert {
 			metric.compute(quad);
 		}
 		
-		// incorrect and unknown 5
+		// incorrect 3
 		// correct 11
-		// 11 / 16
-		assertEquals(0.6875,metric.metricValue(), 0.0001);
+		// 11 / 14
+		assertEquals(0.7857,metric.metricValue(), 0.0001);
 	}	
 	
 	@Test

@@ -60,7 +60,7 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityM
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
 	//Sampling of Problems
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(50000, false);
 
 	private long incorrectDomain = 0;
 	private long incorrectRange = 0;
