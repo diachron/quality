@@ -47,10 +47,11 @@ public class CompatibleDatatype implements QualityMetric {
 	
 	
 	// Sampling of problems - testing for LOD Evaluation
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(10000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
 
 	private Model problemModel = ModelFactory.createDefaultModel();
-	private  Resource bagURI = Commons.generateURI();
+	
+	private Resource bagURI = Commons.generateURI();
 	private Bag problemBag = problemModel.createBag(bagURI.getURI());
 	{
 		//TODO: fix
@@ -166,7 +167,7 @@ public class CompatibleDatatype implements QualityMetric {
 	private class ProblemReport{
 		
 		private Quad q;
-		
+
 		ProblemReport(Quad q){
 			this.q = q;
 		}

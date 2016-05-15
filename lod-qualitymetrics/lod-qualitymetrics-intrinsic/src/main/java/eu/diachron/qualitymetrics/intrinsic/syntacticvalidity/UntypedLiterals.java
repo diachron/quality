@@ -40,7 +40,7 @@ public class UntypedLiterals implements QualityMetric {
 	private int numberTypedLiterals = 0;
 	private int numberUntypedLiterals = 0;
 	
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(10000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(1000, false);
 
 	private Model problemModel = ModelFactory.createDefaultModel();
 	private  Resource bagURI = Commons.generateURI();
