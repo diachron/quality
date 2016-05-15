@@ -8,11 +8,13 @@ import java.util.List;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.Pair;
+import de.unibonn.iai.eis.luzzu.cache.CacheManager;
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
 import eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability;
 import eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceability;
 import eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceabilityByStratified;
 import eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceabilityByTld;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -23,7 +25,7 @@ public class SamplingEvaluation {
 
 	protected static TestLoader loader = new TestLoader();
 
-	protected static int[] paramsEstDeref = { 1000, 5000, 10000, 25000, 50000, 100000};
+	protected static int[] paramsEstDeref = { 50, 100, 1000, 5000, 10000, 25000, 50000, 100000};
 	protected static Pair<?,?>[] paramsTLDExt = new Pair<?,?>[] { 
 		new Pair<Integer, Integer>(10,50), 
 		new Pair<Integer, Integer>(10,100), 
@@ -58,7 +60,7 @@ public class SamplingEvaluation {
 		long tMax = Long.MIN_VALUE;
 		long tAvg = 0;
 
-		for (int i = 0; i < 1; i++){
+		for (int i = -1; i < 2; i++){
 			List<Quad> streamingQuads = loader.getStreamingQuads();
 			long tStart = System.currentTimeMillis();
 			Dereferenceability m = new Dereferenceability();
@@ -81,7 +83,7 @@ public class SamplingEvaluation {
 				tMin = (tMin > difference) ? difference : tMin;
 			}
 		}
-		tAvg = tAvg/1;
+		tAvg = tAvg/2;
 		System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
 	}
 
@@ -97,7 +99,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = 0; i < 1; i++){
+			for (int i = -1; i < 2; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceability m = new EstimatedDereferenceability();
@@ -120,8 +122,9 @@ public class SamplingEvaluation {
 					tMax = (tMax < difference) ? difference : tMax;
 					tMin = (tMin > difference) ? difference : tMin;
 				}
+				CacheManager.getInstance().clearCache(DiachronCacheManager.HTTP_RESOURCE_CACHE);
 			}
-			tAvg = tAvg/1;
+			tAvg = tAvg/2;
 			System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
 		}
 	}
@@ -138,7 +141,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = 0; i < 1; i++){
+			for (int i = -1; i < 2; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceabilityByTld m = new EstimatedDereferenceabilityByTld();
@@ -162,8 +165,9 @@ public class SamplingEvaluation {
 					tMax = (tMax < difference) ? difference : tMax;
 					tMin = (tMin > difference) ? difference : tMin;
 				}
+				CacheManager.getInstance().clearCache(DiachronCacheManager.HTTP_RESOURCE_CACHE);
 			}
-			tAvg = tAvg/1;
+			tAvg = tAvg/2;
 			System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
 		}
 	}
@@ -180,7 +184,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = 0; i < 1; i++){
+			for (int i = -1; i < 2; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceabilityByStratified m = new EstimatedDereferenceabilityByStratified();
@@ -204,8 +208,9 @@ public class SamplingEvaluation {
 					tMax = (tMax < difference) ? difference : tMax;
 					tMin = (tMin > difference) ? difference : tMin;
 				}
+				CacheManager.getInstance().clearCache(DiachronCacheManager.HTTP_RESOURCE_CACHE);
 			}
-			tAvg = tAvg/1;
+			tAvg = tAvg/2;
 			System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
 		}
 	}
@@ -213,10 +218,10 @@ public class SamplingEvaluation {
 	
 	public static void main (String [] args) {
 		for (String d : datasets){
-			dereferenceability(d);
-//			estimatedDereferenceabilityByStratified(d);
-//			estimatedDereferenceability(d);
-//			estimatedDereferenceabilityTLD(d);
+//			dereferenceability(d);
+			estimatedDereferenceabilityByStratified(d);
+			estimatedDereferenceability(d);
+			estimatedDereferenceabilityTLD(d);
 		}
 	}
 }
