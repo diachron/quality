@@ -47,7 +47,7 @@ public class CompatibleDatatype implements QualityMetric {
 	
 	
 	// Sampling of problems - testing for LOD Evaluation
-	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(250000, false);
+	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(10000, false);
 
 	private Model problemModel = ModelFactory.createDefaultModel();
 	private  Resource bagURI = Commons.generateURI();
