@@ -11,6 +11,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
@@ -105,44 +106,17 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 	public double metricValue() {
 		
 		if(!this.metricCalculated) {
-			// Collect the list of URIs of the TLDs, to be dereferenced
-			List<String> lstUrisToDeref = new ArrayList<String>(this.tldsReservoir.size());			
-			for(Tld tld : this.tldsReservoir.getItems()) {
-				lstUrisToDeref.add(tld.getUri());
-			}
-			
-			// Dereference all TLD URIs
-			List<DerefResult> lstDeRefTlds = this.deReferenceUris(lstUrisToDeref);
-			
 			long totalDerefUris = 0;
-			long totalUris = 0;
 			
-			for(DerefResult curTldDeRefRes : lstDeRefTlds) {
-				// Obtain the TLD corresponding to the URI whose result currently is being examined
-				Tld derefTld = this.tldsReservoir.findItem(new Tld(curTldDeRefRes.uri, MAX_FQURIS_PER_TLD));
-				totalUris += ((derefTld.getfqUris() != null)?(derefTld.getfqUris().size()):(0));
-				
-				// Only URIs comprised by dereferenceable TLDs are subject to be counted as successfully dereferenced
-				if(curTldDeRefRes.isDeref && derefTld.getfqUris() != null) {
-					// Dereference all URIs part of the TLD
-					List<DerefResult> lstDeRefUris = this.deReferenceUris(derefTld.getfqUris().getItems());
-					
-					// Count those successfully dereferenced
-					for(DerefResult curUriDeRefRes : lstDeRefUris) {						
-						if(curUriDeRefRes.isDeref && curUriDeRefRes.isRdfXml) {
-							logger.debug("-- URI successfully dereferenced: {}", curUriDeRefRes.uri);
-							totalDerefUris += 1;
-						} else {
-							logger.debug("-- URI: {} failed to be dereferenced", curUriDeRefRes.uri);							
-						}
-					}
-					logger.debug("TLD: {} successfully dereferenced, sampling from: {} URIs", curTldDeRefRes.uri, derefTld.countFqUris());
-				} else {
-					logger.debug("TLD: {} non-dereferenced", curTldDeRefRes.uri);
-				}
+			List<String> lstUrisToDeref = new ArrayList<String>();			
+			
+			for(Tld tld : this.tldsReservoir.getItems()){
+				lstUrisToDeref.addAll(tld.getfqUris().getItems());
 			}
 			
-			this.metricValue = (double)totalDerefUris / (double)totalUris;
+			totalDerefUris = this.deReferenceUris(lstUrisToDeref);
+			this.metricValue = (double)totalDerefUris / (double)lstUrisToDeref.size();
+			
 		}
 		
 		return this.metricValue;
@@ -197,13 +171,13 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 	 * @param uriSet Set of URIs to be dereferenced
 	 * @return list with the results of the dereferenceability operations, for those URIs that were found in the cache 
 	 */
-	private List<DerefResult> deReferenceUris(List<String> uriSet) {
-		// Start the dereferencing process, which will be run in parallel
+	private long deReferenceUris(List<String> uriSet) {
+		// Start the dereferenciation process, which will be run in parallel
 		httpRetriever.addListOfResourceToQueue(uriSet);
 		httpRetriever.start(true);
 		
-		List<DerefResult> lstDerefUris = new ArrayList<DerefResult>();
 		List<String> lstToDerefUris = new ArrayList<String>(uriSet);
+		long totalDerefUris = 0;
 				
 		// Dereference each and every one of the URIs contained in the specified set
 		while(lstToDerefUris.size() > 0) {
@@ -218,39 +192,34 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 				lstToDerefUris.add(headUri);
 			} else {
 				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
-				DerefResult curUrlResult = new DerefResult(headUri, false, false);
-				lstDerefUris.add(curUrlResult);
-				
 				if (Dereferencer.hasValidDereferencability(httpResource)) {
-				} else {
-					this.createProblemQuad(httpResource.getUri(), DQMPROB.SC303WithoutParsableContent);
+					totalDerefUris++;
 				}
-				logger.trace("Resource fetched: {}. Deref. status: {}. Is RDF: {}", headUri, httpResource.getDereferencabilityStatusCode(), curUrlResult.isRdfXml);
+				
+				createProblemReport(httpResource);
+				logger.trace("{} - {} - {}", headUri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
 		
-		return lstDerefUris;
+		return totalDerefUris;
 	}
 	
-	
-	/**
-	 * Inner class, with the purpose of coupling an URI with the result of its dereferencing process
-	 * It's basically a pair establishing a relation between an URI and its dereferenceability
-	 * @author slondono
-	 */
-	private class DerefResult {
+	private void createProblemReport(CachedHTTPResource httpResource){
+		StatusCode sc = httpResource.getDereferencabilityStatusCode();
 		
-		private String uri;
-		private boolean isDeref;
-		private boolean isRdfXml;
-		
-		private DerefResult(String uri, boolean isDeref, boolean isRdfXml) {
-			this.uri = uri;
-			this.isDeref = isDeref;
-			this.isRdfXml = isRdfXml;
+		switch (sc){
+			case SC200 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC200OK); break;
+			case SC301 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC301MovedPermanently); break;
+			case SC302 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC302Found); break;
+			case SC307 : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC307TemporaryRedirectory); break;
+			case SC3XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC3XXRedirection); break;
+			case SC4XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC4XXClientError); break;
+			case SC5XX : this.createProblemQuad(httpResource.getUri(), DQMPROB.SC5XXServerError); break;
+			case SC303 : if (!httpResource.isContentParsable())  this.createProblemQuad(httpResource.getUri(), DQMPROB.SC303WithoutParsableContent); break;
+ 			default	   : break;
 		}
 	}
-			
+	
 //	public static int getMAX_TLDS() {
 //		return MAX_TLDS;
 //	}
@@ -271,9 +240,6 @@ public class EstimatedDereferenceabilityByTld implements QualityMetric {
 		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), problem.asNode());
 		this._problemList.add(q);
 	}
-	
-
-
 	
 	@Override
 	public boolean isEstimate() {

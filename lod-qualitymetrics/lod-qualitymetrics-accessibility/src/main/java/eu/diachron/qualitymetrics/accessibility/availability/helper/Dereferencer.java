@@ -130,7 +130,6 @@ public class Dereferencer {
 		} catch (RiotException re){
 			resource.setParsableContent(false);
 		} catch (Exception e){
-			System.out.println(resource.getUri());
 			resource.setParsableContent(false);
 		}
 	}
