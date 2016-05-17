@@ -59,7 +59,9 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityM
 	 * instance of
 	 */
 	protected HTreeMap<String, Set<String>> typesOfResource = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+	protected Set<String> multipleTypeResource = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	
+	private long totalResources = 0l;
 	
 	/**
 	 * list of problematic nodes
@@ -91,14 +93,16 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityM
 				// If we have a triple ?s rdf:type ?o, we add ?o to the list of
 				// types of ?s
 				Set<String> tmpTypes = typesOfResource.get(subject);
-
+				
 				if (tmpTypes == null) {
 					tmpTypes = new HashSet<String>();
 					tmpTypes.add(object);
 					typesOfResource.put(subject, tmpTypes);
+					totalResources++;
 				} else {
 					tmpTypes.add(object);
 					typesOfResource.put(subject, tmpTypes);
+					multipleTypeResource.add(subject);
 				}
 			}
 		} catch (Exception exception) {
@@ -115,7 +119,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityM
 		long count = 0;
 		
 //		for (Map.Entry<String, Set<String>> entry : typesOfResource.entrySet()) {
-		for (String entity : typesOfResource.keySet()){
+		for (String entity : multipleTypeResource){
 			// one entity in the dataset …
 //			String entity = entry.getKey();
 			// … and the classes it's an instance of
@@ -185,15 +189,15 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityM
 		if (!metricCalculated){
 			this.entitiesAsMembersOfDisjointClasses = countEntitiesAsMembersOfDisjointClasses();
 		}
-		
-		if (typesOfResource.entrySet().size() <= 0) {
+
+		if (totalResources <= 0) {
 			logger.warn("Total number of entities in given dataset is found to be zero.");
 			return 0.0;
 		}
 
-		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
+		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.totalResources);
 
-		statsLogger.info("Dataset: {}; Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.getDatasetURI(), this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
+		statsLogger.info("Dataset: {}; Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.getDatasetURI(), this.entitiesAsMembersOfDisjointClasses, this.totalResources, metricValue);
 
 		return metricValue;
 	}
