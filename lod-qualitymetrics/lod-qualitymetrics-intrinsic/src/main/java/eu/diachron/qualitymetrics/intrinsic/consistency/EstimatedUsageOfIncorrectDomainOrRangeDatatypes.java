@@ -158,10 +158,11 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 			types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
 
 			Set<RDFNode> _dom = VocabularyLoader.getInstance().getPropertyDomain(t.getPredicate());
-
-			if(Sets.intersection(_dom, types).size() == 0){
-				addToProblem(new Quad(null, t),'d');
-				incorrectDomain++;
+			if (_dom.size() > 0){ // do not consider those properties which have an open domain
+				if(Sets.intersection(_dom, types).size() == 0){
+					addToProblem(new Quad(null, t),'d');
+					incorrectDomain++;
+				}
 			}
 		} else {
 			addToProblem(new Quad(null, t),'x');
@@ -171,31 +172,32 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 	
 	private void checkRange(Triple t){
 		Set<RDFNode> _ran = VocabularyLoader.getInstance().getPropertyRange(t.getPredicate());
-		
-		if (t.getObject().isLiteral()){
-			Resource litRes = this.getLiteralType(t.getObject());
-			if (!_ran.contains(litRes)){
-				addToProblem(new Quad(null, t),'r');
-				incorrectRange++;
-			}
-		} else {
-			String objURI = (t.getObject().isBlank()) ? t.getObject().toString() : t.getObject().getURI();
-			
-			if (mapResourceType.containsKey(objURI)){
-				String type = mapResourceType.get(objURI);
-				
-				Set<RDFNode> types = new LinkedHashSet<RDFNode>();;
-				types.add(mc.createResource(type));
-				types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
-				
-				
-				if(Sets.intersection(_ran, types).size() == 0){
+		if (_ran.size() > 0){ // do not consider those properties which have an open range
+			if (t.getObject().isLiteral()){
+				Resource litRes = this.getLiteralType(t.getObject());
+				if (!_ran.contains(litRes)){
 					addToProblem(new Quad(null, t),'r');
 					incorrectRange++;
 				}
 			} else {
-				addToProblem(new Quad(null, t),'u');
-				unknownDomainAndRange++;
+				String objURI = (t.getObject().isBlank()) ? t.getObject().toString() : t.getObject().getURI();
+				
+				if (mapResourceType.containsKey(objURI)){
+					String type = mapResourceType.get(objURI);
+					
+					Set<RDFNode> types = new LinkedHashSet<RDFNode>();
+					types.add(mc.createResource(type));
+					types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
+					
+					
+					if(Sets.intersection(_ran, types).size() == 0){
+						addToProblem(new Quad(null, t),'r');
+						incorrectRange++;
+					}
+				} else {
+					addToProblem(new Quad(null, t),'u');
+					unknownDomainAndRange++;
+				}
 			}
 		}
 	}
@@ -283,9 +285,9 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 	    	if (type == 'r')
 	    		m.add(gen, RDF.type, DQMPROB.IncorrectRange);
 	    	if (type == 'x')
-	    		m.add(gen, RDF.type, DQMPROB.IncorrectDomain);
+	    		m.add(gen, RDF.type, DQMPROB.UnknownType);
 	    	if (type == 'u')
-	    		m.add(gen, RDF.type, DQMPROB.IncorrectRange);
+	    		m.add(gen, RDF.type, DQMPROB.UnknownType);
 
 	    	
 	    	Resource anon = m.createResource(AnonId.create());

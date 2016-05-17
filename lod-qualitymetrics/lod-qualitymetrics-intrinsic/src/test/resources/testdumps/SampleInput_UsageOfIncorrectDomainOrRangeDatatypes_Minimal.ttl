@@ -11,4 +11,5 @@
 :DOW a foaf:Document ;
 	foaf:name "Description of Work"^^xsd:string . 
 	
-:Bob a foaf:Person .
+:Bob a foaf:Person ;
+	foaf:givenName "Bob" .

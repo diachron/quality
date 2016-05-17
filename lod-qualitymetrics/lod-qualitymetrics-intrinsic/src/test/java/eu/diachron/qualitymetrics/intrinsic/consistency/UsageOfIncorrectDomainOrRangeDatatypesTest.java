@@ -50,10 +50,10 @@ public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 			// here we start streaming triples to the quality metric
 			metric.compute(quad);
 		}
-//		 # Incorrect Domains : 1; # Incorrect Ranges : 1; # Predicates Assessed : 4; # Undereferenceable Predicate : 0
+//		 # Incorrect Domains : 1; # Incorrect Ranges : 1; # Predicates Assessed : 5; # Undereferenceable Predicate : 0
 		
-		// 2 / 8
-		assertEquals(0.75,metric.metricValue(), 0.0001);
+		// 2 / 10
+		assertEquals(0.8,metric.metricValue(), 0.0001);
 	}	
 
 	@Ignore
