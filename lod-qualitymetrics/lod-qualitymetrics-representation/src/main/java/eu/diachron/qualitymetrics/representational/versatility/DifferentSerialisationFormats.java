@@ -28,6 +28,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
@@ -46,7 +47,7 @@ import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
  * The metric returns 1 if the data published is represented in 2 or more
  * formats.
  */
-public class DifferentSerialisationFormats implements QualityMetric{
+public class DifferentSerialisationFormats extends AbstractQualityMetric{
 	
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 	private Set<SerialisableQuad> _problemList = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());

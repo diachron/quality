@@ -28,13 +28,14 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
  * 
  * This measures the percentage of entities having an rdfs:label or rdfs:comment
  */
-public class HumanReadableLabelling implements QualityMetric{
+public class HumanReadableLabelling extends AbstractQualityMetric{
 	private final Resource METRIC_URI = DQM.HumanReadableLabellingMetric;
 	
 	final static Logger logger = LoggerFactory.getLogger(HumanReadableLabelling.class);

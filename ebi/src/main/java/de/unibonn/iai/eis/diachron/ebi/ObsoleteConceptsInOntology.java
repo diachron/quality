@@ -25,7 +25,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * a lot of changes, and is potentially in a state of poor quality.
  * 
  */
-public class ObsoleteConceptsInOntology implements QualityMetric {
+public class ObsoleteConceptsInOntology extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = EBIQM.ObsoleteConceptsInOntologyMetric;
 

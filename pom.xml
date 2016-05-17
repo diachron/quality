@@ -17,6 +17,7 @@
 		<mapdb.version>1.0.9</mapdb.version>
 		<luzzu.version>1.0.2</luzzu.version>
 		<diachron.version>1.0.0</diachron.version>
+		<httpcommons.version>4.5.2</httpcommons.version>
 		
 		<mockito.version>1.9.5</mockito.version>
 		<powermock.version>1.5.5</powermock.version>
@@ -114,25 +115,25 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
-			<version>4.3.2</version>
+			<version>4.4.4</version> <!-- 4.3.2 -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore-nio</artifactId>
-			<version>4.3.2</version>
+			<version>4.4.4</version> <!-- 4.3.2 -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
-			<version>4.0.2</version>
+			<version>4.1.1</version> <!-- 4.0.2 -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient-cache</artifactId>
-			<version>4.0.2</version>
+			<version>4.1.1</version> <!-- 4.0.2 -->
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>

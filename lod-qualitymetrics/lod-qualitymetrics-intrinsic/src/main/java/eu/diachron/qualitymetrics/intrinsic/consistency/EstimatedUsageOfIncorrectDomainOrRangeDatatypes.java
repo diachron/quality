@@ -6,6 +6,7 @@ package eu.diachron.qualitymetrics.intrinsic.consistency;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
+
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -45,7 +47,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * schema.
  * 
  */
-public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes implements QualityMetric {
+public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.UsageOfIncorrectDomainOrRangeDatatypesMetric;
 

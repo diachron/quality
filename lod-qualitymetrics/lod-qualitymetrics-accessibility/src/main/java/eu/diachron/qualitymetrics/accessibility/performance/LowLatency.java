@@ -14,6 +14,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -21,7 +22,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * Estimates the efficiency with which a system can bind to the dataset, by measuring the delay between 
  * the submission of a request for that very dataset and reception of the respective response (or part of it)
  */
-public class LowLatency implements QualityMetric {
+public class LowLatency extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.LowLatencyMetric;
 	

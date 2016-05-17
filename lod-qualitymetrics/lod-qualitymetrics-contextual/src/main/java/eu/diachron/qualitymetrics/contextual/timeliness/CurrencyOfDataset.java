@@ -22,6 +22,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.contextual.timeliness.TimelinessSharedResources.DatasetFreshness;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -36,7 +37,7 @@ import eu.diachron.qualitymetrics.contextual.timeliness.TimelinessSharedResource
  * For this metric we use the definition of currency by Rula et al. in 
  * Capturing the Age of Linked Open Data: Towards a Dataset-independent Framework
  */
-public class CurrencyOfDataset implements QualityMetric{
+public class CurrencyOfDataset extends AbstractQualityMetric{
 
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	

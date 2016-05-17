@@ -7,6 +7,7 @@ import java.util.List;
 
 
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -36,7 +38,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  * Check if a SPARQL endpoint (matching void:sparqlEndpoint) is available and returns a result. 
  * 
  */
-public class SPARQLAccessibility implements QualityMetric {
+public class SPARQLAccessibility extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.EndPointAvailabilityMetric;
 	

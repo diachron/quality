@@ -14,6 +14,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -21,7 +22,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * Estimates the efficiency with which a system can bind to the dataset, by measuring the number of 
  * answered HTTP requests responsed by the source of the dataset, per second.
  */
-public class HighThroughput implements QualityMetric {
+public class HighThroughput extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.HighThroughputMetric;
 	

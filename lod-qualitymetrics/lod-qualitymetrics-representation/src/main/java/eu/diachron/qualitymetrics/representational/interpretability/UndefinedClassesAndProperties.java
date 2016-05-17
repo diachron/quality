@@ -26,6 +26,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -38,7 +39,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * instead of foaf:img).
  * 
  */
-public class UndefinedClassesAndProperties implements QualityMetric {
+public class UndefinedClassesAndProperties extends AbstractQualityMetric {
 
 	private int undefinedClasses = 0;
 	private int undefinedProperties = 0;

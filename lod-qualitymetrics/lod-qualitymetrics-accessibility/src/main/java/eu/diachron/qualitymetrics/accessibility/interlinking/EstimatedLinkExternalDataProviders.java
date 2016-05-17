@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * In this metric we identify the total number of external linked used in the dataset. An external link
@@ -38,7 +39,7 @@ import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
  * Linking, Issue VI: Use External URIs (page 26).
  * @author Santiago Londoño 
  */
-public class EstimatedLinkExternalDataProviders implements QualityMetric {
+public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.LinksToExternalDataProvidersMetric;
 	

@@ -30,6 +30,7 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -37,7 +38,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * @author Christoph Lange
  * @date 13th May 2014
  */
-public class SimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric {
+public class SimpleEntitiesAsMembersOfDisjointClasses extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */

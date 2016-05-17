@@ -22,6 +22,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.contextual.timeliness.TimelinessSharedResources.DatasetFreshness;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -38,7 +39,7 @@ import eu.diachron.qualitymetrics.contextual.timeliness.TimelinessSharedResource
  * Hartig and Zhao. For currency we use the same formula
  * used in Currency of Dataset Metric
  */
-public class FreshnessOfDataset implements QualityMetric {
+public class FreshnessOfDataset extends AbstractQualityMetric {
 
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	

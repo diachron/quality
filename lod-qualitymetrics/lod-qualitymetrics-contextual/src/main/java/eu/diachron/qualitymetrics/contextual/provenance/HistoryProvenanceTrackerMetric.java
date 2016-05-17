@@ -8,6 +8,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -22,7 +23,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * and then checking if there are prov:Revision instances leading up
  * to the last modified date. 
  */
-public class HistoryProvenanceTrackerMetric implements QualityMetric {
+public class HistoryProvenanceTrackerMetric extends AbstractQualityMetric {
 
 	@Override
 	public void compute(Quad quad) {

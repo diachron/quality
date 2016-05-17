@@ -25,6 +25,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Santiago Londono
@@ -38,7 +39,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  * they have some licencing information as described in Issue XIV (Hogan et al.)
  * 
  */
-public class MachineReadableLicense implements QualityMetric {
+public class MachineReadableLicense extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.MachineReadableLicenseMetric;
 	

@@ -21,12 +21,13 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
  * 
  */
-public class DigitalSignatureUsage implements QualityMetric {
+public class DigitalSignatureUsage extends AbstractQualityMetric {
 
 	private static final Resource ENDORSEMENT = ModelFactory.createDefaultModel().createResource("http://xmlns.com/wot/0.1/Endorsement");
 	private static final Property ASSURANCE = ModelFactory.createDefaultModel().createProperty("http://xmlns.com/wot/0.1/assurance");

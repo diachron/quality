@@ -26,6 +26,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * This metric checks the compatability of the literal datatype
@@ -41,7 +42,7 @@ import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
  * @author Jeremy Debattista
  * 
  */
-public class CompatibleDatatype implements QualityMetric {
+public class CompatibleDatatype extends AbstractQualityMetric {
 
 //	private static Logger logger = LoggerFactory.getLogger(CompatibleDatatype.class);
 	

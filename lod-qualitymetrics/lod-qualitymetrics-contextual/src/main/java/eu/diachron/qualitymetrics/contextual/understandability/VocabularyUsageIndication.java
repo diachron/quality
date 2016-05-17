@@ -24,12 +24,13 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
  * 
  */
-public class VocabularyUsageIndication implements QualityMetric {
+public class VocabularyUsageIndication extends AbstractQualityMetric {
 
 	final static Logger logger = LoggerFactory.getLogger(VocabularyUsageIndication.class);
 

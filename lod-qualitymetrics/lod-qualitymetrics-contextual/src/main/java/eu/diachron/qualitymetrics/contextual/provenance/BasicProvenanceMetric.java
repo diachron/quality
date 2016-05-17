@@ -22,6 +22,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -32,7 +33,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  * have either a dc:creator or dc:publisher as a minimum requirement. 
  * 
  */
-public class BasicProvenanceMetric implements QualityMetric {
+public class BasicProvenanceMetric extends AbstractQualityMetric {
 	
 	protected ConcurrentHashMap<String, String> dataset = new ConcurrentHashMap<String,String>();
 	protected Set<String> isMetadata = new HashSet<String>();

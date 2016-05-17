@@ -20,7 +20,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * 
  * This is a specific property required for the EBI usecase.
  */
-public class OntologyVersioningConciseness implements QualityMetric {
+public class OntologyVersioningConciseness extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = EBIQM.OntologyVersionConcisenessMetric;
 	private HashMap<Node, Integer> ontologyInstances = new HashMap<Node, Integer>();

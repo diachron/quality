@@ -29,6 +29,7 @@ import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -43,7 +44,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  *         it is a misreported content type.
  * 
  */
-public class MisreportedContentType implements QualityMetric {
+public class MisreportedContentType extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.MisreportedContentTypesMetric;
 

@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -30,7 +31,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * A high usage of such classes or properties will give a low value (closer to 0),
  * whilst a low usage of such classes will give a high value (closer to 1).
  */
-public class UsageOfDeprecatedClassesOrProperties implements QualityMetric{
+public class UsageOfDeprecatedClassesOrProperties extends AbstractQualityMetric{
 	
 	private final Resource METRIC_URI = DQM.UsageOfDeprecatedClassesOrProperties;
 

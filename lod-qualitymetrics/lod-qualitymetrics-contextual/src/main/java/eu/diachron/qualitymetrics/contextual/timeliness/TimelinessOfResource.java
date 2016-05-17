@@ -19,13 +19,14 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Santiago Londono
  * Assesses the difference between the last modified time of the original data source and the last 
  * modified time of the semantic web source, thereby indicating that the resource is most likely outdated
  */
-public class TimelinessOfResource implements QualityMetric {
+public class TimelinessOfResource extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.TimelinessOfResourceMetric;
 	

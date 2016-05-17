@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Santiago Londono
@@ -35,7 +36,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
  * number of local URIs of a dataset
  *
  */
-public class ShortURIs implements QualityMetric {
+public class ShortURIs extends AbstractQualityMetric {
 	
 //	private static Logger logger = LoggerFactory.getLogger(ShortURIs.class);
 	

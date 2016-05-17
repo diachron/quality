@@ -14,6 +14,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.intrinsic.semanticaccuracy.helper.PredicateClusteringIndexing;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -21,7 +22,7 @@ import eu.diachron.qualitymetrics.intrinsic.semanticaccuracy.helper.PredicateClu
  * TODO: TEST
  * 
  */
-public class OutliersDetectionClustering implements QualityMetric {
+public class OutliersDetectionClustering extends AbstractQualityMetric {
 
 	protected HTreeMap<String, PredicateClusteringIndexing> propertyClustersClasses = 
 			MapDbFactory.createFilesystemDB().createHashMap("predicate_clustering_index").make();

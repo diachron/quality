@@ -40,12 +40,13 @@ import de.unibonn.iai.eis.luzzu.exceptions.AfterException;
 import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 
 /**
  * @author Jeremy Debattista
  * 
  */
-public class CorrectLanguageTag implements ComplexQualityMetric {
+public class CorrectLanguageTag extends AbstractComplexQualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(CorrectLanguageTag.class);
 	

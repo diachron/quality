@@ -14,12 +14,13 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
  * 
  */
-public class PresenceOfURIRegEx implements QualityMetric {
+public class PresenceOfURIRegEx extends AbstractQualityMetric {
 
 	final static Logger logger = LoggerFactory.getLogger(PresenceOfURIRegEx.class);
 

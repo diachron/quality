@@ -34,6 +34,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -48,7 +49,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * Based on: Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance.
  * 
  */
-public class EstimatedDereferenceBackLinks implements QualityMetric {
+public class EstimatedDereferenceBackLinks extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	

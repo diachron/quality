@@ -30,6 +30,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -38,7 +39,7 @@ import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
  * of a triple. The metric value returns a value [0-1] where a higher number of blank nodes
  * will result in a value closer to 0.
  */
-public class NoBlankNodeUsage implements QualityMetric {
+public class NoBlankNodeUsage extends AbstractQualityMetric {
 
 	private static Logger logger = LoggerFactory.getLogger(NoBlankNodeUsage.class);
 	

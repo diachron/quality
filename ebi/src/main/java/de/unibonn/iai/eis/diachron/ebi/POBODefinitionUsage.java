@@ -23,7 +23,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * <pobo:def> in defined classes.
  * 
  */
-public class POBODefinitionUsage implements QualityMetric{
+public class POBODefinitionUsage extends AbstractQualityMetric{
 
 	private final Resource METRIC_URI = EBIQM.POBODefinitionUsageMetric;
 	

@@ -29,7 +29,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
  * @date 12th June 2014
  * @category EBI
  */
-public class OBOFoundry implements QualityMetric{
+public class OBOFoundry extends AbstractQualityMetric{
         /**
          * URI for OBO Foundry 
          */

@@ -22,6 +22,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -46,7 +47,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
  * then Slash URIs are required. Therefore, the metric will return 1.0 (or true) if slash uri's
  * are used when a dataset has a large amount of data or hash uri's are used if otherwise.
  */
-public class CorrectURIUsage implements QualityMetric {
+public class CorrectURIUsage extends AbstractQualityMetric {
 
 	final static Logger logger = LoggerFactory.getLogger(CorrectURIUsage.class);
 

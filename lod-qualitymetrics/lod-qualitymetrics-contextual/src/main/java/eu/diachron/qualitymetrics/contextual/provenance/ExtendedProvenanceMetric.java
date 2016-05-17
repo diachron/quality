@@ -19,6 +19,7 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.PROV;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -48,7 +49,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * PROV-O ontology.
  * 
  */
-public class ExtendedProvenanceMetric implements QualityMetric {
+public class ExtendedProvenanceMetric extends AbstractQualityMetric {
 	
 	private ConcurrentMap<String, Entity> entityDirectory = new ConcurrentHashMap<String, Entity>();
 	private ConcurrentMap<String, Activity> activityDirectory =  new ConcurrentHashMap<String, Activity>();

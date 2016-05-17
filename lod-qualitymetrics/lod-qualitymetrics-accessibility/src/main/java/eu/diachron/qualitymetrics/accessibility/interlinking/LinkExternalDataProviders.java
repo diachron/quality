@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
@@ -21,6 +23,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -36,7 +39,7 @@ import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
  * Based on: [1] Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance. Section 5.2, 
  * Linking, Issue VI: Use External URIs (page 20).
  */
-public class LinkExternalDataProviders implements QualityMetric {
+public class LinkExternalDataProviders extends AbstractQualityMetric {
 	
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset

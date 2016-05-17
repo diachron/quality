@@ -10,6 +10,7 @@ import java.util.List;
 
 
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
@@ -37,7 +39,7 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  * Check if ALL data dumps (void:dataDump) exist, are reachable and parsable.
  *     
  */
-public class RDFAccessibility implements QualityMetric {
+public class RDFAccessibility extends AbstractQualityMetric {
 	
 	static Logger logger = LoggerFactory.getLogger(RDFAccessibility.class);
 	

@@ -16,16 +16,16 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Santiago Londono
  * Provides a measure of the redundancy of the dataset at the data level, by calculating the 
  * Extensional Conciseness metric, which is part of the Conciseness dimension.
  */
-public class ExtensionalConciseness implements QualityMetric {
+public class ExtensionalConciseness extends AbstractQualityMetric {
 	
 	private static Logger logger = Logger.getLogger(ExtensionalConciseness.class);
 	

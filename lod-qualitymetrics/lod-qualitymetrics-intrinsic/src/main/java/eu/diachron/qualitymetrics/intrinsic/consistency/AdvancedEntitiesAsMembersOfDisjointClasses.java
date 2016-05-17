@@ -29,6 +29,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -40,7 +41,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * 
  * TODO: fix when having a lot of classes
  */
-public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric {
+public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityMetric {
 	/**
 	 * Metric URI
 	 */
@@ -116,11 +117,12 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses implements QualityMetric
 	protected long countEntitiesAsMembersOfDisjointClasses() {
 		long count = 0;
 		
-		for (Map.Entry<String, Set<String>> entry : typesOfResource.entrySet()) {
+//		for (Map.Entry<String, Set<String>> entry : typesOfResource.entrySet()) {
+		for (String entity : typesOfResource.keySet()){
 			// one entity in the dataset …
-			String entity = entry.getKey();
+//			String entity = entry.getKey();
 			// … and the classes it's an instance of
-			Set<String> classes = entry.getValue();
+			Set<String> classes = typesOfResource.get(entity);
 			
 			if (classes.size() >= 2) {
 				// we only need to check disjointness when there are at least 2 classes

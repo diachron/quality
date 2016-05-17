@@ -25,12 +25,13 @@ import eu.diachron.qualitymetrics.accessibility.interlinking.helper.ClusteringCo
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DegreeMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.DescriptiveRichnessMeasure;
 import eu.diachron.qualitymetrics.accessibility.interlinking.helper.SameAsMeasure;
+import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 
 /**
  * @author Jeremy Debattista
  * 
  */
-public class EstimatedInterlinkDetectionMetric implements ComplexQualityMetric {
+public class EstimatedInterlinkDetectionMetric extends AbstractComplexQualityMetric {
 	
 	final static Logger logger = LoggerFactory.getLogger(EstimatedInterlinkDetectionMetric.class);
 

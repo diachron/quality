@@ -33,6 +33,7 @@ import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -55,7 +56,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * Best Case 1, Worst Case 0
  * 
  */
-public class DereferenceabilityForwardLinks implements QualityMetric {
+public class DereferenceabilityForwardLinks extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityForwardLinksMetric;
 	

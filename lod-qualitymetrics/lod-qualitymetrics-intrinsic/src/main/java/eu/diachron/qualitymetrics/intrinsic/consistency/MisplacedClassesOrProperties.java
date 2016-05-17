@@ -21,6 +21,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -35,7 +36,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * 
  * @author Jeremy Debattista
  */
-public class MisplacedClassesOrProperties implements QualityMetric {
+public class MisplacedClassesOrProperties extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.MisplacedClassesOrPropertiesMetric;
 	private static Logger logger = LoggerFactory.getLogger(MisplacedClassesOrProperties.class);

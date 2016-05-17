@@ -24,6 +24,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.intrinsic.consistency.helper.IFPTriple;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -39,7 +40,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * More information can be found in Hogan et. al Weaving the Pedantic Web.
  * 
  */
-public class ValidIFPUsage implements QualityMetric{
+public class ValidIFPUsage extends AbstractQualityMetric{
 	
 	private final Resource METRIC_URI = DQM.ValidIFPUsageMetric;
 

@@ -35,6 +35,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 import eu.diachron.qualitymetrics.utilities.LOVInterface;
 import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -59,7 +60,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  *  :hasVocabularies <http://www.w3.org/2003/01/geo/wgs84_pos#> , <http://www.geonames.org/ontology#> ;
  *  :getFromLOV "True" 
  */
-public class ReuseExistingVocabularies implements ComplexQualityMetric {
+public class ReuseExistingVocabularies extends AbstractComplexQualityMetric {
 
 	private Model categories = ModelFactory.createDefaultModel();
 

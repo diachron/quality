@@ -19,6 +19,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.AfterException;
 import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
 import eu.diachron.qualitymetrics.intrinsic.semanticaccuracy.helper.PredicateProbability;
+import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -28,7 +29,7 @@ import eu.diachron.qualitymetrics.intrinsic.semanticaccuracy.helper.PredicatePro
  * 
  * https://d.docs.live.net/18e42970155ff7b6/Documents/Bits'n'Pieces/LODCloud%20Survey.one#Detecting%20Outliers&section-id={B9375B85-CE1C-4A4D-93DB-2F409825DA95}&page-id={C4C5335D-3CC2-0D41-A5FE-C608BE7CF2B2}&object-id={6792311B-A19A-EB48-921F-52738EC2EF1A}&8B
  */
-public class OutliersDetection implements ComplexQualityMetric{
+public class OutliersDetection extends AbstractComplexQualityMetric{
 	
 	private Map<String, Set<String>> resourceTypes = new HashMap<String, Set<String>>(); // ResourceURI, Resource Type
 	private Map<String, Set<PredicateProbability>> predicates = new HashMap<String, Set<PredicateProbability>>() ; //ResourceURI, Predicates attached to it

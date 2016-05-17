@@ -19,7 +19,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * Checks whether the creator <efo:creator> is defined in the ontology.
  * 
  */
-public class DefinedOntologyAuthor implements QualityMetric {
+public class DefinedOntologyAuthor extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = EBIQM.DefinedOntologyAuthorMetric;
 	

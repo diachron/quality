@@ -28,6 +28,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Santiago Londono
@@ -36,7 +37,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
  * analyzes the text searching for key, licensing related terms. Also, additional to the license related properties this metric examines comment 
  * properties such as rdfs:label, dcterms:description, rdfs:comment.
  */
-public class HumanReadableLicense implements QualityMetric {
+public class HumanReadableLicense extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.HumanReadableLicenseMetric;
 	

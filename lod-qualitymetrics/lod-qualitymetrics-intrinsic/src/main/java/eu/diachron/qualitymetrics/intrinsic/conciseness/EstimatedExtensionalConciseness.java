@@ -15,11 +15,11 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.RLBSBloomFilter;
-import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 
 /**
  * @author Santiago Londono
@@ -27,7 +27,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
  * Bloom Filter, as proposed by Bera et al. [bera12]. This algorithm is designed to scale well for huge amounts 
  * of data, but providing approximate results
  */
-public class EstimatedExtensionalConciseness implements ComplexQualityMetric {
+public class EstimatedExtensionalConciseness extends AbstractComplexQualityMetric {
 	
 	private static Logger logger = LoggerFactory.getLogger(EstimatedExtensionalConciseness.class);
 	

@@ -30,6 +30,7 @@ import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.intrinsic.consistency.helper.MDC;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -38,7 +39,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * An Estimate version for the metric Entities as members of
  * disjoint classes using reservoir sampling
  */
-public class EstimateSimpleEntitiesAsMembersOfDisjointClasses implements QualityMetric{
+public class EstimateSimpleEntitiesAsMembersOfDisjointClasses extends AbstractQualityMetric{
 
 	private final Resource METRIC_URI = DQM.EntitiesAsMembersOfDisjointClassesMetric;
 	private static Logger logger = LoggerFactory.getLogger(EstimateSimpleEntitiesAsMembersOfDisjointClasses.class);

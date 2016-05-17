@@ -36,6 +36,7 @@ import eu.diachron.qualitymetrics.accessibility.availability.DereferenceabilityF
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -53,7 +54,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * Based on: Hogan Aidan, Umbrich Jürgen. An empirical survey of Linked Data conformance.
  * 
  */
-public class DereferenceBackLinks implements QualityMetric {
+public class DereferenceBackLinks extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityBackLinksMetric;
 	

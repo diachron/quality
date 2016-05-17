@@ -24,6 +24,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
@@ -33,7 +34,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
  * 
  * The value returns a ratio of the total number of prolix (RCC) triples against the total number of triples
  */
-public class NoProlixRDF implements QualityMetric {
+public class NoProlixRDF extends AbstractQualityMetric {
 
 	private double totalTriples = 0.0;
 	

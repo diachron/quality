@@ -22,6 +22,7 @@ import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
 
 /**
@@ -34,7 +35,7 @@ import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
  * @author Jeremy Debattista
  * 
  */
-public class OntologyHijacking implements QualityMetric{
+public class OntologyHijacking extends AbstractQualityMetric{
         
         private final Resource METRIC_URI = DQM.OntologyHijackingMetric;
         static Logger logger = LoggerFactory.getLogger(OntologyHijacking.class);

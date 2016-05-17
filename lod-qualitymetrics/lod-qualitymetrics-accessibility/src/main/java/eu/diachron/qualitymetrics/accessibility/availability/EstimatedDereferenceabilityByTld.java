@@ -23,6 +23,7 @@ import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.Dereferencer;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
@@ -38,7 +39,7 @@ import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
  * Dereferencing Semantic Web URIs: What is 200 OK on the Semantic Web? - Yang et al.</a>
  * 
  */
-public class EstimatedDereferenceabilityByTld implements QualityMetric {
+public class EstimatedDereferenceabilityByTld extends AbstractQualityMetric {
 	
 	private final Resource METRIC_URI = DQM.DereferenceabilityMetric;
 

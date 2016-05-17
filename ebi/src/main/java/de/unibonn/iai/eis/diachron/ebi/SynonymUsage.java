@@ -23,7 +23,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
  * 
  * This is only required for the EBI use case
  */
-public class SynonymUsage implements QualityMetric {
+public class SynonymUsage extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = EBIQM.SynonymUsageMetric;
 	

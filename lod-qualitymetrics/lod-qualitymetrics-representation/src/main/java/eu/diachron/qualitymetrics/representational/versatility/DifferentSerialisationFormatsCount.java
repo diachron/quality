@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
+import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
 
 /**
@@ -40,7 +42,7 @@ import eu.diachron.qualitymetrics.utilities.SerialisableQuad;
  * The metric returns the number of different serialisation formats
  * in a dataset.
  */
-public class DifferentSerialisationFormatsCount implements QualityMetric{
+public class DifferentSerialisationFormatsCount extends AbstractQualityMetric{
 	
 	private Set<Quad> _problemList = new HashSet<Quad>();
 	
