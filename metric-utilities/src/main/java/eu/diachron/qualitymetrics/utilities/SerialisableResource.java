@@ -8,7 +8,6 @@ import java.io.Serializable;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
-import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.cache.JenaCacheObject;
 

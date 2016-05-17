@@ -18,7 +18,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
@@ -163,7 +162,7 @@ public class OntologyHijacking extends AbstractQualityMetric{
         	if (this.totalPossibleHijacks == 0) return 1.0;
         	
         	double value = 1.0 - (this.totalHijacks / this.totalPossibleHijacks);
-        	statsLogger.info("Dataset: {}; Total Hijacks: {}; Total Possible: {}; Metric Value: {}",EnvironmentProperties.getInstance().getDatasetURI(), this.totalHijacks, this.totalPossibleHijacks, value); 
+        	statsLogger.info("Dataset: {}; Total Hijacks: {}; Total Possible: {}; Metric Value: {}",this.getDatasetURI(), this.totalHijacks, this.totalPossibleHijacks, value); 
 
             return value;
         }

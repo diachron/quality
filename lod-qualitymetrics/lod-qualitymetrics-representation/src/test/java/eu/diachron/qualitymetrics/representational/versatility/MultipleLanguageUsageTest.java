@@ -5,14 +5,10 @@ package eu.diachron.qualitymetrics.representational.versatility;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
-import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**

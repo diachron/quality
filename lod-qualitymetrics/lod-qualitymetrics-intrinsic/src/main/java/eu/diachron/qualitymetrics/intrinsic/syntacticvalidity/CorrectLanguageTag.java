@@ -34,11 +34,9 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
-import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.AfterException;
 import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 
@@ -86,7 +84,7 @@ public class CorrectLanguageTag extends AbstractComplexQualityMetric {
 		double metricValue = (double) totalCorrectStrings / (double) totalvalidLangStrings;
 		
 		statsLogger.info("Correct Language Tag. Dataset: {} - Total # Correct Strings : {}; # Total Valid Language Strings : {}, Metric Value: {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), totalCorrectStrings, totalvalidLangStrings,metricValue);
+				this.getDatasetURI(), totalCorrectStrings, totalvalidLangStrings,metricValue);
 
 		return metricValue;
 	}

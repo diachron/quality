@@ -2,13 +2,13 @@ package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.List;
 
-import eu.diachron.qualitymetrics.utilities.TestLoader;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
+
+import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class EstimatedDereferenceabilityTest extends Assert {
 	

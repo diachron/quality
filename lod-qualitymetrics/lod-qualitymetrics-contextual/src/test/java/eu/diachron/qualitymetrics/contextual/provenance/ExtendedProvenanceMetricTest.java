@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import eu.diachron.qualitymetrics.contextual.provenance.ExtendedProvenanceMetric;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**

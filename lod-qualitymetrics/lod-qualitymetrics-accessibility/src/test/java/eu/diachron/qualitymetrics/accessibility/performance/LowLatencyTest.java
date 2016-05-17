@@ -2,18 +2,17 @@ package eu.diachron.qualitymetrics.accessibility.performance;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
-import eu.diachron.qualitymetrics.accessibility.performance.LowLatency;
 
 public class LowLatencyTest extends Assert {
 	

@@ -13,7 +13,6 @@ import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
-import eu.diachron.qualitymetrics.accessibility.performance.DataSourceScalability;
 
 public class DataSourceScalabilityTest extends Assert {
 	

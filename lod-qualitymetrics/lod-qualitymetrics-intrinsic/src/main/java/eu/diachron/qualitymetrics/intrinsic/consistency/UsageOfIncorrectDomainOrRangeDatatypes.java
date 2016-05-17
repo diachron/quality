@@ -32,9 +32,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.SerialisableTriple;
@@ -148,7 +146,7 @@ public class UsageOfIncorrectDomainOrRangeDatatypes extends AbstractQualityMetri
 
 		
 		statsLogger.info("Dataset: {} - # Incorrect Domains : {}; # Incorrect Ranges : {}; # Predicates Assessed : {}; # Undereferenceable Predicates : {}; # Unknown Domain and Range : {}; Metric Value: {} "
-				, EnvironmentProperties.getInstance().getDatasetURI(), incorrectDomain, incorrectRange, totalPredicates, undereferenceablePredicates, unknownDomainAndRange, value);
+				, this.getDatasetURI(), incorrectDomain, incorrectRange, totalPredicates, undereferenceablePredicates, unknownDomainAndRange, value);
 		
 		return value;
 	}

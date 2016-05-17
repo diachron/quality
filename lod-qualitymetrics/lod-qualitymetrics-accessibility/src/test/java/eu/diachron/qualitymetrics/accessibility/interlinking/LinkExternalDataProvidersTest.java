@@ -1,12 +1,8 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
-import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.lang.PipedRDFIterator;
@@ -21,6 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
+
+import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
+import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class LinkExternalDataProvidersTest extends Assert {
 	

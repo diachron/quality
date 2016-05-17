@@ -14,9 +14,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -120,7 +118,7 @@ public class MisusedOwlDatatypeOrObjectProperties extends AbstractQualityMetric 
 		if (misused > 0.0) 
 			metricValue = 1.0 - (misused / this.validPredicates);
 		
-		statsLogger.info("Dataset: {}; Number of Misused Datatype Properties: {}, Number of Misused Object Property : {}, Metric Value: {}",EnvironmentProperties.getInstance().getDatasetURI(),this.misuseDatatypeProperties, this.misuseObjectProperties, metricValue);
+		statsLogger.info("Dataset: {}; Number of Misused Datatype Properties: {}, Number of Misused Object Property : {}, Metric Value: {}",this.getDatasetURI(),this.misuseDatatypeProperties, this.misuseObjectProperties, metricValue);
 		return metricValue;
 	}
 

@@ -1,7 +1,6 @@
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,9 +24,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -196,7 +193,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityM
 
 		double metricValue = 1 - ((double) entitiesAsMembersOfDisjointClasses / this.typesOfResource.entrySet().size());
 
-		statsLogger.info("Dataset: {}; Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", EnvironmentProperties.getInstance().getDatasetURI(), this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
+		statsLogger.info("Dataset: {}; Values: Members of Disjoined Classes: {}, Types of resource: {}, Metric Value: {}", this.getDatasetURI(), this.entitiesAsMembersOfDisjointClasses, this.typesOfResource.entrySet().size(), metricValue);
 
 		return metricValue;
 	}

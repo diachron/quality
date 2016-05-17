@@ -26,8 +26,8 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 

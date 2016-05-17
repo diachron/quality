@@ -9,12 +9,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
-import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**

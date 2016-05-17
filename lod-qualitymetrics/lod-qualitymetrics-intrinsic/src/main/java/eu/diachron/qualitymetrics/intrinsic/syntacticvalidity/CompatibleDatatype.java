@@ -22,9 +22,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -103,7 +101,7 @@ public class CompatibleDatatype extends AbstractQualityMetric {
 	public double metricValue() {
 		double metricValue = (double) numberCorrectLiterals / ((double)numberIncorrectLiterals + (double)numberCorrectLiterals);
 		statsLogger.info("CompatibleDatatype. Dataset: {} - Total # Correct Literals : {}; # Incorrect Literals : {}; # Metric Value: {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), numberCorrectLiterals, numberIncorrectLiterals, metricValue);
+				this.getDatasetURI(), numberCorrectLiterals, numberIncorrectLiterals, metricValue);
 
 		return metricValue;
 	}

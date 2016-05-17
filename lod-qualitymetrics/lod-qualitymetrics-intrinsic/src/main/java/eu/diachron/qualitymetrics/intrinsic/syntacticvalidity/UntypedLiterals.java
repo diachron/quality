@@ -20,7 +20,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -68,7 +67,7 @@ public class UntypedLiterals extends AbstractQualityMetric {
 
 	@Override
 	public double metricValue() {
-		statsLogger.info("Dataset: {};# Typed Literals: {}, # Untyped Literals: {}",EnvironmentProperties.getInstance().getDatasetURI(), numberTypedLiterals, numberUntypedLiterals);
+		statsLogger.info("Dataset: {};# Typed Literals: {}, # Untyped Literals: {}",this.getDatasetURI(), numberTypedLiterals, numberUntypedLiterals);
 		if (((double)numberTypedLiterals + (double) numberUntypedLiterals) == 0.0) return 1.0;
 		
 		return 1.0 - (double)numberUntypedLiterals / ((double)numberTypedLiterals + (double) numberUntypedLiterals);

@@ -19,9 +19,7 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
-import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.intrinsic.consistency.helper.IFPTriple;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
@@ -123,7 +121,7 @@ public class ValidIFPUsage extends AbstractQualityMetric{
 		else metricValue = 1.0 - ((double)totalViolatedIFPs/(double)totalIFPs);
 		
 		statsLogger.info("ValidIFPUsage. Dataset: {} - Total # IFP Statements : {}; # Violated Predicate-Object Statements : {};  # Total no of triples:  {}; Metric Value: {}"
-				, EnvironmentProperties.getInstance().getDatasetURI(), totalIFPs, totalViolatedIFPs,counter, metricValue);
+				, this.getDatasetURI(), totalIFPs, totalViolatedIFPs,counter, metricValue);
 
 		return metricValue;
 	}

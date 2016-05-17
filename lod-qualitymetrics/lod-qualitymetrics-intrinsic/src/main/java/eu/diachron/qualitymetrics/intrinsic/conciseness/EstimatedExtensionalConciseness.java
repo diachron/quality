@@ -17,7 +17,6 @@ import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.RLBSBloomFilter;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.AbstractComplexQualityMetric;
 
@@ -127,7 +126,7 @@ public class EstimatedExtensionalConciseness extends AbstractComplexQualityMetri
 	@Override
 	public double metricValue() {
 		double metricValue = ((double)(this.totalCreatedInstances - this.estimatedDuplInstances))/((double)this.totalCreatedInstances);;
-		statsLogger.debug("Datasets: {};Total Created Instances: {}, Estimated Duplicates: {}, Metric Value: {}",EnvironmentProperties.getInstance().getDatasetURI(), this.totalCreatedInstances, this.estimatedDuplInstances, metricValue);
+		statsLogger.debug("Datasets: {};Total Created Instances: {}, Estimated Duplicates: {}, Metric Value: {}",this.getDatasetURI(), this.totalCreatedInstances, this.estimatedDuplInstances, metricValue);
 		return metricValue;
 	}
 	
