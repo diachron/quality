@@ -1,5 +1,5 @@
 @prefix daq:     <http://purl.org/eis/vocab/daq#> .
-@prefix ebiqm:     <http://www.diachron-fp7.eu/ebiqm:#> .
+@prefix ebiqm:     <http://www.diachron-fp7.eu/ebiqm#> .
 @prefix owl:	 <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfg:	 <http://www.w3.org/2004/03/trix/rdfg-1> .
@@ -14,7 +14,7 @@
 
 #Ontology Versioning Conciseness
 ebiqm:hasOntologyVersionConcisenessMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:comment	"Links Conciseness Dimension with Ontology Versioning Conciseness Metric" ;
 	rdfs:label	"Conciseness has extensional conciseness metric" ;
@@ -31,7 +31,7 @@ ebiqm:OntologyVersionConcisenessMetric
 		
 #Obsolete Concepts in Ontology
 ebiqm:hasObsoleteConceptsInOntologyMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Understandability ;
 	rdfs:range	ebiqm:ObsoleteConceptsInOntologyMetric .	
@@ -45,7 +45,7 @@ ebiqm:ObsoleteConceptsInOntologyMetric
 		
 #Synonym Usage in Ontology Classes
 ebiqm:hasSynonymUsageMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:SyntacticValidity ;
 	rdfs:range	ebiqm:SynonymUsageMetric .	
@@ -59,7 +59,7 @@ ebiqm:SynonymUsageMetric
 	
 #POBO Definition Usage
 ebiqm:hasPOBODefinitionUsageMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:SyntacticValidity ;
 	rdfs:range	ebiqm:POBODefinitionUsageMetric .	
@@ -72,7 +72,7 @@ ebiqm:POBODefinitionUsageMetric
 	rdfs:label	"POBO definition usage metric" .
 	
 ebiqm:hasDefinedOntologyAuthorMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:SyntacticValidity ;
 	rdfs:range	ebiqm:DefinedOntologyAuthorMetric .	
@@ -93,7 +93,7 @@ ebiqm:OBOFoundryMetric
 	rdfs:label "OBO foundry metric" .
 	
 ebiqm:hasOBOFoundryMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Provenance ;
 	rdfs:range	ebiqm:OBOFoundryMetric .

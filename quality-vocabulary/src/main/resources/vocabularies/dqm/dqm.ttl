@@ -1,5 +1,5 @@
 @prefix daq:     <http://purl.org/eis/vocab/daq#> .
-@prefix dqm:     <http://www.diachron-fp7.eu/dqm#> .
+@prefix dqm:     <http://purl.org/eis/vocab/dqm#> .
 @prefix owl:	 <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfg:	 <http://www.w3.org/2004/03/trix/rdfg-1> .
@@ -27,7 +27,6 @@ dqm:
     vann:preferredNamespaceUri "http://purl.org/eis/vocab/dqm#";
 	vann:preferredNamespacePrefix "dqm";
 	foaf:homepage <http://purl.org/eis/vocab/dqm> .
-
 
 ### Accessibility Category
 dqm:Accessibility
@@ -79,37 +78,37 @@ dqm:MisreportedContentTypesMetric
 	rdfs:label	"Misreported content types metric" .
 
 dqm:hasAvailabilityDimension
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Availability .
 
 dqm:hasEndPointAvailabilityMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Availability ;
 	rdfs:range	dqm:EndPointAvailabilityMetric .
 
 dqm:hasRDFAvailabilityMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Availability ;
 	rdfs:range	dqm:RDFAvailabilityMetric .
 
 dqm:hasDereferenceabilityMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Availability ;
 	rdfs:range	dqm:DereferenceabilityMetric .
 
 dqm:hasDereferenceabilityForwardLinksMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Availability ;
 	rdfs:range	dqm:DereferenceabilityForwardLinksMetric .
 
 dqm:hasMisreportedContentTypesMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Availability ;
 	rdfs:range	dqm:MisreportedContentTypesMetric .
@@ -136,19 +135,19 @@ dqm:HumanReadableLicenseMetric
 	rdfs:label	"Human-readable indication of a license metric" .
 
 dqm:hasLicensingDimension
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Licensing .
 
 dqm:hasMachineReadableLicenseMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Licensing ;
 	rdfs:range	dqm:MachineReadableLicenseMetric .
 
 dqm:hasHumanReadableLicenseMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Licensing ;
 	rdfs:range	dqm:HumanReadableLicenseMetric .
@@ -168,13 +167,13 @@ dqm:DigitalSignatureUsage
 	rdfs:label	"Digital Signature Usage" .
 
 dqm:hasSecurityDimension
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Security .
 
 dqm:hasDigitalSignatureUsage
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Security ;
 	rdfs:range	dqm:DigitalSignatureUsage .
@@ -215,31 +214,31 @@ dqm:CorrectURIUsage
 	rdfs:label	"Correct Usage of Cool URIs" .
 
 dqm:hasPerformanceDimension
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Performance .
 
 dqm:hasLowLatencyMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:LowLatencyMetric .
 
 dqm:hasHighThroughputMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:HighThroughputMetric .
 
 dqm:hasScalabilityOfDataSourceMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:ScalabilityOfDataSourceMetric .
 
 dqm:hasCorrectURIUsage
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Performance ;
 	rdfs:range	dqm:CorrectURIUsage .
@@ -274,25 +273,25 @@ dqm:LinksToExternalDataProvidersMetric
 	rdfs:label "Existence of links to external data providers" .
 
 dqm:hasInterlinkDimension
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasDimension ;
 	rdfs:domain	dqm:Accessibility ;
 	rdfs:range	dqm:Interlinking .
 
 dqm:hasDereferenceabilityBackLinksMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interlinking ;
 	rdfs:range	dqm:DereferenceabilityBackLinksMetric .
 
 dqm:hasInterlinkDetectionMetricMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interlinking ;
 	rdfs:range	dqm:InterlinkDetectionMetric .
 
 dqm:hasLinkToExternalDataProvidersMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interlinking ;
 	rdfs:range	dqm:LinksToExternalDataProvidersMetric .
@@ -322,7 +321,7 @@ dqm:MisplacedClassesOrPropertiesMetric
 	a	rdfs:Class ;
 	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
-	rdfs:comment	"Find resources that are - defined as a property but also appear on subject or object positions in other triples (except cases like ex:prop rdf:type rdfs:Property, ex:prop rds:subPropetyOf) - defined as a class but also appear on predicate position in other triples. The metric is computed as a ratio of misplaced classes and properties" ;
+	rdfs:comment	"Find resources that are - defined as a property but also appear on subject or object positions in other triples (except cases like ex:prop rdf:type rdf:Property, ex:prop rds:subPropetyOf) - defined as a class but also appear on predicate position in other triples. The metric is computed as a ratio of misplaced classes and properties" ;
 	rdfs:label	"Misplaced classes or properties metric" .
 
 dqm:MisusedOwlDatatypeOrObjectPropertiesMetric
@@ -361,49 +360,49 @@ dqm:ValidIFPUsageMetric
 	rdfs:label	"Valid Usage of the owl:InverseFunctionalProperty" .
 
 dqm:hasConsistencyDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Intrinsic ;
 	rdfs:range dqm:Consistency .
 
 dqm:hasEntitiesAsMembersOfDisjointClassesMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:EntitiesAsMembersOfDisjointClassesMetric .
 
 dqm:hasMisusedOwlDatatypeOrObjectPropertiesMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:MisusedOwlDatatypeOrObjectPropertiesMetric .
 
 dqm:hasMisplacedClassesOrPropertiesMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:MisplacedClassesOrPropertiesMetric .
 
 dqm:hasOntologyHijackingMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:OntologyHijackingMetric .
 
 dqm:hasUsageOfDeprecatedClassesOrProperties
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:UsageOfDeprecatedClassesOrProperties .
 
 dqm:hasUsageOfIncorrectDomainOrRangeDatatypesMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:UsageOfIncorrectDomainOrRangeDatatypesMetric .
 
 dqm:hasValidIFPUsageMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Consistency ;
 	rdfs:range	dqm:ValidIFPUsageMetric .
@@ -423,13 +422,13 @@ dqm:DataCubePopulationCompleteness
 	rdfs:label	"RDF Data Cube Population Completeness" .
 
 dqm:hasCompletenessDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Intrinsic ;
 	rdfs:range dqm:Completeness .
 
 dqm:hasDataCubePopulationCompletenessDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasMetric ;
 	rdfs:domain dqm:Completeness ;
 	rdfs:range dqm:DataCubePopulationCompleteness  .
@@ -449,13 +448,13 @@ dqm:ExtensionalConcisenessMetric
 	rdfs:label	"Extensional conciseness metric" .
 
 dqm:hasConcisenessDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Intrinsic ;
 	rdfs:range dqm:Conciseness .
 
 dqm:hasExtensionalConcisenessMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Conciseness ;
 	rdfs:range	dqm:ExtensionalConcisenessMetric .
@@ -490,25 +489,25 @@ dqm:UntypedLiteralsMetric
 	rdfs:label	"Untyped Literals" .
 
 dqm:hasCorrectLanguageTag
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasMetric ;
 	rdfs:domain dqm:SyntacticValidity ;
 	rdfs:range dqm:CorrectLanguageTag .
 
 dqm:hasSyntacticValidityDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Intrinsic ;
 	rdfs:range dqm:SyntacticValidity .
 
 dqm:hasCompatibleDatatype
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasMetric ;
 	rdfs:domain dqm:SyntacticValidity ;
 	rdfs:range dqm:CompatibleDatatype .
 
 dqm:hasUntypedLiteral
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasMetric ;
 	rdfs:domain dqm:SyntacticValidity ;
 	rdfs:range dqm:UntypedLiteralsMetric .
@@ -550,25 +549,25 @@ dqm:PresenceOfURIRegEx
 	rdfs:label	"Vocabulary Usage Indication" .
 
 dqm:hasUnderstandabilityDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Contextual ;
 	rdfs:range dqm:Understandability .
 
 dqm:hasPresenceOfURIRegEx
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Understandability ;
 	rdfs:range	dqm:PresenceOfURIRegEx .
 
 dqm:hasVocabularyUsageIndication
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Understandability ;
 	rdfs:range	dqm:VocabularyUsageIndication .
 
 dqm:hasHumanReadableLabellingMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Understandability ;
 	rdfs:range	dqm:HumanReadableLabellingMetric .
@@ -602,25 +601,25 @@ dqm:CurrencyOfDatasetMetric
 	rdfs:label	"Currency of a Dataset" .
 
 dqm:hasTimelinessDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Contextual ;
 	rdfs:range dqm:Timeliness .
 
 dqm:hasFreshnessOfDatasetMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:FreshnessOfDatasetMetric .
 
 dqm:hasTimelinessOfResourceMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:TimelinessOfResourceMetric .
 
 dqm:hasCurrencyOfDatasetMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Timeliness ;
 	rdfs:range	dqm:CurrencyOfDatasetMetric .
@@ -648,19 +647,19 @@ dqm:BasicProvenanceMetric
 	rdfs:label "Basic Provenance Metric" .
 
 dqm:hasProvenanceDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Contextual ;
 	rdfs:range dqm:Provenance .
 
 dqm:hasBasicProvenanceMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Provenance ;
 	rdfs:range	dqm:BasicProvenanceMetric .
 
 dqm:hasExtendedProvenanceMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Provenance ;
 	rdfs:range	dqm:ExtendedProvenanceMetric .
@@ -694,19 +693,19 @@ dqm:NoProlixRDFMetric
 	rdfs:label	"No Use of Prolix RDF features metric" .
 
 dqm:hasShortURIsMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:RepresentationalConciseness ;
 	rdfs:range	dqm:ShortURIsMetric .
 
 dqm:hasNoProlixRDFMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:RepresentationalConciseness ;
 	rdfs:range	dqm:NoProlixRDFMetric .
 
 dqm:hasRepresentationalConcisenessDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Representational ;
 	rdfs:range dqm:RepresentationalConciseness .
@@ -733,19 +732,19 @@ dqm:MultipleLanguageUsageMetric
 	rdfs:label	"Multiple Language Usage Metric" .
 
 dqm:hasVersatilityDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Representational ;
 	rdfs:range dqm:Versatility .
 
 dqm:hasDifferentSerialisationsMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Versatility ;
 	rdfs:range	dqm:DifferentSerialisationsMetric .
 
 dqm:hasMultipleLanguageUsageMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Versatility ;
 	rdfs:range	dqm:MultipleLanguageUsageMetric .
@@ -772,19 +771,19 @@ dqm:NoBlankNodeMetric
 	rdfs:label	"No blank node metric" .
 
 dqm:hasInterpretabilityDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Representational ;
 	rdfs:range dqm:Interpretability .
 
 dqm:hasNoBlankNodeMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interpretability ;
 	rdfs:range	dqm:NoBlankNodeMetric .
 
 dqm:hasUndefinedClassesAndPropertiesMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interpretability ;
 	rdfs:range	dqm:UndefinedClassesAndPropertiesMetric .
@@ -811,20 +810,20 @@ dqm:ReuseExistingVocabularyMetric
 	rdfs:label	"Reuse existing vocabularies metric" .
 
 dqm:hasInteroperabilityDimension
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf daq:hasDimension ;
 	rdfs:domain dqm:Representational ;
 	rdfs:range dqm:Interoperability .
 
 dqm:hasReuseExistingTermsMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interoperability ;
 	rdfs:range	dqm:ReuseExistingTermsMetric .
 
 
 dqm:hasReuseExistingVocabularyMetric
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Interoperability ;
 	rdfs:range	dqm:ReuseExistingVocabularyMetric .

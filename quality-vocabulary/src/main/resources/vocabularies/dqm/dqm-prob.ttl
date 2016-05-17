@@ -102,13 +102,13 @@ dqm-prob:MisreportedTypeException
 	rdfs:label "Misreported Content Type" .
 
 dqm-prob:expectedContentType
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource ;
 	rdfs:range	rdfs:Resource .
 
 dqm-prob:actualContentType 
-	a	rdfs:Property ;
+	a	rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource ;
 	rdfs:range	rdfs:Resource .
@@ -127,7 +127,7 @@ dqm-prob:ViolatingTriple
 	rdfs:label "Violating Triple" .
 
 dqm-prob:hasViolatingTriple
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource ;
 	rdfs:range	rdfs:Resource .
@@ -186,7 +186,7 @@ dqm-prob:NoBackLink
 	rdfs:label "No Backlink" .
 
 dqm-prob:hasNoBackLink
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource ;
 	rdfs:range	rdfs:Resource .
@@ -289,7 +289,7 @@ dqm-prob:MultiTypedResourceWithDisjointedClasses
 	rdfs:label "Disjoined Classes Typing" .
 
 dqm-prob:violatingDisjoinedClass
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource;
 	rdfs:range	rdfs:Resource .
@@ -304,7 +304,7 @@ dqm-prob:MisplacedClass
 	rdfs:label "Misplaced Class" .
 
 dqm-prob:hasMisplacedClass
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource;
 	rdfs:range	rdfs:Resource .
@@ -317,7 +317,7 @@ dqm-prob:MisplacedProperty
 	rdfs:label "Misplaced Property" .
 
 dqm-prob:hasMisplacedProperty
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource;
 	rdfs:range	rdfs:Resource .
@@ -331,7 +331,7 @@ dqm-prob:MisusedDatatypeProperty
 	rdfs:label "Misused Datatype Property" .
 
 dqm-prob:hasMisusedDatatypeProperty
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource;
 	rdfs:range	rdfs:Resource .
@@ -344,7 +344,7 @@ dqm-prob:MisusedObjectProperty
 	rdfs:label "Misplaced Property" .
 
 dqm-prob:hasMisusedObjectProperty
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	rdfs:Resource;
 	rdfs:range	rdfs:Resource .
@@ -398,7 +398,7 @@ dqm-prob:OntologyHijackingException
 	rdfs:label "Misplaced Property" .
 
 dqm-prob:hijackedTripleStatement
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	dqm-prob:OntologyHijackingException;
 	rdfs:range	rdf:Statement .
@@ -423,7 +423,7 @@ dqm-prob:UnknownType
 	rdfs:label "Undefined Property" .
 	
 dqm-prob:problematicTriple
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	qpro:Exception;
 	rdfs:range	rdf:Statement .
@@ -436,19 +436,19 @@ dqm-prob:InverseFunctionalPropertyViolation
 	rdfs:label "Inverse Functional Property Violation" .
 	
 dqm-prob:violatedPredicate
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	dqm-prob:InverseFunctionalPropertyViolation;
 	rdfs:range	rdf:Resource .		
 
 dqm-prob:violatedObject
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	dqm-prob:InverseFunctionalPropertyViolation;
 	rdfs:range	rdf:Resource .
 	
 dqm-prob:violatingSubjects
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	dqm-prob:InverseFunctionalPropertyViolation;
 	rdfs:range	rdf:Bag .		
@@ -482,13 +482,13 @@ dqm-prob:MissingPopulationCoverage
 	rdfs:label "Missing Population Coverage" .
 	
 dqm-prob:forCodedProperty
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain	dqm-prob:MissingPopulationCoverage ;
 	rdfs:range	rdf:Resource .	
 	
 dqm-prob:missingPopulationCoverageList
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:subPropertyOf qpro:extraExceptionProperty ;
 	rdfs:domain dqm-prob:MissingPopulationCoverage ;
 	rdfs:range rdf:Bag .
