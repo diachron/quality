@@ -19,7 +19,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.DCAT;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -78,7 +77,7 @@ public class BasicProvenanceMetric extends AbstractQualityMetric {
 			if (!(s.equals(""))) validProv++;
 		
 		statsLogger.info("Basic Provenance Metric. Dataset: {} - Valid Provenance {}, Dataset Size {}", 
-				EnvironmentProperties.getInstance().getDatasetURI(), validProv, dataset.size());
+				this.getDatasetURI(), validProv, dataset.size());
 
 		return (dataset.size() == 0) ? 0.0 : (validProv / (double)dataset.size());
 	}

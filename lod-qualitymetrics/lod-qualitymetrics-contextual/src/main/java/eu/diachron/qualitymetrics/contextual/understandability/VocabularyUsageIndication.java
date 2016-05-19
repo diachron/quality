@@ -11,22 +11,27 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
  * @author Jeremy Debattista
+ * 
+ * This metric checks whether vocabularies used in the datasets (ie. predicate or object if predicate is rdf:type) 
+ * are indicated in the dataset's metadata, specifically using the void:vocabulary predicate 
  * 
  */
 public class VocabularyUsageIndication extends AbstractQualityMetric {
@@ -41,6 +46,13 @@ public class VocabularyUsageIndication extends AbstractQualityMetric {
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
 
+	private Set<String> nsIgnore = new HashSet<String>();
+	{
+		nsIgnore.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		nsIgnore.add("http://www.w3.org/2002/07/owl#");
+		nsIgnore.add("http://rdfs.org/ns/void#");
+		nsIgnore.add("http://www.w3.org/2000/01/rdf-schema#");
+	}
 	
 	
 	@Override
@@ -49,33 +61,33 @@ public class VocabularyUsageIndication extends AbstractQualityMetric {
 		Node object = quad.getObject();
 		
 		differentNamespacesUsed.add(predicate.getNameSpace());
-		if (object.isURI()) differentNamespacesUsed.add(object.getNameSpace());
+		if (predicate.getURI().equals(RDF.type.getURI())){
+			if (object.isURI()) differentNamespacesUsed.add(object.getNameSpace());
+		}
 		
-		if (predicate.getURI().equals(VOID.vocabulary.getURI())) namespacesIndicated.add(object.getNameSpace());
+		if (predicate.getURI().equals(VOID.vocabulary.getURI())) namespacesIndicated.add(object.getURI());
 	}
 
 	@Override
 	public double metricValue() {
 		
 		if (!calculated){
+			
 			calculated = true;
 			
 			double totalDiffNs = differentNamespacesUsed.size();
 			double totalNsInd = namespacesIndicated.size();
 			
+			SetView<String> view = Sets.intersection(differentNamespacesUsed, namespacesIndicated); // view of indicated and used
 			
-			Set<String> _ns = new HashSet<String>();
-			_ns.addAll(namespacesIndicated);
 			
-			_ns.removeAll(differentNamespacesUsed);
-			
-			double totalIndicated = totalNsInd - _ns.size() ; //making sure that if a NS was indicated but never used, is not part of the value
-			
-			statsLogger.info("Dataset: {} - Total # NS used : {}; # NS indicated by void : {} # NS indicated : {};"
-					, EnvironmentProperties.getInstance().getDatasetURI(), totalDiffNs, totalNsInd, totalIndicated); //TODO: these store in a seperate file
+			statsLogger.info("Dataset: {} - Total # NS used : {}; # NS indicated by void : {} # NS used vis-a-vie indicated : {};"
+					, this.getDatasetURI(), totalDiffNs, totalNsInd, view.size()); //TODO: these store in a seperate file
 
 		
-			value = (double)totalIndicated/(double)totalDiffNs;
+			if (view.size() == 0) value = 0.0;
+			else if (totalDiffNs == 0) value = 0.0;
+			else value = (double)view.size()/(double)totalDiffNs;
 			
 			
 			//for problem report
