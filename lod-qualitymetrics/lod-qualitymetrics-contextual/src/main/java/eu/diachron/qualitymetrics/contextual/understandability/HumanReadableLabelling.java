@@ -24,7 +24,6 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
-import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -45,6 +44,10 @@ public class HumanReadableLabelling extends AbstractQualityMetric{
 	private Set<String> entitiesWith = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private Set<String> entitiesUnknown = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString()); // have human readable label/description but don't know if it is 
 																										   // a described entity in the dataset - ie. with a type definition
+	
+	private long entitiesWOSize = 0l;
+	private long entitiesWithSize = 0l;
+
 	
 	private ReservoirSampler<Quad> problemSampler = new ReservoirSampler<Quad>(100000, false);
 	
@@ -82,11 +85,15 @@ public class HumanReadableLabelling extends AbstractQualityMetric{
 		
 		if (quad.getSubject().isURI() && quad.getPredicate().getURI().equals(RDF.type.getURI())){
 			String entity = quad.getSubject().getURI();
-			if (!entityInASet(entity)) entitiesWO.add(entity);
+			if (!entityInASet(entity)) {
+				entitiesWO.add(entity);
+				entitiesWOSize++;
+			}
 			else {
 				if (entitiesUnknown.contains(entity)){
 					entitiesWith.add(entity);
 					entitiesUnknown.remove(entity);
+					entitiesWithSize++;
 				}
 			}
 		}
@@ -96,6 +103,8 @@ public class HumanReadableLabelling extends AbstractQualityMetric{
 			if (entitiesWO.contains(entity)){
 				entitiesWith.add(entity);
 				entitiesWO.remove(entity);
+				entitiesWithSize++;
+				entitiesWOSize--;
 			} else {
 				entitiesUnknown.add(entity);
 			}
@@ -110,12 +119,11 @@ public class HumanReadableLabelling extends AbstractQualityMetric{
 	}
 	
 	public double metricValue() {
-		double entities = (entitiesWO.size() + entitiesWith.size());
-		double humanLabels = entitiesWith.size();
+		double entities = (entitiesWOSize + entitiesWithSize);
+		double humanLabels = entitiesWithSize;
 			
-		value = 1 - (humanLabels/entities); 	
-		statsLogger.info("Dataset: {} - Total # Human Readable Labels : {}; # Entities : {};"
-					, this.getDatasetURI(), humanLabels, entities); 
+		value = (humanLabels/entities); 	
+		statsLogger.info("Dataset: {} - Total # Human Readable Labels : {}; # Entities : {};", this.getDatasetURI(), humanLabels, entities); 
 
 		return value;
 	}
@@ -124,6 +132,7 @@ public class HumanReadableLabelling extends AbstractQualityMetric{
 		return this.METRIC_URI;
 	}
 	
+	@SuppressWarnings("unused")
 	private void createProblemQuads(){
 		for (String entity : entitiesWO){
 			Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(entity).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.NoHumanReadableLabel.asNode());
@@ -133,19 +142,20 @@ public class HumanReadableLabelling extends AbstractQualityMetric{
 	}
 	
 	public ProblemList<?> getQualityProblems() {
-		createProblemQuads();
-		ProblemList<Quad> pl = null;
-		try {
-			if(this.problemSampler != null && this.problemSampler.size() > 0) {
-				pl = new ProblemList<Quad>(this.problemSampler.getItems());
-			}
-			else {
-				pl = new ProblemList<Quad>();
-			}
-		} catch (ProblemListInitialisationException e) {
-			logger.error(e.getMessage());
-		}
-		return pl;
+//		createProblemQuads();
+//		ProblemList<Quad> pl = null;
+//		try {
+//			if(this.problemSampler != null && this.problemSampler.size() > 0) {
+//				pl = new ProblemList<Quad>(this.problemSampler.getItems());
+//			}
+//			else {
+//				pl = new ProblemList<Quad>();
+//			}
+//		} catch (ProblemListInitialisationException e) {
+//			logger.error(e.getMessage());
+//		}
+//		return pl;
+		return new ProblemList<Quad>();
 	}
 
 	@Override
