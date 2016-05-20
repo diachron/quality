@@ -60,7 +60,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
 	public int MAX_TLDS = 100;
-	public int MAX_FQURIS_PER_TLD = 1000;
+	public int MAX_FQURIS_PER_TLD = 3000;
 	
 	private long totalDerefUris = 0;
 	
@@ -89,7 +89,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	private boolean metricCalculated = false;
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
-
+	
 	
 	/**
 	 * Processes each triple obtained from the dataset to be assessed (instance declarations, that is, 

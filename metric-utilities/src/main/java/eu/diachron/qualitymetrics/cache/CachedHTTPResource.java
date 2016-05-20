@@ -80,7 +80,7 @@ public class CachedHTTPResource implements CacheObject {
 	public void setParsableContent(boolean containsRDF) {
 		this.parsableContent = containsRDF;
 	}
-
+	
 	public class SerialisableHttpResponse implements Serializable{
 		
 		//http://en.wikipedia.org/wiki/List_of_HTTP_header_fields

@@ -25,24 +25,25 @@ public class SamplingEvaluation {
 
 	protected static TestLoader loader = new TestLoader();
 
-	protected static int[] paramsEstDeref = { 50, 100, 1000, 5000, 10000, 25000, 50000, 100000};
+	protected static int[] paramsEstDeref = { 1000, 3000, 5000};
 	protected static Pair<?,?>[] paramsTLDExt = new Pair<?,?>[] { 
-		new Pair<Integer, Integer>(10,50), 
-		new Pair<Integer, Integer>(10,100), 
+//		new Pair<Integer, Integer>(10,50) 
+//		new Pair<Integer, Integer>(10,100), 
 		new Pair<Integer, Integer>(10,1000), 
-		new Pair<Integer, Integer>(10,5000),
-		new Pair<Integer, Integer>(10,10000),
-		new Pair<Integer, Integer>(10,25000),
-		new Pair<Integer, Integer>(10,50000),
-		new Pair<Integer, Integer>(10,100000),
-		new Pair<Integer, Integer>(50,50), 
-		new Pair<Integer, Integer>(50,100), 
-		new Pair<Integer, Integer>(50,1000), 
-		new Pair<Integer, Integer>(50,5000),
-		new Pair<Integer, Integer>(50,10000),
-		new Pair<Integer, Integer>(50,25000),
-		new Pair<Integer, Integer>(50,50000),
-		new Pair<Integer, Integer>(50,100000)
+		new Pair<Integer, Integer>(10,3000), 
+		new Pair<Integer, Integer>(10,5000)
+//		new Pair<Integer, Integer>(10,10000),
+//		new Pair<Integer, Integer>(10,25000),
+//		new Pair<Integer, Integer>(10,50000),
+//		new Pair<Integer, Integer>(10,100000),
+//		new Pair<Integer, Integer>(50,50), 
+//		new Pair<Integer, Integer>(50,100), 
+//		new Pair<Integer, Integer>(50,1000), 
+//		new Pair<Integer, Integer>(50,5000),
+//		new Pair<Integer, Integer>(50,10000),
+//		new Pair<Integer, Integer>(50,25000),
+//		new Pair<Integer, Integer>(50,50000),
+//		new Pair<Integer, Integer>(50,100000)
 	};
 	
 	protected static String[] datasets = {
@@ -60,7 +61,7 @@ public class SamplingEvaluation {
 		long tMax = Long.MIN_VALUE;
 		long tAvg = 0;
 
-		for (int i = -1; i < 2; i++){
+		for (int i = 0; i < 1; i++){
 			List<Quad> streamingQuads = loader.getStreamingQuads();
 			long tStart = System.currentTimeMillis();
 			Dereferenceability m = new Dereferenceability();
@@ -99,7 +100,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = -1; i < 2; i++){
+			for (int i = 0; i < 1; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceability m = new EstimatedDereferenceability();
@@ -141,7 +142,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = -1; i < 2; i++){
+			for (int i = 0; i < 1; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceabilityByTld m = new EstimatedDereferenceabilityByTld();
@@ -184,7 +185,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = -1; i < 2; i++){
+			for (int i = 0; i < 1; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceabilityByStratified m = new EstimatedDereferenceabilityByStratified();
@@ -218,12 +219,11 @@ public class SamplingEvaluation {
 	
 	public static void main (String [] args) {
 		for (String d : datasets){
-//			dereferenceability(d);
 			estimatedDereferenceabilityByStratified(d);
-			estimatedDereferenceability(d);
 			estimatedDereferenceabilityTLD(d);
+			dereferenceability(d);
+			estimatedDereferenceability(d);
 		}
 	}
 }
-
 
