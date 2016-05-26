@@ -13,6 +13,8 @@
   	<module>lod-qualitymetrics-representation</module>
   	<module>lod-qualitymetrics-intrinsic</module>
   	<module>lod-qualitymetrics-contextual</module>
+  	<module>lod-qualitymetrics-ontologies</module>
+  	
   </modules>
   
   <dependencies>
