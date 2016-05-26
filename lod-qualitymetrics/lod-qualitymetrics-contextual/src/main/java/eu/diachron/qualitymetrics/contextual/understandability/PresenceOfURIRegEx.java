@@ -40,7 +40,7 @@ public class PresenceOfURIRegEx extends AbstractQualityMetric {
 
 	@Override
 	public Resource getMetricURI() {
-		return DQM.VocabularyUsageIndication;
+		return DQM.PresenceOfURIRegEx;
 	}
 
 	
