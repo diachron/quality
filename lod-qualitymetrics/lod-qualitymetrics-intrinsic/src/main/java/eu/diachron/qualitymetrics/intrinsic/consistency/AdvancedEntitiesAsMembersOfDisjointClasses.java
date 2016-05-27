@@ -89,7 +89,7 @@ public class AdvancedEntitiesAsMembersOfDisjointClasses extends AbstractQualityM
 			Node predicate = quad.getPredicate();
 			String object = quad.getObject().toString();
 
-			if (RDF.type.asNode().equals(predicate)) {
+			if (predicate.getURI().equals(RDF.type.getURI())){
 				// If we have a triple ?s rdf:type ?o, we add ?o to the list of
 				// types of ?s
 				Set<String> tmpTypes = typesOfResource.get(subject);
