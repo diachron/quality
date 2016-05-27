@@ -3,7 +3,9 @@
  */
 package eu.diachron.qualitymetrics.intrinsic.consistency;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,12 +55,13 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 	
 	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 	
-	private HTreeMap<String, String> mapResourceType =  MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+	private HTreeMap<String, List<String>> mapResourceType =  MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 
 //	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 	private ReservoirSampler<Triple> unknownTriples = new ReservoirSampler<Triple>(100000, false);
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
-	
+
+    
 	//Sampling of Problems
 	ReservoirSampler<ProblemReport> problemSampler = new ReservoirSampler<ProblemReport>(50000, false);
 
@@ -79,8 +82,14 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 			if (quad.getSubject().isBlank()) s = quad.getSubject().getBlankNodeLabel();
 			else s = quad.getSubject().getURI();
 			String o = quad.getObject().getURI();
-			
-			mapResourceType.putIfAbsent(s,o);
+
+			List<String> types = new ArrayList<String>();
+
+			if (mapResourceType.containsKey(s)){
+				types = mapResourceType.get(s);
+			} 
+			types.add(o);
+			mapResourceType.put(s, types);			
 		}
 		else {
 			this.unknownTriples.add(quad.asTriple());
@@ -151,12 +160,15 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 		String subURI = (t.getSubject().isBlank()) ? t.getSubject().toString() : t.getSubject().getURI();
 
 		if (mapResourceType.containsKey(subURI)){
-			String type = mapResourceType.get(subURI);
+			List<String> _typeList = mapResourceType.get(subURI);
 			
 			Set<RDFNode> types = new LinkedHashSet<RDFNode>();
-			types.add(mc.createResource(type));
-			types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
-
+			types.add(RDFS.Resource); // this is required as everything is a resource, useful for those undereferenceable properties
+			for (String type : _typeList){
+				types.add(mc.createResource(type));
+				types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
+			}
+			
 			Set<RDFNode> _dom = VocabularyLoader.getInstance().getPropertyDomain(t.getPredicate());
 			if (_dom.size() > 0){ // do not consider those properties which have an open domain
 				if(Sets.intersection(_dom, types).size() == 0){
@@ -183,12 +195,14 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 				String objURI = (t.getObject().isBlank()) ? t.getObject().toString() : t.getObject().getURI();
 				
 				if (mapResourceType.containsKey(objURI)){
-					String type = mapResourceType.get(objURI);
+					List<String> _typeList = mapResourceType.get(objURI);
 					
 					Set<RDFNode> types = new LinkedHashSet<RDFNode>();
-					types.add(mc.createResource(type));
-					types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
 					
+					for (String type : _typeList){
+						types.add(mc.createResource(type));
+						types.addAll(VocabularyLoader.getInstance().inferParentClass(mc.createResource(type).asNode()));
+					}
 					
 					if(Sets.intersection(_ran, types).size() == 0){
 						addToProblem(new Quad(null, t),'r');
