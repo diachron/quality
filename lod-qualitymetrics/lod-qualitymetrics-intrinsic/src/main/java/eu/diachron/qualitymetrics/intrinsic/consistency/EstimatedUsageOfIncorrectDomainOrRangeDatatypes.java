@@ -58,7 +58,7 @@ public class EstimatedUsageOfIncorrectDomainOrRangeDatatypes extends AbstractQua
 	private HTreeMap<String, List<String>> mapResourceType =  MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 
 //	private Set<SerialisableTriple> unknownTriples =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
-	private ReservoirSampler<Triple> unknownTriples = new ReservoirSampler<Triple>(100000, false);
+	private ReservoirSampler<Triple> unknownTriples = new ReservoirSampler<Triple>(500000, false);
 //	protected Set<SerialisableModel> problemList =  MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
     
