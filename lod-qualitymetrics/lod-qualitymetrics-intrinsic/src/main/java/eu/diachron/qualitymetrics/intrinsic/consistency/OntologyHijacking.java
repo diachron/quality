@@ -61,7 +61,6 @@ public class OntologyHijacking extends AbstractQualityMetric{
         	hijackingRules.add(new HijackingRule(RDFS.domain, TriplePosition.SUBJECT));
         	hijackingRules.add(new HijackingRule(RDFS.range, TriplePosition.SUBJECT));
         	hijackingRules.add(new HijackingRule(OWL.SymmetricProperty, TriplePosition.SUBJECT));
-        	hijackingRules.add(new HijackingRule(OWL.SymmetricProperty, TriplePosition.SUBJECT));
         	hijackingRules.add(new HijackingRule(OWL.onProperty, TriplePosition.OBJECT));
         	hijackingRules.add(new HijackingRule(OWL.hasValue, TriplePosition.SUBJECT));
         	hijackingRules.add(new HijackingRule(OWL.unionOf, TriplePosition.OBJECT));
@@ -146,7 +145,7 @@ public class OntologyHijacking extends AbstractQualityMetric{
 			
 			if (node.isAnon()) return true;
 			
-			if (node.getNameSpace().equals(EnvironmentProperties.getInstance().getBaseURI())) 
+			if (node.getNameSpace().equals(this.getDatasetURI())) 
 				return true;
 			else 
 				return !(VocabularyLoader.getInstance().checkTerm(node.asNode()));

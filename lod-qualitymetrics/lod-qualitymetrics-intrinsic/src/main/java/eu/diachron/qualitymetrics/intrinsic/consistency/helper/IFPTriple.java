@@ -61,7 +61,7 @@ public class IFPTriple implements Serializable {
 	    	
 		 if (obj instanceof IFPTriple){
 			 IFPTriple other = (IFPTriple) obj;
-			 if (this.object.equals(other.object) && this.predicate.equals(other.predicate)) return true;
+			 if ((!this.subject.equals(other.subject)) && this.object.equals(other.object) && this.predicate.equals(other.predicate)) return true;
 			 else return false;
 		 }
 		 

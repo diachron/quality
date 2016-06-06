@@ -70,7 +70,7 @@ public class MisusedOwlDatatypeOrObjectProperties extends AbstractQualityMetric 
 						this.misuseObjectProperties++;
 						this.createProblemModel(subject, predicate, DQMPROB.MisusedObjectProperty);
 					}
-				} else if(object.isURI()){
+				} else if(object.isURI() || object.isBlank()){
 					// predicate should not be an owl:DataProperty
 					if (VocabularyLoader.getInstance().isDatatypeProperty(predicate)){
 						this.misuseDatatypeProperties++;
