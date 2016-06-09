@@ -144,8 +144,8 @@ public class OntologyHijacking extends AbstractQualityMetric{
 			 */
 			
 			if (node.isAnon()) return true;
-			
-			if (node.getNameSpace().equals(this.getDatasetURI())) 
+
+			if (node.getNameSpace().contains(this.getDatasetURI())) 
 				return true;
 			else 
 				return !(VocabularyLoader.getInstance().checkTerm(node.asNode()));
@@ -160,7 +160,7 @@ public class OntologyHijacking extends AbstractQualityMetric{
         public double metricValue() {
         	if (this.totalPossibleHijacks == 0) return 1.0;
         	
-        	double value = 1.0 - (this.totalHijacks / this.totalPossibleHijacks);
+        	double value = Math.abs(1.0 - (this.totalHijacks / this.totalPossibleHijacks));
         	statsLogger.info("Dataset: {}; Total Hijacks: {}; Total Possible: {}; Metric Value: {}",this.getDatasetURI(), this.totalHijacks, this.totalPossibleHijacks, value); 
 
             return value;
