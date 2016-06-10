@@ -37,12 +37,12 @@ public class EstimatedExtensionalConciseness extends AbstractComplexQualityMetri
 	/**
 	 * Parameter: default size of the Bloom filters, determines the precision of the estimations
 	 */
-	private static int defaultFilterSize = 100000;
+	private static int defaultFilterSize = 5500000;
 	
 	/**
 	 * Parameter: number of Bloom filters to be created, determines the precision of the estimations
 	 */
-	private static int numFilters = 10;
+	private static int numFilters = 13;
 	
 	// Randomized Load-balanced Biased Sampling Bloom Filter, used to find duplicate instance declarations
 	private RLBSBloomFilter rlbsBloomFilterDupls = null;
