@@ -51,17 +51,24 @@ public class LicensingModelClassifier {
 		setLicenseProperties.add("http://dbpedia.org/ontology/licence"); //dbo:licence
 		setLicenseProperties.add("http://dbpedia.org/property/licence"); //dbp:licence
 		setLicenseProperties.add("http://usefulinc.com/ns/doap#license"); //doap:license
+		setLicenseProperties.add("https://schema.org/license"); //schema:license
+
 		
+
 		// Initialize set of regex patterns corresponding to CopyLeft license URIs
-		arrCopyLeftURIPatterns = new Pattern[4];
+		arrCopyLeftURIPatterns = new Pattern[7];
 		arrCopyLeftURIPatterns[0] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/odbl.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[1] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/pddl/.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[2] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[3] = Pattern.compile("^http://creativecommons\\.org/publicdomain/zero/.*", Pattern.CASE_INSENSITIVE);
-		
-		arrNotRecommendedCopyLeftURIPatterns = new Pattern[2];
+		arrCopyLeftURIPatterns[4] = Pattern.compile("^http://creativecommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[5] = Pattern.compile("^http://purl\\.org/NET/rdflicense/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[6] = Pattern.compile("^http://www\\.gnu\\.org/licenses/.*", Pattern.CASE_INSENSITIVE);
+
+		arrNotRecommendedCopyLeftURIPatterns = new Pattern[3];
 		arrNotRecommendedCopyLeftURIPatterns[0] = Pattern.compile("^http://creativecommons\\.org/licenses/by-sa/.*", Pattern.CASE_INSENSITIVE);
 		arrNotRecommendedCopyLeftURIPatterns[1] = Pattern.compile("^http://www\\.gnu\\.org/copyleft/.*", Pattern.CASE_INSENSITIVE);
+		arrNotRecommendedCopyLeftURIPatterns[2] = Pattern.compile("^http://creativecommons\\.org/licenses/by-nc/.*", Pattern.CASE_INSENSITIVE);
 
 		
 		// Initialize the licensing text pattern
@@ -169,7 +176,7 @@ public class LicensingModelClassifier {
 	
 	// TODO: Remove main method introduced for testing purposes
 	public static void main(String[] args) {
-		String[] arrTestStrs = new String[7];
+		String[] arrTestStrs = new String[8];
 		arrTestStrs[0] = "Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material";
 		arrTestStrs[1] = "Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights";
 		arrTestStrs[2] = "All rights granted under this License are granted for the term of copyright on the Program, and are irrevocable provided the stated conditions are met. This License explicitly affirms your unlimited permission to run the unmodified Program.";
@@ -177,6 +184,7 @@ public class LicensingModelClassifier {
 		arrTestStrs[4] = "To the extent possible under law, The Example Organisation has waived all copyright and related or neighboring rights to The Example Dataset.";
 		arrTestStrs[5] = "The dataset supports HTTP caching using ETags";
 		arrTestStrs[6] = "### About Data exposed: a large life sciences data set about proteins and their function. ### Openness Not open. [Copyright page](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/rdf/README) states: Copyright 2007-2012 UniProt Consortium. We have chosen to apply the Creative Commons Attribution-NoDerivs License (http://creativecommons.org/licenses/by-nd/3.0/) to all copyrightable parts (http://sciencecommons.org/) of our databases. This means that you are free to copy, distribute, display and make commercial use of these databases, provided you give us credit. However, if you intend to distribute a modified version of one of our databases, you must ask us for permission first. All databases and documents in the UniProt FTP directory may be copied and redistributed freely, without advance permission, provided that this copyright statement is reproduced with each copy.";
+		arrTestStrs[7] = "copyleft, copyright, free software, intellectual property, license, open source, software piracy";
 		
 		LicensingModelClassifier classif = new LicensingModelClassifier();
 		
