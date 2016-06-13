@@ -101,7 +101,7 @@ public class MachineReadableLicense extends AbstractQualityMetric {
 				}
 				if (licenseModel.size() > 0){
 					// is there an owl:sameAs
-					NodeIterator itr = licenseModel.listObjectsOfProperty(Commons.asRDFNode(subject).asResource(), OWL.sameAs);
+					NodeIterator itr = licenseModel.listObjectsOfProperty(Commons.asRDFNode(object).asResource(), OWL.sameAs);
 					boolean isValidLicense = false;
 					while(itr.hasNext()){
 						RDFNode possLicense = itr.next();
