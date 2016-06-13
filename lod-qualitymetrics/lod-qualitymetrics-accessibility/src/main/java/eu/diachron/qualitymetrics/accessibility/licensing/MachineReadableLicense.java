@@ -2,6 +2,7 @@ package eu.diachron.qualitymetrics.accessibility.licensing;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,13 +10,17 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.OWL;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
+import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -85,53 +90,38 @@ public class MachineReadableLicense extends AbstractQualityMetric {
 			if (licenseClassifier.isLicensingPredicate(predicate)) {
 				totalPossibleLicenses++;
 				
-				boolean isValidLicense = hasValidLicence(subject,object);
-				if (isValidLicense){
-					//is it semantic resource?
-					Model license = ModelFactory.createDefaultModel();
-					try{
-						license = RDFDataMgr.loadModel(object.getURI());
-					} catch (Exception e) {
-						Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), NotMachineReadableLicense.asNode());
-						this._problemList.add(q);
-						nonMachineReadableLicenses++;
+				//is it semantic resource?
+				Model licenseModel = ModelFactory.createDefaultModel();
+				try{
+					licenseModel = RDFDataMgr.loadModel(object.getURI());
+				} catch (Exception e) {
+					Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), NotMachineReadableLicense.asNode());
+					this._problemList.add(q);
+					nonMachineReadableLicenses++;
+				}
+				if (licenseModel.size() > 0){
+					// is there an owl:sameAs
+					NodeIterator itr = licenseModel.listObjectsOfProperty(Commons.asRDFNode(subject).asResource(), OWL.sameAs);
+					boolean isValidLicense = false;
+					while(itr.hasNext()){
+						RDFNode possLicense = itr.next();
+						
+						if (licenseClassifier.isCopyLeftLicenseURI(possLicense.asNode())){
+							isValidLicense = true;
+							break;
+						}
+						
+						if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(possLicense.asNode())){
+							Quad q = new Quad(null, subject, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDataset.asNode());
+							this._problemList.add(q);
+							isValidLicense = true;
+							break;
+						}
 					}
-					if (license.size() > 0){
-						validLicenses++;
-					}
+					if (isValidLicense) validLicenses++;
 				}
 			}
 		}
-		
-//		if ((object.matches(VOID.Dataset.asNode())) || (object.matches(DCAT.Dataset.asNode()))){
-//			if (subject.isURI()){
-//				if (subject.getURI().startsWith(this.getDatasetURI())){
-//					Node licence = ModelFactory.createDefaultModel().createResource().asNode();
-//					if(this.mapLicensedResources.containsKey(subject.getURI())){
-//						licence = this.mapLicensedResources.get(subject.getURI());
-//						this.mapLicensedResources.remove(subject.getURI());
-//					}
-//					if (!(this.mapLicensedDatasets.containsKey(subject.getURI()))) 
-//						mapLicensedDatasets.put(subject.getURI(), licence);
-//				}
-//			}
-//		}
-//		
-//		if (subject.isURI()){
-//			if (subject.getURI().startsWith(this.getDatasetURI())){
-//				if(licenseClassifier.isLicensingPredicate(predicate)) {
-//					// Yes, this quad provides licensing information, store the subject's URI (or ID) in the map of resources having a license
-//					logger.trace("Quad providing license info detected. Subject: {}, object: {}", subject.getURI(), object);
-//					
-//					if(this.mapLicensedDatasets.containsKey(subject.getURI())){
-//						this.mapLicensedDatasets.put(subject.getURI(), object);
-//					} else {
-//						mapLicensedResources.put(subject.getURI(), object);
-//					}
-//				}
-//				localURIs.add(subject.getURI());
-//			}
-//		}
 	}
 
 	/**
@@ -140,33 +130,6 @@ public class MachineReadableLicense extends AbstractQualityMetric {
 	 * @return Current value of the Machine-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */
 	public double metricValue() {
-		
-//		double voidValidLicences = 0.0d;
-//		double validLicences = 0.0d;
-//		
-//		//check the licences per void dataset
-//		for(String voidDS : this.mapLicensedDatasets.keySet()){
-//			Node dataset = ModelFactory.createDefaultModel().createResource(voidDS).asNode();
-//			Node licence = this.mapLicensedDatasets.get(voidDS);
-//			if (licence != null){
-//				if (hasValidLicence(dataset,licence)) voidValidLicences++;
-//			} else {
-//				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDataset.asNode());
-//				this._problemList.add(q);
-//			}
-//		}
-//		
-//		//check datasets having a license but not part of a void/dcat dataset
-//		for(String licenseSubj : this.mapLicensedResources.keySet()){
-//			if (licenseClassifier.isCopyLeftLicenseURI(this.mapLicensedResources.get(licenseSubj))){
-//				validLicences++;
-//			} else {
-//				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(licenseSubj).asNode(), QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDataset.asNode());
-//				this._problemList.add(q);
-//			}
-//		}
-		
-		//calculating the metric
 		double metValue = 0.0d;
 		
 		
@@ -179,19 +142,6 @@ public class MachineReadableLicense extends AbstractQualityMetric {
 		return metValue;
 	}
 	
-	private boolean hasValidLicence(Node dataset, Node licence){
-		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return true;
-		else if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(licence)){
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDataset.asNode());
-			this._problemList.add(q);
-			return true;
-		} else {
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDataset.asNode());
-			this._problemList.add(q);
-		}
-		return false;
-	}
-
 	public Resource getMetricURI() {
 		return METRIC_URI;
 	}

@@ -29,24 +29,12 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 	private static Logger logger = LoggerFactory.getLogger(HumanReadableLicense.class);
 	
 	/**
-	* A set containing the URIs of the subjects for which a human-readable license statement was found in the resource 
-	*/
-//	private Set<String> setLicensedURIs = Collections.synchronizedSet(new HashSet<String>());
-//	private Map<String,Node> possibleHumanReadableLicense = new ConcurrentHashMap<String,Node>();
-	
-	/**
 	 * Determines if an object contains a human-readable license
 	 */
 	private LicensingModelClassifier licenseClassifier = new LicensingModelClassifier();
 	
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
-
-	/**
-	 * Mapping all licenses that are attached to a void:Dataset
-	 */
-//	private Map<String, Node> humanLicencePerDataset = new HashMap<String, Node>();
-	
 
 
 	private double validLicenses = 0.0d;
@@ -76,41 +64,6 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 				if (isValidLicense) validLicenses++;
 			}
 		}
-		
-//		if ((object.matches(VOID.Dataset.asNode())) || (object.matches(DCAT.Dataset.asNode()))){
-//			if (subject.isURI()){
-//				if (subject.getURI().startsWith(this.getDatasetURI())){
-//					Node licence = ModelFactory.createDefaultModel().createResource().asNode();
-//					if(this.possibleHumanReadableLicense.containsKey(subject.getURI())){
-//						licence = this.possibleHumanReadableLicense.get(subject.getURI());
-//						this.possibleHumanReadableLicense.remove(subject.getURI());
-//					}
-//					if (!(this.humanLicencePerDataset.containsKey(subject.getURI()))) 
-//						humanLicencePerDataset.put(subject.getURI(), licence);
-//				}
-//			}
-//		}
-//		
-//		// Check whether the predicate corresponds to a documentation property...
-//		if (subject.isURI()){
-//			if (subject.getURI().startsWith(this.getDatasetURI())){
-//				if(setLicensingDocumProps.contains(predicate.getURI())) {
-//					logger.debug("Evaluating human-readable license candidate: {} with object: {}", predicate, object);
-//					
-//					// ... and check if the object contains text recognized to be of a human-readable license
-//					if(this.licenseModClassifier.isLicenseStatement(object) && subject.isURI()) {
-//						this.possibleHumanReadableLicense.put(subject.getURI(),object);
-//						logger.debug("Human-readable license detected for subject: {}", subject);
-//					} 
-//					else if (this.licenseModClassifier.isNotRecommendedLicenseStatement(object) && subject.isURI()) {
-//						// we should also check if the licence used is a non-recommended one
-//						this.possibleHumanReadableLicense.put(subject.getURI(),object);
-//						logger.debug("Human-readable license detected for subject: {}", subject);
-//					}
-//				}
-//				localURIs.add(subject.getURI());
-//			}
-//		}
 	}
 	
 	/**

@@ -182,7 +182,7 @@ public class LicensingModelClassifier {
 		arrTestStrs[2] = "All rights granted under this License are granted for the term of copyright on the Program, and are irrevocable provided the stated conditions are met. This License explicitly affirms your unlimited permission to run the unmodified Program.";
 		arrTestStrs[3] = "RDF data extracted from Wikipedia";
 		arrTestStrs[4] = "To the extent possible under law, The Example Organisation has waived all copyright and related or neighboring rights to The Example Dataset.";
-		arrTestStrs[5] = "The dataset supports HTTP caching using ETags";
+		arrTestStrs[5] = "Creative Commons Attribution-Share Alike 3.0 Unported License";
 		arrTestStrs[6] = "### About Data exposed: a large life sciences data set about proteins and their function. ### Openness Not open. [Copyright page](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/rdf/README) states: Copyright 2007-2012 UniProt Consortium. We have chosen to apply the Creative Commons Attribution-NoDerivs License (http://creativecommons.org/licenses/by-nd/3.0/) to all copyrightable parts (http://sciencecommons.org/) of our databases. This means that you are free to copy, distribute, display and make commercial use of these databases, provided you give us credit. However, if you intend to distribute a modified version of one of our databases, you must ask us for permission first. All databases and documents in the UniProt FTP directory may be copied and redistributed freely, without advance permission, provided that this copyright statement is reproduced with each copy.";
 		arrTestStrs[7] = "copyleft, copyright, free software, intellectual property, license, open source, software piracy";
 		
