@@ -134,7 +134,7 @@ public class MachineReadableLicense extends AbstractQualityMetric {
 		
 		
 		if ((totalPossibleLicenses == 0) || (validLicenses == 0)) metValue = 0.0d;
-		metValue = (double)validLicenses / ((double)totalPossibleLicenses);
+		else metValue = (double)validLicenses / ((double)totalPossibleLicenses);
 		
 		statsLogger.info("MachineReadableLicense. Dataset: {} - Total # Licenses in Dataset : {}; # Total Machine Readable License : {}; Total Non-Machine Readable Licenses: {}", 
 				this.getDatasetURI(), totalPossibleLicenses, validLicenses, nonMachineReadableLicenses);

@@ -94,14 +94,11 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 	 * @return Current value of the Human-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */
 	public double metricValue() {
-		
 		double metValue = 0.0d;
-		
-		
 		if ((totalPossibleLicenses == 0) || (validLicenses == 0)) metValue = 0.0d;
-		metValue = (double)validLicenses / ((double)totalPossibleLicenses);
+		else metValue = (double)validLicenses / ((double)totalPossibleLicenses);
 		
-		statsLogger.info("MachineReadableLicense. Dataset: {} - Total # Licenses in Dataset : {}; # Total Human Readable License : {}", 
+		statsLogger.info("HumanReadableLicense. Dataset: {} - Total # Licenses in Dataset : {}; # Total Human Readable License : {}", 
 				this.getDatasetURI(), totalPossibleLicenses, validLicenses);
 		
 		return metValue;
