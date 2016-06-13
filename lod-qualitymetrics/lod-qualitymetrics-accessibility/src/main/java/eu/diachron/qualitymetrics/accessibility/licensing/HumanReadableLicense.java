@@ -1,13 +1,18 @@
 package eu.diachron.qualitymetrics.accessibility.licensing;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDFS;
+
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -39,6 +44,15 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 
 	private double validLicenses = 0.0d;
 	private double totalPossibleLicenses = 0.0d;
+	
+	private static HashSet<String> setLicensingDocumProps;		
+	static {		
+ 		setLicensingDocumProps = new HashSet<String>();		
+		setLicensingDocumProps.add(DCTerms.description.getURI());		
+		setLicensingDocumProps.add(RDFS.comment.getURI());	
+		setLicensingDocumProps.add(RDFS.label.getURI());
+		setLicensingDocumProps.add("http://schema.org/description");
+	}		
 
 	
 	/**
@@ -62,6 +76,13 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 				
 				boolean isValidLicense = hasValidLicence(subject,object);
 				if (isValidLicense) validLicenses++;
+			}
+		}
+		
+		if (setLicensingDocumProps.contains(predicate.getURI())){
+			if (licenseClassifier.isLicenseStatement(object)){
+				totalPossibleLicenses++;
+				validLicenses++;
 			}
 		}
 	}
