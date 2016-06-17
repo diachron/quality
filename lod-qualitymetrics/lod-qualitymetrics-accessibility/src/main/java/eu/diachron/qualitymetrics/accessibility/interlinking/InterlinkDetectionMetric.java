@@ -58,7 +58,7 @@ public class InterlinkDetectionMetric extends AbstractComplexQualityMetric {
 			if (quad.getObject().isURI()){
 				object = quad.getObject().getURI();
 			} else {
-				object = quad.getObject().getLiteralValue().toString();
+				object = quad.getObject().toString();
 			}
 		} else {
 			object = quad.getObject().getBlankNodeLabel();

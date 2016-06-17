@@ -58,7 +58,11 @@ public class SameAsMeasure {
 		
 		//TODO: better return of value.. for the time, a value closer to 1 means that we are near the ideal as described by gueret et al. to 0 
 		
-		double ratio = openChains / totalChains;
+		double ratio = 0.0;
+		if (totalChains > 0){
+			if (openChains > 0)
+				ratio = openChains / totalChains;
+		}
 		return (1.0 - ratio);
 	}
 	

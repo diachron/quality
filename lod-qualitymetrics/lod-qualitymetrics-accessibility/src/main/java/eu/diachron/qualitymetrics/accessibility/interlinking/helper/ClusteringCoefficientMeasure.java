@@ -43,9 +43,10 @@ public class ClusteringCoefficientMeasure {
 	// In this case, 0 doesn't mean that it is bad, and 1 doesn't mean it is good
 	// This will be the ideal over the estimated measure
 	public double getIdealMeasure(){
-		if (estimateMeasure == Double.MIN_VALUE) this.getEstimatedMeasure();
+//		if (estimateMeasure == Double.MIN_VALUE) this.getEstimatedMeasure();
+		return (1.0 - ((1.0/((double)this._graph.getVertexCount()))* this.calculateClusteringCoefficient()));
 		
-		return (1.0 - ((1.0/((double)this.resourcesInRandomPath.size()))* this.estimateMeasure));
+//		return (1.0 - ((1.0/((double)this.resourcesInRandomPath.size()))* this.estimateMeasure));
 	}
 
 	
@@ -121,13 +122,12 @@ public class ClusteringCoefficientMeasure {
 	}
 	
 	
-	@SuppressWarnings("unused")
 	private double calculateClusteringCoefficient() {
 		Map<String, Double> vertexCC = new HashMap<String, Double>();
 		
 		double summationCoeffValue = 0.0;
 		
-		for(String vertex : randomWalkPath){
+		for(String vertex : this._graph.getVertices()){
 			if (vertexCC.containsKey(vertex)) continue;
 			
 			double ccValue = 0.0d;

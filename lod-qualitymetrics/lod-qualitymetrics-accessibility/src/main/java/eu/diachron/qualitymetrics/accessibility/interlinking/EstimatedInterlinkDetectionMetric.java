@@ -53,6 +53,7 @@ public class EstimatedInterlinkDetectionMetric extends AbstractComplexQualityMet
 	private final Resource METRIC_URI = DQM.InterlinkDetectionMetric;
 	
 	private List<Quad> _problemList = new ArrayList<Quad>();
+
 	
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
@@ -69,7 +70,11 @@ public class EstimatedInterlinkDetectionMetric extends AbstractComplexQualityMet
 			if (quad.getObject().isURI()){
 				object = quad.getObject().getURI();
 			} else {
-				object = quad.getObject().getLiteralValue().toString();
+				try{
+					object = quad.getObject().getLiteralValue().toString();
+				} catch (Exception e){
+					object = quad.getObject().toString();
+				}
 			}
 		} else {
 			object = quad.getObject().getBlankNodeLabel();
@@ -155,31 +160,34 @@ public class EstimatedInterlinkDetectionMetric extends AbstractComplexQualityMet
 	public void after(Object... arg0) {
 		this.afterExecuted = true;
 		
-		//1. DegreeMeasure
-		DegreeMeasure dm = new DegreeMeasure(graph);
-		metricValue += dm.getIdealMeasure() * 0.2;
-		
+//		//1. DegreeMeasure
+//		DegreeMeasure dm = new DegreeMeasure(graph);
+//		metricValue += dm.getIdealMeasure() * 0.2;
+//		
 		//2. Clustering Coefficient
 		ClusteringCoefficientMeasure ccm = new ClusteringCoefficientMeasure(graph);
-		metricValue += ccm.getIdealMeasure() * 0.2;
+		ClusteringCoefficientMeasure.setMixigTimeFactor(ccmMT);
+		//metricValue += ccm.getIdealMeasure() * 0.2;
+		metricValue = ccm.getIdealMeasure();
 		
-		//3. Centrality
-		CentralityMeasure cm = new CentralityMeasure(graph);
-		metricValue += cm.getIdealMeasure() * 0.2;
 		
-		//4. OpenSameAs
-		//	for this we do a ratio of the number of same as triples against the number of open sameas - ideally we have 0..
-		SameAsMeasure sam = new SameAsMeasure(graph);
-		metricValue += (1.0 - sam.getIdealMeasure()) * 0.2;
+//		//3. Centrality
+//		CentralityMeasure cm = new CentralityMeasure(graph);
+//		metricValue += cm.getIdealMeasure() * 0.2;
+//		
+//		//4. OpenSameAs
+//		//	for this we do a ratio of the number of same as triples against the number of open sameas - ideally we have 0..
+//		SameAsMeasure sam = new SameAsMeasure(graph);
+//		metricValue += (1.0 - sam.getIdealMeasure()) * 0.2;
+//		
+//		//5. Description Richness
+//		DescriptiveRichnessMeasure drm = new DescriptiveRichnessMeasure(graph);
+//		metricValue += drm.getIdealMeasure() * 0.2;
 		
-		//5. Description Richness
-		DescriptiveRichnessMeasure drm = new DescriptiveRichnessMeasure(graph);
-		metricValue += drm.getIdealMeasure() * 0.2;
-		
-		statsLogger.info("EstimatedInterlinkDetectionMetric. Dataset: {} - Degree Measure : {}; Clustering Coef. : {}; " +
-				"Centrality : {}; Open Same As : {}; Description Richness : {};", 
-				EnvironmentProperties.getInstance().getDatasetURI(), dm.getIdealMeasure(), ccm.getIdealMeasure(), 
-				cm.getIdealMeasure(), sam.getIdealMeasure(), drm.getIdealMeasure());
+//		statsLogger.info("EstimatedInterlinkDetectionMetric. Dataset: {} - Degree Measure : {}; Clustering Coef. : {}; " +
+//				"Centrality : {}; Open Same As : {}; Description Richness : {};", 
+//				this.getDatasetURI(), dm.getIdealMeasure(), ccm.getIdealMeasure(), 
+//				cm.getIdealMeasure(), sam.getIdealMeasure(), drm.getIdealMeasure());
 	}
 
 
@@ -199,6 +207,11 @@ public class EstimatedInterlinkDetectionMetric extends AbstractComplexQualityMet
 	}
 	public static void setSkipNodeProbability(double skipNodeProbability) {
 		EstimatedInterlinkDetectionMetric.skipNodeProbability = skipNodeProbability;
+	}
+	
+	public static double ccmMT = 0.1;
+	public static void setCCMmxtime(double p){
+		ccmMT = p;
 	}
 
 }
