@@ -10,16 +10,16 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
 /**
  * @author Santiago Londono
  * Estimates the efficiency with which a system can bind to the dataset, by measuring the number of 
- * answered HTTP requests responsed by the source of the dataset, per second.
+ * answered HTTP requests responded by the source of the dataset, per second.
  */
 public class HighThroughput extends AbstractQualityMetric {
 	
@@ -30,7 +30,7 @@ public class HighThroughput extends AbstractQualityMetric {
 	/**
 	 * Amount of HTTP requests that will be sent to the data source in order to estimate how many requests are served per second. 
 	 */
-	private static final int NUM_HTTP_REQUESTS = 3;
+	private static final int NUM_HTTP_REQUESTS = 10;
 	
 	/**
 	 * Number of requests per second that ideally, should be served by a data source. In other words, its the amount of served requests 
@@ -43,11 +43,6 @@ public class HighThroughput extends AbstractQualityMetric {
 	 */
 	private long totalDelay = -1;
 	
-	/**
-	 * Dataset PLD
-	 */
-	private String datasetURI = null;
-
 	/**
 	 * Holds the metric value
 	 */
@@ -62,8 +57,16 @@ public class HighThroughput extends AbstractQualityMetric {
 	 * thus obtaining the estimated number of requests server per second
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
+	
+	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(50,true);
+
 	public void compute(Quad quad) {
-		logger.debug("Computing : {} ", quad.asTriple().toString());
+		if (quad.getSubject().isURI()){
+			if (quad.getSubject().getURI().startsWith(this.getDatasetURI())) 
+				resSamp.add(quad.getSubject().getURI());
+			else if (this.getDatasetURI().equals(""))
+				resSamp.add(quad.getSubject().getURI());
+		}
 	}
 
 	/**
@@ -74,19 +77,18 @@ public class HighThroughput extends AbstractQualityMetric {
 	 * @return Current value of the High Throughput metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
-		this.datasetURI = EnvironmentProperties.getInstance().getBaseURI();
-		
 		if (this.metricValue == null){
-			totalDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, NUM_HTTP_REQUESTS);
-			logger.trace("Total delay for dataset {} was {}", datasetURI, totalDelay);
+			for(String s : resSamp.getItems()){
+				totalDelay += HTTPRetriever.measureReqsBurstDelay(s, NUM_HTTP_REQUESTS);
+				logger.trace("Total delay for dataset {} was {}", s, totalDelay);	
+			}
 
-			double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay);
+			double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay / (double)resSamp.getItems().size());
 			this.metricValue = Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
 			
-			statsLogger.info("HighThroughput. Dataset: {}; Base URI: {} - Total Delay (millisecs) : {}; " +
+			statsLogger.info("HighThroughput. Dataset: {}; - Total Delay (millisecs) : {}; " +
 					"# HTTP Requests Sent : {}; Norm Served Requests per Millisecond : {};", 
-					EnvironmentProperties.getInstance().getDatasetURI(), EnvironmentProperties.getInstance().getBaseURI(), 
-					totalDelay, NUM_HTTP_REQUESTS, NORM_SERVED_REQS_PER_MILLISEC);
+					this.getDatasetURI(), totalDelay, NUM_HTTP_REQUESTS, NORM_SERVED_REQS_PER_MILLISEC);
 		}
 				
 		return this.metricValue;

@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -20,32 +19,40 @@ import eu.diachron.qualitymetrics.utilities.TestLoader;
  */
 public class MachineReadableLicenseTest extends Assert {
 	
-	MachineReadableLicense mrl; 
-	
 	TestLoader l = new TestLoader();
-	
 
 	@Before
 	public void setUp(){
-		l.loadDataSet("testdumps/void.ttl");
-		l.loadDataSet("testdumps/WSECTOR.ttl");
-		
-		PropertyManager.getInstance().addToEnvironmentVars("baseURI", "http://oecd.270a.info");
-		PropertyManager.getInstance().addToEnvironmentVars("datasetURI", "http://oecd.270a.info/dataset/WSECTOR");
-		mrl = new MachineReadableLicense();
+		l.loadDataSet("testdumps/void.ttl");		
 	}
 	
-	
 	@Test
-	public void test(){
+	public void testMachineReadableLicense(){
+		MachineReadableLicense mrl = new MachineReadableLicense();
+		mrl.setDatasetURI("http://oecd.270a.info/dataset/");
+
 		List<Quad> quads = l.getStreamingQuads();
 		
 		for (Quad q : quads){
 			mrl.compute(q);
 		}
 		
-		assertEquals(0.66667, mrl.metricValue(), 0.00001);
+		assertEquals(0.0, mrl.metricValue(), 0.00001);
 	}
 	
+	
+	@Test
+	public void testHumanReadableLicense(){
+		HumanReadableLicense mrl = new HumanReadableLicense();
+		mrl.setDatasetURI("http://oecd.270a.info/dataset/");
+
+		List<Quad> quads = l.getStreamingQuads();
+		
+		for (Quad q : quads){
+			mrl.compute(q);
+		}
+		
+		assertEquals(1.0, mrl.metricValue(), 0.00001);
+	}
 
 }

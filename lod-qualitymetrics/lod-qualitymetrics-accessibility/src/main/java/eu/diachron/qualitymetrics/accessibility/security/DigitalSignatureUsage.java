@@ -4,7 +4,9 @@
 package eu.diachron.qualitymetrics.accessibility.security;
 
 import java.io.Serializable;
+import java.util.UUID;
 
+import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +34,10 @@ public class DigitalSignatureUsage extends AbstractQualityMetric {
 	private static final Property ASSURANCE = ModelFactory.createDefaultModel().createProperty("http://xmlns.com/wot/0.1/assurance");
 	private static final Property ENDORSER = ModelFactory.createDefaultModel().createProperty("http://xmlns.com/wot/0.1/endorser");
 
-	private HTreeMap<String,DigitalSignature> docs = MapDbFactory.createFilesystemDB().createHashMap("dig-sig-docs").make();
-	private HTreeMap<String,DigitalSignature> endorsements = MapDbFactory.createFilesystemDB().createHashMap("endorcements-docs").make();
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
+
+	private HTreeMap<String,DigitalSignature> docs = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
+	private HTreeMap<String,DigitalSignature> endorsements = MapDbFactory.createHashMap(mapDb, UUID.randomUUID().toString());
 	
 	private static Logger logger = LoggerFactory.getLogger(DigitalSignatureUsage.class);
 	
@@ -44,11 +48,11 @@ public class DigitalSignatureUsage extends AbstractQualityMetric {
 		Node subject = quad.getSubject();
 		Node object = quad.getObject();
 		
-		if (quad.getObject().equals(FOAF.Document.asNode())){
+		if (quad.getObject().getURI().equals(FOAF.Document.getURI())){
 			docs.putIfAbsent(subject.toString(), new DigitalSignature());
 		}
 		
-		if (quad.getPredicate().equals(ASSURANCE.asNode())){
+		if (quad.getPredicate().getURI().equals(ASSURANCE.getURI())){
 			DigitalSignature ds ;
 			if (endorsements.containsKey(object.getURI())){
 				ds = endorsements.get(object.getURI());
@@ -64,7 +68,7 @@ public class DigitalSignatureUsage extends AbstractQualityMetric {
 
 		}
 		
-		if (quad.getPredicate().equals(ENDORSER.asNode())){
+		if (quad.getPredicate().getURI().equals(ENDORSER.getURI())){
 			DigitalSignature ds ;
 			if (endorsements.containsKey(object.getURI())){
 				ds = endorsements.get(object.getURI());
@@ -76,7 +80,7 @@ public class DigitalSignatureUsage extends AbstractQualityMetric {
 			ds.endorcer = object.getURI();
 		}
 		
-		if (quad.getObject().equals(ENDORSEMENT.asNode())){
+		if (quad.getObject().getURI().equals(ENDORSEMENT.getURI())){
 			DigitalSignature ds = new DigitalSignature();
 			ds.endorcement = subject.getURI();
 			

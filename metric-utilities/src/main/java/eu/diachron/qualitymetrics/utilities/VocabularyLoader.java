@@ -552,7 +552,9 @@ public class VocabularyLoader {
 							(inferred.getURI().equals(OWL.DatatypeProperty.getURI())) ||
 							(inferred.getURI().equals(OWL.OntologyProperty.getURI())) ||
 							(inferred.getURI().equals(OWL.AnnotationProperty.getURI())) ||
-							(inferred.getURI().equals(OWL.ObjectProperty.getURI())) ) {
+							(inferred.getURI().equals(OWL.ObjectProperty.getURI())) ||
+							(inferred.getURI().equals(OWL.FunctionalProperty.getURI()))
+									) {
 								// if the inferred class is one of the properties, then it is a property
 								isClass = false;
 							} else {
@@ -970,8 +972,8 @@ public class VocabularyLoader {
 	
 	public static void main (String [] args){
 //		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
-		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/VillainByDefault").asNode();
+		Node n = ModelFactory.createDefaultModel().createResource("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property").asNode();
 
-		System.out.println(VocabularyLoader.getInstance().isClass(n));
+		System.out.println(VocabularyLoader.getInstance().isDeprecatedTerm(n));
 	}
 }

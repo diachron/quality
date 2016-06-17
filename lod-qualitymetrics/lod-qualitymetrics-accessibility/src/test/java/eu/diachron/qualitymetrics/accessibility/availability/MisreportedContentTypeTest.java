@@ -18,12 +18,12 @@ public class MisreportedContentTypeTest extends Assert {
 	private static Logger logger = LoggerFactory.getLogger(MisreportedContentTypeTest.class);
 	
 	protected TestLoader loader = new TestLoader();
-	protected EstimatedMisreportedContentType metric = new EstimatedMisreportedContentType();
+	protected EstimatedMisreportedContentTypeByStratified metric = new EstimatedMisreportedContentTypeByStratified();
 
 	@Before
 	public void setUp() throws Exception {
 //		loader.loadDataSet(DataSetMappingForTestCase.MisreportedContentType);
-		loader.loadDataSet("/Volumes/Green-TeaExternal/transparency.270a.info/CPI2009.ttl");
+		loader.loadDataSet("/Users/jeremy/Dropbox/wals.info.nt.gz");
 	}
 
 	@After

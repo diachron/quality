@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class HighThroughputTest extends Assert {
@@ -23,7 +22,7 @@ public class HighThroughputTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet(DataSetMappingForTestCase.HighThroughput, "https://raw.github.com/openphacts/ops-platform-setup/master/void/drugbank_void.ttl");
+		loader.loadDataSet("/Users/jeremy/Dropbox/pdev-lemon.nt.gz");
 	}
 
 	@After
@@ -46,7 +45,7 @@ public class HighThroughputTest extends Assert {
 		
 		// Obtain the estimated number of requests server per second by the endpoint the dataset comes from
 		double metricValue = metric.metricValue();
-		logger.trace("Computed high-throughput metric: " + metricValue);
+		System.out.println("Computed high-throughput metric: " + metricValue);
 
 		assertTrue("High Throughput is out of range", (metricValue >= 0.0) && (metricValue <= 1.0));
 		

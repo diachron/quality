@@ -19,6 +19,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.SD;
+import de.unibonn.iai.eis.diachron.semantics.knownvocabs.SIOCSERVICES;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
@@ -52,11 +53,9 @@ public class SPARQLAccessibility extends AbstractQualityMetric {
 	final static List<String> endpointProperty = new ArrayList<String>();
 	static{
 		endpointProperty.add(VOID.sparqlEndpoint.getURI());
-//		endpointProperty.add(SIOCSERVICES.service_endpoint);
+		endpointProperty.add(SIOCSERVICES.service_endpoint.getURI());
 		endpointProperty.add(SD.endpoint.getURI());
 	}
-	
-	
 	
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
@@ -90,7 +89,7 @@ public class SPARQLAccessibility extends AbstractQualityMetric {
 
 	public double metricValue() {
 		statsLogger.info("SPARQLAccessibility. Dataset: {} - Total # Defined SPARQL Endpoints : {}; Total # Active SPARQL Endpoints : {};", 
-				EnvironmentProperties.getInstance().getDatasetURI(), totalDefinedSparqlEndPoints, sparqlEndPoints);
+				this.getDatasetURI(), totalDefinedSparqlEndPoints, sparqlEndPoints);
 		
 		if (totalDefinedSparqlEndPoints == 0.0) return 0.0;
 		return sparqlEndPoints/totalDefinedSparqlEndPoints;

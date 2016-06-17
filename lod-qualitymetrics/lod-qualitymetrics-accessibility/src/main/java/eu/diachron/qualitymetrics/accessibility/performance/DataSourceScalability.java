@@ -10,9 +10,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
+import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 
@@ -72,8 +72,16 @@ public class DataSourceScalability extends AbstractQualityMetric {
 	 * single request is sent and its response time measured, the result of substracting it from the average is set as "scalability differential factor" 
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
+	
+	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(50,true);
+	
 	public void compute(Quad quad) {
-		logger.debug("Computing : {} ", quad.asTriple().toString());
+		if (quad.getSubject().isURI()){
+			if (quad.getSubject().getURI().startsWith(this.getDatasetURI())) 
+				resSamp.add(quad.getSubject().getURI());
+			else if (this.getDatasetURI().equals(""))
+				resSamp.add(quad.getSubject().getURI());
+		}
 	}
 
 	/**
@@ -85,35 +93,40 @@ public class DataSourceScalability extends AbstractQualityMetric {
 	 * @return Current value of the Scalability of a Data Source metric, measured with respect to the dataset's URI
 	 */
 	public double metricValue() {
-		this.datasetURI = EnvironmentProperties.getInstance().getBaseURI();
+		this.datasetURI = this.getDatasetURI();
 		
 		if (this.metricValue == null){
 			
-			// Send parallel requests and accumulate their response times as the total delay
-			logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);
-			long requestsSwarmDelay = HTTPRetriever.measureParallelReqsDelay(this.datasetURI, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
-			
-			// Verify if the total delay was properly calculated (a delay of -1 indicates that one or more requests failed, which would spoil the avg. op.)
-			if(requestsSwarmDelay >= 0) {
-				// Estimate the response time of a single request as the average response time among the swarm of requests
-				long avgRequestsSwarmDelay = requestsSwarmDelay / NUM_HTTP_REQUESTS;
-	
-				// Send a single request, directly obtain the time required to attend that very request
-				long singleRequestDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, 1);
+			for(String s : resSamp.getItems()){
+				// Send parallel requests and accumulate their response times as the total delay
+				logger.trace("Sending {} HTTP GET requests in parallel to {}...", NUM_HTTP_REQUESTS, datasetURI);
+				long requestsSwarmDelay = HTTPRetriever.measureParallelReqsDelay(s, NUM_HTTP_REQUESTS, REQUEST_SET_IMEOUT);
 				
-				// Calculate the scalability differential factor
-				scalabilityDiff = avgRequestsSwarmDelay - singleRequestDelay;
-				logger.trace("Total scalability differential factor for dataset {} was {}", datasetURI, scalabilityDiff);
-			} else {
-				logger.trace("Calculation of scalability differential factor failed for dataset {}", datasetURI);
-				scalabilityDiff = ((long)DIFFERENCE_THRESHOLD); //return 0 when test fails
+				// Verify if the total delay was properly calculated (a delay of -1 indicates that one or more requests failed, which would spoil the avg. op.)
+				if(requestsSwarmDelay >= 0) {
+					// Estimate the response time of a single request as the average response time among the swarm of requests
+					long avgRequestsSwarmDelay = requestsSwarmDelay / NUM_HTTP_REQUESTS;
+		
+					// Send a single request, directly obtain the time required to attend that very request
+					long singleRequestDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, 1);
+					
+					// Calculate the scalability differential factor
+					scalabilityDiff += avgRequestsSwarmDelay - singleRequestDelay;
+					logger.trace("Total scalability differential factor for dataset {} was {}", datasetURI, scalabilityDiff);
+				} else {
+					logger.trace("Calculation of scalability differential factor failed for dataset {}", datasetURI);
+					scalabilityDiff += ((long)DIFFERENCE_THRESHOLD); //return 0 when test fails
+				}
 			}
 			
-			statsLogger.info("DataSourceScalability. Dataset: {}; Base URI: {} - Scalability Differential : {}; " +
-					"Difference Threshold : {};", EnvironmentProperties.getInstance().getDatasetURI(), 
-					EnvironmentProperties.getInstance().getBaseURI(), scalabilityDiff, DIFFERENCE_THRESHOLD);
+
 			
-			this.metricValue = Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, (double)scalabilityDiff));
+			
+			
+			statsLogger.info("DataSourceScalability. Dataset: {}; - Scalability Differential : {}; " +
+					"Difference Threshold : {};", this.getDatasetURI(), scalabilityDiff, DIFFERENCE_THRESHOLD);
+			
+			this.metricValue = Math.max(0.0, 1.0 - (1.0/DIFFERENCE_THRESHOLD) * Math.max(0.0, ((double)scalabilityDiff/resSamp.getItems().size())));
 		}
 		return this.metricValue;
 	}

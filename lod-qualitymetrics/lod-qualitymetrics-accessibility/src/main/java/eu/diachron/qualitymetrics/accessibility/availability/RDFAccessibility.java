@@ -20,12 +20,7 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
-import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
-import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
-import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
-import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debattista
@@ -41,17 +36,9 @@ public class RDFAccessibility extends AbstractQualityMetric {
 
 	private final Resource METRIC_URI = DQM.RDFAvailabilityMetric;
 	
-	private DiachronCacheManager dcmgr = DiachronCacheManager.getInstance();
-
-	
 	private double metricValue = 0.0d;
 	
 	private double totalDataDumps = 0.0d;
-	@Deprecated private double workingDataDumps = 0.0d;
-	private List<String> dataDumpsURIs = new ArrayList<String>();
-	@Deprecated private HTTPRetriever httpRetreiver = new HTTPRetriever();
-	
-	@Deprecated private boolean metricCalculated = false;
 	
 
 	public void compute(Quad quad) {
@@ -66,7 +53,7 @@ public class RDFAccessibility extends AbstractQualityMetric {
 		metricValue = (totalDataDumps > 0) ? 1.0 : 0.0;
 		
 		statsLogger.info("RDFAccessibility. Dataset: {} - Total # Datadumps : {};", 
-				EnvironmentProperties.getInstance().getDatasetURI(), totalDataDumps);
+				this.getDatasetURI(), totalDataDumps);
 		
 		return metricValue;
 	}
@@ -76,28 +63,6 @@ public class RDFAccessibility extends AbstractQualityMetric {
 		return this.METRIC_URI;
 	}
 	
-	@Deprecated //This method won't always work because datadumps might be zip files!
-	private void checkForRDFDataset(){
-		httpRetreiver.start();
-		
-		for (String uri : dataDumpsURIs){
-			if (DiachronCacheManager.getInstance().existsInCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri)){
-				CachedHTTPResource httpResource = (CachedHTTPResource) dcmgr.getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-				
-				for(SerialisableHttpResponse response : httpResource.getResponses()){
-					if ((response.getHeaders("Status").contains("200")) && (LinkedDataContent.contentTypes.contains(response.getHeaders("Content-Type")))){
-						workingDataDumps++;
-						break;
-					} else {
-						Resource subject = ModelFactory.createDefaultModel().createResource(uri);
-						Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQMPROB.InvalidDataDumpURI.asNode());
-						this.problemList.add(q);
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	public ProblemList<?> getQualityProblems() {
 		ProblemList<Quad> tmpProblemList = null;

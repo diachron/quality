@@ -6,6 +6,7 @@ package eu.diachron.qualitymetrics.accessibility.performance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.mapdb.DB;
 import org.slf4j.Logger;
@@ -19,7 +20,6 @@ import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -53,11 +53,11 @@ public class CorrectURIUsage extends AbstractQualityMetric {
 	/**
 	 * MapDB database, used to persist the Map containing the instances found to be declared in the dataset
 	 */
-	transient private static DB mapDB = MapDbFactory.createFilesystemDB();
 	
+	private static DB mapDb = MapDbFactory.getMapDBAsyncTempFile();
 
-	 private Set<String> pSetHashURI = mapDB.createHashSet("HashURISet").make();
-	 private Set<String> pSetSlashURI = mapDB.createHashSet("SlashURISet").make();
+	 private Set<String> pSetHashURI = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
+	 private Set<String> pSetSlashURI = MapDbFactory.createHashSet(mapDb, UUID.randomUUID().toString());
 
 //	 private List<Resource> _problemList = new ArrayList<Resource>();
 	 private List<Quad> _problemList = new ArrayList<Quad>();
@@ -97,7 +97,7 @@ public class CorrectURIUsage extends AbstractQualityMetric {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 
 		String subject = (quad.getSubject().isURI()) ? quad.getSubject().getURI() : "";
-		if (!(subject.equals("")) && (subject.startsWith(EnvironmentProperties.getInstance().getBaseURI()))){
+		if (!(subject.equals("")) && (subject.startsWith(this.getDatasetURI()))){
 			logger.debug("Processing triple with subject URI: {}.", subject);
 			
 			// URIs ending in slash are valid, yet would be problematic to dissect. Remove trailing slash if found
@@ -140,7 +140,7 @@ public class CorrectURIUsage extends AbstractQualityMetric {
 			if (this.slashURICounter.equals(this.tripleCounter)) return 1.0;
 			else {
 				//TODO: fix, this is temporary - report should include all resources that are not hashURIs
-				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), 
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(this.getDatasetURI()).asNode(), 
 						QPRO.exceptionDescription.asNode(), ModelFactory.createDefaultModel().createLiteral(this.hashURICounter.toString()).asNode());
 				this._problemList.add(q);
 
@@ -148,9 +148,8 @@ public class CorrectURIUsage extends AbstractQualityMetric {
 //					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
 //				}
 				
-				statsLogger.info("CorrectURIUsage. Dataset: {} - # Slash URIs Found : {}; Total # Triples with URI Subject : {}; " +
-						"Maximum # Triples : {};", 
-						EnvironmentProperties.getInstance().getDatasetURI(), slashURICounter, tripleCounter, MAX_TRIPLES);
+				statsLogger.info("CorrectURIUsage. Dataset: {} - # Slash URIs Found : {}; Total # Triples with URI Subject : {}; Maximum # Triples : {};", 
+						this.getDatasetURI(), slashURICounter, tripleCounter, MAX_TRIPLES);
 				
 				if (this.slashURICounter == 0) return 0.0;
 				return ((double)this.slashURICounter) / ((double)this.tripleCounter) ;
@@ -159,7 +158,7 @@ public class CorrectURIUsage extends AbstractQualityMetric {
 			if (this.hashURICounter.equals(this.tripleCounter)) return 1.0;
 			else {
 				//TODO: fix, this is temporary - report should include all resources that are not hashURIs
-				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(EnvironmentProperties.getInstance().getBaseURI()).asNode(), 
+				Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(this.getDatasetURI()).asNode(), 
 						QPRO.exceptionDescription.asNode(), ModelFactory.createDefaultModel().createLiteral(this.slashURICounter.toString()).asNode());
 				this._problemList.add(q);
 				
@@ -167,10 +166,8 @@ public class CorrectURIUsage extends AbstractQualityMetric {
 //					this._problemList.add(ModelFactory.createDefaultModel().createResource(problemUri));
 //				}
 				
-				statsLogger.info("CorrectURIUsage. Dataset: {}; Base URI: {} - # Hash URIs Found : {}; " +
-						"Total # Triples with URI Subject : {}; Maximum # Triples : {};", 
-						EnvironmentProperties.getInstance().getDatasetURI(), EnvironmentProperties.getInstance().getBaseURI(),
-						hashURICounter, tripleCounter, MAX_TRIPLES);
+				statsLogger.info("CorrectURIUsage. Dataset: {}; - # Hash URIs Found : {}; Total # Triples with URI Subject : {}; Maximum # Triples : {};", 
+						this.getDatasetURI(),hashURICounter, tripleCounter, MAX_TRIPLES);
 				
 				if (this.hashURICounter == 0) return 0.0;
 				return ((double)this.hashURICounter) / ((double)this.tripleCounter) ;
