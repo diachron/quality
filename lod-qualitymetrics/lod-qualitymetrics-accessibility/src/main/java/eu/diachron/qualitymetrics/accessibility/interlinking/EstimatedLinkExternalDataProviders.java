@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -47,7 +47,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	/**
 	 * Parameter: default size for the reservoir 
 	 */
-	private static int reservoirsize = 5000;
+	private static int reservoirsize = 10000;
 	
 	
 	/**
@@ -61,10 +61,6 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	 */
 	private Set<String> setPLDsRDF = new HashSet<String>();
 
-	/**
-     * Base URI of the resource based on its contents
-     */
-	private String baseURI = EnvironmentProperties.getInstance().getDatasetURI();
 	
 	private boolean computed = false;
 	private List<Quad> _problemList = new ArrayList<Quad>();
@@ -78,19 +74,24 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		String objectPLD = "";
-		
-		if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-		
-		if(!quad.getSubject().toString().contains(this.baseURI)) {
-			this.addUriToSampler(quad.getSubject().toString());
-		}
-
-		if ((objectPLD != "") ) {
-			if(!quad.getObject().toString().contains(this.baseURI)) {
+		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
+			if ((quad.getObject().isURI()) && (!(quad.getObject().getURI().startsWith(this.getDatasetURI())))){
 				this.addUriToSampler(quad.getObject().toString());
 			}
 		}
+		
+//		String objectPLD = "";
+//		if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+		
+//		if(!quad.getSubject().toString().contains(this.baseURI)) {
+//			this.addUriToSampler(quad.getSubject().toString());
+//		}
+
+//		if ((objectPLD != "") ) {
+//			if(!quad.getObject().toString().contains(this.getDatasetURI())) {
+//				this.addUriToSampler(quad.getObject().toString());
+//			}
+//		}
 		
 	}
 	
@@ -122,7 +123,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 			computed = true;
 			
 			statsLogger.info("EstimatedLinkExternalDataProviders. Dataset: {} - # Top Level Domains : {};", 
-					EnvironmentProperties.getInstance().getDatasetURI(), mapPLDs.size());
+					this.getDatasetURI(), mapPLDs.size());
 		}
 		
 		return setPLDsRDF.size();
@@ -133,7 +134,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 			for (String s : curPldUris.getItems()){
 				if (ModelParser.snapshotParser(s)) {
 					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
-					break;
+					break; // stop when at least one resource is LD dereferenceable
 				}
 			}
 		}

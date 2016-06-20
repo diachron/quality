@@ -4,7 +4,6 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -14,13 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
@@ -68,34 +67,31 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	@Override
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
+//		
+//		String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
+//		setResources.add(subject);
+//
+//		if (quad.getObject().isURI()){
+//			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
+//			setResources.add(object);
+//		}
 		
-		String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-		setResources.add(subject);
-
-		if (quad.getObject().isURI()){
-			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-			setResources.add(object);
+		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
+			if ((quad.getObject().isURI()) && (!(quad.getObject().getURI().startsWith(this.getDatasetURI())))){
+				setResources.add(quad.getObject().toString());
+			}
 		}
 	}
 
 	@Override
 	public double metricValue() {
 		if (!computed){
-			//remove the base uri from the set because that will not be an "external link"
-			String baseURI = EnvironmentProperties.getInstance().getDatasetURI();
-			
-			Iterator<String> iterator = setResources.iterator();
-			while (iterator.hasNext()) {
-			    String element = iterator.next();
-			    if (element.contains(baseURI)) iterator.remove();
-			}
-			
 			this.checkForRDFLinks();
 			computed = true;
 		}
 		
 		statsLogger.info("LinkExternalDataProviders. Dataset: {} - # Top Level Domains : {};", 
-				EnvironmentProperties.getInstance().getDatasetURI(), setPLDsRDF.size());
+				this.getDatasetURI(), setPLDsRDF.size());
 		
 		return setPLDsRDF.size();
 	}
@@ -132,8 +128,8 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	
 	private void checkForRDFLinks() {
 		for (String s : setResources){
-			if (ModelParser.snapshotParser(s))
-				setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+			if (setPLDsRDF.contains(ResourceBaseURIOracle.extractPayLevelDomainURI(s))) continue;
+			if (ModelParser.snapshotParser(s)) setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
 		}
 	}
 }
