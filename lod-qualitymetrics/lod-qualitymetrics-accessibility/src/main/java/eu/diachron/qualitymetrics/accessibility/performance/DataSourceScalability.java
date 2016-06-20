@@ -36,7 +36,7 @@ public class DataSourceScalability extends AbstractQualityMetric {
 	/**
 	 * Maximum time in milliseconds to wait for the responses to all requests sent
 	 */
-	private static final int REQUEST_SET_IMEOUT = 30000;
+	private static final int REQUEST_SET_IMEOUT = 15000;
 	
 	/**
 	 * The computation of this metric is based on the difference between the response time of a single request and 
@@ -73,7 +73,7 @@ public class DataSourceScalability extends AbstractQualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	
-	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(50,true);
+	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(10,true);
 	
 	public void compute(Quad quad) {
 		if (quad.getSubject().isURI()){

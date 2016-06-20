@@ -58,7 +58,7 @@ public class HighThroughput extends AbstractQualityMetric {
 	 * @param quad Quad to be processed and examined to try to extract the dataset's URI
 	 */
 	
-	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(50,true);
+	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(10,true);
 
 	public void compute(Quad quad) {
 		if (quad.getSubject().isURI()){

@@ -52,7 +52,7 @@ public class LowLatency extends AbstractQualityMetric {
 	
 	private List<Resource> _problemList = new ArrayList<Resource>();
 
-	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(50,true);
+	ReservoirSampler<String> resSamp = new ReservoirSampler<String>(15,true);
 
 	public void compute(Quad quad) {
 		if (quad.getSubject().isURI()){
