@@ -1,10 +1,13 @@
 package org.lod.qualitymetrics.ontologies;
 
+import java.util.Iterator;
+
 import org.mindswap.pellet.jena.PelletReasonerFactory;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.reasoner.ValidityReport.Report;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
@@ -50,6 +53,11 @@ public class ConsistencyCheck implements QualityMetric {
 	public double metricValue() {
 		// TODO Auto-generated method stub
 		return model.validate().getReports().hasNext() ? 1.0d : 0.0d;
+	}
+	
+	public Iterator<Report> getReports() {
+		// TODO Auto-generated method stub
+		return model.validate().getReports();
 	}
 
 
