@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.http.StatusLine;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
 
@@ -17,6 +18,10 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
+import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
+import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
  * @author Jeremy Debattista
@@ -147,45 +152,72 @@ public class Dereferencer {
 	private static void parsable(CachedHTTPResource resource){
 		String ns = ModelFactory.createDefaultModel().createResource(resource.getUri()).getNameSpace();
 		if (!(failSafeMap.containsKey(ns))){
-			try{
-				Model m = RDFDataMgr.loadModel(resource.getUri());
-				if (m.size() > 0){
-					resource.setParsableContent(true);
+			Lang tryLang = null;
+			Long len = -1l;
+			for (SerialisableHttpResponse shr : resource.getResponses()){
+				try {
+					len = Long.valueOf(shr.getHeaders("Content-Length"));
+				} catch (Exception e){}				
+				try {
+					tryLang = LinkedDataContent.contentTypeToLang(shr.getHeaders("Content-Type"));
+				} catch (Exception e){}	
+				
+				if ((tryLang != null) && (len > -1)) break;
+			}
+			
+			len = len/1000000;
+			if ((len > -1) && (len < 10)){
+				// Load model in memory if file is under 10 MB
+				try{
+					Model m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
+					if (m.size() > 0){
+						resource.setParsableContent(true);
+						failSafeCounter.remove(ns);
+					} else {
+						addToFailSafeDecision(ns);
+						resource.setParsableContent(false);
+					}
+				} catch (RiotException re){
+					resource.setParsableContent(false);
+					addToFailSafeDecision(ns);
+				} catch (Exception e){
+					resource.setParsableContent(false);
+					addToFailSafeDecision(ns);
+				}
+			} else {
+				try{
+					resource.setParsableContent(ModelParser.snapshotParser(resource.getUri()));
 					failSafeCounter.remove(ns);
-				} else {
+				} catch (Exception e){
 					addToFailSafeDecision(ns);
 					resource.setParsableContent(false);
 				}
-			} catch (RiotException re){
-				resource.setParsableContent(false);
-				addToFailSafeDecision(ns);
-			} catch (Exception e){
-				resource.setParsableContent(false);
-				addToFailSafeDecision(ns);
 			}
 		} else {
 			resource.setParsableContent(false);
 		}
 	}
 	
-//	public static void main (String [] args) throws InterruptedException{
-//		HTTPRetriever httpRetriever = new HTTPRetriever();
+	public static void main (String [] args) throws InterruptedException{
+		HTTPRetriever httpRetriever = new HTTPRetriever();
 //		String url = "http://mlode.nlp2rdf.org/resource/wals/datapoint/prs-f136B";
-//		httpRetriever.addResourceToQueue(url);
-//		httpRetriever.start();
-//		Thread.sleep(1000);
-//		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
-//		while (res == null){
-//			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
-//		}
-//		
-//		System.out.println(hasValidDereferencability(res));
-////		parsable(res);
-////		System.out.println(res.isContentParsable());
-//		
-//		StatusCode sc = res.getDereferencabilityStatusCode();
-//		System.out.println(sc);
-//
-//	}
+//		String url = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
+		String url = "http://imf.270a.info/data/data.tar.gz";
+		httpRetriever.addResourceToQueue(url);
+		httpRetriever.start();
+		Thread.sleep(1000);
+		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
+		while (res == null){
+			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
+		}
+		
+		System.out.println(hasValidDereferencability(res));
+//		parsable(res);
+//		System.out.println(res.isContentParsable());
+		
+		StatusCode sc = res.getDereferencabilityStatusCode();
+		System.out.println(sc);
+
+	}
 
 }

@@ -30,6 +30,8 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -49,6 +51,7 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
+import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 
 /**
@@ -95,6 +98,8 @@ public class HTTPRetriever {
 
 	
 	private Queue<String> httpQueue = new ConcurrentLinkedQueue<String>();
+	private Queue<String> httpGetQueue = new ConcurrentLinkedQueue<String>();
+	
 	private ExecutorService executor = null;
 				
 	public void addResourceToQueue(String resourceURI) {
@@ -124,7 +129,30 @@ public class HTTPRetriever {
 			Runnable retreiver = new Runnable() {
 				public void run() {
 					try {
-						runHTTPAsyncRetreiver(requiresContentType);
+						runHTTPAsyncRetreiver(requiresContentType, false);
+					} catch (InterruptedException e) {
+						// The thread being interrupted for whatever reason, is severe enough to report a runtime exception
+						logger.error("HTTP async request thread interrupted", e);
+						throw new RuntimeException(e);
+					}
+				}
+			};
+			executor.submit(retreiver);
+			executor.shutdown();
+		}
+		
+		while(!httpQueue.isEmpty()){};		
+		httpQueue.addAll(httpGetQueue);
+		httpGetQueue.clear();
+
+		if(!httpQueue.isEmpty()) {
+			executor = Executors.newSingleThreadExecutor();
+
+			Runnable retreiver = new Runnable() {
+				public void run() {
+					try {
+						//try again with the get now
+						runHTTPAsyncRetreiver(requiresContentType, true);
 					} catch (InterruptedException e) {
 						// The thread being interrupted for whatever reason, is severe enough to report a runtime exception
 						logger.error("HTTP async request thread interrupted", e);
@@ -167,8 +195,15 @@ public class HTTPRetriever {
 		}	
 	}
 	
-	
 	private void runHTTPAsyncRetreiver(final boolean requiresContentType) throws InterruptedException {
+		runHTTPAsyncRetreiver(requiresContentType,false);
+	}
+	
+	private void addToGetQueue(String url){
+		httpGetQueue.add(url);
+	}
+	
+	private void runHTTPAsyncRetreiver(final boolean requiresContentType, boolean useGet) throws InterruptedException {
 		
 		RequestConfig requestConfig = this.getRequestConfig(true);
 		logger.trace("Starting HTTP retriever, HTTP queue size: {}", httpQueue.size());
@@ -186,6 +221,7 @@ public class HTTPRetriever {
 			httpclient.start();
 			
 //			for(final String queuePeek : this.httpQueue) {
+			
 			while(!this.httpQueue.isEmpty()){
 				final String queuePeek = this.httpQueue.poll();
 				final String peekTLD = this.extractTopLevelDomainURI(queuePeek);
@@ -212,7 +248,12 @@ public class HTTPRetriever {
 				newResource.setUri(queuePeek);
 				
 				try {
-					final HttpGet request = new HttpGet(queuePeek);		
+					final HttpRequestBase request;
+					if (useGet) 
+						request = new HttpGet(queuePeek);	
+					else
+						request = new HttpHead(queuePeek);	
+
 					if (requiresContentType || this.useContentType)
 					{
 						Header accept = new BasicHeader(HttpHeaders.ACCEPT, ACCEPT_TYPE);
@@ -246,31 +287,36 @@ public class HTTPRetriever {
 							new FutureCallback<HttpResponse>() {
 						
 								public void completed(final HttpResponse response) {
-									newResource.addResponse(response);
-									try {
-										if (followRedirections && localContext != null && localContext.getRedirectLocations() != null && localContext.getRedirectLocations().size() >= 1) {
-											List<URI> uriRoute = new ArrayList<URI>();
-											uriRoute.add(request.getURI());
-											uriRoute.addAll(localContext.getRedirectLocations());
-											try {
-												logger.trace("Initiating redirection set for URI: {}. Num. requests: {}", queuePeek, uriRoute.size());
-												newResource.addAllResponses(followAsyncRedirection(uriRoute));
-												logger.debug("Request completed with redirection set for URI: {}. {} pending requests", queuePeek, mainHTTPRetreiverLatch.getCount());
-											} catch (IOException e) {
-												logger.warn("Error following redirection: {}. Error: {}", uriRoute, e);
+									if ((response.getStatusLine().getStatusCode() == 405) || (response.getStatusLine().getStatusCode() == 406)) {
+										// if it was an HTTP Head with at 405 Method Not Allowed then we have to do it again with a GET :(
+										addToGetQueue(request.getURI().toString());
+									} else {
+										newResource.addResponse(response);
+										try {
+											if (followRedirections && localContext != null && localContext.getRedirectLocations() != null && localContext.getRedirectLocations().size() >= 1) {
+												List<URI> uriRoute = new ArrayList<URI>();
+												uriRoute.add(request.getURI());
+												uriRoute.addAll(localContext.getRedirectLocations());
+												try {
+													logger.trace("Initiating redirection set for URI: {}. Num. requests: {}", queuePeek, uriRoute.size());
+													newResource.addAllResponses(followAsyncRedirection(uriRoute));
+													logger.debug("Request completed with redirection set for URI: {}. {} pending requests", queuePeek, mainHTTPRetreiverLatch.getCount());
+												} catch (IOException e) {
+													logger.warn("Error following redirection: {}. Error: {}", uriRoute, e);
+												}
+											} else {
+												logger.debug("Request for URI: {} successful. {}. {} redirs. {} pending requests", queuePeek, response.getStatusLine(), ((localContext.getRedirectLocations() != null)?(localContext.getRedirectLocations().size()):(0)), mainHTTPRetreiverLatch.getCount());
+												newResource.addStatusLines(response.getStatusLine());
 											}
-										} else {
-											logger.debug("Request for URI: {} successful. {}. {} redirs. {} pending requests", queuePeek, response.getStatusLine(), ((localContext.getRedirectLocations() != null)?(localContext.getRedirectLocations().size()):(0)), mainHTTPRetreiverLatch.getCount());
+										} catch (Exception e) {
+											logger.debug("Exception during the request for redirect locations whith the following exception : {}", e.getLocalizedMessage());
 											newResource.addStatusLines(response.getStatusLine());
+										} finally {
+											logger.trace("Adding resource to cache URI: {}", queuePeek);
+											DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
+											mainHTTPRetreiverLatch.countDown();
+											updateFailSafeCache(peekTLD);
 										}
-									} catch (Exception e) {
-										logger.debug("Exception during the request for redirect locations whith the following exception : {}", e.getLocalizedMessage());
-										newResource.addStatusLines(response.getStatusLine());
-									} finally {
-										logger.trace("Adding resource to cache URI: {}", queuePeek);
-										DiachronCacheManager.getInstance().addToCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, queuePeek, newResource);
-										mainHTTPRetreiverLatch.countDown();
-										updateFailSafeCache(peekTLD);
 									}
 								}
 		
@@ -518,11 +564,12 @@ public class HTTPRetriever {
 	public static void main(String [] args) throws InterruptedException{
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
+		String uri = "http://data.linkededucation.org/resource/lak/conference/edm2010/paper/135";
 //		String uri = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
 //		String uri = "http://pleiades.stoa.org/places/55500001010#this";
 //		String uri = "http://rdfs.org/ns/void#Dataset";
 //		String uri = "http://pleiades.stoa.org/places/903083";
-		String uri = "http://imf.270a.info/dataset/void";
+//		String uri = "http://imf.270a.info/dataset/void";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start();
 		Thread.sleep(5000);
@@ -532,6 +579,16 @@ public class HTTPRetriever {
 			httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE,uri);
 		}
 		
+		Long len = -1l;
+		for(SerialisableHttpResponse shr : httpResource.getResponses()){
+			try {
+				len = Long.valueOf(shr.getHeaders("Content-Length"));
+				break;
+			} catch (Exception e){}
+		}
+		if (len > -1)
+			System.out.println(len/1000000);
+
 		System.out.println(httpResource.getStatusLines().get(0).getStatusCode());
 		//System.out.println(httpResource.getResponses().get(0).getEntity().getContentType().getValue());
 		//httpResource.getResponses().get(0).getHeaders("Content-Disposition");

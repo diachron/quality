@@ -1,6 +1,7 @@
 package de.unibonn.iai.eis.diachron.datatypes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -77,8 +78,8 @@ public class LightGraph extends MapDBGraph {
 		}
 		
 		// Perform the connections corresponding to the edge, in both, the source and target nodes
-		sourceNodeAdj.outEdges.put(edgeType, targetNodeId);
-		targetNodeAdj.inEdges.put(edgeType, sourceNodeId);
+		sourceNodeAdj.outEdges.add(new Pair<String,String>(edgeType, targetNodeId));
+		targetNodeAdj.inEdges.add(new Pair<String,String>(edgeType, sourceNodeId));
 	}
 	
 	public Set<String> getNeighbors(String nodeId){
@@ -88,8 +89,10 @@ public class LightGraph extends MapDBGraph {
 		// First, ensure that the node exists
 		if(nodeAdjs != null) {
 			// Add all incoming and outgoing neighbors of the queried node
-			allNeighNodeIds.addAll(nodeAdjs.inEdges.values());
-			allNeighNodeIds.addAll(nodeAdjs.outEdges.values());
+//			allNeighNodeIds.addAll(nodeAdjs.inEdges.values());
+//			allNeighNodeIds.addAll(nodeAdjs.outEdges.values());
+			allNeighNodeIds.addAll(nodeAdjs.inEdgesValues());
+			allNeighNodeIds.addAll(nodeAdjs.outEdgesValues());
 		}
 
 		return allNeighNodeIds;
@@ -116,7 +119,8 @@ public class LightGraph extends MapDBGraph {
 		Node firstNode = this.mapNodes.get(firstNodeId);
 		
 		if(firstNode != null) {
-			return (firstNode.inEdges.containsValue(secondNodeId) || firstNode.outEdges.containsValue(secondNodeId));
+//			return (firstNode.inEdges.containsValue(secondNodeId) || firstNode.outEdges.containsValue(secondNodeId));
+			return (firstNode.inEdgeContainsValue(secondNodeId) || firstNode.outEdgeContainsValue(secondNodeId));
 		} else {
 			return false;
 		}
@@ -177,8 +181,39 @@ public class LightGraph extends MapDBGraph {
 		public int nodeIndex;
 		
 		// Edges originating at the node, the key is the edge type relating the nodes, the value is the ID of the target node
-		public HashMap<String, String> outEdges = new HashMap<String, String>();
+		public Set<Pair<String, String>>  outEdges = new HashSet<Pair<String, String>>();
 		// Edges arriving at the node, the key is the edge type relating the nodes, the value is the ID of the source node
-		public HashMap<String, String> inEdges = new HashMap<String, String>();
+		public Set<Pair<String, String>> inEdges = new HashSet<Pair<String, String>>();
+		
+		
+		public Collection<String> inEdgesValues(){
+			Collection<String> coll = new HashSet<String>();
+			for(Pair<String,String> p : inEdges){
+				coll.add(p.getSecondElement());
+			}
+			return coll;
+		}
+		
+		public Collection<String> outEdgesValues(){
+			Collection<String> coll = new HashSet<String>();
+			for(Pair<String,String> p : outEdges){
+				coll.add(p.getSecondElement());
+			}
+			return coll;
+		}
+		
+		public boolean inEdgeContainsValue(String id){
+			for(Pair<String,String> p : inEdges){
+				if (p.getSecondElement().equals(id)) return true;
+			}
+			return false;
+		}
+		
+		public boolean outEdgeContainsValue(String id){
+			for(Pair<String,String> p : outEdges){
+				if (p.getSecondElement().equals(id)) return true;
+			}
+			return false;
+		}
 	}
 }
