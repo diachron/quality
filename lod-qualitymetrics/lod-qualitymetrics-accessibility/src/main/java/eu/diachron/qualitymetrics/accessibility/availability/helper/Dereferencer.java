@@ -166,7 +166,7 @@ public class Dereferencer {
 			}
 			
 			len = len/1000000;
-			if ((len > -1) && (len < 10)){
+			if ((len > 0) && (len < 10)){
 				// Load model in memory if file is under 10 MB
 				try{
 					Model m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
@@ -186,7 +186,9 @@ public class Dereferencer {
 				}
 			} else {
 				try{
-					resource.setParsableContent(ModelParser.snapshotParser(resource.getUri()));
+					if (tryLang == null) resource.setParsableContent(ModelParser.snapshotParser(resource.getUri()));
+					else resource.setParsableContent(ModelParser.snapshotParser(resource.getUri(),tryLang));
+					
 					failSafeCounter.remove(ns);
 				} catch (Exception e){
 					addToFailSafeDecision(ns);

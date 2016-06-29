@@ -42,10 +42,14 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 public class ModelParser {
 			
 	final static Logger logger = LoggerFactory.getLogger(ModelParser.class);
-	
-	@SuppressWarnings("unchecked")
+
 	public static boolean snapshotParser(final String uri){
-		Lang lang  =  Lang.TURTLE;
+		return snapshotParser(uri, Lang.RDFXML); //by default
+	}
+
+	@SuppressWarnings("unchecked")
+	public static boolean snapshotParser(final String uri, final Lang lang){
+//		Lang lang  =  Lang.RDFXML;
 		
 		logger.info("Initiating Streams and Iterators");
 		final PipedRDFIterator<?> iterator;
@@ -66,7 +70,7 @@ public class ModelParser {
 			public void run() {
 				try{
 					logger.info("Trying to parse resource {}.", uri);
-					RDFDataMgr.parse(rdfStream, uri);
+					RDFDataMgr.parse(rdfStream, uri, lang, null);
 				} catch (Exception e){
 					logger.info("Resource {} could not be parsed.", uri);
 					rdfStream.finish();

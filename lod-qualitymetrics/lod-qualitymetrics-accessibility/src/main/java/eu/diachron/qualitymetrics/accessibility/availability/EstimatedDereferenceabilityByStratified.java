@@ -245,7 +245,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 					totalDerefUris++;
 				}
 				
-				createProblemReport(httpResource);
+				//createProblemReport(httpResource);
 				logger.trace("{} - {} - {}", headUri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
