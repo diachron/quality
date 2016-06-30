@@ -73,7 +73,7 @@ public class HTTPRetriever {
 	
 	private static final int TIMEOUT = 10000;
 
-	private static final String ACCEPT_TYPE = "application/rdf+xml, text/n3, text/turtle, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig, text/rdf+n3, application/n3, text/trig" ;
+	private static final String ACCEPT_TYPE = "application/rdf+xml, text/n3, text/turtle, application/rdf+json, application/n-triples, application/ld+json, application/n-quads, application/trig, text/rdf+n3, application/n3, text/trig, text/xml" ;
 	
 	/**
 	 * Web proxy to perform the HTTP requests, if set to null, no proxy will be used
@@ -287,7 +287,7 @@ public class HTTPRetriever {
 							new FutureCallback<HttpResponse>() {
 						
 								public void completed(final HttpResponse response) {
-									if ((response.getStatusLine().getStatusCode() == 405) || (response.getStatusLine().getStatusCode() == 406)) {
+									if ((response.getStatusLine().getStatusCode() == 405)) {
 										// if it was an HTTP Head with at 405 Method Not Allowed then we have to do it again with a GET :(
 										addToGetQueue(request.getURI().toString());
 									} else {
@@ -564,7 +564,7 @@ public class HTTPRetriever {
 	public static void main(String [] args) throws InterruptedException{
 		HTTPRetriever httpRetreiver = new HTTPRetriever();
 	
-		String uri = "http://data.linkededucation.org/resource/lak/conference/edm2010/paper/135";
+		String uri = "http://eprints.soton.ac.uk/id/eprint/10017";
 //		String uri = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
 //		String uri = "http://pleiades.stoa.org/places/55500001010#this";
 //		String uri = "http://rdfs.org/ns/void#Dataset";
