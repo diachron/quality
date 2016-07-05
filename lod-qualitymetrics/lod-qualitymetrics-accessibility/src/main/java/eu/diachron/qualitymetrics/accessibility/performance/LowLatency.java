@@ -48,7 +48,7 @@ public class LowLatency extends AbstractQualityMetric {
 	 * Response time that is considered to be the ideal for a resource. In other words, its the amount of time in milliseconds below 
 	 * which response times for resources will get a perfect score of 1.0. 
 	 */
-	private static final double NORM_TOTAL_RESPONSE_TIME = 750.0;
+	private static final double NORM_TOTAL_RESPONSE_TIME = 1000.0;
 	
 	private List<Resource> _problemList = new ArrayList<Resource>();
 
@@ -79,7 +79,7 @@ public class LowLatency extends AbstractQualityMetric {
 			}
 
 			double avgRespTime = ((double)totalDelay / resSamp.getItems().size()) / ((double)NUM_HTTP_SAMPLES);
-			this.metricValue = Math.min(1.0, NORM_TOTAL_RESPONSE_TIME / avgRespTime);
+			this.metricValue = Math.min(1.0, Math.max(0, NORM_TOTAL_RESPONSE_TIME / avgRespTime));
 			
 			statsLogger.info("LowLatency. Dataset: {}; - Total Delay (millisecs) : {}; " +
 					"# HTTP Samples : {}; Norm Total Response Milliseconds : {};", 

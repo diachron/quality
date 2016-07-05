@@ -36,7 +36,7 @@ public class DataSourceScalability extends AbstractQualityMetric {
 	/**
 	 * Maximum time in milliseconds to wait for the responses to all requests sent
 	 */
-	private static final int REQUEST_SET_IMEOUT = 15000;
+	private static final int REQUEST_SET_IMEOUT = 30000;
 	
 	/**
 	 * The computation of this metric is based on the difference between the response time of a single request and 
@@ -108,7 +108,7 @@ public class DataSourceScalability extends AbstractQualityMetric {
 					long avgRequestsSwarmDelay = requestsSwarmDelay / NUM_HTTP_REQUESTS;
 		
 					// Send a single request, directly obtain the time required to attend that very request
-					long singleRequestDelay = HTTPRetriever.measureReqsBurstDelay(datasetURI, 1);
+					long singleRequestDelay = HTTPRetriever.measureReqsBurstDelay(s, 1);
 					
 					// Calculate the scalability differential factor
 					scalabilityDiff += avgRequestsSwarmDelay - singleRequestDelay;

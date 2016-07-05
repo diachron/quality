@@ -17,7 +17,6 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.DQMPROB;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
@@ -51,9 +50,7 @@ public class RDFAccessibility extends AbstractQualityMetric {
 
 	public double metricValue() {
 		metricValue = (totalDataDumps > 0) ? 1.0 : 0.0;
-		
-		statsLogger.info("RDFAccessibility. Dataset: {} - Total # Datadumps : {};", 
-				this.getDatasetURI(), totalDataDumps);
+		statsLogger.info("RDFAccessibility. Dataset: {} - Total # Datadumps : {};", this.getDatasetURI(), totalDataDumps);
 		
 		return metricValue;
 	}
@@ -68,7 +65,7 @@ public class RDFAccessibility extends AbstractQualityMetric {
 		ProblemList<Quad> tmpProblemList = null;
 		
 		if (this.metricValue() == 0){
-			String resource = EnvironmentProperties.getInstance().getBaseURI();
+			String resource = this.getDatasetURI();
 			Resource subject = ModelFactory.createDefaultModel().createResource(resource);
 			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQMPROB.NoRDFAccessibility.asNode());
 			this.problemList.add(q);

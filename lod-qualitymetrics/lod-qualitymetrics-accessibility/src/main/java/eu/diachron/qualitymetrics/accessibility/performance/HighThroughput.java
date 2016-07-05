@@ -30,13 +30,13 @@ public class HighThroughput extends AbstractQualityMetric {
 	/**
 	 * Amount of HTTP requests that will be sent to the data source in order to estimate how many requests are served per second. 
 	 */
-	private static final int NUM_HTTP_REQUESTS = 10;
+	private static final int NUM_HTTP_REQUESTS = 5;
 	
 	/**
 	 * Number of requests per second that ideally, should be served by a data source. In other words, its the amount of served requests 
 	 * per second above of which a resource will get a perfect score of 1.0. 
 	 */
-	private static final double NORM_SERVED_REQS_PER_MILLISEC = 0.0025;
+	private static final double NORM_SERVED_REQS_PER_MILLISEC = 0.0020;
 	
 	/**
 	 * Holds the total delay as currently calculated by the compute method
@@ -84,7 +84,7 @@ public class HighThroughput extends AbstractQualityMetric {
 			}
 
 			double servedReqsPerMilliSec = ((double)NUM_HTTP_REQUESTS)/((double)totalDelay / (double)resSamp.getItems().size());
-			this.metricValue = Math.min(1.0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC);
+			this.metricValue = Math.min(1.0, Math.max(0, servedReqsPerMilliSec / NORM_SERVED_REQS_PER_MILLISEC));
 			
 			statsLogger.info("HighThroughput. Dataset: {}; - Total Delay (millisecs) : {}; " +
 					"# HTTP Requests Sent : {}; Norm Served Requests per Millisecond : {};", 

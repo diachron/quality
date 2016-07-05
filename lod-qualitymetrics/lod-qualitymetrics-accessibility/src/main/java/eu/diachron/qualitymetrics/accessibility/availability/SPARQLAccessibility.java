@@ -22,7 +22,6 @@ import de.unibonn.iai.eis.diachron.semantics.knownvocabs.SD;
 import de.unibonn.iai.eis.diachron.semantics.knownvocabs.SIOCSERVICES;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.QPRO;
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.VOID;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
@@ -60,7 +59,7 @@ public class SPARQLAccessibility extends AbstractQualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 
-		if ((endpointProperty.contains(quad.getPredicate().getURI())) && (quad.getSubject().getURI().equals(EnvironmentProperties.getInstance().getDatasetURI()))) {
+		if ((endpointProperty.contains(quad.getPredicate().getURI())) && (quad.getSubject().getURI().equals(this.getDatasetURI()))) {
 			totalDefinedSparqlEndPoints++;
 			String sparqlQuerystring = "SELECT ?s where {?s ?p ?o} LIMIT 1";
 			Query query = QueryFactory.create(sparqlQuerystring);
@@ -104,7 +103,7 @@ public class SPARQLAccessibility extends AbstractQualityMetric {
 		ProblemList<Quad> tmpProblemList = null;
 		
 		if (this.metricValue() == 0){
-			String resource = EnvironmentProperties.getInstance().getBaseURI();
+			String resource = this.getDatasetURI();
 			Resource subject = ModelFactory.createDefaultModel().createResource(resource);
 			Quad q = new Quad(null, subject.asNode() , QPRO.exceptionDescription.asNode(), DQMPROB.NoEndPointAccessibility.asNode());
 			this.problemList.add(q);
