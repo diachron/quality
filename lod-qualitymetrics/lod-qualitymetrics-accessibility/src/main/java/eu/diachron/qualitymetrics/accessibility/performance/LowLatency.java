@@ -56,9 +56,11 @@ public class LowLatency extends AbstractQualityMetric {
 
 	public void compute(Quad quad) {
 		if (quad.getSubject().isURI()){
-			if (quad.getSubject().getURI().startsWith(this.getDatasetURI())) 
-				resSamp.add(quad.getSubject().getURI());
-			else if (this.getDatasetURI().equals(""))
+			if (this.getDatasetURI().equals("")){
+				if (!(quad.getSubject().getURI().startsWith("file"))) 
+					resSamp.add(quad.getSubject().getURI());
+			}
+			else if (quad.getSubject().getURI().startsWith(this.getDatasetURI())) 
 				resSamp.add(quad.getSubject().getURI());
 		}
 	}
