@@ -3,11 +3,12 @@
  */
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -78,6 +79,8 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	
 	private String localPLD = null;
 
+	private Map<String,String> resolver = new HashMap<String,String>();
+
 	
 	@Override
 	public void compute(Quad quad) {
@@ -93,13 +96,23 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 		
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
 			if ((quad.getObject().isURI()) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals(localPLD)))){
-				if (ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("purl.org")){
-					String ext = this.getRedirection(quad.getObject().getURI());
-					if (ext == null) setResources.add(quad.getObject().toString());
-					else if (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD))) setResources.add(ext);
+				if ((quad.getObject().getURI().startsWith("http")) || (quad.getObject().getURI().startsWith("https"))){
+					if ((ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("purl.org"))
+							|| (ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("w3id.org"))){
+						String ns = quad.getObject().getNameSpace();
+						String ext = null;
+						if (resolver.containsKey(ns)) ext = resolver.get(ns);
+						else {
+							ext = this.getRedirection(quad.getObject().getURI());
+							if (ext != null) 
+								resolver.put(ns, ext);	
+						}
+	//					if (ext == null) this.addUriToSampler(quad.getObject().toString()); // do not put purl.org uris 
+						if (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD))) setResources.add(ext);
+					}
+					else
+						setResources.add(quad.getObject().toString());
 				}
-				else
-					setResources.add(quad.getObject().toString());
 			}
 		}
 	}
@@ -176,7 +189,7 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 				if ((loc.toString().contains("purl.org")) || (loc.toString().contains("w3id.org"))) continue;
 				else return loc.toString();
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 		return null;
