@@ -3,10 +3,23 @@
  */
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.RedirectLocations;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.jena.riot.RDFDataMgr;
 import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +33,6 @@ import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
@@ -47,13 +59,13 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	/**
 	 * A set that holds all unique resources
 	 */
-	private Set<String> setResources = mapDB.createHashSet("link-external-data-providers").make();
+	private Set<String> setResources = MapDbFactory.createHashSet(mapDB, UUID.randomUUID().toString());
 
 	
 	/**
 	 * A set that holds all unique PLDs that return RDF data
 	 */
-	private Set<String> setPLDsRDF = mapDB.createHashSet("link-external-data-providers-rdf").make();
+	private Set<String> setPLDsRDF = new HashSet<String>();
 	
 	final static Logger logger = LoggerFactory.getLogger(LinkExternalDataProviders.class);
 
@@ -64,25 +76,33 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 
 	private boolean computed = false;
 	
+	private String localPLD = null;
+
+	
 	@Override
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
-//		
-//		String subject = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getSubject().toString());
-//		setResources.add(subject);
-//
-//		if (quad.getObject().isURI()){
-//			String object = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-//			setResources.add(object);
-//		}
+		
+		if (localPLD == null)
+			localPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(this.getDatasetURI());
 		
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
-			if ((quad.getObject().isURI()) && (!(quad.getObject().getURI().startsWith(this.getDatasetURI())))){
-				setResources.add(quad.getObject().toString());
+			if ((quad.getObject().isURI()) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals(localPLD)))){
+			}
+		}
+		
+		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
+			if ((quad.getObject().isURI()) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals(localPLD)))){
+				if (ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("purl.org")){
+					String ext = this.getRedirection(quad.getObject().getURI());
+					if (ext == null) setResources.add(quad.getObject().toString());
+					else if (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD))) setResources.add(ext);
+				}
+				else
+					setResources.add(quad.getObject().toString());
 			}
 		}
 	}
-
 	@Override
 	public double metricValue() {
 		if (!computed){
@@ -129,7 +149,45 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	private void checkForRDFLinks() {
 		for (String s : setResources){
 			if (setPLDsRDF.contains(ResourceBaseURIOracle.extractPayLevelDomainURI(s))) continue;
-			if (ModelParser.snapshotParser(s)) setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+			if (isParsableContent(s)) setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
 		}
 	}
+	
+	private String getRedirection(String resource){
+		HttpHead head = new HttpHead(resource);
+		
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setSocketTimeout(1000)
+				.setConnectTimeout(1000)
+				.build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder
+									.create()
+									.setDefaultRequestConfig(requestConfig)
+									.build();
+		
+        HttpContext context = new BasicHttpContext(); 
+
+		try {
+			httpClient.execute(head,context);
+			RedirectLocations locations = (RedirectLocations) context.getAttribute(HttpClientContext.REDIRECT_LOCATIONS);
+			if (locations.size() == 1) return locations.get(0).toString();
+			for(URI loc : locations.getAll()){
+				if ((loc.toString().contains("purl.org")) || (loc.toString().contains("w3id.org"))) continue;
+				else return loc.toString();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		return null;
+	}
+	
+	private boolean isParsableContent(String uri){
+		try{
+			return (RDFDataMgr.loadModel(uri).size() > 0);
+		} catch (Exception e){
+			return false;
+		}
+	}
+
 }

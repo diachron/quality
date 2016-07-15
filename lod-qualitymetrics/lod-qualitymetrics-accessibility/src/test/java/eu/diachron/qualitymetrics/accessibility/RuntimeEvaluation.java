@@ -4,30 +4,29 @@
 package eu.diachron.qualitymetrics.accessibility;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.jena.riot.lang.PipedRDFIterator;
+
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.diachron.datatypes.Pair;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;
 import de.unibonn.iai.eis.luzzu.assessment.QualityMetric;
+import de.unibonn.iai.eis.luzzu.cache.CacheManager;
+import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import de.unibonn.iai.eis.luzzu.exceptions.AfterException;
 import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
+import eu.diachron.qualitymetrics.accessibility.availability.Dereferenceability;
 import eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceabilityByStratified;
-import eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceabilityForwardLinks;
-import eu.diachron.qualitymetrics.accessibility.availability.EstimatedMisreportedContentType;
-import eu.diachron.qualitymetrics.accessibility.availability.RDFAccessibility;
-import eu.diachron.qualitymetrics.accessibility.availability.SPARQLAccessibility;
-import eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedDereferenceBackLinks;
 import eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedInterlinkDetectionMetric;
 import eu.diachron.qualitymetrics.accessibility.interlinking.EstimatedLinkExternalDataProviders;
-import eu.diachron.qualitymetrics.accessibility.licensing.HumanReadableLicense;
-import eu.diachron.qualitymetrics.accessibility.licensing.MachineReadableLicense;
-import eu.diachron.qualitymetrics.accessibility.performance.CorrectURIUsage;
-import eu.diachron.qualitymetrics.accessibility.performance.DataSourceScalability;
-import eu.diachron.qualitymetrics.accessibility.performance.HighThroughput;
-import eu.diachron.qualitymetrics.accessibility.performance.LowLatency;
-import eu.diachron.qualitymetrics.accessibility.security.DigitalSignatureUsage;
+import eu.diachron.qualitymetrics.accessibility.interlinking.LinkExternalDataProviders;
+import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 /**
@@ -38,42 +37,118 @@ public class RuntimeEvaluation {
 
 	protected static TestLoader loader = new TestLoader();
 
-	protected static QualityMetric m; //EstimatedDereferenceability.class, ,
-	protected static Class<?>[] testing = new Class<?>[] { EstimatedDereferenceabilityByStratified.class, EstimatedDereferenceabilityForwardLinks.class, 
-				EstimatedMisreportedContentType.class, RDFAccessibility.class, SPARQLAccessibility.class,
-				EstimatedDereferenceBackLinks.class, EstimatedInterlinkDetectionMetric.class, EstimatedLinkExternalDataProviders.class,
-				HumanReadableLicense.class, MachineReadableLicense.class, CorrectURIUsage.class, DataSourceScalability.class, HighThroughput.class, 
-				LowLatency.class, DigitalSignatureUsage.class
-			};
+//	CorrectURIUsage.class -> not a quality indicator per se.. why would a slash URI be wrong for example in our case regarding the quality metadata?
+//  DigitalSignatureUsage.class -> we dont really need this because this metric is only related for foaf docs
+	
+	protected static QualityMetric m; //EstimatedDereferenceabilityByStratified.class EstimatedMisreportedContentType.class EstimatedLinkExternalDataProviders.class
+	protected static Class<?>[] testing = new Class<?>[] { 
+		EstimatedLinkExternalDataProviders.class,
+		LinkExternalDataProviders.class
+	};
+	
+	
+	
+	protected static String[] datasets = {
+		"/Volumes/KINGSTON/sampling_datasets/LAK-DATASET-DUMP.nt.gz",
+		"/Volumes/KINGSTON/sampling_datasets/lsoa.nt.gz",
+		"/Volumes/KINGSTON/sampling_datasets/soton.nt.gz",
+		"/Volumes/KINGSTON/sampling_datasets/wn20.nt.gz",
+		"/Volumes/KINGSTON/sampling_datasets/swetodblp_august2007.rdf.gz",
+		"/Volumes/KINGSTON/sampling_datasets/semanticxbrl.nt.gz",
+	};
+	
+	
+	protected static Map<String,String> dsToURI = new HashMap<String,String>();
+	static{
+		dsToURI.put("/Volumes/KINGSTON/sampling_datasets/LAK-DATASET-DUMP.nt.gz", "http://data.linkededucation.org/resource/lak/reference/edm");
+		dsToURI.put("/Volumes/KINGSTON/sampling_datasets/lsoa.nt.gz", "http://opendatacommunities.org/id/geography/lsoa");
+		dsToURI.put("/Volumes/KINGSTON/sampling_datasets/soton.nt.gz", "http://data.southampton.ac.uk/dumps/eprints");
+		dsToURI.put("/Volumes/KINGSTON/sampling_datasets/wn20.nt.gz", "http://www.w3.org/2006/03/wn/wn20");
+		dsToURI.put("/Volumes/KINGSTON/sampling_datasets/swetodblp_august2007.rdf.gz", "http://dblp.uni-trier.de/rec/bibtex");
+		dsToURI.put("/Volumes/KINGSTON/sampling_datasets/semanticxbrl.nt.gz", "http://rhizomik.net/semanticxbrl");
+	}
+	
+	
+	protected static int[] params = {
+//		0.1, 0.15, 0.2, 0.25, 0.3
+		5,10,25,100,250,1000,10000
+	};
+	
+	
+	
+	public static void nonEstimate(String dataset){
+
+		System.out.println("Evaluating Non-Estimate");
+		long tMin = Long.MAX_VALUE;
+		long tMax = Long.MIN_VALUE;
+		long tAvg = 0;
+
+		for (int i = -1; i < 2; i++){
+//			List<Quad> streamingQuads = loader.getStreamingQuads();
+			PipedRDFIterator<?> iter = loader.streamParser(dataset);
+
+			long tStart = System.currentTimeMillis();
+			LinkExternalDataProviders m = new LinkExternalDataProviders();
+			m.setDatasetURI(dsToURI.get(dataset));
+
+			while(iter.hasNext()){
+				Object nxt = iter.next();
+				Object2Quad quad = new Object2Quad(nxt);
+				m.compute(quad.getStatement());
+			}
+
 			
-	public static void main (String [] args) throws BeforeException, AfterException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		loader.loadDataSet("/Users/jeremy/Dropbox/pdev-lemon.nt.gz");
-		PropertyManager.getInstance().addToEnvironmentVars("baseURI", "http://social.mercedes-benz.com/de/");
+			if (i < 0){
+				m.metricValue();
+			} else {
+				System.out.println("Count : " + i + " Value : "+ m.metricValue());
+			}
+			
+			long tEnd = System.currentTimeMillis();
+			if (i >= 0){
+				long difference = tEnd - tStart;
+				tAvg += difference;
+				tMax = (tMax < difference) ? difference : tMax;
+				tMin = (tMin > difference) ? difference : tMin;
+			}
+		}
+		tAvg = tAvg/2;
+		System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
+	}
+	
+	
+	public static void estimate(String dataset){
+
+		System.out.println("Evaluating Estimate");
 		
-		for (Class<?> clazz : testing){
-			System.out.println("Evaluating "+ clazz.getSimpleName());
+		for (Integer param : params){
+			System.out.println("Parameter: "+ param);
 			long tMin = Long.MAX_VALUE;
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = -2; i < 10; i++){
-				List<Quad> streamingQuads = loader.getStreamingQuads();
+			for (int i = -1; i < 2; i++){
+				//List<Quad> streamingQuads = loader.getStreamingQuads();
+				PipedRDFIterator<?> iter = loader.streamParser(dataset);
+				
 				long tStart = System.currentTimeMillis();
-				m = (QualityMetric) clazz.getConstructor().newInstance(new Object[] {});
-				if (m instanceof ComplexQualityMetric){
-					((ComplexQualityMetric)m).before();
+				EstimatedLinkExternalDataProviders m = new EstimatedLinkExternalDataProviders();
+				m.reservoirsize = param;
+				m.setDatasetURI(dsToURI.get(dataset));
+				
+				while(iter.hasNext()){
+					Object nxt = iter.next();
+					Object2Quad quad = new Object2Quad(nxt);
+					m.compute(quad.getStatement());
 				}
-				for(Quad quad : streamingQuads){
-					m.compute(quad);
-				}
-				if (m instanceof ComplexQualityMetric){
-					((ComplexQualityMetric)m).after();
-				}
-				if (i == 9){
-					System.out.println(m.metricValue());
+				
+				
+				if (i < 0){
+					m.metricValue();
 				} else {
-					System.out.println(m.metricValue());
+					System.out.println("Count : " + i + " Value : "+ m.metricValue());
 				}
+				
 				long tEnd = System.currentTimeMillis();
 				if (i >= 0){
 					long difference = tEnd - tStart;
@@ -82,8 +157,18 @@ public class RuntimeEvaluation {
 					tMin = (tMin > difference) ? difference : tMin;
 				}
 			}
-			tAvg = tAvg/10;
+			tAvg = tAvg/2;
 			System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
+		}
+	}
+	
+	
+	
+	public static void main (String [] args){
+		for (String dataset : datasets){
+			System.out.println(dataset);
+			estimate(dataset);
+//			nonEstimate(dataset);
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,6 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.RedirectLocations;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +30,6 @@ import de.unibonn.iai.eis.diachron.technques.probabilistic.ReservoirSampler;
 import de.unibonn.iai.eis.diachron.technques.probabilistic.ResourceBaseURIOracle;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
-import eu.diachron.qualitymetrics.accessibility.availability.helper.ModelParser;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
@@ -47,7 +57,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	/**
 	 * Parameter: default size for the reservoir 
 	 */
-	private static int reservoirsize = 10000;
+	public int reservoirsize = 10;
 	
 	
 	/**
@@ -66,6 +76,10 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	private List<Quad> _problemList = new ArrayList<Quad>();
 	
 	
+
+	
+	private String localPLD = null;
+	
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
 	 * are data-level URIs, if so, extracts their pay-level domain and adds them to the set of TLD URIs.
@@ -74,25 +88,20 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
+		if (localPLD == null)
+			localPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(this.getDatasetURI());
+		
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
-			if ((quad.getObject().isURI()) && (!(quad.getObject().getURI().startsWith(this.getDatasetURI())))){
-				this.addUriToSampler(quad.getObject().toString());
+			if ((quad.getObject().isURI()) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals(localPLD)))){
+				if (ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("purl.org")){
+					String ext = this.getRedirection(quad.getObject().getURI());
+					if (ext == null) this.addUriToSampler(quad.getObject().toString());
+					else if (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD))) this.addUriToSampler(ext);
+				}
+				else
+					this.addUriToSampler(quad.getObject().toString());
 			}
 		}
-		
-//		String objectPLD = "";
-//		if (quad.getObject().isURI()) objectPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().toString());
-		
-//		if(!quad.getSubject().toString().contains(this.baseURI)) {
-//			this.addUriToSampler(quad.getSubject().toString());
-//		}
-
-//		if ((objectPLD != "") ) {
-//			if(!quad.getObject().toString().contains(this.getDatasetURI())) {
-//				this.addUriToSampler(quad.getObject().toString());
-//			}
-//		}
-		
 	}
 	
 	private void addUriToSampler(String uri) {
@@ -132,11 +141,19 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	private void checkForRDFLinks() {
 		for (ReservoirSampler<String> curPldUris : this.mapPLDs.values()) {
 			for (String s : curPldUris.getItems()){
-				if (ModelParser.snapshotParser(s)) {
+				if (isParsableContent(s)) {
 					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
-					break; // stop when at least one resource is LD dereferenceable
-				}
+					break; // stop when the okThreshold is reached and thus means that we have a dereferenceable Linked Data source.
+				} 
 			}
+		}
+	}
+	
+	private boolean isParsableContent(String uri){
+		try{
+			return (RDFDataMgr.loadModel(uri).size() > 0);
+		} catch (Exception e){
+			return false;
 		}
 	}
 
@@ -157,7 +174,37 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 		}
 		return pl;
 	}
+	
+	
+	private String getRedirection(String resource){
+		HttpHead head = new HttpHead(resource);
 		
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setSocketTimeout(1000)
+				.setConnectTimeout(1000)
+				.build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder
+									.create()
+									.setDefaultRequestConfig(requestConfig)
+									.build();
+		
+        HttpContext context = new BasicHttpContext(); 
+
+		try {
+			httpClient.execute(head,context);
+			RedirectLocations locations = (RedirectLocations) context.getAttribute(HttpClientContext.REDIRECT_LOCATIONS);
+			if (locations.size() == 1) return locations.get(0).toString();
+			for(URI loc : locations.getAll()){
+				if ((loc.toString().contains("purl.org")) || (loc.toString().contains("w3id.org"))) continue;
+				else return loc.toString();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		return null;
+	}
+	
 	@Override
 	public boolean isEstimate() {
 		return true;
@@ -167,13 +214,4 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
 	}
-	
-	/**
-	 * Sets the reservoir size parameter
-	 * @param reservoirSize Approximation parameter
-	 */
-	public static void setReservoirSize(int reservoirSize) {
-		EstimatedLinkExternalDataProviders.reservoirsize = reservoirSize;		
-	}
-
 }

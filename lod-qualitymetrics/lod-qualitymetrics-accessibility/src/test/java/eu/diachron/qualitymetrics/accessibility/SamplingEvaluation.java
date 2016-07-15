@@ -3,7 +3,9 @@
  */
 package eu.diachron.qualitymetrics.accessibility;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
@@ -29,9 +31,14 @@ public class SamplingEvaluation {
 	protected static Pair<?,?>[] paramsTLDExt = new Pair<?,?>[] { 
 //		new Pair<Integer, Integer>(10,50) 
 //		new Pair<Integer, Integer>(10,100), 
+		
 		new Pair<Integer, Integer>(10,1000), 
-		new Pair<Integer, Integer>(10,3000), 
-		new Pair<Integer, Integer>(10,5000)
+		new Pair<Integer, Integer>(50,1000), 
+		new Pair<Integer, Integer>(10,3000),
+		new Pair<Integer, Integer>(50,3000), 
+		new Pair<Integer, Integer>(10,5000), 
+		new Pair<Integer, Integer>(50,5000)
+		
 //		new Pair<Integer, Integer>(10,10000),
 //		new Pair<Integer, Integer>(10,25000),
 //		new Pair<Integer, Integer>(10,50000),
@@ -47,14 +54,29 @@ public class SamplingEvaluation {
 	};
 	
 	protected static String[] datasets = {
-//		"/Users/jeremy/Dropbox/pdev-lemon.nt.gz",
-		"/Users/jeremy/Dropbox/wals.info.nt.gz"
+		"/tmp/sampling_datasets/LAK-DATASET-DUMP.nt.gz",
+		"/tmp/sampling_datasets/lsoa.nt.gz",
+		"/tmp/sampling_datasets/soton.nt.gz",
+		"/tmp/sampling_datasets/wn20.nt.gz",
+		"/tmp/sampling_datasets/swetodblp_august2007.rdf.gz",
+		"/tmp/sampling_datasets/semanticxbrl.nt.gz",
 	};
+	
+	
+	protected static Map<String,String> dsToURI = new HashMap<String,String>();
+	static{
+		dsToURI.put("/tmp/sampling_datasets/LAK-DATASET-DUMP.nt.gz", "http://data.linkededucation.org/resource/lak/reference/edm");
+		dsToURI.put("/tmp/sampling_datasets/lsoa.nt.gz", "http://opendatacommunities.org/id/geography/lsoa");
+		dsToURI.put("/tmp/sampling_datasets/soton.nt.gz", "http://data.southampton.ac.uk/dumps/eprints");
+		dsToURI.put("/tmp/sampling_datasets/wn20.nt.gz", "http://www.w3.org/2006/03/wn/wn20");
+		dsToURI.put("/tmp/sampling_datasets/swetodblp_august2007.rdf.gz", "http://dblp.uni-trier.de/rec/bibtex");
+		dsToURI.put("/tmp/sampling_datasets/semanticxbrl.nt.gz", "http://rhizomik.net/semanticxbrl");
+	}
 	
 	
 	public static void dereferenceability(String dataset){
 		loader.loadDataSet(dataset);
-		PropertyManager.getInstance().addToEnvironmentVars("baseURI", "http://social.mercedes-benz.com/de/");
+		PropertyManager.getInstance().addToEnvironmentVars("baseURI", dsToURI.get(dataset));
 
 		System.out.println("Evaluating Dereferencability");
 		long tMin = Long.MAX_VALUE;
@@ -65,6 +87,7 @@ public class SamplingEvaluation {
 			List<Quad> streamingQuads = loader.getStreamingQuads();
 			long tStart = System.currentTimeMillis();
 			Dereferenceability m = new Dereferenceability();
+			m.setDatasetURI(dsToURI.get(dataset));
 
 			for(Quad quad : streamingQuads){
 				m.compute(quad);
@@ -142,7 +165,7 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = 0; i < 1; i++){
+			for (int i = 0; i < 2; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceabilityByTld m = new EstimatedDereferenceabilityByTld();
@@ -174,8 +197,8 @@ public class SamplingEvaluation {
 	}
 
 	public static void estimatedDereferenceabilityByStratified(String dataset){
+		PropertyManager.getInstance().addToEnvironmentVars("baseURI", dsToURI.get(dataset));
 		loader.loadDataSet(dataset);
-		PropertyManager.getInstance().addToEnvironmentVars("baseURI", "http://social.mercedes-benz.com/de/");
 
 		System.out.println("Evaluating EstimatedDereferenceabilityByStratified");
 		
@@ -185,13 +208,14 @@ public class SamplingEvaluation {
 			long tMax = Long.MIN_VALUE;
 			long tAvg = 0;
 
-			for (int i = 0; i < 1; i++){
+			for (int i = -1; i < 2; i++){
 				List<Quad> streamingQuads = loader.getStreamingQuads();
 				long tStart = System.currentTimeMillis();
 				EstimatedDereferenceabilityByStratified m = new EstimatedDereferenceabilityByStratified();
 				m.MAX_TLDS = (Integer) param.getFirstElement();
 				m.MAX_FQURIS_PER_TLD = (Integer) param.getSecondElement();
-
+				m.setDatasetURI(dsToURI.get(dataset));
+				
 				for(Quad quad : streamingQuads){
 					m.compute(quad);
 				}
@@ -211,7 +235,7 @@ public class SamplingEvaluation {
 				}
 				CacheManager.getInstance().clearCache(DiachronCacheManager.HTTP_RESOURCE_CACHE);
 			}
-			tAvg = tAvg/2;
+			tAvg = tAvg/3;
 			System.out.println("Min: "+ (tMin/1000.0) + " Max: "+ (tMax/1000.0) + " Avg: "+ (tAvg/1000.0));
 		}
 	}
@@ -219,10 +243,11 @@ public class SamplingEvaluation {
 	
 	public static void main (String [] args) {
 		for (String d : datasets){
+			System.out.println(d);
 			estimatedDereferenceabilityByStratified(d);
 			estimatedDereferenceabilityTLD(d);
 			dereferenceability(d);
-			estimatedDereferenceability(d);
+//			estimatedDereferenceability(d);
 		}
 	}
 }
