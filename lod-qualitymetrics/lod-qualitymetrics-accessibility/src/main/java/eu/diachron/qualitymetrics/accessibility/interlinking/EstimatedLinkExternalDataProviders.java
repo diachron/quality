@@ -16,10 +16,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -79,6 +81,8 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	
 	private Map<String,String> resolver = new HashMap<String,String>();
 	
+	private Set<String> ns404 = new HashSet<String>();
+	
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
 	 * are data-level URIs, if so, extracts their pay-level domain and adds them to the set of TLD URIs.
@@ -104,7 +108,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 								resolver.put(ns, ext);	
 						}
 	//					if (ext == null) this.addUriToSampler(quad.getObject().toString()); // do not put purl.org uris 
-						if (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD))) this.addUriToSampler(ext);
+						if ((ext != null) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD)))) this.addUriToSampler(ext);
 					}
 					else
 						this.addUriToSampler(quad.getObject().toString());
@@ -119,7 +123,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 		if(pld != null) {
 			if (this.mapPLDs.containsKey(pld)){
 				ReservoirSampler<String> res = this.mapPLDs.get(pld);
-				res.add(uri);
+				if (res.findItem(uri) == null) res.add(uri);
 				mapPLDs.put(pld, res);
 			} else {
 				ReservoirSampler<String> res = new ReservoirSampler<String>(reservoirsize, true);
@@ -148,19 +152,24 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	}
 	
 	private void checkForRDFLinks() {
-		for (ReservoirSampler<String> curPldUris : this.mapPLDs.values()) {
+ 		for (ReservoirSampler<String> curPldUris : this.mapPLDs.values()) {
 			for (String s : curPldUris.getItems()){
 				if (isParsableContent(s)) {
 					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
-					break; // stop when the okThreshold is reached and thus means that we have a dereferenceable Linked Data source.
+					break; // we have a dereferenceable Linked Data source.
 				} 
 			}
 		}
 	}
 	
 	private boolean isParsableContent(String uri){
+		String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+		if (this.ns404.contains(ns)) return false;
 		try{
 			return (RDFDataMgr.loadModel(uri).size() > 0);
+		} catch (HttpException httpE){
+			if (httpE.getResponseCode() == 404) this.ns404.add(ns);
+			return false;
 		} catch (Exception e){
 			return false;
 		}
@@ -209,7 +218,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 				else return loc.toString();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}		
 		return null;
 	}

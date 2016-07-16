@@ -20,11 +20,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.RDFDataMgr;
 import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -81,6 +83,8 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 
 	private Map<String,String> resolver = new HashMap<String,String>();
 
+	private Set<String> ns404 = new HashSet<String>();
+
 	
 	@Override
 	public void compute(Quad quad) {
@@ -108,7 +112,7 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 								resolver.put(ns, ext);	
 						}
 	//					if (ext == null) this.addUriToSampler(quad.getObject().toString()); // do not put purl.org uris 
-						if (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD))) setResources.add(ext);
+						if ((ext != null) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD)))) setResources.add(ext);
 					}
 					else
 						setResources.add(quad.getObject().toString());
@@ -161,8 +165,11 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	
 	private void checkForRDFLinks() {
 		for (String s : setResources){
-			if (setPLDsRDF.contains(ResourceBaseURIOracle.extractPayLevelDomainURI(s))) continue;
-			if (isParsableContent(s)) setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+			if (setPLDsRDF.contains(ResourceBaseURIOracle.extractPayLevelDomainURI(s))) 
+				continue;
+			if (isParsableContent(s)) {
+				setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+			}
 		}
 	}
 	
@@ -190,17 +197,20 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 				else return loc.toString();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}		
 		return null;
 	}
 	
 	private boolean isParsableContent(String uri){
+		String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+		if (this.ns404.contains(ns)) return false;
 		try{
 			return (RDFDataMgr.loadModel(uri).size() > 0);
+		} catch (HttpException httpE){
+			if (httpE.getResponseCode() == 404) this.ns404.add(ns);
+			return false;
 		} catch (Exception e){
 			return false;
 		}
 	}
-
 }
