@@ -29,12 +29,20 @@ public class HTTPResourceUtils {
 	public static SerialisableHttpResponse getSemanticResponse(CachedHTTPResource httpResponse){
 		for(SerialisableHttpResponse res : httpResponse.getResponses()){
 			String ct = parsedContentType(res.getHeaders("Content-Type"));
-			if (ct.equals("text/plain")) continue;
 			if (LinkedDataContent.contentTypeToLang(ct) != null){
 				return res;
 			}
+			if (ct.equals("text/plain")) continue;
 		}
 		return null;
+	}
+	
+	public static boolean isTextXML(CachedHTTPResource httpResponse){
+		for(SerialisableHttpResponse res : httpResponse.getResponses()){
+			String ct = parsedContentType(res.getHeaders("Content-Type"));
+			if (ct.equals("text/xml")) return true;
+		}
+		return false;
 	}
 	
 	public static String parsedContentType(String ct){

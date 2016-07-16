@@ -749,6 +749,8 @@ public class HTTPRetriever {
 			responseStream = httpConn.getInputStream();
 			// Response received, calculate delay
 			delay = (System.currentTimeMillis() - startTimeStamp);
+		} catch (Exception e){
+			System.out.println(targetUrl);
 		} finally {
 			// Make sure the stream is closed, thereby freeing network resources associated to this particular trial
 			if(responseStream != null) {
