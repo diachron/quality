@@ -11,12 +11,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.lang.PipedQuadsStream;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
 import org.apache.jena.riot.lang.PipedTriplesStream;
+import org.apache.jena.riot.web.HttpOp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +46,21 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 public class ModelParser {
 			
 	final static Logger logger = LoggerFactory.getLogger(ModelParser.class);
+	
+	final static RequestConfig requestConfig = RequestConfig.custom()
+			.setSocketTimeout(2000)
+			.setConnectTimeout(2000)
+			.setRedirectsEnabled(true)
+			.build();
+
+	final static CloseableHttpClient httpClient = HttpClientBuilder
+								.create()
+								.setDefaultRequestConfig(requestConfig)
+								.build();
+	static{
+		HttpOp.setDefaultHttpClient(httpClient);
+		HttpOp.createCachingHttpClient();
+	}
 
 	public static boolean snapshotParser(final String uri){
 		return snapshotParser(uri, Lang.RDFXML); //by default

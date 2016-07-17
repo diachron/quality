@@ -7,6 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpHead;
@@ -78,10 +85,8 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	
 	private String localPLD = null;
 	
-	
-	private Map<String,String> resolver = new HashMap<String,String>();
-	
 	private Set<String> ns404 = new HashSet<String>();
+	private Map<String,String> resolver = new HashMap<String,String>();
 	
 	/**
 	 * Processes a single quad making part of the dataset. Determines whether the subject and/or object of the quad 
@@ -144,36 +149,54 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 			this.checkForRDFLinks();
 			computed = true;
 			
-			statsLogger.info("EstimatedLinkExternalDataProviders. Dataset: {} - # Top Level Domains : {};", 
+			statsLogger.info("EstimatedLinkExternalDataProviders. Dataset: {} - # Top Level Domains (Possible External Linked Data Providers) : {};", 
 					this.getDatasetURI(), mapPLDs.size());
 		}
 		
 		return setPLDsRDF.size();
 	}
 	
-	private void checkForRDFLinks() {
+	private void checkForRDFLinks() {	
+		ExecutorService service = Executors.newCachedThreadPool();
  		for (ReservoirSampler<String> curPldUris : this.mapPLDs.values()) {
 			for (String s : curPldUris.getItems()){
-				if (isParsableContent(s)) {
-					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
-					break; // we have a dereferenceable Linked Data source.
-				} 
+				Future<Boolean> future = service.submit(new ParsableContentChecker(s));
+				try {
+					boolean isParsable = future.get(3, TimeUnit.SECONDS);
+					if (isParsable) {
+						setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+						break; // we have a dereferenceable Linked Data source.
+					} 
+				} catch (InterruptedException | ExecutionException
+						| TimeoutException e) {
+				}
 			}
 		}
+ 		
+// 		for (ReservoirSampler<String> curPldUris : this.mapPLDs.values()) {
+//			for (String s : curPldUris.getItems()){
+//				System.out.println(s);
+//				if (isParsableContent(s)) {
+//					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+//					break; // we have a dereferenceable Linked Data source.
+//				} 
+//			}
+//		}
 	}
 	
-	private boolean isParsableContent(String uri){
-		String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
-		if (this.ns404.contains(ns)) return false;
-		try{
-			return (RDFDataMgr.loadModel(uri).size() > 0);
-		} catch (HttpException httpE){
-			if (httpE.getResponseCode() == 404) this.ns404.add(ns);
-			return false;
-		} catch (Exception e){
-			return false;
-		}
-	}
+//	private boolean isParsableContent(String uri){
+//		final String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+//		if (this.ns404.contains(ns)) return false;
+//		
+//		try{
+//			return (RDFDataMgr.loadModel(uri).size() > 0);
+//		} catch (HttpException httpE){
+//			if (httpE.getResponseCode() == 404) ns404.add(ns);
+//			return false;
+//		} catch (Exception e){
+//			return false;
+//		}
+//	}
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
@@ -231,5 +254,30 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	@Override
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
+	}
+	
+	
+	class ParsableContentChecker implements Callable<Boolean>{
+		
+		String uri = "";
+		
+		public ParsableContentChecker(String uri){
+			this.uri = uri;
+		}
+
+		@Override
+		public Boolean call() throws Exception {
+			final String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+			if (ns404.contains(ns)) return false;
+			
+			try{
+				return (RDFDataMgr.loadModel(uri).size() > 0);
+			} catch (HttpException httpE){
+				if (httpE.getResponseCode() == 404) ns404.add(ns);
+				return false;
+			} catch (Exception e){
+				return false;
+			}
+		}
 	}
 }

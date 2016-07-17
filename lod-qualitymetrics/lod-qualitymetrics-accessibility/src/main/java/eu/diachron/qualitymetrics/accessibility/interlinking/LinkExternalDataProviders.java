@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpHead;
@@ -164,13 +171,30 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 	}
 	
 	private void checkForRDFLinks() {
+		ExecutorService service = Executors.newCachedThreadPool();
 		for (String s : setResources){
 			if (setPLDsRDF.contains(ResourceBaseURIOracle.extractPayLevelDomainURI(s))) 
 				continue;
-			if (isParsableContent(s)) {
-				setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+
+			Future<Boolean> future = service.submit(new ParsableContentChecker(s));
+			try {
+				boolean isParsable = future.get(3, TimeUnit.SECONDS);
+				if (isParsable) {
+					setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+					break; // we have a dereferenceable Linked Data source.
+				} 
+			} catch (InterruptedException | ExecutionException
+					| TimeoutException e) {
 			}
 		}
+ 		
+//		for (String s : setResources){
+//			if (setPLDsRDF.contains(ResourceBaseURIOracle.extractPayLevelDomainURI(s))) 
+//				continue;
+//			if (isParsableContent(s)) {
+//				setPLDsRDF.add(ResourceBaseURIOracle.extractPayLevelDomainURI(s));
+//			}
+//		}
 	}
 	
 	private String getRedirection(String resource){
@@ -201,16 +225,40 @@ public class LinkExternalDataProviders extends AbstractQualityMetric {
 		return null;
 	}
 	
-	private boolean isParsableContent(String uri){
-		String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
-		if (this.ns404.contains(ns)) return false;
-		try{
-			return (RDFDataMgr.loadModel(uri).size() > 0);
-		} catch (HttpException httpE){
-			if (httpE.getResponseCode() == 404) this.ns404.add(ns);
-			return false;
-		} catch (Exception e){
-			return false;
+//	private boolean isParsableContent(String uri){
+//		String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+//		if (this.ns404.contains(ns)) return false;
+//		try{
+//			return (RDFDataMgr.loadModel(uri).size() > 0);
+//		} catch (HttpException httpE){
+//			if (httpE.getResponseCode() == 404) this.ns404.add(ns);
+//			return false;
+//		} catch (Exception e){
+//			return false;
+//		}
+//	}
+//	
+	class ParsableContentChecker implements Callable<Boolean>{
+		
+		String uri = "";
+		
+		public ParsableContentChecker(String uri){
+			this.uri = uri;
+		}
+
+		@Override
+		public Boolean call() throws Exception {
+			final String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+			if (ns404.contains(ns)) return false;
+			
+			try{
+				return (RDFDataMgr.loadModel(uri).size() > 0);
+			} catch (HttpException httpE){
+				if (httpE.getResponseCode() == 404) ns404.add(ns);
+				return false;
+			} catch (Exception e){
+				return false;
+			}
 		}
 	}
 }
