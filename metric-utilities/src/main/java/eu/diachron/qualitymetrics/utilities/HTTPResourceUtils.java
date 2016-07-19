@@ -27,12 +27,16 @@ public class HTTPResourceUtils {
 
 
 	public static SerialisableHttpResponse getSemanticResponse(CachedHTTPResource httpResponse){
+		try{
 		for(SerialisableHttpResponse res : httpResponse.getResponses()){
 			String ct = parsedContentType(res.getHeaders("Content-Type"));
 			if (LinkedDataContent.contentTypeToLang(ct) != null){
 				return res;
 			}
 			if (ct.equals("text/plain")) continue;
+		}
+		} catch (Exception e){
+			System.out.println();
 		}
 		return null;
 	}
@@ -58,19 +62,23 @@ public class HTTPResourceUtils {
 	
 	public static String determineActualContentType(CachedHTTPResource httpResource)
     {
-		TypedInputStream in = RDFDataMgr.open(httpResource.getUri());
-		String target = httpResource.getUri();
-		String ctStr = in.getContentType();
+        String ct = "Unknown" ;
+        try{
+        	TypedInputStream in = RDFDataMgr.open(httpResource.getUri());
+        	String target = httpResource.getUri();
+        	String ctStr = in.getContentType();
 		
-        boolean isTextPlain = (ctStr.equals("text/plain")) ? true : false ;
+        	boolean isTextPlain = (ctStr.equals("text/plain")) ? true : false ;
 
-        if (ctStr != null) ctStr = LinkedDataContent.contentTypeCanonical(ctStr) ;
+        	if (ctStr != null) ctStr = LinkedDataContent.contentTypeCanonical(ctStr) ;
 
-        String ct = null ;
-        if (!isTextPlain ) ct = (ctStr==null) ? null : ctStr ;
+        	if (!isTextPlain ) ct = (ctStr==null) ? null : ctStr ;
         
-        if ( ct == null ) ct = LinkedDataContent.guessContentType(target) ;
-        
+        	if ( ct == null ) ct = LinkedDataContent.guessContentType(target) ;
+        } catch (Exception e){
+        	//some error occured
+        	System.out.println(e);
+        }
         return ct ;
     }
 	

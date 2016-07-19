@@ -6,6 +6,7 @@ package eu.diachron.qualitymetrics.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class CachedHTTPResource implements CacheObject {
 	private List<StatusLine> statusLines = null;
 	private StatusCode dereferencabilityStatusCode = null;
 	private Boolean parsableContent = null;
+	private String content = null;
 	
 	public List<SerialisableHttpResponse> getResponses() {
 		return responses;
@@ -56,7 +58,7 @@ public class CachedHTTPResource implements CacheObject {
 		}
 	}
 	public void addAllStatusLines(List<StatusLine> statusLine) {
-		if (this.statusLines == null) this.statusLines = new ArrayList<StatusLine>();
+		if (this.statusLines == null) this.statusLines = new LinkedList<StatusLine>();
 		synchronized(statusLines) {
 			this.statusLines.addAll(statusLine);
 		}
@@ -81,6 +83,13 @@ public class CachedHTTPResource implements CacheObject {
 		this.parsableContent = containsRDF;
 	}
 	
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 	public class SerialisableHttpResponse implements Serializable{
 		
 		//http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
