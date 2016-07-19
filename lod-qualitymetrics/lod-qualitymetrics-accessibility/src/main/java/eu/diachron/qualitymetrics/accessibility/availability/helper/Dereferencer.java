@@ -3,6 +3,7 @@
  */
 package eu.diachron.qualitymetrics.accessibility.availability.helper;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -168,54 +169,117 @@ public class Dereferencer {
 		return false;
 	}
 	
-	private static void parsable(CachedHTTPResource resource){
-		String ns = ModelFactory.createDefaultModel().createResource(resource.getUri()).getNameSpace();
-		if (!(failSafeMap.containsKey(ns))){
-			Lang tryLang = null;
-			double len = -1d;
-			for (SerialisableHttpResponse shr : resource.getResponses()){
-				try {
-					len = Double.valueOf(shr.getHeaders("Content-Length"));
-				} catch (Exception e){}				
-				try {
-					tryLang = LinkedDataContent.contentTypeToLang(shr.getHeaders("Content-Type"));
-				} catch (Exception e){}	
+	public static void parsable(CachedHTTPResource resource){
+		if (resource.isContentParsable() == null) {
+			String ns = ModelFactory.createDefaultModel().createResource(resource.getUri()).getNameSpace();
+			if (!(failSafeMap.containsKey(ns))){
+				Lang tryLang = null;
+				double len = -1d;
+				for (SerialisableHttpResponse shr : resource.getResponses()){
+					try {
+						len = Double.valueOf(shr.getHeaders("Content-Length"));
+					} catch (Exception e){}				
+					try {
+						tryLang = LinkedDataContent.contentTypeToLang(shr.getHeaders("Content-Type"));
+					} catch (Exception e){}	
+					
+					if ((tryLang != null) && (len > -1)) break;
+				}
 				
-				if ((tryLang != null) && (len > -1)) break;
-			}
-			
-			len = len/1000000;
-			if ((len > 0) && (len < 10)){
-				// Load model in memory if file is under 10 MB
-				try{
-					Model m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
-					if (m.size() > 0){
-						resource.setParsableContent(true);
+				len = len/1000000;
+				if ((len > 0) && (len < 10)){
+					// Load model in memory if file is under 10 MB
+					try{
+						//Model m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
+						Model m = ModelFactory.createDefaultModel();
+						if (resource.getContent() != null){
+							m.read(new ByteArrayInputStream(resource.getContent().getBytes()),null, (tryLang == null) ? Lang.RDFXML.getName() : tryLang.getName());
+						} else {
+							m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
+						}
+	
+						if (m.size() > 0){
+							resource.setParsableContent(true);
+							failSafeCounter.remove(ns);
+						} else {
+							addToFailSafeDecision(ns);
+							resource.setParsableContent(false);
+						}
+					} catch (RiotException re){
+						resource.setParsableContent(false);
+						addToFailSafeDecision(ns);
+					} catch (Exception e){
+						resource.setParsableContent(false);
+						addToFailSafeDecision(ns);
+					}
+				} else {
+					try{
+						if (tryLang == null) resource.setParsableContent(ModelParser.snapshotParser(resource.getUri()));
+						else resource.setParsableContent(ModelParser.snapshotParser(resource.getUri(),tryLang));
+						
 						failSafeCounter.remove(ns);
-					} else {
+					} catch (Exception e){
 						addToFailSafeDecision(ns);
 						resource.setParsableContent(false);
 					}
-				} catch (RiotException re){
-					resource.setParsableContent(false);
-					addToFailSafeDecision(ns);
-				} catch (Exception e){
-					resource.setParsableContent(false);
-					addToFailSafeDecision(ns);
 				}
 			} else {
-				try{
-					if (tryLang == null) resource.setParsableContent(ModelParser.snapshotParser(resource.getUri()));
-					else resource.setParsableContent(ModelParser.snapshotParser(resource.getUri(),tryLang));
-					
-					failSafeCounter.remove(ns);
-				} catch (Exception e){
-					addToFailSafeDecision(ns);
-					resource.setParsableContent(false);
-				}
+				resource.setParsableContent(false);
 			}
-		} else {
-			resource.setParsableContent(false);
+		}
+	}
+
+	// Parse with the given language only an nothing else
+	public static void parsable(CachedHTTPResource resource, Lang lang){
+		if (resource.isContentParsable() == null) {
+			String ns = ModelFactory.createDefaultModel().createResource(resource.getUri()).getNameSpace();
+			if (!(failSafeMap.containsKey(ns))){
+				double len = -1.0d;
+				for (SerialisableHttpResponse shr : resource.getResponses()){
+					try {
+						len = Double.valueOf(shr.getHeaders("Content-Length"));
+					} catch (Exception e){}			
+					
+					if  (len > 0) break;
+				}
+				
+				len = len/1000000;
+				if ((len > 0) && (len < 10)) {
+					// Load model in memory if file is under 10 MB
+					try{
+						Model m = ModelFactory.createDefaultModel();
+						if (resource.getContent() != null){
+							m.read(new ByteArrayInputStream(resource.getContent().getBytes()),null, lang.getName());
+						} else {
+							m = RDFDataMgr.loadModel(resource.getUri(), lang);
+						}
+	
+						if (m.size() > 0){
+							resource.setParsableContent(true);
+							failSafeCounter.remove(ns);
+						} else {
+							addToFailSafeDecision(ns);
+							resource.setParsableContent(false);
+						}
+					} catch (RiotException re){
+						resource.setParsableContent(false);
+						addToFailSafeDecision(ns);
+					} catch (Exception e){
+						resource.setParsableContent(false);
+						addToFailSafeDecision(ns);
+					}
+				} else {
+					try{
+						resource.setParsableContent(ModelParser.snapshotParser(resource.getUri(), lang));
+						failSafeCounter.remove(ns);
+					} catch (Exception e){
+						addToFailSafeDecision(ns);
+						resource.setParsableContent(false);
+					}
+				}
+			} else {
+				resource.setParsableContent(false);
+			}
 		}
 	}
 	

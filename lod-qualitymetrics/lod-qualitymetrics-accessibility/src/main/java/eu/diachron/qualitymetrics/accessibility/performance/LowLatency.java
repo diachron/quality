@@ -31,7 +31,7 @@ public class LowLatency extends AbstractQualityMetric {
 	 * Amount of HTTP requests that will be sent to the data source in order to determine its latency, the 
 	 * resulting delays of all of these requests will be averaged to obtain the final latency measure
 	 */
-	private static final int NUM_HTTP_SAMPLES = 10;
+	private static final int NUM_HTTP_SAMPLES = 1;
 	
 	/**
 	 * Holds the total delay as currently calculated by the compute method

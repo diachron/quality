@@ -4,9 +4,7 @@
 package eu.diachron.qualitymetrics.accessibility.availability.helper;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -16,6 +14,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.WebContent;
 import org.apache.jena.riot.lang.PipedQuadsStream;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
@@ -32,6 +31,7 @@ import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
 import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
+import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
 import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
@@ -102,7 +102,7 @@ public class ModelParser {
 		boolean tripleParsed = false;
 	
 		try {
-			if(iterator.hasNext()) {
+ 			if(iterator.hasNext()) {
 				String tripleRead = (iterator.next()).toString();
 				logger.debug("{} contains RDF. Triple read: {}", uri, tripleRead);
 				// OK we know there's some RDF, stop processing
@@ -120,14 +120,14 @@ public class ModelParser {
 		return tripleParsed;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private static boolean snapshotParser(final CachedHTTPResource httpResource, final Lang givenLang){
 		// First, check if the resource is already known to contain RDF
 		if (httpResource.isContentParsable() != null) {
 			return httpResource.isContentParsable();
 		}
 		
-		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.TURTLE;
+		Lang lang  = (tryGetLang(httpResource) != null) ? tryGetLang(httpResource) : Lang.RDFXML;
 						
 		if ((httpResource.getDereferencabilityStatusCode() == StatusCode.SC4XX) ||
 				(httpResource.getDereferencabilityStatusCode() == StatusCode.SC5XX) ||
@@ -267,42 +267,36 @@ public class ModelParser {
 		return lang;
 	}
 
-	public static boolean hasRDFContent(CachedHTTPResource httpResource){
-		return hasRDFContent(httpResource, null);
-	}
 
 	public static boolean hasRDFContent(CachedHTTPResource httpResource, Lang lang){
-		boolean returnRes = snapshotParser(httpResource, lang);
-		httpResource.setParsableContent(returnRes);
-		return returnRes;
+		Dereferencer.parsable(httpResource, lang);
+		return httpResource.isContentParsable();
 	}
 	
+
 	
 	
 	public static void main(String[]args) throws IOException{
 		HTTPRetriever ret = new HTTPRetriever();
 //		String uris = Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
-		String uris = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
+		String uris = "http://transparency.270a.info/dataset/corruption-perceptions-index/2011/ZW";
 		ret.addListOfResourceToQueue(Arrays.asList(uris.split(",")));
 		ret.start();
 		int counter = 0;
 		int wrong = 0;
-		List<String> nonderef = new ArrayList<String>();
+//		List<String> nonderef = new ArrayList<String>();
 		for (String uri : uris.split(",")){
 			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);	
 			while (httpResource == null){
 				httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
 			}
-			if (Dereferencer.hasValidDereferencability(httpResource))
-				if (hasRDFContent(httpResource)) counter++; else wrong++;
-			else {
-				nonderef.add(httpResource.getUri());
-				wrong++;
-			}
+			
+			SerialisableHttpResponse res = HTTPResourceUtils.getSemanticResponse(httpResource);
+			String ct = res.getHeaders("Content-Type").split(";")[0];
+			Lang lang = WebContent.contentTypeToLang(ct);			
+			if (hasRDFContent(httpResource,lang)) counter++; else wrong++;
+			
 		}
 		System.out.println(counter + " " + wrong);
-		for (String s : nonderef){
-			System.out.println(s);
-		}
 	}
 }

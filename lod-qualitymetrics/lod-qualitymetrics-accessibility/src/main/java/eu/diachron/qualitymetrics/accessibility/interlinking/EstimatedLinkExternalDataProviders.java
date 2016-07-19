@@ -41,8 +41,9 @@ import de.unibonn.iai.eis.luzzu.exceptions.ProblemListInitialisationException;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;
 
 /**
- * In this metric we identify the total number of external linked used in the dataset. An external link
- * is identified if the subject URI is from one data source and an object URI from ￼another data source.
+ * In this metric we identify the total number of external linked used in the dataset. An external link 
+ * is identified if the object's resource URI in a triple has a PLD different than the assessed dataset's PLD.
+ * 
  * The data source should return RDF data to be considered as 'linked'.
  * In this metric rdf:type triples are skipped since these are not normally considered as part of the
  * Data Level Constant (or Data Level Position). 
