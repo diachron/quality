@@ -16,7 +16,7 @@ _:DereferenceabilityForwardLinks a lmi:LuzzuMetricJavaImplementation ;
 	
 _:EstimatedDereferenceability a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability (Estimated)" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceability" .
+	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedDereferenceabilityByStratified" .
 	
 _:EstimatedDereferenceabilityForwardLinks a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Dereferenceability of Forward-links (Estimated)" ;
@@ -28,7 +28,7 @@ _:MisreportedContentType a lmi:LuzzuMetricJavaImplementation ;
 	
 _:EstimatedMisreportedContentType a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "Misreported Content Types (Estimated)" ;
-	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedMisreportedContentType" .
+	lmi:javaPackageName "eu.diachron.qualitymetrics.accessibility.availability.EstimatedMisreportedContentTypeByStratified" .
 	
 _:RDFAccessibility a lmi:LuzzuMetricJavaImplementation ;
 	rdfs:label "RDF Accessibility" ;
