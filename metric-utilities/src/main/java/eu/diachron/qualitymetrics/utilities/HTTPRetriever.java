@@ -332,7 +332,7 @@ public class HTTPRetriever {
 													List<HttpResponse> lst = followAsyncRedirection(uriRoute);
 													for (HttpResponse res : lst){
 														newResource.addResponse(res);
-														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 20)
+														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)
 														&& (res.getStatusLine().getStatusCode() == 200)) {
 															newResource.setContent(contentToString(res.getEntity().getContent()));
 														}
