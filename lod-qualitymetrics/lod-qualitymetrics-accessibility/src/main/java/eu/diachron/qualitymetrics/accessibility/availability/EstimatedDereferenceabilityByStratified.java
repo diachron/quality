@@ -59,7 +59,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	public int MAX_TLDS = 100;
+	public int MAX_TLDS = 50;
 	public int MAX_FQURIS_PER_TLD = 3000;
 	
 	private long totalDerefUris = 0;

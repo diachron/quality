@@ -66,7 +66,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	/**
 	 * Parameter: default size for the reservoir 
 	 */
-	public int reservoirsize = 10;
+	public int reservoirsize = 25;
 	
 	
 	/**
