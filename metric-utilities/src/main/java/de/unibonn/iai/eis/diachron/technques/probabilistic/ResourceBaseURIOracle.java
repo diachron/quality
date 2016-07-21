@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.xerces.util.XMLChar;
 import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,6 +334,19 @@ public class ResourceBaseURIOracle {
 		} else {
 			return resourceURI;
 		}
+	}
+	
+	
+	public static String extractNameSpace(String resourceURI){
+		if(resourceURI == null) {
+			return null;
+		}
+		
+		if ((resourceURI.startsWith("http://")) || (resourceURI.startsWith("https://"))) {
+			if (resourceURI.contains("#")) return resourceURI.substring(0,resourceURI.indexOf("#"));
+			else return resourceURI.substring(0, resourceURI.lastIndexOf("/"));
+		} else
+			return resourceURI;
 	}
 
 }

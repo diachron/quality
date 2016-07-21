@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -105,16 +106,19 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 				if ((quad.getObject().getURI().startsWith("http")) || (quad.getObject().getURI().startsWith("https"))){
 					if ((ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("purl.org"))
 							|| (ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals("w3id.org"))){
-						String ns = quad.getObject().getNameSpace();
+						String ns = ResourceBaseURIOracle.extractNameSpace(quad.getObject().getURI()); 
 						String ext = null;
-						if (resolver.containsKey(ns)) ext = resolver.get(ns);
-						else {
-							ext = this.getRedirection(quad.getObject().getURI());
-							if (ext != null) 
-								resolver.put(ns, ext);	
+						if (!(ns404.contains(ns))){
+							if (resolver.containsKey(ns)) ext = resolver.get(ns);
+							else {
+								ext = this.getRedirection(quad.getObject().getURI());
+								if (ext != null) 
+									resolver.put(ns, ext);	
+							}
+							if (ext == null) ns404.add(ns);
+		//					if (ext == null) this.addUriToSampler(quad.getObject().toString()); // do not put purl.org uris 
+							if ((ext != null) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD)))) this.addUriToSampler(ext);
 						}
-	//					if (ext == null) this.addUriToSampler(quad.getObject().toString()); // do not put purl.org uris 
-						if ((ext != null) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(ext).equals(localPLD)))) this.addUriToSampler(ext);
 					}
 					else
 						this.addUriToSampler(quad.getObject().toString());
@@ -224,6 +228,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 		RequestConfig requestConfig = RequestConfig.custom()
 				.setSocketTimeout(1000)
 				.setConnectTimeout(1000)
+				.setRedirectsEnabled(true)
 				.build();
 
 		CloseableHttpClient httpClient = HttpClientBuilder
@@ -232,9 +237,10 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 									.build();
 		
         HttpContext context = new BasicHttpContext(); 
-
+        CloseableHttpResponse response = null;
+        
 		try {
-			httpClient.execute(head,context);
+			response = httpClient.execute(head,context);
 			RedirectLocations locations = (RedirectLocations) context.getAttribute(HttpClientContext.REDIRECT_LOCATIONS);
 			if (locations.size() == 1) return locations.get(0).toString();
 			for(URI loc : locations.getAll()){
@@ -268,7 +274,7 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 
 		@Override
 		public Boolean call() throws Exception {
-			final String ns = ModelFactory.createDefaultModel().createResource(uri).getNameSpace();
+			final String ns = ResourceBaseURIOracle.extractNameSpace(uri);
 			if (ns404.contains(ns)) return false;
 			
 			try{
