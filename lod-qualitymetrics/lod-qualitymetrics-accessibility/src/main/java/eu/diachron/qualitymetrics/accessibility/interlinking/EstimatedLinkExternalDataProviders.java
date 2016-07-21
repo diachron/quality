@@ -99,7 +99,6 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
 		if (localPLD == null){
-			System.out.println("Dataset URI: "+ this.getDatasetURI());
 			localPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(this.getDatasetURI());
 		}
 		

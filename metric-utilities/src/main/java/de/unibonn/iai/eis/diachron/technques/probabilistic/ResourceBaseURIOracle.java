@@ -316,7 +316,6 @@ public class ResourceBaseURIOracle {
 	 * @return
 	 */
 	public static String extractPayLevelDomainURI(String resourceURI) {
-		System.out.println(resourceURI);
 		// Argument validation. Fail fast
 		if(resourceURI == null) {
 			return null;
