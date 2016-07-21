@@ -98,8 +98,10 @@ public class EstimatedLinkExternalDataProviders extends AbstractQualityMetric {
 	public void compute(Quad quad) {
 		logger.debug("Computing : {} ", quad.asTriple().toString());
 		
-		if (localPLD == null)
+		if (localPLD == null){
+			System.out.println("Dataset URI: "+ this.getDatasetURI());
 			localPLD = ResourceBaseURIOracle.extractPayLevelDomainURI(this.getDatasetURI());
+		}
 		
 		if (!(quad.getPredicate().getURI().equals(RDF.type.getURI()))){
 			if ((quad.getObject().isURI()) && (!(ResourceBaseURIOracle.extractPayLevelDomainURI(quad.getObject().getURI()).equals(localPLD)))){
