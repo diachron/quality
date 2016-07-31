@@ -196,7 +196,7 @@ public class EstimatedDereferenceabilityByTld extends AbstractQualityMetric {
 					totalDerefUris++;
 				}
 				
-				createProblemReport(httpResource);
+//				createProblemReport(httpResource);
 				logger.trace("{} - {} - {}", headUri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}

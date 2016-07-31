@@ -133,7 +133,7 @@ public class Dereferenceability extends AbstractQualityMetric {
 					dereferencedURI++;
 				}
 				
-				createProblemReport(httpResource);
+//				createProblemReport(httpResource);
 				
 				logger.trace("{} - {} - {}", uri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}

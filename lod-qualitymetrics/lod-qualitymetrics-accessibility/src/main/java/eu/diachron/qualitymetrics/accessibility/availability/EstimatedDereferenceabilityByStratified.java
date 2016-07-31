@@ -161,7 +161,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 					
 					lstUrisToDeref.addAll(_tmpRes.getItems());
 				}
-//				System.out.println(tld.getUri() + " - " + tldCount.get(tld.getUri()) + " - " + maxRepresentativeSample);
+				System.out.println(tld.getUri() + " - " + tldCount.get(tld.getUri()) + " - " + maxRepresentativeSample);
 			}
 			
 			this.totalDerefUris = this.deReferenceUris(lstUrisToDeref);
