@@ -87,6 +87,27 @@ public class ModelParser {
 		}
 	}
 	
+	public static boolean timeoutModel(final String uri, final Lang tryLang){
+    	final Model m = ModelFactory.createDefaultModel();	
+		try {
+		      TimeLimitedCodeBlock.runWithTimeout(new Runnable() {
+		        @Override
+		        public void run() {
+					m.read(uri, tryLang.getName());
+		        }
+		      }, 5, TimeUnit.SECONDS);
+		    }
+		catch (Exception e) {
+			logger.debug("Timeout Reading Model: "+uri);
+		}
+		
+		if (m.size() > 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static boolean snapshotParser(final String uri){
 		return snapshotParser(uri, Lang.RDFXML); //by default
 	}

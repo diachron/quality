@@ -215,7 +215,7 @@ public class Dereferencer {
 				} else {
 					try{
 						if (tryLang == null) resource.setParsableContent(ModelParser.timeoutModel(resource.getUri()));
-						//else resource.setParsableContent(ModelParser.timeoutModel(resource.getUri(),tryLang));
+						else resource.setParsableContent(ModelParser.timeoutModel(resource.getUri(),tryLang));
 						
 						failSafeCounter.remove(ns);
 					} catch (Exception e){
@@ -286,21 +286,46 @@ public class Dereferencer {
 	
 	public static void main (String [] args) throws InterruptedException{
 		HTTPRetriever httpRetriever = new HTTPRetriever();
-		String url = "http://eprints.soton.ac.uk/10094/";
-		httpRetriever.addResourceToQueue(url);
+		
+		List<String> lst = new ArrayList<String>();
+		lst.add("http://eprints.soton.ac.uk/id/person/ext-1e76cb65e67ad783a57a8eeddfa5e9f8");
+//		lst.add("http://eprints.soton.ac.uk/10081/");
+//		lst.add("http://eprints.soton.ac.uk/10082/");
+//		lst.add("http://eprints.soton.ac.uk/10083/");
+//		lst.add("http://eprints.soton.ac.uk/10084/");
+//		lst.add("http://eprints.soton.ac.uk/10085/");
+//		lst.add("http://eprints.soton.ac.uk/10086/");
+//		lst.add("http://eprints.soton.ac.uk/10087/");
+//		lst.add("http://eprints.soton.ac.uk/10088/");
+//		lst.add("http://eprints.soton.ac.uk/10089/");
+//		lst.add("http://eprints.soton.ac.uk/10090/");
+//		lst.add("http://eprints.soton.ac.uk/10091/");
+//		lst.add("http://eprints.soton.ac.uk/10092/");
+//		lst.add("http://eprints.soton.ac.uk/10093/");
+//		lst.add("http://eprints.soton.ac.uk/10094/");
+//		lst.add("http://eprints.soton.ac.uk/10095/");
+//		lst.add("http://eprints.soton.ac.uk/10096/");
+//		lst.add("http://eprints.soton.ac.uk/10097/");
+//		lst.add("http://eprints.soton.ac.uk/10098/");
+//		lst.add("http://eprints.soton.ac.uk/10099/");
+		
+//		String url = "http://eprints.soton.ac.uk/10094/";
+//		httpRetriever.addResourceToQueue(url);
+		httpRetriever.addListOfResourceToQueue(lst);
 		httpRetriever.start();
 		Thread.sleep(1000);
-		CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
-		while (res == null){
-			res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
+		
+		for(String url : lst){
+			CachedHTTPResource res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
+			while (res == null){
+				res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
+			}
+			System.out.println(url + " " +hasValidDereferencability(res));
+//			StatusCode sc = res.getDereferencabilityStatusCode();
+//			System.out.println(sc);
 		}
 		
-		System.out.println(hasValidDereferencability(res));
-//		parsable(res);
-//		System.out.println(res.isContentParsable());
-		
-		StatusCode sc = res.getDereferencabilityStatusCode();
-		System.out.println(sc);
+
 
 	}
 
