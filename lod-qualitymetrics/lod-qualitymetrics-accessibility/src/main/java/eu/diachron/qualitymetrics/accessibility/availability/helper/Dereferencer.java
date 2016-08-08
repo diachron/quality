@@ -115,7 +115,7 @@ public class Dereferencer {
 			return false;
 		} else {
 			switch(statusCode){
-				case SC200: case SC303 : case HASH : return true;
+				case SC303 : case HASH : return true;
 				default : return false;
 			}
 		}
@@ -174,7 +174,7 @@ public class Dereferencer {
 			String ns = ModelFactory.createDefaultModel().createResource(resource.getUri()).getNameSpace();
 			if (!(failSafeMap.containsKey(ns))){
 				Lang tryLang = null;
-				double len = -1d;
+				double len = -1.0d;
 				for (SerialisableHttpResponse shr : resource.getResponses()){
 					try {
 						len = Double.valueOf(shr.getHeaders("Content-Length"));
@@ -214,8 +214,8 @@ public class Dereferencer {
 					}
 				} else {
 					try{
-						if (tryLang == null) resource.setParsableContent(ModelParser.snapshotParser(resource.getUri()));
-						else resource.setParsableContent(ModelParser.snapshotParser(resource.getUri(),tryLang));
+						if (tryLang == null) resource.setParsableContent(ModelParser.timeoutModel(resource.getUri()));
+						//else resource.setParsableContent(ModelParser.timeoutModel(resource.getUri(),tryLang));
 						
 						failSafeCounter.remove(ns);
 					} catch (Exception e){
@@ -228,6 +228,7 @@ public class Dereferencer {
 			}
 		}
 	}
+
 
 	// Parse with the given language only an nothing else
 	public static void parsable(CachedHTTPResource resource, Lang lang){
@@ -285,9 +286,7 @@ public class Dereferencer {
 	
 	public static void main (String [] args) throws InterruptedException{
 		HTTPRetriever httpRetriever = new HTTPRetriever();
-//		String url = "http://mlode.nlp2rdf.org/resource/wals/datapoint/prs-f136B";
-//		String url = "http://pdev.org.uk/pdevlemon/PDEN_LexicalEntry_1008";
-		String url = "http://imf.270a.info/data/data.tar.gz";
+		String url = "http://eprints.soton.ac.uk/10094/";
 		httpRetriever.addResourceToQueue(url);
 		httpRetriever.start();
 		Thread.sleep(1000);

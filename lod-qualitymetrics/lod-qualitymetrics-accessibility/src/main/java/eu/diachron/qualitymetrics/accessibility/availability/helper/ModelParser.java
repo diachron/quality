@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -24,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
@@ -61,7 +65,28 @@ public class ModelParser {
 		HttpOp.setDefaultHttpClient(httpClient);
 		HttpOp.createCachingHttpClient();
 	}
-
+	
+	public static boolean timeoutModel(final String uri){
+    	final Model m = ModelFactory.createDefaultModel();	
+		try {
+		      TimeLimitedCodeBlock.runWithTimeout(new Runnable() {
+		        @Override
+		        public void run() {
+					m.read(uri);
+		        }
+		      }, 5, TimeUnit.SECONDS);
+		    }
+		catch (Exception e) {
+			logger.debug("Timeout Reading Model: "+uri);
+		}
+		
+		if (m.size() > 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static boolean snapshotParser(final String uri){
 		return snapshotParser(uri, Lang.RDFXML); //by default
 	}
@@ -272,9 +297,6 @@ public class ModelParser {
 		Dereferencer.parsable(httpResource, lang);
 		return httpResource.isContentParsable();
 	}
-	
-
-	
 	
 	public static void main(String[]args) throws IOException{
 		HTTPRetriever ret = new HTTPRetriever();
