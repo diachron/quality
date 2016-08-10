@@ -1,6 +1,7 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,8 +60,8 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	 * Constants controlling the maximum number of elements in the reservoir of Top-level Domains and 
 	 * Fully Qualified URIs of each TLD, respectively
 	 */
-	public int MAX_TLDS = 50;
-	public int MAX_FQURIS_PER_TLD = 3000;
+	public int MAX_TLDS = 5000;
+	public int MAX_FQURIS_PER_TLD = 10000;
 	
 	private long totalDerefUris = 0;
 	
@@ -98,7 +99,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	 * @param quad Triple (in quad format) to be evaluated
 	 */
 	public void compute(Quad quad) {
-		logger.debug("Assessing {}", quad.asTriple().toString());
+//		logger.debug("Assessing {}", quad.asTriple().toString());
 
 		
 		// we are currently ignoring triples ?s a ?o
@@ -114,9 +115,9 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 					Long cur = tldCount.get(uriTLD) + 1;
 					tldCount.put(uriTLD, cur);
 				} else {
-					tldCount.put(uriTLD, 0l);
+					tldCount.put(uriTLD, 1l);
 				}
-			}
+			} 
 
 			String object = quad.getObject().toString();
 			if (httpRetriever.isPossibleURL(object)) {
@@ -128,7 +129,7 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 					Long cur = tldCount.get(uriTLD) + 1;
 					tldCount.put(uriTLD, cur);
 				} else {
-					tldCount.put(uriTLD, 0l);
+					tldCount.put(uriTLD, 1l);
 				}
 			}
 		}
@@ -140,11 +141,10 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	 * @return estimated dereferencibility, computed as aforementioned
 	 */
 	public double metricValue() {
+		// Collect the list of URIs of the TLDs, to be dereferenced
+		List<String> lstUrisToDeref = new ArrayList<String>(MAX_FQURIS_PER_TLD);	
 		
 		if(!this.metricCalculated) {
-			// Collect the list of URIs of the TLDs, to be dereferenced
-			List<String> lstUrisToDeref = new ArrayList<String>(MAX_FQURIS_PER_TLD);			
-			
 			for(Tld tld : this.tldsReservoir.getItems()){
 				//Work out ratio for the number of maximum TLDs in Reservior
 				double totalRatio = ((double) tldCount.get(tld.getUri())) * POPULATION_PERCENTAGE;  // ratio between the total number of URIs of a TLD in a dataset against the overall total number of URIs
@@ -161,12 +161,24 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 					
 					lstUrisToDeref.addAll(_tmpRes.getItems());
 				}
-				System.out.println(tld.getUri() + " - " + tldCount.get(tld.getUri()) + " - " + maxRepresentativeSample);
+				logger.debug(tld.getUri() + " - " + tldCount.get(tld.getUri()) + " - " + maxRepresentativeSample);
 			}
 			
 			this.totalDerefUris = this.deReferenceUris(lstUrisToDeref);
 			this.metricValue = (double)totalDerefUris / (double)lstUrisToDeref.size();
 		}
+		
+		String s = "";
+		for (String key : statsProblem.keySet()){
+			s += key + " - " + statsProblem.get(key) + " ; ";
+		}
+		
+		statsLogger.info("EstimatedDerefByStratified. Dataset: {} - Total Deref URIs: {}; Total URIs to Deref: {}",
+				this.getDatasetURI(),
+				totalDerefUris,
+				lstUrisToDeref.size()
+		);
+		statsLogger.info("EstimatedDerefByStratified. Dataset: {} - {};",  this.getDatasetURI(), s);
 		
 		return this.metricValue;
 	}
@@ -243,9 +255,12 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 				// URI found in the cache (which means that was fetched at some point), check if successfully dereferenced
 				if (Dereferencer.hasValidDereferencability(httpResource)) {
 					totalDerefUris++;
+				} else {
+					createStatProblem(httpResource);
 				}
 				
 				//createProblemReport(httpResource);
+				
 				logger.trace("{} - {} - {}", headUri, httpResource.getStatusLines(), httpResource.getDereferencabilityStatusCode());
 			}
 		}
@@ -269,6 +284,46 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 		}
 	}
 	
+	
+	private HashMap<String, Long> statsProblem = new HashMap<String, Long>();
+	{
+		statsProblem.put("SC200", 0l);
+		statsProblem.put("SC301", 0l);
+		statsProblem.put("SC302", 0l);
+		statsProblem.put("SC307", 0l);
+		statsProblem.put("SC3XX", 0l);
+		statsProblem.put("SC4XX", 0l);
+		statsProblem.put("SC5XX", 0l);
+		statsProblem.put("SC303NoParse", 0l);
+		statsProblem.put("HASHNoParse", 0l);
+		statsProblem.put("BAD", 0l);
+		statsProblem.put("ANY", 0l);
+		statsProblem.put("EMPTY", 0l);
+	}
+	
+	private void createStatProblem(CachedHTTPResource httpResource){
+		StatusCode sc = httpResource.getDereferencabilityStatusCode();
+		String key = "";
+		switch (sc){
+			case SC200 : key = "SC200"; break;
+			case SC301 : key = "SC301"; break;
+			case SC302 : key = "SC302"; break;
+			case SC307 : key = "SC307"; break;
+			case SC3XX : key = "SC3XX"; break;
+			case SC4XX : key = "SC4XX"; break;
+			case SC5XX : key = "SC5XX"; break;
+			case SC303 : if (!httpResource.isContentParsable())  key = "SC303NoParse"; break;
+			case HASH : if (!httpResource.isContentParsable())  key = "HASHNoParse"; break;
+			case BAD : key = "BAD"; break;
+			case ANY : key = "ANY"; break;
+			case EMPTY : key = "EMPTY"; break;
+ 			default	   : break;
+		}
+
+		Long curr = statsProblem.get(key);
+		statsProblem.put(key, curr + 1);
+	}
+	
 	private void createProblemQuad(String resource, Resource problem){
 		Quad q = new Quad(null, ModelFactory.createDefaultModel().createResource(resource).asNode(), QPRO.exceptionDescription.asNode(), problem.asNode());
 		this._problemList.add(q);
@@ -283,4 +338,9 @@ public class EstimatedDereferenceabilityByStratified extends AbstractQualityMetr
 	public Resource getAgentURI() {
 		return 	DQM.LuzzuProvenanceAgent;
 	}	
+	
+	public void setMaxTLDS(int maxTLDS){
+		this.MAX_TLDS = maxTLDS;
+		tldsReservoir = new ReservoirSampler<Tld>(maxTLDS, true);
+	}
 }

@@ -84,10 +84,25 @@ public class Dereferencer {
 	private static void dereferencabilityCode(CachedHTTPResource httpResource){
 		if (httpResource.getDereferencabilityStatusCode() == null){
 			List<Integer> statusCode = getStatusCodes(httpResource.getStatusLines());
-			
+						
 			if (httpResource.getUri().contains("#") && statusCode.contains(200)) httpResource.setDereferencabilityStatusCode(StatusCode.HASH);
 			else if (statusCode.contains(200)){
 				httpResource.setDereferencabilityStatusCode(StatusCode.SC200);
+				if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
+				else {
+					if (statusCode.contains(301)) { 
+						httpResource.setDereferencabilityStatusCode(StatusCode.SC301);
+					}
+					else if (statusCode.contains(302)){
+						httpResource.setDereferencabilityStatusCode(StatusCode.SC302);
+					}
+					else if (statusCode.contains(307)) {
+						httpResource.setDereferencabilityStatusCode(StatusCode.SC307);
+					} else {
+						if (hasBad3xxCode(statusCode)) httpResource.setDereferencabilityStatusCode(StatusCode.SC3XX);
+					}
+				}
+			} else {
 				if (statusCode.contains(303)) httpResource.setDereferencabilityStatusCode(StatusCode.SC303);
 				else {
 					if (statusCode.contains(301)) { 
@@ -288,8 +303,9 @@ public class Dereferencer {
 		HTTPRetriever httpRetriever = new HTTPRetriever();
 		
 		List<String> lst = new ArrayList<String>();
-		lst.add("http://eprints.soton.ac.uk/id/person/ext-1e76cb65e67ad783a57a8eeddfa5e9f8");
-//		lst.add("http://eprints.soton.ac.uk/10081/");
+		lst.add("http://statistics.data.gov.uk/id/local-authority-district/45UE");
+//		lst.add("http://eprints.soton.ac.uk/id/person/ext-1e76cb65e67ad783a57a8eeddfa5e9f8");
+//		lst.add("http://eprints.soton.ac.uk/id/eprint/13484#authors");
 //		lst.add("http://eprints.soton.ac.uk/10082/");
 //		lst.add("http://eprints.soton.ac.uk/10083/");
 //		lst.add("http://eprints.soton.ac.uk/10084/");
@@ -321,8 +337,8 @@ public class Dereferencer {
 				res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
 			}
 			System.out.println(url + " " +hasValidDereferencability(res));
-//			StatusCode sc = res.getDereferencabilityStatusCode();
-//			System.out.println(sc);
+			StatusCode sc = res.getDereferencabilityStatusCode();
+			System.out.println(sc);
 		}
 		
 
