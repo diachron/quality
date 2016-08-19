@@ -286,7 +286,9 @@ public class Dereferencer {
 					}
 				} else {
 					try{
-						resource.setParsableContent(ModelParser.snapshotParser(resource.getUri(), lang));
+						if (lang == null) resource.setParsableContent(ModelParser.timeoutModel(resource.getUri()));
+						else resource.setParsableContent(ModelParser.timeoutModel(resource.getUri(), lang));
+
 						failSafeCounter.remove(ns);
 					} catch (Exception e){
 						addToFailSafeDecision(ns);
@@ -303,7 +305,8 @@ public class Dereferencer {
 		HTTPRetriever httpRetriever = new HTTPRetriever();
 		
 		List<String> lst = new ArrayList<String>();
-		lst.add("http://statistics.data.gov.uk/id/local-authority-district/45UE");
+//		lst.add("http://zbw.eu/stw/thsys/70572");
+		lst.add("http://abs.270a.info/dataset/ABS_NOM_VISA_CY");
 //		lst.add("http://eprints.soton.ac.uk/id/person/ext-1e76cb65e67ad783a57a8eeddfa5e9f8");
 //		lst.add("http://eprints.soton.ac.uk/id/eprint/13484#authors");
 //		lst.add("http://eprints.soton.ac.uk/10082/");

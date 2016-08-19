@@ -229,7 +229,10 @@ public class HTTPRetriever {
 				}
 			}
 		}
-		return sb.toString();
+		if (sb.toString().contains("</html>")) 
+			return "";
+		else 
+			return sb.toString();
 	}
 	
 	private void runHTTPAsyncRetreiver(final boolean requiresContentType, boolean useGet) throws InterruptedException {
@@ -332,9 +335,9 @@ public class HTTPRetriever {
 													List<HttpResponse> lst = followAsyncRedirection(uriRoute);
 													for (HttpResponse res : lst){
 														newResource.addResponse(res);
-														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)
-														&& (res.getStatusLine().getStatusCode() == 200)) {
-															newResource.setContent(contentToString(res.getEntity().getContent()));
+														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)) {
+															String cnt = contentToString(res.getEntity().getContent());
+															if (cnt.length() > 0) newResource.setContent(cnt);
 														}
 													}
 													logger.debug("Request completed with redirection set for URI: {}. {} pending requests", queuePeek, mainHTTPRetreiverLatch.getCount());
@@ -612,7 +615,7 @@ public class HTTPRetriever {
 //		String uri = "http://pleiades.stoa.org/places/55500001010#this";
 //		String uri = "http://rdfs.org/ns/void#Dataset";
 //		String uri = "http://pleiades.stoa.org/places/903083";
-		String uri = "http://www.asiarisk.com/";
+		String uri = "http://eprints.soton.ac.uk/10082/";
 		httpRetreiver.addResourceToQueue(uri);
 		httpRetreiver.start(true);
 		Thread.sleep(5000);
