@@ -20,6 +20,7 @@ import org.apache.jena.riot.web.HttpOp;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFReader;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
@@ -74,6 +75,7 @@ public class Dereferencer {
 	}
 	
 	public static boolean hasValidDereferencability(CachedHTTPResource httpResource){
+//		System.out.println("Trying to parse: "+httpResource.getUri());
 		dereferencabilityCode(httpResource);
 		parsable(httpResource);
 		
@@ -208,18 +210,29 @@ public class Dereferencer {
 						//Model m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
 						Model m = ModelFactory.createDefaultModel();
 						if (resource.getContent() != null){
-							m.read(new ByteArrayInputStream(resource.getContent().getBytes()),null, (tryLang == null) ? Lang.RDFXML.getName() : tryLang.getName());
+//							m.read(new ByteArrayInputStream(resource.getContent().getBytes()),null, (tryLang == null) ? Lang.RDFXML.getName() : tryLang.getName());
+							RDFReader arp = (tryLang == null) ? m.getReader("RDF/XML") : m.getReader(tryLang.getName());
+							arp.setProperty("WARN_REDEFINITION_OF_ID","EM_IGNORE");
+							arp.read(m,new ByteArrayInputStream(resource.getContent().getBytes()) , resource.getUri());
+							
+							if (m.size() > 0){
+								resource.setParsableContent(true);
+								failSafeCounter.remove(ns);
+							} else {
+								addToFailSafeDecision(ns);
+								resource.setParsableContent(false);
+							}
 						} else {
-							m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
+//							//m = RDFDataMgr.loadModel(resource.getUri(), (tryLang == null) ? Lang.RDFXML : tryLang);
+//							RDFReader arp = (tryLang == null) ? m.getReader("RDF/XML") : m.getReader(tryLang.getName());
+//							arp.setProperty("WARN_REDEFINITION_OF_ID","EM_IGNORE");
+//							arp.read(m, resource.getUri());
+							if (tryLang == null) resource.setParsableContent(ModelParser.timeoutModel(resource.getUri()));
+							else resource.setParsableContent(ModelParser.timeoutModel(resource.getUri(),tryLang));
+
 						}
 	
-						if (m.size() > 0){
-							resource.setParsableContent(true);
-							failSafeCounter.remove(ns);
-						} else {
-							addToFailSafeDecision(ns);
-							resource.setParsableContent(false);
-						}
+
 					} catch (RiotException re){
 						resource.setParsableContent(false);
 						addToFailSafeDecision(ns);
@@ -305,16 +318,17 @@ public class Dereferencer {
 		HTTPRetriever httpRetriever = new HTTPRetriever();
 		
 		List<String> lst = new ArrayList<String>();
-//		lst.add("http://zbw.eu/stw/thsys/70572");
-		lst.add("http://abs.270a.info/dataset/ABS_NOM_VISA_CY");
-//		lst.add("http://eprints.soton.ac.uk/id/person/ext-1e76cb65e67ad783a57a8eeddfa5e9f8");
-//		lst.add("http://eprints.soton.ac.uk/id/eprint/13484#authors");
-//		lst.add("http://eprints.soton.ac.uk/10082/");
-//		lst.add("http://eprints.soton.ac.uk/10083/");
-//		lst.add("http://eprints.soton.ac.uk/10084/");
-//		lst.add("http://eprints.soton.ac.uk/10085/");
-//		lst.add("http://eprints.soton.ac.uk/10086/");
-//		lst.add("http://eprints.soton.ac.uk/10087/");
+		lst.add("http://www.icane.es/opendata/void#ICANE");
+		lst.add("http://www.icane.es/opendata/vocab#section");
+		lst.add("http://www.icane.es/opendata/vocab#subsection");
+		lst.add("http://www.icane.es/opendata/vocab#category");
+		lst.add("http://www.icane.es/c/document_library/get_file?uuid=0140ef84-10a3-4428-82cd-68c11524ee67&groupId=10138");
+		lst.add("http://www.icane.es/opendata/reference-areas#publications");
+		lst.add("http://www.icane.es/metadata/api/publications/society/living-standards/0140ef84-10a3-4428-82cd-68c11524ee67");
+		lst.add("http://www.icane.es/metadata/api/municipal-data/population/demographic-balance/demographic-balance-municipal");
+		lst.add("http://www.icane.es/society/living-standards#subsection");
+		lst.add("http://www.icane.es/c/document_library/get_file?uuid=01736705-f6f2-4d36-b2ca-c016a1dcc969&groupId=10138");
+		lst.add("http://www.icane.es/population/demographic-analysis#publications-demographic-synthesis-previous-reports");
 //		lst.add("http://eprints.soton.ac.uk/10088/");
 //		lst.add("http://eprints.soton.ac.uk/10089/");
 //		lst.add("http://eprints.soton.ac.uk/10090/");
@@ -339,11 +353,13 @@ public class Dereferencer {
 			while (res == null){
 				res = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, url);
 			}
+//			httpRetriever.stop();
 			System.out.println(url + " " +hasValidDereferencability(res));
 			StatusCode sc = res.getDereferencabilityStatusCode();
 			System.out.println(sc);
 		}
-		
+		httpRetriever.stop();
+
 
 
 	}

@@ -4,19 +4,16 @@
 package eu.diachron.qualitymetrics.accessibility.availability.helper;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.WebContent;
 import org.apache.jena.riot.lang.PipedQuadsStream;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
@@ -28,15 +25,13 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFReader;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource.SerialisableHttpResponse;
-import eu.diachron.qualitymetrics.cache.DiachronCacheManager;
-import eu.diachron.qualitymetrics.utilities.HTTPResourceUtils;
-import eu.diachron.qualitymetrics.utilities.HTTPRetriever;
 import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
 
 /**
@@ -72,9 +67,12 @@ public class ModelParser {
 		      TimeLimitedCodeBlock.runWithTimeout(new Runnable() {
 		        @Override
 		        public void run() {
-					m.read(uri);
+		        	RDFReader arp = m.getReader("RDF/XML");
+					arp.setProperty("WARN_REDEFINITION_OF_ID","EM_IGNORE");
+					arp.read(m, uri);
+//					m.read(uri);
 		        }
-		      }, 5, TimeUnit.SECONDS);
+		      }, 3, TimeUnit.SECONDS);
 		    }
 		catch (Exception e) {
 			logger.debug("Timeout Reading Model: "+uri);
@@ -90,16 +88,18 @@ public class ModelParser {
 	public static boolean timeoutModel(final String uri, final Lang tryLang){
     	final Model m = ModelFactory.createDefaultModel();	
 		try {
-		      TimeLimitedCodeBlock.runWithTimeout(new Runnable() {
-		        @Override
-		        public void run() {
-					m.read(uri, tryLang.getName());
-		        }
-		      }, 5, TimeUnit.SECONDS);
+				final RDFReader arp = m.getReader(tryLang.getName());
+				TimeLimitedCodeBlock.runWithTimeout(new Runnable() {
+					@Override
+				    public void run() {
+						arp.setProperty("WARN_REDEFINITION_OF_ID","EM_IGNORE");
+						arp.read(m, uri);
+				//		m.read(uri, tryLang.getName());
+				    }
+				}, 3, TimeUnit.SECONDS);
+		    } catch (Exception e) {
+		    	logger.debug("Timeout Reading Model: "+uri);
 		    }
-		catch (Exception e) {
-			logger.debug("Timeout Reading Model: "+uri);
-		}
 		
 		if (m.size() > 0){
 			return true;
@@ -320,26 +320,10 @@ public class ModelParser {
 	}
 	
 	public static void main(String[]args) throws IOException{
-		HTTPRetriever ret = new HTTPRetriever();
-//		String uris = Files.readFirstLine(new File("/Users/jeremy/Desktop/uris.txt"), Charset.defaultCharset());
-		String uris = "http://transparency.270a.info/dataset/corruption-perceptions-index/2011/ZW";
-		ret.addListOfResourceToQueue(Arrays.asList(uris.split(",")));
-		ret.start();
-		int counter = 0;
-		int wrong = 0;
-//		List<String> nonderef = new ArrayList<String>();
+		String uris = "http://transparency.270a.info/dataset/corruption-perceptions-index/2011/ZW,http://www.icane.es/opendata/void#ICANE";
 		for (String uri : uris.split(",")){
-			CachedHTTPResource httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);	
-			while (httpResource == null){
-				httpResource = (CachedHTTPResource) DiachronCacheManager.getInstance().getFromCache(DiachronCacheManager.HTTP_RESOURCE_CACHE, uri);
-			}
-			
-			SerialisableHttpResponse res = HTTPResourceUtils.getSemanticResponse(httpResource);
-			String ct = res.getHeaders("Content-Type").split(";")[0];
-			Lang lang = WebContent.contentTypeToLang(ct);			
-			if (hasRDFContent(httpResource,lang)) counter++; else wrong++;
-			
+			System.out.println(ModelParser.timeoutModel(uri));
 		}
-		System.out.println(counter + " " + wrong);
 	}
+	
 }
