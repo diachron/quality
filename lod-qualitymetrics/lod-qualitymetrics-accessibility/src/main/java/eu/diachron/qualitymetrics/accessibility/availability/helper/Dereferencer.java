@@ -9,14 +9,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.http.StatusLine;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
-import org.apache.jena.riot.web.HttpOp;
-
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -35,21 +30,21 @@ import eu.diachron.qualitymetrics.utilities.LinkedDataContent;
  */
 public class Dereferencer {
 	
-	final static RequestConfig requestConfig = RequestConfig.custom()
-			.setSocketTimeout(2000)
-			.setConnectTimeout(2000)
-			.setRedirectsEnabled(true)
-			.build();
-
-	final static CloseableHttpClient httpClient = HttpClientBuilder
-								.create()
-								.setDefaultRequestConfig(requestConfig)
-								.build();
-	
-	static{
-		HttpOp.setDefaultHttpClient(httpClient);
-		HttpOp.createCachingHttpClient();
-	}
+//	final static RequestConfig requestConfig = RequestConfig.custom()
+//			.setSocketTimeout(2000)
+//			.setConnectTimeout(2000)
+//			.setRedirectsEnabled(true)
+//			.build();
+//
+//	final static CloseableHttpClient httpClient = HttpClientBuilder
+//								.create()
+//								.setDefaultRequestConfig(requestConfig)
+//								.build();
+//	
+//	static{
+//		HttpOp.setDefaultHttpClient(httpClient);
+//		HttpOp.createCachingHttpClient();
+//	}
 	/*
 	 * In order to improve the scalability of the dereferencer
 	 * we will keep a fail-safe map, similar to the vocabulary
