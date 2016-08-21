@@ -1,6 +1,7 @@
 package eu.diachron.qualitymetrics.utilities;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.hp.hpl.jena.rdf.model.RDFReader;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import eu.diachron.qualitymetrics.cache.CachedHTTPResource;
@@ -231,8 +233,9 @@ public class HTTPRetriever {
 		}
 		if (sb.toString().contains("</html>")) 
 			return "";
-		else 
+		else {
 			return sb.toString();
+		}
 	}
 	
 	private void runHTTPAsyncRetreiver(final boolean requiresContentType, boolean useGet) throws InterruptedException {
@@ -335,10 +338,10 @@ public class HTTPRetriever {
 													List<HttpResponse> lst = followAsyncRedirection(uriRoute);
 													for (HttpResponse res : lst){
 														newResource.addResponse(res);
-														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)) {
-															String cnt = contentToString(res.getEntity().getContent());
-															if (cnt.length() > 0) newResource.setContent(cnt);
-														}
+//														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)) {
+//															String cnt = contentToString(res.getEntity().getContent());
+//															if (cnt.length() > 0) newResource.setContent(cnt);
+//														}
 													}
 													logger.debug("Request completed with redirection set for URI: {}. {} pending requests", queuePeek, mainHTTPRetreiverLatch.getCount());
 												} catch (IOException e) {
