@@ -39,6 +39,7 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
@@ -49,10 +50,14 @@ import org.apache.http.nio.client.methods.AsyncCharConsumer;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
 import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
 import org.apache.http.protocol.HttpContext;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFLanguages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFReader;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
@@ -210,7 +215,7 @@ public class HTTPRetriever {
 		httpGetQueue.add(url);
 	}
 	
-	private String contentToString(InputStream is){
+	private String contentToString(InputStream is, ContentType contentType){
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
 		
@@ -234,7 +239,16 @@ public class HTTPRetriever {
 		if (sb.toString().contains("</html>")) 
 			return "";
 		else {
-			return sb.toString();
+			try{
+				Lang tryLang = RDFLanguages.contentTypeToLang(contentType.toString());
+				Model m = ModelFactory.createDefaultModel();
+				RDFReader arp = m.getReader(tryLang.getName());
+				arp.setProperty("WARN_REDEFINITION_OF_ID","EM_IGNORE");
+				arp.read(m,new ByteArrayInputStream(sb.toString().getBytes()),"");
+				return sb.toString();
+			} catch (Exception e) {
+				return "";
+			}
 		}
 	}
 	
@@ -338,10 +352,13 @@ public class HTTPRetriever {
 													List<HttpResponse> lst = followAsyncRedirection(uriRoute);
 													for (HttpResponse res : lst){
 														newResource.addResponse(res);
-//														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)) {
-//															String cnt = contentToString(res.getEntity().getContent());
-//															if (cnt.length() > 0) newResource.setContent(cnt);
-//														}
+														if (((res.getEntity().getContent() != null) && (Double.valueOf(res.getHeaders("Content-Length")[0].getValue()) / 1000000) < 3)) {
+															String cnt = contentToString(res.getEntity().getContent(),ContentType.getOrDefault(res.getEntity()));
+															if (cnt.length() > 0) {
+																newResource.setParsableContent(true);
+																newResource.setContent(cnt);
+															}
+														}
 													}
 													logger.debug("Request completed with redirection set for URI: {}. {} pending requests", queuePeek, mainHTTPRetreiverLatch.getCount());
 												} catch (IOException e) {
@@ -352,7 +369,7 @@ public class HTTPRetriever {
 												newResource.addStatusLines(response.getStatusLine());
 												newResource.addResponse(response);
 												try{
-													newResource.setContent(contentToString(response.getEntity().getContent()));
+													newResource.setContent(contentToString(response.getEntity().getContent(),ContentType.getOrDefault(response.getEntity())));
 												} catch (Exception e1){
 													logger.debug(e1.getLocalizedMessage());
 												}

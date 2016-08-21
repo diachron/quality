@@ -77,10 +77,13 @@ public class Dereferencer {
 	public static boolean hasValidDereferencability(CachedHTTPResource httpResource){
 //		System.out.println("Trying to parse: "+httpResource.getUri());
 		dereferencabilityCode(httpResource);
-		parsable(httpResource);
-		
 		StatusCode scode = httpResource.getDereferencabilityStatusCode();
-		return (mapDerefStatusCode(scode) && httpResource.isContentParsable());
+		boolean hasRightDCode = mapDerefStatusCode(scode);
+		if (hasRightDCode) parsable(httpResource);
+		
+		boolean isParsable = (httpResource.isContentParsable() == null)? false : true;
+		
+		return (hasRightDCode && isParsable);
 	}
 	
 	private static void dereferencabilityCode(CachedHTTPResource httpResource){
@@ -319,29 +322,29 @@ public class Dereferencer {
 		
 		List<String> lst = new ArrayList<String>();
 		lst.add("http://mlode.nlp2rdf.org/resource/ids/entry/e106-c13-l139");
-//		lst.add("http://www.icane.es/opendata/void#ICANE");
-//		lst.add("http://www.icane.es/opendata/vocab#section");
-//		lst.add("http://www.icane.es/opendata/vocab#subsection");
-//		lst.add("http://www.icane.es/opendata/vocab#category");
-//		lst.add("http://www.icane.es/c/document_library/get_file?uuid=0140ef84-10a3-4428-82cd-68c11524ee67&groupId=10138");
-//		lst.add("http://www.icane.es/opendata/reference-areas#publications");
-//		lst.add("http://www.icane.es/metadata/api/publications/society/living-standards/0140ef84-10a3-4428-82cd-68c11524ee67");
-//		lst.add("http://www.icane.es/metadata/api/municipal-data/population/demographic-balance/demographic-balance-municipal");
-//		lst.add("http://www.icane.es/society/living-standards#subsection");
-//		lst.add("http://www.icane.es/c/document_library/get_file?uuid=01736705-f6f2-4d36-b2ca-c016a1dcc969&groupId=10138");
-//		lst.add("http://www.icane.es/population/demographic-analysis#publications-demographic-synthesis-previous-reports");
-//		lst.add("http://eprints.soton.ac.uk/10088/");
-//		lst.add("http://eprints.soton.ac.uk/10089/");
-//		lst.add("http://eprints.soton.ac.uk/10090/");
-//		lst.add("http://eprints.soton.ac.uk/10091/");
-//		lst.add("http://eprints.soton.ac.uk/10092/");
-//		lst.add("http://eprints.soton.ac.uk/10093/");
-//		lst.add("http://eprints.soton.ac.uk/10094/");
-//		lst.add("http://eprints.soton.ac.uk/10095/");
-//		lst.add("http://eprints.soton.ac.uk/10096/");
-//		lst.add("http://eprints.soton.ac.uk/10097/");
-//		lst.add("http://eprints.soton.ac.uk/10098/");
-//		lst.add("http://eprints.soton.ac.uk/10099/");
+		lst.add("http://www.icane.es/opendata/void#ICANE");
+		lst.add("http://www.icane.es/opendata/vocab#section");
+		lst.add("http://www.icane.es/opendata/vocab#subsection");
+		lst.add("http://www.icane.es/opendata/vocab#category");
+		lst.add("http://www.icane.es/c/document_library/get_file?uuid=0140ef84-10a3-4428-82cd-68c11524ee67&groupId=10138");
+		lst.add("http://www.icane.es/opendata/reference-areas#publications");
+		lst.add("http://www.icane.es/metadata/api/publications/society/living-standards/0140ef84-10a3-4428-82cd-68c11524ee67");
+		lst.add("http://www.icane.es/metadata/api/municipal-data/population/demographic-balance/demographic-balance-municipal");
+		lst.add("http://www.icane.es/society/living-standards#subsection");
+		lst.add("http://www.icane.es/c/document_library/get_file?uuid=01736705-f6f2-4d36-b2ca-c016a1dcc969&groupId=10138");
+		lst.add("http://www.icane.es/population/demographic-analysis#publications-demographic-synthesis-previous-reports");
+		lst.add("http://eprints.soton.ac.uk/10088/");
+		lst.add("http://eprints.soton.ac.uk/10089/");
+		lst.add("http://eprints.soton.ac.uk/10090/");
+		lst.add("http://eprints.soton.ac.uk/10091/");
+		lst.add("http://eprints.soton.ac.uk/10092/");
+		lst.add("http://eprints.soton.ac.uk/10093/");
+		lst.add("http://eprints.soton.ac.uk/10094/");
+		lst.add("http://eprints.soton.ac.uk/10095/");
+		lst.add("http://eprints.soton.ac.uk/10096/");
+		lst.add("http://eprints.soton.ac.uk/10097/");
+		lst.add("http://eprints.soton.ac.uk/10098/");
+		lst.add("http://eprints.soton.ac.uk/10099/");
 		
 //		String url = "http://eprints.soton.ac.uk/10094/";
 //		httpRetriever.addResourceToQueue(url);
