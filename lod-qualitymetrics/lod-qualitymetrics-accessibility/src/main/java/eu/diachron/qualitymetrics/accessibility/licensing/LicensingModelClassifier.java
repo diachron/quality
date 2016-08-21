@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.NodeFactory;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
@@ -56,7 +57,7 @@ public class LicensingModelClassifier {
 		
 
 		// Initialize set of regex patterns corresponding to CopyLeft license URIs
-		arrCopyLeftURIPatterns = new Pattern[7];
+		arrCopyLeftURIPatterns = new Pattern[15];
 		arrCopyLeftURIPatterns[0] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/odbl.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[1] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/pddl/.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[2] = Pattern.compile("^http://www\\.opendatacommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
@@ -64,6 +65,14 @@ public class LicensingModelClassifier {
 		arrCopyLeftURIPatterns[4] = Pattern.compile("^http://creativecommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[5] = Pattern.compile("^http://purl\\.org/NET/rdflicense/.*", Pattern.CASE_INSENSITIVE);
 		arrCopyLeftURIPatterns[6] = Pattern.compile("^http://www\\.gnu\\.org/licenses/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[7] = Pattern.compile("^http://opendatacommons\\.org/licenses/odbl.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[8] = Pattern.compile("^http://opendatacommons\\.org/licenses/pddl/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[9] = Pattern.compile("^http://opendatacommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[10] = Pattern.compile("^http://gnu\\.org/licenses/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[11] = Pattern.compile("^http://www\\.creativecommons\\.org/publicdomain/zero/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[12] = Pattern.compile("^http://www\\.creativecommons\\.org/licenses/by/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[13] = Pattern.compile("^http://www\\.purl\\.org/NET/rdflicense/.*", Pattern.CASE_INSENSITIVE);
+		arrCopyLeftURIPatterns[14] = Pattern.compile("^http://creativecommons\\.org/publicdomain/.*", Pattern.CASE_INSENSITIVE);
 
 		arrNotRecommendedCopyLeftURIPatterns = new Pattern[3];
 		arrNotRecommendedCopyLeftURIPatterns[0] = Pattern.compile("^http://creativecommons\\.org/licenses/by-sa/.*", Pattern.CASE_INSENSITIVE);
@@ -176,22 +185,26 @@ public class LicensingModelClassifier {
 	
 	// TODO: Remove main method introduced for testing purposes
 	public static void main(String[] args) {
-		String[] arrTestStrs = new String[8];
-		arrTestStrs[0] = "Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material";
-		arrTestStrs[1] = "Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights";
-		arrTestStrs[2] = "All rights granted under this License are granted for the term of copyright on the Program, and are irrevocable provided the stated conditions are met. This License explicitly affirms your unlimited permission to run the unmodified Program.";
-		arrTestStrs[3] = "RDF data extracted from Wikipedia";
-		arrTestStrs[4] = "To the extent possible under law, The Example Organisation has waived all copyright and related or neighboring rights to The Example Dataset.";
-		arrTestStrs[5] = "Creative Commons Attribution-Share Alike 3.0 Unported License";
-		arrTestStrs[6] = "### About Data exposed: a large life sciences data set about proteins and their function. ### Openness Not open. [Copyright page](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/rdf/README) states: Copyright 2007-2012 UniProt Consortium. We have chosen to apply the Creative Commons Attribution-NoDerivs License (http://creativecommons.org/licenses/by-nd/3.0/) to all copyrightable parts (http://sciencecommons.org/) of our databases. This means that you are free to copy, distribute, display and make commercial use of these databases, provided you give us credit. However, if you intend to distribute a modified version of one of our databases, you must ask us for permission first. All databases and documents in the UniProt FTP directory may be copied and redistributed freely, without advance permission, provided that this copyright statement is reproduced with each copy.";
-		arrTestStrs[7] = "copyleft, copyright, free software, intellectual property, license, open source, software piracy";
+//		String[] arrTestStrs = new String[8];
+//		arrTestStrs[0] = "Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material";
+//		arrTestStrs[1] = "Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights";
+//		arrTestStrs[2] = "All rights granted under this License are granted for the term of copyright on the Program, and are irrevocable provided the stated conditions are met. This License explicitly affirms your unlimited permission to run the unmodified Program.";
+//		arrTestStrs[3] = "RDF data extracted from Wikipedia";
+//		arrTestStrs[4] = "To the extent possible under law, The Example Organisation has waived all copyright and related or neighboring rights to The Example Dataset.";
+//		arrTestStrs[5] = "Creative Commons Attribution-Share Alike 3.0 Unported License";
+//		arrTestStrs[6] = "### About Data exposed: a large life sciences data set about proteins and their function. ### Openness Not open. [Copyright page](ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/rdf/README) states: Copyright 2007-2012 UniProt Consortium. We have chosen to apply the Creative Commons Attribution-NoDerivs License (http://creativecommons.org/licenses/by-nd/3.0/) to all copyrightable parts (http://sciencecommons.org/) of our databases. This means that you are free to copy, distribute, display and make commercial use of these databases, provided you give us credit. However, if you intend to distribute a modified version of one of our databases, you must ask us for permission first. All databases and documents in the UniProt FTP directory may be copied and redistributed freely, without advance permission, provided that this copyright statement is reproduced with each copy.";
+//		arrTestStrs[7] = "copyleft, copyright, free software, intellectual property, license, open source, software piracy";
+//		
+//		LicensingModelClassifier classif = new LicensingModelClassifier();
+//		
+//		for(String licenseText : arrTestStrs) {
+//			Node curNode = NodeFactory.createLiteral(licenseText);
+//			System.out.println("String " + licenseText.substring(0, 10) + " is license: " + classif.isLicenseStatement(curNode));
+//		}
 		
 		LicensingModelClassifier classif = new LicensingModelClassifier();
+		System.out.println(classif.isCopyLeftLicenseURI(ModelFactory.createDefaultModel().createResource("http://creativecommons.org/licenses/by/3.0/de/").asNode()));
 		
-		for(String licenseText : arrTestStrs) {
-			Node curNode = NodeFactory.createLiteral(licenseText);
-			System.out.println("String " + licenseText.substring(0, 10) + " is license: " + classif.isLicenseStatement(curNode));
-		}
 	}
 
 }

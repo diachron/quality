@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -42,8 +43,10 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 	private List<Quad> _problemList = new ArrayList<Quad>();
 
 
-	private double validLicenses = 0.0d;
-	private double totalPossibleLicenses = 0.0d;
+//	private double validLicenses = 0.0d;
+//	private double totalPossibleLicenses = 0.0d;
+	
+	private boolean hasValidLicense = false;
 	
 	private static HashSet<String> setLicensingDocumProps;		
 	static {		
@@ -52,6 +55,7 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 		setLicensingDocumProps.add(RDFS.comment.getURI());	
 		setLicensingDocumProps.add(RDFS.label.getURI());
 		setLicensingDocumProps.add("http://schema.org/description");
+		setLicensingDocumProps.add("http://www.w3.org/2004/02/skos/core#altLabel");
 	}		
 
 	
@@ -71,18 +75,12 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 		Node object = quad.getObject();
 		
 		if ((subject.isURI()) && (subject.getURI().startsWith(this.getDatasetURI()))){
-			if (licenseClassifier.isLicensingPredicate(predicate)) {
-				totalPossibleLicenses++;
-				
-				boolean isValidLicense = hasValidLicence(subject,object);
-				if (isValidLicense) validLicenses++;
-			}
-		}
-		
-		if (setLicensingDocumProps.contains(predicate.getURI())){
-			if (licenseClassifier.isLicenseStatement(object)){
-				totalPossibleLicenses++;
-				validLicenses++;
+			if ((licenseClassifier.isLicensingPredicate(predicate)) || (setLicensingDocumProps.contains(predicate.getURI()))) {
+				if (object.isLiteral()){
+					if (licenseClassifier.isLicenseStatement(object)){
+						this.hasValidLicense = true;
+					}
+				}
 			}
 		}
 	}
@@ -94,43 +92,49 @@ public class HumanReadableLicense extends AbstractQualityMetric {
 	 * @return Current value of the Human-readable indication of a license metric, measured for the whole dataset. [Range: 0 or 1. Error: -1]
 	 */
 	public double metricValue() {
-		double metValue = 0.0d;
-		if ((totalPossibleLicenses == 0) || (validLicenses == 0)) metValue = 0.0d;
-		else metValue = (double)validLicenses / ((double)totalPossibleLicenses);
+		double metValue = (this.hasValidLicense) ? 1.0d : 0.0d;
 		
-		statsLogger.info("HumanReadableLicense. Dataset: {} - Total # Licenses in Dataset : {}; # Total Human Readable License : {}", 
-				this.getDatasetURI(), totalPossibleLicenses, validLicenses);
+		if (!this.hasValidLicense){
+			Quad q = new Quad(null, 
+					ModelFactory.createDefaultModel().createResource(this.getDatasetURI()).asNode(), 
+					QPRO.exceptionDescription.asNode(), 
+					DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
+			this._problemList.add(q);
+		}
+		
+		statsLogger.info("HumanReadableLicense. Dataset: {} - Has Valid License : {}", 
+				this.getDatasetURI(), this.hasValidLicense);
 		
 		return metValue;
 	}
 	
 	
-	private boolean hasValidLicence(Node dataset, Node licence){
-		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return true;
-		else if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(licence)){
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDatasetForHumans.asNode());
-			this._problemList.add(q);
-			return true;
-		} else {
-			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
-			this._problemList.add(q);
-		}
-		
-		if (licence.isLiteral()){
-			if (licenseClassifier.isLicenseStatement(licence)) return true;
-			else if (licenseClassifier.isNotRecommendedLicenseStatement(licence)){
-				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDatasetForHumans.asNode());
-				this._problemList.add(q);
-				return true;
-			} 
-			else {
-				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
-				this._problemList.add(q);
-				return false;
-			}
-		}
-		return false;
-	}
+//	private boolean hasValidLicence(Node dataset, Node licence){
+//		if (licenseClassifier.isCopyLeftLicenseURI(licence)) return true;
+//		else if (licenseClassifier.isNotRecommendedCopyLeftLicenseURI(licence)){
+//			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDatasetForHumans.asNode());
+//			this._problemList.add(q);
+//			return true;
+//		} else {
+//			Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
+//			this._problemList.add(q);
+//		}
+//		
+//		if (licence.isLiteral()){
+//			if (licenseClassifier.isLicenseStatement(licence)) return true;
+//			else if (licenseClassifier.isNotRecommendedLicenseStatement(licence)){
+//				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NotRecommendedLicenceInDatasetForHumans.asNode());
+//				this._problemList.add(q);
+//				return true;
+//			} 
+//			else {
+//				Quad q = new Quad(null, dataset, QPRO.exceptionDescription.asNode(), DQMPROB.NoValidLicenceInDatasetForHumans.asNode());
+//				this._problemList.add(q);
+//				return false;
+//			}
+//		}
+//		return false;
+//	}
 
 	public Resource getMetricURI() {
 		return this.METRIC_URI;
