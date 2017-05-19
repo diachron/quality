@@ -15,7 +15,7 @@
 		<jena.version>2.11.0</jena.version>
 		<jung.version>2.0.1</jung.version>
 		<mapdb.version>1.0.9</mapdb.version>
-		<luzzu.version>1.0.2</luzzu.version>
+		<luzzu.version>2.0.0</luzzu.version>
 		<diachron.version>1.0.0</diachron.version>
 		<httpcommons.version>4.5.2</httpcommons.version>
 		
