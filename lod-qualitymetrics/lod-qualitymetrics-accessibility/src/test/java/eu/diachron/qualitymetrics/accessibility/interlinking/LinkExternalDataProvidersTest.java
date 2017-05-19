@@ -1,6 +1,7 @@
 package eu.diachron.qualitymetrics.accessibility.interlinking;
 
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
@@ -31,8 +33,7 @@ public class LinkExternalDataProvidersTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 //		loader.loadDataSet(DataSetMappingForTestCase.Dereferenceability);
-		EnvironmentProperties.getInstance().setDatasetURI("http://lsdis.cs.uga.edu/projects/semdis/opus#");
-//		loader.loadDataSet("/Users/jeremy/Downloads/swetodblp_april_2008.rdf");
+//		loader.loadDataSet("/Users/jeremy/Desktop/data.dcs.shef.ac.uk.nt.gz");
 	}
 
 	@After
@@ -40,8 +41,36 @@ public class LinkExternalDataProvidersTest extends Assert {
 		// No clean-up required
 	}
 	
-	private int[] resSize = new int[]{50,70,90,100,120,140,160,180,200,220,240,280,300,320,340,360,380,400,450,470};
+	
+	
+	@Test
+	public void testExternalDataProviders() {
+		metric = new EstimatedLinkExternalDataProviders();
+		metric.setDatasetURI("http://www.myexperiment.org");
 
+		 PipedRDFIterator<?> iter =loader.streamParser("/Users/jeremy/Desktop/www.myexperiment.org.nt.gz");
+		// Load quads...
+//		List<Quad> streamingQuads = loader.getStreamingQuads();
+//		int counter = 0;
+		
+//		for(Quad quad : streamingQuads){
+//			metric.compute(quad);
+//			counter++;
+//		}
+//		System.out.println(counter);
+		
+		while(iter.hasNext()){
+			Object nxt = iter.next();
+			Object2Quad quad = new Object2Quad(nxt);
+			metric.compute(quad.getStatement());
+		}
+//		
+		assertEquals(0.052,metric.metricValue(),0.001);
+	}
+	
+//	private int[] resSize = new int[]{50,70,90,100,120,140,160,180,200,220,240,280,300,320,340,360,380,400,450,470};
+
+	/*
 	
 	protected PipedRDFIterator<?> iterator;
 	protected PipedRDFStream<?> rdfStream;
@@ -96,8 +125,6 @@ public class LinkExternalDataProvidersTest extends Assert {
 			System.out.println(i + " - " + sec + " - " + metricValue);
 			
 		}
-		
-
 	}
-
+*/
 }

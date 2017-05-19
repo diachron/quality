@@ -12,6 +12,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
@@ -64,43 +65,48 @@ public class MisplacedClassesOrProperties extends AbstractQualityMetric {
 		Node predicate = quad.getPredicate(); // retrieve predicate
 		Node object = quad.getObject(); // retrieve object
 		
-		//checking if classes are found in the property position
-//		logger.info("Is the used predicate {} actually a class?", predicate.getURI());
-		this.totalPropertiesCount++;
-		if (seenProperties.containsKey(predicate.toString())){
-			if (!(seenProperties.get(predicate.toString()))){
-				this.misplacedPropertiesCount++;
-				this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
-			}
+		if ((predicate.getURI().equals(OWL.equivalentProperty)) ||
+			(predicate.getURI().equals(OWL.inverseOf))){
+			// do nothing
 		} else {
-			if(VocabularyLoader.getInstance().checkTerm(predicate)){ //if the predicate does not exist, then do not count it as misplaced
-				if ((VocabularyLoader.getInstance().isClass(predicate))){
+			//checking if classes are found in the property position
+//			logger.info("Is the used predicate {} actually a class?", predicate.getURI());
+			this.totalPropertiesCount++;
+			if (seenProperties.containsKey(predicate.toString())){
+				if (!(seenProperties.get(predicate.toString()))){
 					this.misplacedPropertiesCount++;
 					this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
-					seenProperties.put(predicate.toString(), false);
 				}
-				seenProperties.put(predicate.toString(), true);
-			}
-		}
-		
-		//checking if properties are found in the object position
-		if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI()))){
-			if (VocabularyLoader.getInstance().checkTerm(object)){
-				logger.info("Checking {} for misplaced class", object.getURI());
-				this.totalClassesCount++;
-				if (seenClasses.containsKey(object.toString())){
-					if (!(seenClasses.get(object.toString()))){
-						this.misplacedClassesCount++;
-						this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
+			} else {
+				if(VocabularyLoader.getInstance().checkTerm(predicate)){ //if the predicate does not exist, then do not count it as misplaced
+					if ((VocabularyLoader.getInstance().isClass(predicate))){
+						this.misplacedPropertiesCount++;
+						this.createProblemModel(quad.getSubject(), predicate, DQMPROB.MisplacedClass);
+						seenProperties.put(predicate.toString(), false);
 					}
-				} else {
-					if(VocabularyLoader.getInstance().checkTerm(object)){ //if the object does not exist, then do not count it as misplaced
-						if (VocabularyLoader.getInstance().isProperty(object)){
+					seenProperties.put(predicate.toString(), true);
+				}
+			}
+			
+			//checking if properties are found in the object position
+			if ((object.isURI()) && (predicate.getURI().equals(RDF.type.getURI()))){
+				if (VocabularyLoader.getInstance().checkTerm(object)){
+					logger.info("Checking {} for misplaced class", object.getURI());
+					this.totalClassesCount++;
+					if (seenClasses.containsKey(object.toString())){
+						if (!(seenClasses.get(object.toString()))){
 							this.misplacedClassesCount++;
 							this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
-							seenClasses.put(object.toString(), false);
 						}
-						seenClasses.put(object.toString(), true);
+					} else {
+						if(VocabularyLoader.getInstance().checkTerm(object)){ //if the object does not exist, then do not count it as misplaced
+							if (VocabularyLoader.getInstance().isProperty(object)){
+								this.misplacedClassesCount++;
+								this.createProblemModel(quad.getSubject(), object, DQMPROB.MisplacedProperty);
+								seenClasses.put(object.toString(), false);
+							}
+							seenClasses.put(object.toString(), true);
+						}
 					}
 				}
 			}

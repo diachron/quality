@@ -1,0 +1,200 @@
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_COFOG_DIVISIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_COFOG_GROUPS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed HCL_COFOG data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_COFOG_DIVISIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_COFOG_GROUPS> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/HCL_COFOG> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#qualifiedAssociation> <http://csarven.ca/linked-sdmx-data> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid1 .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid2 .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid3 .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#startedAtTime> "2014-03-07T02:34:07Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#used> <http://bfs.270a.info/data/OFS_WISTA_VGR_GRP+HCL_COFOG+1.0.xml> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#wasAssociatedWith> <https://github.com/csarven/linked-sdmx> .
+<http://bfs.270a.info/provenance/activity/20140307023407> <http://www.w3.org/ns/prov#wasStartedBy> <http://csarven.ca/#i> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_COICOP_DIVISIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_COICOP_GROUPS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed HCL_COICOP data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_COICOP_DIVISIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_COICOP_GROUPS> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/HCL_COICOP> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#qualifiedAssociation> <http://csarven.ca/linked-sdmx-data> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid1 .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid2 .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid3 .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#startedAtTime> "2014-03-07T02:34:08Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#used> <http://bfs.270a.info/data/OFS_WISTA_VGR_GRP+HCL_COICOP+1.0.xml> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#wasAssociatedWith> <https://github.com/csarven/linked-sdmx> .
+<http://bfs.270a.info/provenance/activity/20140307023408> <http://www.w3.org/ns/prov#wasStartedBy> <http://csarven.ca/#i> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_IS_CLASSES data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_IS_DIVISIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_IS_GROUPS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_IS_SECTIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_IS_SUBCLASSES data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed HCL_INSTSECTORS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_IS_CLASSES> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_IS_DIVISIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_IS_GROUPS> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_IS_SECTIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_IS_SUBCLASSES> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/HCL_INSTSECTORS> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedAssociation> <http://csarven.ca/linked-sdmx-data> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid1 .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid2 .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid3 .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid4 .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid5 .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid6 .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#startedAtTime> "2014-03-07T02:34:10Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#used> <http://bfs.270a.info/data/OFS_WISTA_VGR_GRP+HCL_INSTSECTORS+1.0.xml> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#wasAssociatedWith> <https://github.com/csarven/linked-sdmx> .
+<http://bfs.270a.info/provenance/activity/20140307023410> <http://www.w3.org/ns/prov#wasStartedBy> <http://csarven.ca/#i> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_TRANSAC_CLASSES data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_TRANSAC_DIVISIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_TRANSAC_GROUPS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_TRANSAC_SECTIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_TRANSAC_SUBCLASSES data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed CL_TRANSAC_TITLE data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/2000/01/rdf-schema#label> "Transformed HCL_TRANSACTIONS data"@en .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_TRANSAC_CLASSES> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_TRANSAC_DIVISIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_TRANSAC_GROUPS> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_TRANSAC_SECTIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_TRANSAC_SUBCLASSES> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/CL_TRANSAC_TITLE> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#generated> <http://bfs.270a.info/code/1.0/HCL_TRANSACTIONS> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedAssociation> <http://csarven.ca/linked-sdmx-data> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid1 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid2 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid3 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid4 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid5 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid6 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#qualifiedUsage> _:genid7 .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#startedAtTime> "2014-03-07T02:34:11Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#used> <http://bfs.270a.info/data/OFS_WISTA_VGR_GRP+HCL_TRANSACTIONS+1.0.xml> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#wasAssociatedWith> <https://github.com/csarven/linked-sdmx> .
+<http://bfs.270a.info/provenance/activity/20140307023411> <http://www.w3.org/ns/prov#wasStartedBy> <http://csarven.ca/#i> .
+<http://csarven.ca/#i> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Agent> .
+<http://csarven.ca/#i> <http://www.w3.org/2000/01/rdf-schema#label> "Sarven Capadisli"@en .
+<http://csarven.ca/linked-sdmx-data> <http://purl.org/dc/terms/creator> <http://csarven.ca/#i> .
+<http://csarven.ca/linked-sdmx-data> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Association> .
+<http://csarven.ca/linked-sdmx-data> <http://www.w3.org/2000/01/rdf-schema#label> "Linked SDMX Data"@en .
+<http://csarven.ca/linked-sdmx-data> <http://www.w3.org/ns/prov#agent> <https://github.com/csarven/linked-sdmx> .
+<http://csarven.ca/linked-sdmx-data> <http://www.w3.org/ns/prov#hadRole> <https://github.com/csarven/linked-sdmx#sdmx-ml-to-rdfxml> .
+<https://github.com/csarven/linked-sdmx> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Agent> .
+<https://github.com/csarven/linked-sdmx> <http://www.w3.org/2000/01/rdf-schema#label> "Linked SDMX"@en .
+<https://github.com/csarven/linked-sdmx#sdmx-ml-to-rdfxml> <http://www.w3.org/2000/01/rdf-schema#label> "Transformation from SDMX-ML to RDF/XML"@en .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BN+HCL_CSP+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BN+HCL_CSP+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BN+HCL_ISCO+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BN+HCL_ISCO+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BN+HCL_ISCO+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BN+HCL_ISCO+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BN+HCL_SBN+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BN+HCL_SBN+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BUR+CL_LEGALFORMS+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BUR+CL_LEGALFORMS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BUR+CL_LEGALFORMS+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BUR+CL_LEGALFORMS+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_BUR+CL_LEGALFORMS+3.0.xml> <http://purl.org/dc/terms/identifier> "CH1_BUR+CL_LEGALFORMS+3.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_DEM+HCL_LANGUAGESPUB+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_DEM+HCL_LANGUAGESPUB+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_DEM+HCL_LANGUAGESPUB+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_DEM+HCL_LANGUAGESPUB+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_DEM+HCL_LANGUAGESSYST+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_DEM+HCL_LANGUAGESSYST+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_DEM+HCL_LANGUAGESSYST+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_DEM+HCL_LANGUAGESSYST+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_NOGA+HCL_NOGA+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_NOGA+HCL_NOGA+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_NOGA+HCL_NOGA+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_NOGA+HCL_NOGA+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_NOGA+HCL_NOGA+3.0.xml> <http://purl.org/dc/terms/identifier> "CH1_NOGA+HCL_NOGA+3.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RE+CL_MARITALSTATUS+3.0.xml> <http://purl.org/dc/terms/identifier> "CH1_RE+CL_MARITALSTATUS+3.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_COUNTRIESGEO+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_COUNTRIESGEO+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_COUNTRIESGEO+2012.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_COUNTRIESGEO+2012.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_COUNTRIESGEO+2014.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_COUNTRIESGEO+2014.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_COUNTRIESPOLIT+2012.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_COUNTRIESPOLIT+2012.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_COUNTRIESPOLIT+2014.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_COUNTRIESPOLIT+2014.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE+2011.2.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE+2011.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE+2012.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE+2012.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE+2012.2.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE+2012.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE+2013.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE+2013.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE+2013.2.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE+2013.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE+2014.1.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE+2014.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RN+HCL_HGDE_HIST+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_RN+HCL_HGDE_HIST+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_RS+CL_SEX+1.0.xml> <http://purl.org/dc/terms/identifier> "CH1_RS+CL_SEX+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/CH1_WSA+CL_NOGA_TIC+2.0.xml> <http://purl.org/dc/terms/identifier> "CH1_WSA+CL_NOGA_TIC+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BILD_P_GRP+HCL_SHIS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BILD_P_GRP+HCL_SHIS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BILD_P_GRP+HCL_SHIS+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BILD_P_GRP+HCL_SHIS+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BILD_P_GRP+HCL_SHIS+3.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BILD_P_GRP+HCL_SHIS+3.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BILD_P_GRP+HCL_SHIS+4.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BILD_P_GRP+HCL_SHIS+4.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BILD_P_GRP+HCL_SHIS+5.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BILD_P_GRP+HCL_SHIS+5.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_AES_SBN+HCL_CSP+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_AES_SBN+HCL_CSP+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_AES_SBN+HCL_CSP+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_AES_SBN+HCL_CSP+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_AES_SBN+HCL_ISCO+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_AES_SBN+HCL_ISCO+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_AES_SBN+HCL_ISCO+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_AES_SBN+HCL_ISCO+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_AES_SBN+HCL_SBN+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_AES_SBN+HCL_SBN+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_AES_SBN+HCL_SBN+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_AES_SBN+HCL_SBN+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_DEM_GRP+HCL_LANGUAGESPUB+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_DEM_GRP+HCL_LANGUAGESPUB+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_DEM_GRP+HCL_LANGUAGESPUB+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_DEM_GRP+HCL_LANGUAGESPUB+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_DEM_GRP+HCL_LANGUAGESSYST+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_DEM_GRP+HCL_LANGUAGESSYST+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_DEM_GRP+HCL_LANGUAGESSYST+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_DEM_GRP+HCL_LANGUAGESSYST+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_DEM_GRP+HCL_RELIGIONSPUB+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_DEM_GRP+HCL_RELIGIONSPUB+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_DEM_GRP+HCL_RELIGIONSPUB+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_DEM_GRP+HCL_RELIGIONSPUB+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_POP_GRP+CL_MARITALSTATUS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_POP_GRP+CL_MARITALSTATUS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_BS_POP_GRP+CL_MARITALSTATUS+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_BS_POP_GRP+CL_MARITALSTATUS+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_BUR_BUR+CL_LEGALFORMS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_BUR_BUR+CL_LEGALFORMS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_BUR_BUR+CL_LEGALFORMS+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_BUR_BUR+CL_LEGALFORMS+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_BUR_NOGA+HCL_NOGA+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_BUR_NOGA+HCL_NOGA+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_BUR_NOGA+HCL_NOGA+2.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_BUR_NOGA+HCL_NOGA+2.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_BUR_NOGA+HCL_NOGA+3.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_BUR_NOGA+HCL_NOGA+3.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2000.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2000.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2002.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2002.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2003.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2003.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2004.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2004.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2006.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2006.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2008.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2008.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2009.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2009.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2010.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESGEO+2010.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2000.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2000.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2002.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2002.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2003.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2003.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2004.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2004.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2006.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2006.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2008.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2008.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2009.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2009.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2010.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_COUNTRIESPOL+2010.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2000.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2000.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2000.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2000.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2001.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2001.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2001.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2001.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2001.3.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2001.3" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2002.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2002.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2003.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2003.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2003.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2003.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2004.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2004.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2004.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2004.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2004.3.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2004.3" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2004.4.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2004.4" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2005.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2005.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2005.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2005.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2006.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2006.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2006.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2006.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2006.3.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2006.3" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2006.4.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2006.4" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2006.5.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2006.5" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2006.6.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2006.6" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2007.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2007.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2008.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2008.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2008.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2008.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2009.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2009.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2009.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2009.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2009.3.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2009.3" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2010.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2010.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2010.2.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2010.2" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2010.3.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2010.3" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE+2011.1.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE+2011.1" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_GEWO_RN+HCL_HGDE_HIST+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_GEWO_RN+HCL_HGDE_HIST+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_SI_UNS_UDEMO+CL_SEX_V01+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_SI_UNS_UDEMO+CL_SEX_V01+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_SUKO_GRP+CL_NOGA_TIC+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_SUKO_GRP+CL_NOGA_TIC+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_SUKO_GRP+HCL_HS_ICT_CH+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_SUKO_GRP+HCL_HS_ICT_CH+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_VGR_GRP+HCL_ASSETS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_VGR_GRP+HCL_ASSETS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_VGR_GRP+HCL_BALANCINGITEMS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_VGR_GRP+HCL_BALANCINGITEMS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_VGR_GRP+HCL_COFOG+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_VGR_GRP+HCL_COFOG+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_VGR_GRP+HCL_COICOP+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_VGR_GRP+HCL_COICOP+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_VGR_GRP+HCL_INSTSECTORS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_VGR_GRP+HCL_INSTSECTORS+1.0" .
+<http://www.bfs.admin.ch/xmlns/sdmx/OFS_WISTA_VGR_GRP+HCL_TRANSACTIONS+1.0.xml> <http://purl.org/dc/terms/identifier> "OFS_WISTA_VGR_GRP+HCL_TRANSACTIONS+1.0" .

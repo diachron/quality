@@ -10,6 +10,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.cybozu.labs.langdetect.Detector;
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 import eu.diachron.qualitymetrics.utilities.TestLoader;
@@ -48,4 +51,13 @@ public class CorrectLanguageTagTest extends Assert {
 		// 5 / 7
 		assertEquals(0.71428571428,metric.metricValue(), 0.0001);
 	}	
+	
+	
+	public static void main (String [] args) throws LangDetectException{
+		DetectorFactory.loadProfile("/Users/jeremy/Documents/Workspaces/eis/quality/lod-qualitymetrics/lod-qualitymetrics-intrinsic/src/test/resources/profiles");
+		
+		Detector detector = DetectorFactory.create();
+        detector.append("apple I eat");
+        System.out.println(detector.detect());
+	}
 }

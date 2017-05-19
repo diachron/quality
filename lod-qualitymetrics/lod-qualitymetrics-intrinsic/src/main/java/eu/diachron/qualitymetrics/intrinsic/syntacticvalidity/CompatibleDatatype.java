@@ -102,6 +102,9 @@ public class CompatibleDatatype extends AbstractQualityMetric {
 		double metricValue = (double) numberCorrectLiterals / ((double)numberIncorrectLiterals + (double)numberCorrectLiterals);
 		statsLogger.info("CompatibleDatatype. Dataset: {} - Total # Correct Literals : {}; # Incorrect Literals : {}; # Metric Value: {}", 
 				this.getDatasetURI(), numberCorrectLiterals, numberIncorrectLiterals, metricValue);
+		
+		if (((Double)metricValue).isNaN())
+			metricValue = 1.0d;
 
 		return metricValue;
 	}

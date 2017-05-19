@@ -28,7 +28,7 @@ import eu.diachron.qualitymetrics.utilities.TestLoader;
  */
 public class UsageOfIncorrectDomainOrRangeDatatypesTest extends Assert {
 	protected TestLoader loader = new TestLoader();
-	protected EstimatedUsageOfIncorrectDomainOrRangeDatatypes metric = new EstimatedUsageOfIncorrectDomainOrRangeDatatypes();
+	protected UsageOfIncorrectDomainOrRangeDatatypes metric = new UsageOfIncorrectDomainOrRangeDatatypes();
 
 
 	@Before

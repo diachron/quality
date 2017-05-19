@@ -1,5 +1,8 @@
 package eu.diachron.qualitymetrics.accessibility.availability;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import org.junit.After;
@@ -9,8 +12,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
+import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
+import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class MisreportedContentTypeTest extends Assert {
@@ -23,7 +29,8 @@ public class MisreportedContentTypeTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 //		loader.loadDataSet(DataSetMappingForTestCase.MisreportedContentType);
-		loader.loadDataSet("/Users/jeremy/Dropbox/wals.info.nt.gz");
+//		loader.loadDataSet("/Users/jeremy/Dropbox/wals.info.nt.gz");
+		loader.loadDataSet("/Volumes/KINGSTON/sampling_datasets/LAK-DATASET-DUMP.nt.gz");
 	}
 
 	@After
@@ -51,6 +58,20 @@ public class MisreportedContentTypeTest extends Assert {
 		
 		// Obtain the measurement of Dereferenceability for the source of the dataset
 		double metricValue = metric.metricValue();
+		
+		
+		// Problem report
+		ProblemList<?> pl = metric.getQualityProblems();
+		QualityReport qr = new QualityReport();
+		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+		
+		try {
+			plModel.write(new FileOutputStream(new File("/Users/jeremy/Desktop/preport_test.ttl")), "TURTLE");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		logger.trace("Computed misreported content-type metric: " + metricValue);
 		assertEquals(expectedValue, metricValue, delta);
 	}

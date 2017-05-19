@@ -179,14 +179,14 @@ public class PredicateClusteringIndexing implements Serializable {
 			
 			logger.info("Clustering Stats - Host Location: {},{}", hostCellX, hostCellY);
 			
-//			SerialisableTriple hostTriple = resSampler.getItems().get(hostPos);
+			SerialisableTriple hostTriple = resSampler.getItems().get(hostPos);
 			
-			Triple triple = new Triple(
-					ModelFactory.createDefaultModel().createResource("http://dbpedia.org/resource/Ripatransone").asNode(),
-					ModelFactory.createDefaultModel().createProperty("http://dbpedia.org/property/saint").asNode(),
-					ModelFactory.createDefaultModel().createResource("http://dbpedia.org/resource/Mary_Magdalene").asNode()
-			);
-			SerialisableTriple hostTriple = new SerialisableTriple(triple);
+//			Triple triple = new Triple(
+//					ModelFactory.createDefaultModel().createResource("http://dbpedia.org/resource/Ripatransone").asNode(),
+//					ModelFactory.createDefaultModel().createProperty("http://dbpedia.org/property/saint").asNode(),
+//					ModelFactory.createDefaultModel().createResource("http://dbpedia.org/resource/Mary_Magdalene").asNode()
+//			);
+//			SerialisableTriple hostTriple = new SerialisableTriple(triple);
 			
 			logger.info("Clustering Stats - Host {},{}", hostTriple.getTriple().getSubject().toString(), hostTriple.getTriple().getObject().toString());
 

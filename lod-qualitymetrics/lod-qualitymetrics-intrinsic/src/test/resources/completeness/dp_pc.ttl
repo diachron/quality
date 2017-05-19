@@ -1,0 +1,22 @@
+@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# There shouold be a configuration for each input file
+[] a ex:PopulationCompletenessConfiguration ;
+	ex:goldStandard <file:///Users/jeremy/Downloads/CompletenessMetric/dp2012.ttl> ;
+	ex:dsd <file:///Users/jeremy/Downloads/CompletenessMetric/dp2012.ttl> ; # this is where the data structure definition and component properties are defined
+	ex:conditionConfiguration [
+		a ex:ConditionConfiguration ;
+		ex:assessedComponentProperty <http://www.data-publica.com/lod/publication/dp#commune-dim> ;
+		ex:conditionOperator ">="^^xsd:string ;
+		ex:conditionValue "1"^^xsd:integer ;
+	] ,
+	[
+		a ex:ConditionConfiguration ;
+		ex:assessedComponentProperty <http://www.data-publica.com/lod/publication/dp#pays-dim> ;
+		ex:conditionOperator ">="^^xsd:string ;
+		ex:conditionValue "1"^^xsd:integer ;
+	] .

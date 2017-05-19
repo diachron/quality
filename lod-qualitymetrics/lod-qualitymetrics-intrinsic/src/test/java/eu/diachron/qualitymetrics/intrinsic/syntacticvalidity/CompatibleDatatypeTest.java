@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -33,7 +34,7 @@ public class CompatibleDatatypeTest extends Assert {
 	@Before
 	public void setUp() throws Exception {
 		loader.loadDataSet("testdumps/SampleInput_CompatibleDatatype.ttl");
-		//		loader.loadDataSet("/Users/jeremy/Dropbox/Public/knud/21-chronik.ttl");
+//		loader.loadDataSet("/Users/jeremy/Desktop/www.bibsonomy.org.nt.gz");
 
 	}
 	
@@ -46,6 +47,7 @@ public class CompatibleDatatypeTest extends Assert {
 	 * 
 	 * Note that the FOAF vocabulary has been published as LOD, and that foaf:Person is explicitly declared disjoint with foaf:Document.
 	 */
+	@Ignore
 	@Test
 	public void testCompatibleDatatypeMinimalExample() {
 		List<Quad> streamingQuads = loader.getStreamingQuads();
@@ -61,6 +63,7 @@ public class CompatibleDatatypeTest extends Assert {
 		assertEquals(0.7857,metric.metricValue(), 0.0001);
 	}	
 	
+
 	@Test
 	public void problemReportTest() throws IOException{
 		for(Quad q : loader.getStreamingQuads()){
@@ -73,6 +76,8 @@ public class CompatibleDatatypeTest extends Assert {
 		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
 		Model plModel = qr.getProblemReportFromTBD(plModelURI);
 		
-		plModel.write(new FileWriter(new File("/Users/jeremy/Desktop/pr.ttl")), "TURTLE");
+//		plModel.write(new FileWriter(new File("/Users/jeremy/Desktop/pr.ttl")), "TURTLE");
+		plModel.write(System.out, "TURTLE");
+
 	}
 }

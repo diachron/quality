@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.diachron.configuration.DataSetMappingForTestCase;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
 public class LowLatencyTest extends Assert {
@@ -23,7 +22,8 @@ public class LowLatencyTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet("/Users/jeremy/Dropbox/pdev-lemon.nt.gz");
+		loader.loadDataSet("/Users/jeremy/Documents/Workspaces/eis/quality/lod-qualitymetrics/lod-qualitymetrics-accessibility/src/test/resources/testdumps/performance.nt");
+//		loader.loadDataSet("/Users/jeremy/Desktop/pisa.rkbexplorer.com.nt.gz");
 	}
 
 	@After
@@ -33,6 +33,7 @@ public class LowLatencyTest extends Assert {
 
 	@Test
 	public void testLowLatency() {
+		metric.setDatasetURI("http://bfs.270a.info/");
 		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int countLoadedQuads = 0;

@@ -14,12 +14,12 @@ public class EstimatedDereferenceabilityTest extends Assert {
 	
 	
 	protected TestLoader loader = new TestLoader();
-	protected EstimatedDereferenceability metric = new EstimatedDereferenceability();
+	protected EstimatedDereferenceabilityByStratified metric = new EstimatedDereferenceabilityByStratified();
 
 	@Before
 	public void setUp() throws Exception {
 		//loader.loadDataSet("testdumps/sample_deref.ttl");
-		loader.loadDataSet("/Users/jeremy/Downloads/LAK-DATASET-DUMP.nt");
+		loader.loadDataSet("/Users/jeremy/Desktop/zbw.eu_stw.nt.gz");
 		
 	}
 	
@@ -28,6 +28,7 @@ public class EstimatedDereferenceabilityTest extends Assert {
 		// Load quads...
 		List<Quad> streamingQuads = loader.getStreamingQuads();
 		int counter = 0;
+		metric.setDatasetURI("http://zbw.eu/stw");
 		
 		for(Quad quad : streamingQuads){
 			metric.compute(quad);

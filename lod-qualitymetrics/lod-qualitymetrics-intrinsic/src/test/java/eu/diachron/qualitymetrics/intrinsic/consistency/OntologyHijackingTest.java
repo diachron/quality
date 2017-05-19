@@ -31,7 +31,8 @@ public class OntologyHijackingTest extends Assert{
 	@Before
 	public void setUp() throws Exception {
 		PropertyManager.getInstance().addToEnvironmentVars("baseURI", "http://example.org/data/");
-
+		metric.setDatasetURI("http://example.org/data/");
+		
 		loader.loadDataSet("testdumps/SampleInput_OntologyHijacking_Minimal.ttl");
 	}
 

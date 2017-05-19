@@ -22,7 +22,9 @@ public class HighThroughputTest extends Assert {
 	
 	@Before
 	public void setUp() throws Exception {
-		loader.loadDataSet("/Users/jeremy/Dropbox/pdev-lemon.nt.gz");
+		loader.loadDataSet("/Users/jeremy/Documents/Workspaces/eis/quality/lod-qualitymetrics/lod-qualitymetrics-accessibility/src/test/resources/testdumps/performance.nt");
+//		loader.loadDataSet("/Users/jeremy/Desktop/pisa.rkbexplorer.com.nt.gz");
+
 	}
 
 	@After
