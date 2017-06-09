@@ -1,3 +1,5 @@
+THIS IS OUTDATED. WILL BE UPDATED IN DUE COURSE
+
 Diachron Quality Assessment Framework
 =======
 
