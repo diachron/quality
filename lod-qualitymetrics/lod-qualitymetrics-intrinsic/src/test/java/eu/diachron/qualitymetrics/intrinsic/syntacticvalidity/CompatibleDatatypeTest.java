@@ -17,7 +17,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 
@@ -64,20 +63,20 @@ public class CompatibleDatatypeTest extends Assert {
 	}	
 	
 
-	@Test
-	public void problemReportTest() throws IOException{
-		for(Quad q : loader.getStreamingQuads()){
-			metric.compute(q);
-		}
-		metric.metricValue();
-		
-		ProblemList<?> pl = metric.getQualityProblems();
-		QualityReport qr = new QualityReport();
-		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
-		Model plModel = qr.getProblemReportFromTBD(plModelURI);
-		
-//		plModel.write(new FileWriter(new File("/Users/jeremy/Desktop/pr.ttl")), "TURTLE");
-		plModel.write(System.out, "TURTLE");
-
-	}
+//	@Test
+//	public void problemReportTest() throws IOException{
+//		for(Quad q : loader.getStreamingQuads()){
+//			metric.compute(q);
+//		}
+//		metric.metricValue();
+//		
+//		ProblemList<?> pl = metric.getQualityProblems();
+//		QualityReport qr = new QualityReport();
+//		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+//		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+//		
+////		plModel.write(new FileWriter(new File("/Users/jeremy/Desktop/pr.ttl")), "TURTLE");
+//		plModel.write(System.out, "TURTLE");
+//
+//	}
 }

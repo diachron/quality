@@ -16,7 +16,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 
-import de.unibonn.iai.eis.luzzu.annotations.QualityReport;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import de.unibonn.iai.eis.luzzu.exceptions.BeforeException;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
@@ -57,19 +56,19 @@ public class DataCubePopulationCompletenessTest extends Assert{
 
 	}	
 	
-	
-	private void problemReportTest(){
-		ProblemList<?> pl = metric.getQualityProblems();
-		QualityReport qr = new QualityReport();
-		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
-		Model plModel = qr.getProblemReportFromTBD(plModelURI);
-		
-		try {
-			plModel.write(new FileOutputStream("/Users/jeremy/Desktop/report.ttl"), "TURTLE");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+//	
+//	private void problemReportTest(){
+//		ProblemList<?> pl = metric.getQualityProblems();
+//		QualityReport qr = new QualityReport();
+//		String plModelURI = qr.createQualityProblem(metric.getMetricURI(), pl);
+//		Model plModel = qr.getProblemReportFromTBD(plModelURI);
+//		
+//		try {
+//			plModel.write(new FileOutputStream("/Users/jeremy/Desktop/report.ttl"), "TURTLE");
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 
 }
