@@ -1,9 +1,9 @@
 /* CVS $Id: $ */
 package de.unibonn.iai.eis.diachron.semantics.knownvocabs; 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
  
 /**
  * Vocabulary definitions from http://www.w3.org/ns/sparql-service-description.rdf 

@@ -11,9 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.luzzu.semantics.vocabularies.DAQ;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;

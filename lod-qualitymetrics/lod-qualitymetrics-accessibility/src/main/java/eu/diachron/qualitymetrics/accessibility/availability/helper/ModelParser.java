@@ -18,11 +18,11 @@ import org.apache.jena.riot.lang.PipedTriplesStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFReader;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFReader;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
@@ -314,7 +314,7 @@ public class ModelParser {
 		Dereferencer.parsable(httpResource, lang);
 		return httpResource.isContentParsable();
 	}
-	
+		
 	public static void main(String[]args) throws IOException{
 		String uris = "http://transparency.270a.info/dataset/corruption-perceptions-index/2011/ZW,http://www.icane.es/opendata/void#ICANE";
 		for (String uri : uris.split(",")){

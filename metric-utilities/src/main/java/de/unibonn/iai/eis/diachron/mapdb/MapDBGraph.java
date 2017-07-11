@@ -9,7 +9,7 @@ import org.mapdb.HTreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.OWL;
 
 /**
  * @author Jeremy Debattista

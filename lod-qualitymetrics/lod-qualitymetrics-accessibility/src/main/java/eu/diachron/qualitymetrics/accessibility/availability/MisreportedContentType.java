@@ -6,15 +6,14 @@ import java.util.List;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.riot.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.impl.StatementImpl;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
@@ -131,7 +130,7 @@ public class MisreportedContentType extends AbstractQualityMetric {
 				SerialisableHttpResponse res = HTTPResourceUtils.getSemanticResponse(httpResource);
 				if (res != null){
 					String ct = res.getHeaders("Content-Type");
-					Lang lang = WebContent.contentTypeToLang(ct);
+					Lang lang = RDFLanguages.contentTypeToLang(ct);
 					
 					//should the resource be dereferencable?
 					if (lang != null){

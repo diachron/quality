@@ -5,9 +5,9 @@ package eu.diachron.qualitymetrics.intrinsic.semanticaccuracy;
 
 import org.mapdb.HTreeMap;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;

@@ -3,8 +3,8 @@
  */
 package eu.diachron.qualitymetrics.contextual.provenance;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.AbstractQualityMetric;

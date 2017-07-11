@@ -16,8 +16,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.datatypes.Object2Quad;
 import de.unibonn.iai.eis.luzzu.properties.EnvironmentProperties;

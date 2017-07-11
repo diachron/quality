@@ -26,23 +26,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.util.iterator.Filter;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.graph.Node;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.util.iterator.Filter;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 import eu.diachron.qualitymetrics.cache.CachedVocabulary;
@@ -255,8 +255,13 @@ public class VocabularyLoader {
 				    @Override
 				    public Model call() throws Exception {
 				    	logger.info("Loading {}", ns);
-				    	Model m = RDFDataMgr.loadModel(ns, Lang.RDFXML);
-				    	return m;
+				    	Model m = ModelFactory.createDefaultModel();
+				    	try {
+				    		m = RDFDataMgr.loadModel(ns, Lang.RDFXML);    	
+				    	} catch (Exception e) {
+				    		System.out.println(e.getMessage());
+				    	}
+				    	return m; 
 				    }
 				});
 				
@@ -972,7 +977,7 @@ public class VocabularyLoader {
 	
 	public static void main (String [] args){
 //		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
-		Node n = ModelFactory.createDefaultModel().createResource("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property").asNode();
+		Node n = ModelFactory.createDefaultModel().createResource("http://purl.org/eis/vocab/daq#computedOn").asNode();
 
 		System.out.println(VocabularyLoader.getInstance().isDeprecatedTerm(n));
 	}

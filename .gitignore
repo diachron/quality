@@ -8,3 +8,5 @@
 /tmp/
 /datapublica/
 .DS_Store
+.project
+.externalToolBuilders/org.eclipse.jdt.core.javabuilder.launch

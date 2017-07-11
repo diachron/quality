@@ -6,8 +6,8 @@ package eu.diachron.qualitymetrics.accessibility.licensing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
@@ -42,7 +42,7 @@ public class CorrectLicenceReattribution extends AbstractQualityMetric {
 	final static Logger logger = LoggerFactory.getLogger(CorrectLicenceReattribution.class);
 	
 	/* (non-Javadoc)
-	 * @see de.unibonn.iai.eis.luzzu.assessment.QualityMetric#compute(com.hp.hpl.jena.sparql.core.Quad)
+	 * @see de.unibonn.iai.eis.luzzu.assessment.QualityMetric#compute(org.apache.jena.sparql.core.Quad)
 	 */
 	@Override
 	public void compute(Quad quad) {

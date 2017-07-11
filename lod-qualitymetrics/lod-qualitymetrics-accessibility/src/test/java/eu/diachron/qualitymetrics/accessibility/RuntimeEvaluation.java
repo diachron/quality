@@ -10,8 +10,8 @@ import java.util.Map;
 
 import org.apache.jena.riot.lang.PipedRDFIterator;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.Pair;
 import de.unibonn.iai.eis.luzzu.assessment.ComplexQualityMetric;

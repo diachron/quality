@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 
 
 /**

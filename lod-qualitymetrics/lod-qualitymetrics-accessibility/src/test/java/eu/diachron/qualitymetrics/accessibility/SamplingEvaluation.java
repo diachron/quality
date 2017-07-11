@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.diachron.datatypes.Pair;
 import de.unibonn.iai.eis.luzzu.cache.CacheManager;

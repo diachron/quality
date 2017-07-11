@@ -6,10 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.StatusCode;
 import de.unibonn.iai.eis.diachron.datatypes.Tld;

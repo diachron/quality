@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.sparql.core.Quad;
 
 import eu.diachron.qualitymetrics.utilities.SerialisableTriple;
 

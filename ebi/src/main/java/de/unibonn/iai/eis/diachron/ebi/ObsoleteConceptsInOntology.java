@@ -3,11 +3,11 @@ package de.unibonn.iai.eis.diachron.ebi;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDFS;
 
 import de.unibonn.iai.eis.diachron.semantics.DQM;
 import de.unibonn.iai.eis.diachron.semantics.EBIQM;

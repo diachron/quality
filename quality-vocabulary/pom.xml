@@ -12,51 +12,75 @@
 	<description>Contains vocabularies (such as DQM) that are required to run these metrics</description>
 
 
-	<build>
+
+	<!-- <build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<configuration>
-							<tasks>
-								<property name="runtime_classpath" refid="maven.runtime.classpath" />
-								<echo message="Compiling Vocabularies into Classes" />
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/dqm/dqm.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.semantics -o src/main/java -n DQM" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/dqm/ebiqm.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.semantics -o src/main/java -n EBIQM" />
-								</java>
-								<java classname="jena.schemagen" classpath="${runtime_classpath}">
-									<arg line="-i src/main/resources/vocabularies/dqm/dqm-prob.ttl -e N3 --inference --package de.unibonn.iai.eis.diachron.semantics -o src/main/java -n DQMPROB" />
-								</java>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		<!-- 	<plugin>
-				<groupId>de.unibonn.iai.eis</groupId>
-				<artifactId>luzzu-plugins</artifactId>
-				<version>1.0.0</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>daQValidator</goal>
-						</goals>
-						<configuration>
-							<vocabLocation>/Users/jeremy/Documents/Workspaces/eis/quality/quality-vocabulary/src/main/resources/vocabularies/dqm/dqm.ttl</vocabLocation></configuration>
-					</execution>
-				</executions>
-			</plugin> -->
+			    <groupId>org.apache.jena</groupId>
+			    <artifactId>jena-maven-tools</artifactId>
+			    <version>3.1.0</version>
+			    <configuration>
+			    		<includes>
+			    			<include>src/main/resources/vocabularies/dqm/*.ttl</include>
+			    		</includes>
+			    		<fileOptions>
+			    			   <source>
+					          <input>default</input>
+					          <package-name>de.unibonn.iai.eis.diachron.semantics</package-name>
+					          <use-inf>true</use-inf>
+					          <output>src/main/java/</output>
+					       </source>
+			    		</fileOptions>
+			    </configuration>
+			    <executions>
+			      <execution>
+			        <id>schemagen</id>
+			        <goals>
+			          <goal>translate</goal>
+			        </goals>
+			      </execution>
+			    </executions>
+			  </plugin>
+			<plugin>
+			    <groupId>org.apache.jena</groupId>
+			    <artifactId>jena-maven-tools</artifactId>
+			    <version>3.1.0</version>
+			    <configuration>
+			    		<includes>
+			    			<include>http://www.w3.org/ns/dcat#</include>
+			    			<include>http://www.w3.org/ns/prov#</include>
+						<include>http://www.w3.org/ns/sparql-service-description#</include>
+			    			<include>http://rdfs.org/sioc/ns#</include>
+			    			<include>http://rdfs.org/sioc/services#</include>
+			    		</includes>
+			    		<fileOptions>
+			    			   <source>
+					          <input>default</input>
+					          <package-name>de.unibonn.iai.eis.diachron.semantics.knownvocabs</package-name>
+					          <output>src/main/java/</output>
+					       </source>
+			    		</fileOptions>
+			    </configuration>
+			    <executions>
+			      <execution>
+			        <id>schemagen</id>
+			        <goals>
+			          <goal>translate</goal>
+			        </goals>
+			      </execution>
+			    </executions>
+			  </plugin>
 		</plugins>
-	</build>
+	</build> -->
 	
+	
+	
+<dependencies>
+   <dependency>
+     <groupId>org.apache.jena</groupId>
+     <artifactId>jena-core</artifactId>
+     <version>${jena.version}</version>
+  </dependency>
+</dependencies>
 	
 </project>

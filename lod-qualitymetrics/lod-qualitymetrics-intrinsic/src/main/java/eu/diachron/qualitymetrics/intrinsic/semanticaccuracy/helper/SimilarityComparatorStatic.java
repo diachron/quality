@@ -21,11 +21,11 @@ import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 
 import de.unibonn.iai.eis.diachron.datatypes.Pair;
 import eu.diachron.qualitymetrics.utilities.VocabularyLoader;
@@ -125,7 +125,7 @@ public class SimilarityComparatorStatic {
     	Model m = VocabularyLoader.getInstance().getClassModelNoLiterals(observed.asNode(), null);
     	
     	for(Statement stmt : m.listStatements().toList()){
-    		if (stmt.getPredicate().equals(com.hp.hpl.jena.vocabulary.RDFS.subClassOf)) continue;
+    		if (stmt.getPredicate().equals(org.apache.jena.vocabulary.RDFS.subClassOf)) continue;
     		graph.addE(FACTORY.getURI(observed.getURI()), 
     				FACTORY.getURI(stmt.getPredicate().getURI()),
     				FACTORY.getURI(stmt.getObject().asResource().getURI()));

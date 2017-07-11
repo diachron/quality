@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.properties.PropertyManager;
 import eu.diachron.qualitymetrics.utilities.TestLoader;

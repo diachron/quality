@@ -6,9 +6,9 @@ package eu.diachron.qualitymetrics.accessibility.interlinking.helper;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 

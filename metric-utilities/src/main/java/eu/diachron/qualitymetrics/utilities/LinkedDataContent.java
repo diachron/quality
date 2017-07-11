@@ -13,7 +13,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.LangBuilder;
 import org.apache.jena.riot.RDFLanguages;
 
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.util.FileUtils;
 
 
 /**

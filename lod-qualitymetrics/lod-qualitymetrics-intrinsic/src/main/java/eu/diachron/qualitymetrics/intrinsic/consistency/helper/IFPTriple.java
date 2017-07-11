@@ -5,10 +5,10 @@ package eu.diachron.qualitymetrics.intrinsic.consistency.helper;
 
 import java.io.Serializable;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 
 import de.unibonn.iai.eis.luzzu.semantics.utilities.Commons;
 

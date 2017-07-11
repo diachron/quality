@@ -5,9 +5,9 @@ package eu.diachron.qualitymetrics.utilities;
 
 import java.io.Serializable;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.impl.ResourceImpl;
 
 import de.unibonn.iai.eis.luzzu.cache.JenaCacheObject;
 

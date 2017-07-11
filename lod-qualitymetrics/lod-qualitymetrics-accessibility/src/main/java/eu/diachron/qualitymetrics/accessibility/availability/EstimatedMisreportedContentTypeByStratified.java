@@ -9,16 +9,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.WebContent;
+import org.apache.jena.riot.RDFLanguages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.impl.StatementImpl;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.vocabulary.RDF;
 
 import de.unibonn.iai.eis.diachron.datatypes.Tld;
 import de.unibonn.iai.eis.diachron.semantics.DQM;
@@ -193,7 +193,7 @@ public class EstimatedMisreportedContentTypeByStratified extends AbstractQuality
 				SerialisableHttpResponse res = HTTPResourceUtils.getSemanticResponse(httpResource);
 				if (res != null){
 					String ct = res.getHeaders("Content-Type").split(";")[0];
-					Lang lang = WebContent.contentTypeToLang(ct);
+					Lang lang = RDFLanguages.contentTypeToLang(ct);
 					
 					//should the resource be dereferencable?
 					if (lang != null){

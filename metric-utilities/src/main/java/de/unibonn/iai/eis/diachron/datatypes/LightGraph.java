@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import org.mapdb.DB;
 import org.mapdb.HTreeMap;
 
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.OWL;
 
 import de.unibonn.iai.eis.diachron.mapdb.MapDBGraph;
 import de.unibonn.iai.eis.diachron.mapdb.MapDbFactory;

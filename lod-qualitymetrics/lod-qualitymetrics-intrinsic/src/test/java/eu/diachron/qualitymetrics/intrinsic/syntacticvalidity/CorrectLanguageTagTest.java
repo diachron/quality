@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.sparql.core.Quad;
 
 import eu.diachron.qualitymetrics.utilities.TestLoader;
 

@@ -10,9 +10,9 @@ import java.io.StringWriter;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.impl.ModelCom;
-import com.hp.hpl.jena.sparql.graph.GraphFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.sparql.graph.GraphFactory;
 
 import de.unibonn.iai.eis.luzzu.cache.JenaCacheObject;
 

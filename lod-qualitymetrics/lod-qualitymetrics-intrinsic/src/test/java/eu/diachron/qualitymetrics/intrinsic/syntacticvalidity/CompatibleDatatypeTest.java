@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.core.Quad;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.core.Quad;
 
 import de.unibonn.iai.eis.luzzu.datatypes.ProblemList;
 import eu.diachron.qualitymetrics.utilities.TestLoader;
