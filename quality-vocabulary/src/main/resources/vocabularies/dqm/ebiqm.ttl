@@ -7,7 +7,7 @@
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix qpro:     <http://purl.org/eis/vocab/qpro#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix dqm:     <http://www.diachron-fp7.eu/dqm#> .
+@prefix dqm:     <http://purl.org/eis/vocab/dqm#> .
 
 
 # EBI Metrics
@@ -19,83 +19,81 @@ ebiqm:hasOntologyVersionConcisenessMetric
 	rdfs:comment	"Links Conciseness Dimension with Ontology Versioning Conciseness Metric" ;
 	rdfs:label	"Conciseness has extensional conciseness metric" ;
 	rdfs:domain	dqm:Conciseness ;
-	rdfs:range	ebiqm:OntologyVersionConcisenessMetric .	
-	
+	rdfs:range	ebiqm:OntologyVersionConcisenessMetric .
+
 ebiqm:OntologyVersionConcisenessMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a measure for checking singleton instances of the use-case specific defined owl:ontologyVersion property" ;
 	rdfs:label	"Ontology version conciseness metric" .
-		
-		
+
+
 #Obsolete Concepts in Ontology
 ebiqm:hasObsoleteConceptsInOntologyMetric
 	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Understandability ;
-	rdfs:range	ebiqm:ObsoleteConceptsInOntologyMetric .	
-	
+	rdfs:range	ebiqm:ObsoleteConceptsInOntologyMetric .
+
 ebiqm:ObsoleteConceptsInOntologyMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a measure for the number of classes and properties in an ontology which are marked as depricated. If an ontology is making lots of obsolete concepts between different versions, then this is an indicator that the ontology is going through a lot of changes, and is potentially in a state of poor quality" ;
 	rdfs:label	"Obsolete concepts in ontology metric" .
-		
+
 #Synonym Usage in Ontology Classes
 ebiqm:hasSynonymUsageMetric
 	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:SyntacticValidity ;
-	rdfs:range	ebiqm:SynonymUsageMetric .	
+	rdfs:range	ebiqm:SynonymUsageMetric .
 
 ebiqm:SynonymUsageMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Measures the number of classes which has a synonym <efo:alternative_term> described." ;
 	rdfs:label	"Synonym usage metric" .
-	
+
 #POBO Definition Usage
 ebiqm:hasPOBODefinitionUsageMetric
 	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:SyntacticValidity ;
-	rdfs:range	ebiqm:POBODefinitionUsageMetric .	
+	rdfs:range	ebiqm:POBODefinitionUsageMetric .
 
 ebiqm:POBODefinitionUsageMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Provides a measure for an Ontology checking the usage of <pobo:def> in defined classes." ;
 	rdfs:label	"POBO definition usage metric" .
-	
+
 ebiqm:hasDefinedOntologyAuthorMetric
 	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:SyntacticValidity ;
-	rdfs:range	ebiqm:DefinedOntologyAuthorMetric .	
+	rdfs:range	ebiqm:DefinedOntologyAuthorMetric .
 
 ebiqm:DefinedOntologyAuthorMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
 	rdfs:comment	"Checks whether the creator <efo:creator> is defined in the ontology." ;
 	rdfs:label	"Defined ontology author" .
-	
+
 
 ebiqm:OBOFoundryMetric
 	a	rdfs:Class ;
-	rdfs:subClassOf	daq:Metric ; 
+	rdfs:subClassOf	daq:Metric ;
 	daq:expectedDataType xsd:double ;
-	rdfs:comment "Detects non reputable resources by retrieving URI of resources from data sets and comparing them with URI found in reputable resources." ; 
+	rdfs:comment "Detects non reputable resources by retrieving URI of resources from data sets and comparing them with URI found in reputable resources." ;
 	rdfs:label "OBO foundry metric" .
-	
+
 ebiqm:hasOBOFoundryMetric
 	a	rdf:Property ;
 	rdfs:subPropertyOf	daq:hasMetric ;
 	rdfs:domain	dqm:Provenance ;
 	rdfs:range	ebiqm:OBOFoundryMetric .
-
-
