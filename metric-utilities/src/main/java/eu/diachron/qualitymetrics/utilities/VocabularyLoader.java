@@ -22,11 +22,18 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFParser;
+import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.apache.jena.riot.lang.PipedTriplesStream;
+import org.apache.jena.riot.system.StreamRDF;
+import org.apache.jena.riot.system.StreamRDFLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QueryExecution;
@@ -70,7 +77,7 @@ public class VocabularyLoader {
 
 	// --- Vocabulary Storage and Cache --- //
 	private DiachronCacheManager dcm = DiachronCacheManager.getInstance();
-	private Dataset dataset = DatasetFactory.createMem();
+	private Dataset dataset = DatasetFactory.createGeneral();
 	private ConcurrentMap<String, String> knownDatasets = new ConcurrentHashMap<String,String>();
 	
 	// --- LRU Caches --- //
@@ -253,15 +260,21 @@ public class VocabularyLoader {
 				
 				final Future<Model> handler = executor.submit(new Callable<Model>() {
 				    @Override
-				    public Model call() throws Exception {
-				    	logger.info("Loading {}", ns);
-				    	Model m = ModelFactory.createDefaultModel();
-				    	try {
-				    		m = RDFDataMgr.loadModel(ns, Lang.RDFXML);    	
-				    	} catch (Exception e) {
-				    		System.out.println(e.getMessage());
-				    	}
-				    	return m; 
+				    public Model call() {
+					    	logger.info("Loading {}", ns);
+					    	Model m = null;
+					    	try {
+					    		m = RDFDataMgr.loadModel(ns);
+					    	} catch (RiotException re) {
+					    		logger.error(ns+" cannot be fetched using text/turtle. Trying to fetch data using application/rdf+xml");
+					    		m = ModelFactory.createDefaultModel();
+					    		StreamRDF dest = StreamRDFLib.graph(m.getGraph());
+					    		RDFParser parser = RDFParser.source(ns).httpAccept("application/rdf+xml").build();
+					    		parser.parse(dest);
+					    	} catch (Exception e) {
+					    		logger.error(ns+" cannot be fetched.");
+					    	} 
+					    	return m;
 				    }
 				});
 				
@@ -359,7 +372,7 @@ public class VocabularyLoader {
 	
 	public void clearDataset(){
 		this.dataset.close();
-		this.dataset = DatasetFactory.createMem();
+		this.dataset = DatasetFactory.createGeneral();
 	}
 	
 	// --- Vocabulary Helper Methods --- //
@@ -599,7 +612,9 @@ public class VocabularyLoader {
 		m.enterCriticalSection(Lock.READ);
 		try{ 
 			Resource r = Commons.asRDFNode(term).asResource();
-			boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();
+			boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(deprecatedfilter).hasNext();			
+			//boolean isDeprecated = m.listObjectsOfProperty(r, RDF.type).filterKeep(o -> o.equals(OWL.DeprecatedClass) || o.equals(OWL.DeprecatedProperty)).hasNext();
+			// CHECK: https://www.mkyong.com/java8/java-8-streams-filter-examples/
 			checkedDeprecatedTerm.putIfAbsent(term.getURI(), isDeprecated);
 		} finally {
 			m.leaveCriticalSection();
@@ -979,6 +994,6 @@ public class VocabularyLoader {
 //		Node n = ModelFactory.createDefaultModel().createResource("http://dbtropes.org/resource/Main/TheImp").asNode();
 		Node n = ModelFactory.createDefaultModel().createResource("http://purl.org/eis/vocab/daq#computedOn").asNode();
 
-		System.out.println(VocabularyLoader.getInstance().isDeprecatedTerm(n));
+		System.out.println(VocabularyLoader.getInstance().isProperty(n));
 	}
 }
